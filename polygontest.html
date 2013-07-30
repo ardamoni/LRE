@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <title>Accra Web Map</title>
+        
+        <link rel="stylesheet" href="../theme/default/style.css" type="text/css">
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <style type="text/css">
+          .olControlAttribution { 
+            bottom: 0px;
+            left: 2px;
+            right: inherit;
+            width: 400px;
+        }        
+          #controlToggle li {
+                list-style: none; 
+            }
+            p {
+                width: 512px;
+            }
+          #map {
+            width: 1280px;
+            height: 640px;
+              }
+                   
+	      textarea.output {
+                text-align: left;
+                font-size: 0.9em;
+                width: 450px;
+                height: 65px;
+                overflow: auto;
+            }
+
+            /* avoid pink tiles */
+            .olImageLoadError {
+                background-color: transparent !important;
+            }
+        </style>
+    </head>
+    <body onload="init()">
+        <h1 id="title">Accra Web Map</h1>
+
+ 
+
+        <div id="map" class="smallmap"></div>
+    
+          <div id="east">
+            <table>
+                <caption>Geo Location of Building</caption>
+                <tbody>
+                    <tr>
+                        <td>        
+                        <ul id="controlToggle">
+							<li>
+								<input type="radio" name="type" value="none" id="noneToggle"
+									   onclick="toggleControl(this);" checked="checked" />
+								<label for="noneToggle">navigate</label>
+							</li>
+							<li>
+								<input type="radio" name="type" value="point" id="pointToggle" onclick="toggleControl(this);" />
+								<label for="pointToggle">draw point</label>
+							</li>
+							<li>
+								<input type="radio" name="type" value="line" id="lineToggle" onclick="toggleControl(this);" />
+								<label for="lineToggle">draw line</label>
+							</li>
+							<li>
+								<input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(this);" />
+								<label for="polygonToggle">draw polygon</label>
+							</li>
+							<li>
+								<input type="radio" name="type" value="box" id="boxToggle" onclick="toggleControl(this);" />
+								<label for="boxToggle">draw box</label>
+							</li>
+							<li>
+								<input type="checkbox" name="allow-pan" value="allow-pan" id="allowPanCheckbox" checked=true onclick="allowPan(this);" />
+								<label for="allowPanCheckbox">allow pan while drawing</label>
+							</li>
+						</ul>
+						</td>
+                        <td>Latitude / Longitude (in WKT): </td>
+                        <td><textarea class="output" id="singleOutput"></textarea></td>
+                    </tr>
+               </tbody>
+            </table>
+        </div>
+      <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
+    <script src="../lib/proj4js/lib/defs/EPSG2041.js"></script >
+      <script src="../lib/OpenLayers.js"></script>
+        <script type="text/javascript">
+            var map, drawControls;
+            
+        var map = new OpenLayers.Map({
+        div: "map",        
+        projection: "EPSG:900913",
+        displayProjection: "EPSG:4326",
+        numZoomLevels: 18,
+    });
+                
+                
+    			// create OSM layers
+			    var mapnik = new OpenLayers.Layer.OSM();
+
+    
+var points = [
+    new OpenLayers.Geometry.Point(-2.010583585082925, 5.572335434879831).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),
+    new OpenLayers.Geometry.Point(-2.0140168126220526, 5.559350678214417).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),
+    new OpenLayers.Geometry.Point(-1.9923874791259404, 5.563963716709926).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),
+    new OpenLayers.Geometry.Point(-2.0008847172850532, 5.573616809787244).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject())//,
+//    new OpenLayers.Geometry.Point(-2.010583585082925, 5.572335434879831).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject())
+];
+var ring = new OpenLayers.Geometry.LinearRing(points);
+var polygon = new OpenLayers.Geometry.Polygon([ring]);
+
+// create some attributes for the feature
+var attributes = {name: "my name", bar: "foo"};
+
+var feature = new OpenLayers.Feature.Vector(polygon, attributes);
+var layer = new OpenLayers.Layer.Vector("Test");
+layer.addFeatures([feature]);
+
+    map.addLayer(mapnik);
+    map.addLayer(layer); 
+    
+    
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+    var bogoso = new OpenLayers.LonLat(-2.012644, 5.567).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
+
+    map.setCenter(bogoso, 15);
+        </script>
+
+    </body>
+</html>
