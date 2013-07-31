@@ -1,0 +1,923 @@
+
+
+<html>
+<head>
+
+<title>Statistisches Bundesamt Deutschland - GENESIS-Online: Interaktive Karten - ai002-1</title>
+
+<link rel="stylesheet" type="text/css" href="https://www-genesis.destatis.de/gis/resources/genview.css"/>
+<link rel="stylesheet" type="text/css" href="https://www-genesis.destatis.de/gis/resources/sliderpack.css"/>
+
+<style type="text/css">
+@import "https://www-genesis.destatis.de/gis/resources/dojotoolkit/dijit/themes/nihilo/nihilo.css";
+@import "https://www-genesis.destatis.de/gis/resources/dojotoolkit/dojox/grid/resources/Grid.css";
+@import "https://www-genesis.destatis.de/gis/resources/dojotoolkit/dojox/grid/resources/nihiloGrid.css";
+.dojoxGrid table { margin: 0; }
+.dojoxGridCell { text-align:center; }
+a:link { color:rgb(51,102,204); }
+a:visited { color:rgb(51,102,204); }
+a:active { color:rgb(51,102,204); }
+</style>
+
+<script type="text/javascript" src="https://www-genesis.destatis.de/gis/resources/dojotoolkit/dojo/dojo.js"
+	djConfig="parseOnLoad:true, isDebug: false"></script>
+<script type="text/javascript" src="https://www-genesis.destatis.de/gis/resources/OpenLayers-2.8/OpenLayers.js"></script>
+<script type="text/javascript" src="https://www-genesis.destatis.de/gis/resources/slider.js"></script>
+<script type="text/javascript" src="https://www-genesis.destatis.de/gis/resources/proj4js-combined.js"></script>
+<script type="text/javascript" src="https://www-genesis.destatis.de/gis/resources/EPSG3034.js"></script >
+
+<script type="text/javascript">
+
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit.layout.AccordionContainer");
+dojo.require("dijit.form.FilteringSelect");
+dojo.require("dojo.data.ItemFileReadStore");
+dojo.require("dijit.form.RadioButton");
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.Dialog");
+dojo.require("dojox.grid.DataGrid");
+dojo.require("dojox.data.CsvStore");
+dojo.require("dijit.Tree");
+
+
+var classQString;
+var copyright;
+function requestNewMap() {
+	var initial = "false";
+	var servletLocation = "mapRequest";
+	featureQString = "&VARS=%5B&" + dojo.formToQuery("featureSelect") + "%5D";
+	var classifySelection = dojo.formToQuery("classifySelect");
+	if (classifySelection == "CLA=0"
+		|| (classifySelection == "CLA=1" && sliderObj == null))
+		classQString = dojo.formToQuery("classSelect");
+	else
+		classQString = "CLASSLIM=" + sliderObj.getSliderBorder().join(",");
+	colorQString = dojo.formToQuery("colorSelect");
+	textcolorQString = dojo.formToQuery("textcolorSelect");
+	referenceQString = dojo.formToQuery("refSelect");
+	fontsizeQString = dojo.formToQuery("fontsizeSelect");
+	optionQString = dojo.formToQuery("optionSelect");
+	if (optionQString)
+		optionQString = "&" + optionQString;
+	
+	var urlString = servletLocation + "?IDENTITY=GUEST_22174580303&TABLE=ai002-1&" + featureQString + "&" + classQString + "&" + colorQString + optionQString + "&" + textcolorQString + "&" + fontsizeQString + "&" + referenceQString;
+	
+	urlString = urlString + "&CONTEXT=" + "REGATLAS01";
+	urlString = urlString + "&INITIAL=" + initial;
+	urlString = urlString + "&RAND=" + Math.random();
+	if (busy == 1)
+		alert("Bitte etwas Geduld, Ihre letzte Anfrage wird noch bearbeitet!");
+	else {
+		busy = 1;
+		var xhrArgs = {
+			url: urlString,
+			handleAs: "text",
+			load: function(response, ioArgs) {
+				busy = 0;
+				wms.redraw(true);
+				parseResponse(response);
+				if (success == "true") {
+					changeLogo();
+					document.getElementById("copyrightSection").innerHTML = copyright;
+					document.getElementById("information").innerHTML = legtext;
+					if (min != "" && min != null && max != "" && max != null && limits != "" && limits != null) {
+						sliderObj = new GenViewSlider();
+						sliderObj.createSlider('classifInput', min, max, limits);					
+						if (dojo.formToQuery("classifySelect") != "CLA=0")
+							setSliderActive();
+						firstMouseover = 1;
+						essentialMapconfigChanged = 0;
+						essentialMapconfigLast = dojo.formToQuery("featureSelect") + dojo.formToQuery("refSelect");
+					}
+				}
+				else {
+					document.getElementById("information").innerHTML = legtext;
+				}
+			},
+			error: function(error) {
+                busy = 0;
+				alert("Folgender Fehler trat auf: " + error);
+            }
+		}
+		var deferred = dojo.xhrGet(xhrArgs);
+	}
+}
+
+var legtext;
+var min;
+var max;
+var limits;
+var emptySet;
+var logoAlt;
+var logoHref;
+var logoSrc;
+var logoTarget;
+var logoTitle;
+var success;
+
+var mUnitForTable = "Bevölkerungsdichte (Einwohner je qkm) [Anzahl]";
+
+function parseResponse(response) {
+	var kvpairs = response.split("&&");
+	var pair;
+	for (i=0; i<kvpairs.length; i++) {
+		pair = kvpairs[i].split("<equals>");
+		if (pair[0] == "legtext")
+			legtext = pair[1];
+		else if (pair[0] == "min")
+			min = pair[1];
+		else if (pair[0] == "max")
+			max = pair[1];
+		else if (pair[0] == "limits")
+			limits = pair[1].split(",");
+		else if (pair[0] == "copyright")
+			copyright = pair[1];
+		else if (pair[0] == "logoAlt")
+			logoAlt = pair[1];
+		else if (pair[0] == "logoHref")
+			logoHref = pair[1];
+		else if (pair[0] == "logoSrc")
+			logoSrc = pair[1];
+		else if (pair[0] == "logoTarget")
+			logoTarget = pair[1];
+		else if (pair[0] == "logoTitle")
+			logoTitle = pair[1];
+		else if (pair[0] == "emptySet")
+			emptySet = pair[1];
+		else if (pair[0] == "success")
+			success = pair[1];
+
+		else if (pair[0] == "measureUnit")
+			mUnitForTable = pair[1];
+
+	}
+}
+
+function changeLogo() {
+	document.getElementById("logo-img").src = logoSrc;
+	document.getElementById("logo-img").title = logoTitle;
+	document.getElementById("logo-img").alt = logoAlt;
+	document.getElementById("logoUrl").href = logoHref;
+	document.getElementById("logoUrl").target = logoTarget;
+}
+
+function printMap() {
+	if (busy == 1)
+		alert("Bitte etwas Geduld, Ihre letzte Anfrage wird noch bearbeitet!");
+	else {
+		busy=1;
+		var servletLocation = "printMap";
+		var bbox = wms.map.getExtent().toBBOX();
+		var bboxArr = bbox.split(",");
+		var lonLat1 = new OpenLayers.LonLat(bboxArr[0],bboxArr[1]).transform(new OpenLayers.Projection("EPSG:"+epsg), new OpenLayers.Projection("EPSG:4326"));
+		var lonLat2 = new OpenLayers.LonLat(bboxArr[2],bboxArr[3]).transform(new OpenLayers.Projection("EPSG:"+epsg), new OpenLayers.Projection("EPSG:4326"));
+		var bbox4326 = lonLat1.lon + "," + lonLat1.lat + "," + lonLat2.lon + "," + lonLat2.lat;
+		var urlstring = servletLocation + "?USER=GUEST_22174580303&BBOX=" + bbox + "&BBOX4326=" + bbox4326 + "&EPSG=" + epsg + "&RAND=" + Math.random();
+		var xhrArgs = {
+			url: urlstring,
+			handleAs: "text",
+			load: function(response, ioArgs) {
+				window.open('https://www-genesis.destatis.de/gis/tmp/' + 'GUEST_22174580303.pdf','','scrollbars=no,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
+				busy=0;
+			},
+			error: function(error) {
+				busy=0;
+				alert("Folgender Fehler trat auf: " + error);
+	        }
+		}
+		var deferred = dojo.xhrGet(xhrArgs);
+	}
+}
+
+function onlineHelp() {
+	window.open("https://www-genesis.destatis.de/gis/resources/" + "hlp-REGATLAS01.pdf",'','scrollbars=yes,menubar=no,height=600,width=800,resizable=yes,toolbar=no,location=no,status=no');
+}
+
+var classifySelection = "CLA=0";
+function replaceNode_Classify() {
+	var classifySelectionNew = dojo.formToQuery("classifySelect");
+	if (classifySelectionNew == "CLA=0") {
+		document.getElementById('classifyManuallyDiv').style.display='none';
+		document.getElementById('noManuallyClassifDiv').style.display='none';
+		document.getElementById('classifyAutomaticallyDiv').style.display='block';
+	}
+	else { // manuelle Klassifizierung
+		if (essentialMapconfigChanged != 0) {
+			document.getElementById('classifyManuallyDiv').style.display='none';
+			document.getElementById('classifyAutomaticallyDiv').style.display='none';
+			document.getElementById('noManuallyClassifDiv').style.display='block';
+		}
+		else {
+			document.getElementById('classifyAutomaticallyDiv').style.display='none';
+			document.getElementById('noManuallyClassifDiv').style.display='none';
+			document.getElementById('classifyManuallyDiv').style.display='block';
+		}
+	}
+}
+
+var essentialMapconfigChanged = 0;
+var manualClassification = 0;
+function onEssentialMapconfigChanged() {
+	var essentialMapconfigCurrent = dojo.formToQuery("featureSelect") + dojo.formToQuery("refSelect");
+	if (essentialMapconfigCurrent != essentialMapconfigLast) {
+		essentialMapconfigLast = essentialMapconfigCurrent;
+		essentialMapconfigChanged = 1;
+		if (dojo.formToQuery("classifySelect") != "CLA=0")
+			setSliderInactive();
+	}
+}
+
+function setSliderInactive() {
+    document.getElementById('classifyManuallyDiv').style.display = 'none';
+    document.getElementById('classifInput').style.display = 'none';
+    document.getElementById('classifInput').style.visibility = 'hidden';
+	document.getElementById('noManuallyClassifDiv').style.display = 'block';
+}
+
+function setSliderActive() {
+    document.getElementById('noManuallyClassifDiv').style.display = 'none';
+    document.getElementById('classifyManuallyDiv').style.display = 'block';
+    document.getElementById('classifInput').style.display = 'block';
+    document.getElementById('classifInput').style.visibility = 'visible';
+}
+
+var sliderObj;
+var logos;
+dojo.addOnLoad(function(){
+
+document.getElementById('classifyAutomaticallyDiv').style.display='block';
+document.getElementById('classifyManuallyDiv').style.display='none';
+document.getElementById('noManuallyClassifDiv').style.display='none';
+
+min = "38.1";
+max = "4435.7";
+limits = [107.3,155.3,280.2,868.1];
+sliderObj = new GenViewSlider();
+sliderObj.createSlider('classifInput', 38.1, 4435.7, limits);
+
+	
+	busy = 0;
+store_VALUE948812 = new dojo.data.ItemFileReadStore({url: "https://www-genesis.destatis.de/gis/tmp/GUEST_22174580303-VALUE948812.json"});
+store_SPATIAL617443 = new dojo.data.ItemFileReadStore({url: "https://www-genesis.destatis.de/gis/tmp/GUEST_22174580303-SPATIAL617443.json"});
+
+store_JAHR = new dojo.data.ItemFileReadStore({url: "https://www-genesis.destatis.de/gis/tmp/GUEST_22174580303-JAHR.json"});
+
+store_classes = new dojo.data.ItemFileReadStore({url: "https://www-genesis.destatis.de/gis/resources/Klassen.json"});   
+store_classm = new dojo.data.ItemFileReadStore({url: "https://www-genesis.destatis.de/gis/resources/Klassifizierungsmethoden.json"});
+filteringSelect_VALUE948812 = new dijit.form.FilteringSelect({id: "fs_VALUE948812", name: "VALUE", title: "Karteninhalt", value: "AI02011", store: store_VALUE948812, searchAttr: "name", style: "width:180px"}, "fs_VALUE948812");
+filteringSelect_SPATIAL617443 = new dijit.form.FilteringSelect({id: "fs_SPATIAL617443", name: "SPATIAL", title: "Raumgliederung", value: "KREISE", store: store_SPATIAL617443, searchAttr: "name", style: "width:180px"}, "fs_SPATIAL617443");
+
+filteringSelect_JAHR = new dijit.form.FilteringSelect({id: "fs_JAHR", name: "JAHR", title: "Jahr", value: "2011", store: store_JAHR, searchAttr: "name", style: "width:180px"}, "fs_JAHR");
+
+fs_CLASSMETH = new dijit.form.FilteringSelect({id: "cBox_Class1", name: "CLASSMETH", title: "Klassifizierungsmethode", value: "EqualPopulation", store: store_classm, searchAttr: "name", style: "width:180px"}, "cBox_Class1");
+fs_CLASSNUM = new dijit.form.FilteringSelect({id: "cBox_Class2", name: "CLASSES", title: "Klassenanzahl", value: "5", store: store_classes, searchAttr: "name", style: "width:180px"}, "cBox_Class2");   
+colRadioObj1 = new dijit.form.RadioButton({checked: false, value: "0", name: "COLORSCHEME"}, "colRadio1");
+colRadioObj2 = new dijit.form.RadioButton({checked: false, value: "1", name: "COLORSCHEME"}, "colRadio2");
+colRadioObj3 = new dijit.form.RadioButton({checked: false, value: "2", name: "COLORSCHEME"}, "colRadio3");
+colRadioObj4 = new dijit.form.RadioButton({checked: false, value: "3", name: "COLORSCHEME"}, "colRadio4");
+colRadioObj5 = new dijit.form.RadioButton({checked: false, value: "4", name: "COLORSCHEME"}, "colRadio5");
+colRadioObj6 = new dijit.form.RadioButton({checked: false, value: "5", name: "COLORSCHEME"}, "colRadio6");
+colRadioObj7 = new dijit.form.RadioButton({checked: false, value: "6", name: "COLORSCHEME"}, "colRadio7");
+colRadioObj8 = new dijit.form.RadioButton({checked: true, value: "7", name: "COLORSCHEME"}, "colRadio8");
+colRadioObj9 = new dijit.form.RadioButton({checked: false, value: "8", name: "COLORSCHEME"}, "colRadio9");
+colRadioObj10 = new dijit.form.RadioButton({checked: false, value: "9", name: "COLORSCHEME"}, "colRadio10");
+colRadioObj11 = new dijit.form.RadioButton({checked: false, value: "10", name: "COLORSCHEME"}, "colRadio11");
+
+textColRadio1 = new dijit.form.RadioButton({checked: true, value: "0", name: "TEXTCOLSCHEME"}, "tcradio1");
+textColRadio2 = new dijit.form.RadioButton({checked: false, value: "1", name: "TEXTCOLSCHEME"}, "tcradio2");
+textColRadio3 = new dijit.form.RadioButton({checked: false, value: "2", name: "TEXTCOLSCHEME"}, "tcradio3");
+
+fontsizeRadio1 = new dijit.form.RadioButton({checked: false, value: "0", name: "FONTSIZE"}, "fsradio1");
+fontsizeRadio2 = new dijit.form.RadioButton({checked: true, value: "1", name: "FONTSIZE"}, "fsradio2");
+fontsizeRadio3 = new dijit.form.RadioButton({checked: false, value: "2", name: "FONTSIZE"}, "fsradio3");
+
+
+radioClassif1 = new dijit.form.RadioButton({checked: true, value: "0", name: "CLA"}, "classifyradio1");
+radioClassif2 = new dijit.form.RadioButton({checked: false, value: "1", name: "CLA"}, "classifyradio2");
+
+	
+	document.getElementById("logo-img").src = "resources/logo-stat.png";
+	document.getElementById("logo-img").title = "Statistische Ämter des Bundes und der Länder";
+	document.getElementById("logo-img").alt = "Wechseln zum Statistik-Portal";
+	document.getElementById("logoUrl").href = "http://www.statistik-portal.de";
+	document.getElementById("logoUrl").target = "_blank";
+});
+
+// Update der Karte nach Aenderung der Kartengroesse:
+
+function stopDrag() {
+	if (mapWidth != document.getElementById("map").offsetWidth) {
+		mapWidth = document.getElementById("map").offsetWidth;
+		map.updateSize();
+	}
+}
+
+// ========================================
+
+var map, title, url, params, options, wms, panel, mapfileLoc;
+
+var	epsg = 3034;
+function initMapModule() {
+	var lon_ll = 6.3;
+	var lat_ll = 47.0;
+	var lon_ur = 15.5;
+	var lat_ur = 55.1;
+	var lonLat1 = new OpenLayers.LonLat(lon_ll,lat_ll).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:"+epsg));
+	var lonLat2 = new OpenLayers.LonLat(lon_ur,lat_ur).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:"+epsg));
+	var ger_bbox = new OpenLayers.Bounds(lonLat1.lon, lonLat1.lat, lonLat2.lon, lonLat2.lat);
+	map = new OpenLayers.Map('map', {projection : 'EPSG:'+epsg, units: 'm', maxExtent: ger_bbox, numZoomLevels: 6, controls:[new OpenLayers.Control.Navigation()], 'maxResolution':'auto'});
+	map.addControl( new OpenLayers.Control.PanZoomBar() );
+	addWMS();
+	addMapControls();
+}
+
+function addWMS() {
+	title = "myWMS";
+	url = "https://www-genesis.destatis.de/gis/cgi-bin/mapserv";
+	mapfileLoc = "/home/fgs/gis/gisdocs/tmp/GUEST_22174580303.map";
+	params = {layers: 'StBA-Kartenebenen', map: mapfileLoc, format:'image/png'};
+	options = {singleTile:true};
+	wms = new OpenLayers.Layer.WMS( title, url, params, options );
+	map.addLayer(wms);
+	var lat = 51.2;
+	var lon = 10.5;
+	var zoom = 0;
+	var lonLat = new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:"+epsg));
+    map.addLayer(wms);
+	map.setCenter(lonLat, zoom);
+
+	popupFlag=0; // Wenn ein FeatureInfo-Popup offen ist, darf kein zweites Popup geoeffnet werden
+	map.events.register('click', map, function (e) {
+		var queryLayer = "Statistikdaten";
+		var featureInfoUrl =  wms.getFullRequestString({
+						REQUEST: "GetFeatureInfo",
+						BBOX: wms.map.getExtent().toBBOX(),
+						X: e.xy.x,
+						Y: e.xy.y,
+						INFO_FORMAT: 'text/html',
+						QUERY_LAYERS: queryLayer,
+						WIDTH: wms.map.size.w,
+						HEIGHT: wms.map.size.h});
+
+		var myMap = document.getElementById('map');
+		var mapPos = dojo.coords(myMap, true);
+		var fiPos_x = mapPos.x + e.xy.x - 5;
+		var fiPos_y = mapPos.y + e.xy.y - 5;
+
+		if (popupFlag == 0) {
+			popupFlag=1;
+			popupdiv = document.createElement('div');
+			popup_overlay = document.createElement('div');
+			popupdiv.id = "featureInfo";
+			popup_overlay.id = "popup_overlay";
+			popup_overlay.onmouseout = function() {popup_overlay.parentNode.removeChild(popupdiv); popup_overlay.parentNode.removeChild(popup_overlay); popupFlag=0;};
+			popup_overlay.onclick = function() {popup_overlay.parentNode.removeChild(popupdiv); popup_overlay.parentNode.removeChild(popup_overlay); popupFlag=0;};
+			popupdiv.style.left = fiPos_x+"px";
+			popupdiv.style.top = fiPos_y+"px";
+			popup_overlay.style.left = fiPos_x+"px";
+			popup_overlay.style.top = fiPos_y+"px";
+			var popupHTML = "<iframe src=\"" + featureInfoUrl + "\" frameborder=0></iframe>";
+			popupdiv.innerHTML = popupHTML;
+			document.body.appendChild(popupdiv);
+			document.body.appendChild(popup_overlay);
+		}
+		
+		OpenLayers.Event.stop(e);
+	});	
+}
+
+function initialMapView() {
+	var lat = 51.2;
+	var lon = 10.5;
+	var zoom = 0;
+	var lonLat = new OpenLayers.LonLat(lon,lat).transform(new OpenLayers.Projection("EPSG:4326"), new OpenLayers.Projection("EPSG:"+epsg));
+	map.setCenter(lonLat, zoom);
+}
+
+function addMapControls() {
+	var nav = new OpenLayers.Control.NavigationHistory({
+		"previousOptions": {"title": "Kartenansicht zurück"},
+		"nextOptions": {"title": "Kartenansicht vor"}
+	});
+	map.addControl(nav);
+
+	panel = new OpenLayers.Control.Panel({'div':OpenLayers.Util.getElement('mapControls')});
+	var dragInfo = new OpenLayers.Control.MouseDefaults({title:'Karte ziehen / Info-Abfrage'});
+	var ButtonArr = [
+		dragInfo, 
+		new OpenLayers.Control.ZoomIn({title:"Hineinzoomen"}),
+		new OpenLayers.Control.ZoomOut({title:"Herauszoomen"}),
+		new OpenLayers.Control.ZoomBox({title:"Zoom auf Bereich"}),
+		new OpenLayers.Control.Button({displayClass: "olControlZoomToMaxExtent", trigger: initialMapView, title:"Gesamtansicht"}),
+		nav.previous, nav.next
+	];
+	panel.addControls(ButtonArr);
+	map.addControl(panel);
+}
+
+function showURL() {
+	if (busy == 1)
+		alert("Bitte etwas Geduld, Ihre letzte Anfrage wird noch bearbeitet!");
+	else {
+		busy=1;
+		var servletLocation = "wmsFreeze";
+		var urlstring = servletLocation + "?USER=GUEST_22174580303" + "&RAND=" + Math.random();
+		var xhrArgs = {
+			url: urlstring,
+			handleAs: "text",
+			load: function(response, ioArgs) {
+				busy=0;
+				if (response != "" && response != null)
+					document.getElementById("capabilitiesURL").innerHTML = response;
+				else
+					document.getElementById("capabilitiesURL").innerHTML = "Fehler bei der serverseitigen Bereitstellung des WMS-Dienstes.";
+				dijit.byId("capabilitiesDialog").show();
+			},
+			error: function(error) {
+				busy=0;
+				alert("Folgender Fehler trat auf: " + error);
+	        }
+		}
+		var deferred = dojo.xhrGet(xhrArgs);
+	}
+}
+
+function showThemeSelection() {
+	dijit.byId("themeDialog").show();
+}
+
+
+emptySet = false;
+function loadTableview() {
+	if (emptySet == "true") {
+		dijit.byId("tableviewDialog").show();
+		dojo.byId("tableviewContainer").innerHTML = "Eine Tabelle kann leider nicht angezeigt werden.";
+	}
+	else
+	{
+		var urlstring = "tabRequest?IDENTITY=GUEST_22174580303&RAND=" + Math.random();
+		var xhrArgs = {
+			url: urlstring,
+			handleAs: "text",
+			load: function(response, ioArgs) {
+				createTable(response);
+			},
+			error: function(error) {
+				alert("Folgender Fehler trat auf: " + error);
+			}
+		}
+		var deferred = dojo.xhrGet(xhrArgs);
+	}
+}
+function createTable(tableData) {
+	var statStore = new dojox.data.CsvStore({
+		data: tableData
+	});
+			
+	var statLayout = [{
+	defaultCell: {cellStyles:'text-align:center;'},
+	rows: [{
+		field: 'Schluessel',
+		name: 'Schl&uuml;ssel der Gebietseinheit',
+		width: 'auto'
+	},
+	{
+		field: 'Name',
+		name: 'Name der Gebietseinheit',
+		width: 'auto'
+	},
+	{
+		field: 'Wert',
+		name: 'Wert',
+		width: 'auto'
+	}]
+	}];
+	statLayout[0].rows[2].name = mUnitForTable; // Name neu setzen
+	var statGrid = new dojox.grid.DataGrid({
+		query: {
+			Schluessel: '*'
+		},
+		store: statStore,
+		clientSort: true,
+		rowSelector: '10px',
+		structure: statLayout,
+		sortInfo: 1,
+		rowsPerPage: 1
+	},
+	document.createElement('div'));
+	dijit.byId("tableviewDialog").show();
+	// remove childs from previous requests
+	var tmpNode = dojo.byId("tableviewContainer");
+	var len = tmpNode.childNodes.length;
+	for(var i = 0; i < len; i++)
+	{
+		tmpNode.removeChild(tmpNode.childNodes[i]);
+	}
+	// append the new grid to the div "tableviewContainer":
+	tmpNode.appendChild(statGrid.domNode);
+	// Call startup, in order to render the grid:
+	statGrid.startup();
+}
+
+
+
+var metadataURL = "https://www-genesis.destatis.de/gis/tmp/GUEST_22174580303-meta.txt";
+function loadMetadata() {
+	dijit.byId("metadataDialog").show();
+	var xhrArgs = {
+		url: metadataURL,
+		handleAs: "text",
+		load: function(response, ioArgs) {
+			dojo.byId("metadataContainer").innerHTML = response;
+		},
+		error: function(error) {
+			dojo.byId("metadataContainer").innerHTML = "Fehler beim Lesen der Statistik-Metadaten.";
+		}
+	}
+	var deferred = dojo.xhrGet(xhrArgs);
+}
+
+
+
+function loadImpressum() {
+	dijit.byId("impressumDialog").show();
+}
+
+
+var essentialMapconfigLast;
+var mapWidth;
+function init() {
+	initMapModule();
+	mapWidth = document.getElementById("map").offsetWidth;
+	essentialMapconfigLast = dojo.formToQuery("featureSelect") + dojo.formToQuery("refSelect");
+}
+
+</script>
+
+</head>
+
+<body class="nihilo" onload="window.setTimeout('init()', 1000)">
+<div dojoType="dijit.layout.BorderContainer" id="container" onmouseup="stopDrag()">
+<div dojoType="dijit.layout.ContentPane" region="top" id="caption">
+<div dojoType="dijit.layout.ContentPane" region="left" id="mapControls"
+	class="olControlPanel"></div>
+<div dojoType="dijit.layout.ContentPane" region="center"
+	id="otherControls">
+
+<div id="tableButton" title="Tabellarische Ansicht der Karte" onclick="loadTableview()"></div>
+
+
+<div id="metadataButton" title="Erl&auml;uterungen" onclick="loadMetadata()"></div>
+
+<div id="getURLControl" title="Web Map Service" onclick="showURL()"></div>
+<div id="drucken" title="Druckansicht als PDF" onclick="printMap()"></div>
+<div id="help" title="Online-Hilfe" onclick="onlineHelp()"></div>
+</div>
+<div dojoType="dijit.layout.ContentPane" region="right" id="logo">
+<a id="logoUrl"><img id="logo-img"/></a>
+</div>
+</div>
+<div dojoType="dijit.layout.ContentPane" region="leading" id="settings" style="overflow:auto;"
+	splitter="true">
+<div dojoType="dijit.layout.AccordionContainer"
+	style="width: 250px; height: 380px; border: 1px solid #ccc;" onclick="onEssentialMapconfigChanged()">
+<div dojoType="dijit.layout.ContentPane" title="Inhaltsauswahl" selected="true">
+
+<table style="width:100%;"><tr><td align="center">
+<button dojoType="dijit.form.Button" type="button" onClick="showThemeSelection()" style="text-align:center;">Weitere Karten</button>
+</td></tr></table>
+<br>
+
+<form id="featureSelect">
+<table><tr><td>
+Karteninhalt:
+</td></tr>
+<tr><td>
+<input id="fs_VALUE948812" />
+</td></tr></table><br>
+
+<table><tr><td>
+Jahr:
+</td></tr>
+<tr><td>
+<input id="fs_JAHR"/>
+</td></tr></table><br>
+
+<table><tr><td>
+Raumgliederung:
+</td></tr>
+<tr><td>
+<input id="fs_SPATIAL617443" />
+</td></tr></table>
+</form>
+</div>
+<div dojoType="dijit.layout.ContentPane" title="Klassifizierung">
+<form id="classifySelect" onclick="replaceNode_Classify();">
+<table>
+	<tr>
+		<td>Berechnete Klassengrenzen</td>
+		<td class="schemeselect"><input id="classifyradio1" /></td>
+	</tr>
+	<tr>
+		<td>Manuelle Klassengrenzen</td>
+		<td class="schemeselect"><input id="classifyradio2" /></td>
+	</tr>
+</table>
+</form>
+<div id="classifyAutomaticallyDiv">
+<form id="classSelect">
+<table><tr><td>
+W&auml;hlen Sie hier die Methode zur Ermittlung der Klassengrenzen:
+</tr></td><tr><td>
+<input id="cBox_Class1" />
+</tr></td></table>
+<br>
+<table><tr><td>
+W&auml;hlen Sie hier die Anzahl der Klassen:<br>
+</tr></td><tr><td>
+<input id="cBox_Class2" />
+</tr></td></table>
+</form>
+</div>
+<div id="classifyManuallyDiv">
+Freie Eingabe von Klassengrenzen:<br><br>
+<div id="classifInput">
+</div>
+<br><br><br>
+</div>
+<div id="noManuallyClassifDiv">
+Manuelle Klassifizierung derzeit nicht m&ouml;glich!
+<br>
+Karte bitte zuerst neu anzeigen!
+<br><br>
+</div>
+<form id="colorSelect">
+<table>
+	<tr>
+		<td>W&auml;hlen Sie hier das zu verwendende Farbschema:</td>
+	</tr>
+	<tr>
+		<td><img src="resources/weiss-blau.png" alt="Farbschema1"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio1" /></td>
+	</tr>
+	<tr>
+		<td><img src="resources/weiss-gruen.png" alt="Farbschema2"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio2" /></td>
+	</tr>
+	<tr>
+		<td><img src="resources/weiss-gelb.png" alt="Farbschema3"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio3" /></td>
+	</tr>
+	<tr>
+		<td><img src="resources/weiss-rot.png" alt="Farbschema4"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio4" /></td>
+	</tr>	
+	<tr>
+		<td><img src="resources/gruen-rot.png" alt="Farbschema5"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio5" /></td>
+	</tr>	
+	<tr>
+		<td><img src="resources/gruen-gelb.png" alt="Farbschema6"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio6" /></td>
+	</tr>	
+	<tr>
+		<td><img src="resources/blau-gruen.png" alt="Farbschema7"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio7" /></td>
+	</tr>	
+	<tr>
+		<td><img src="resources/gruen-gelb-rot.png" alt="Farbschema8"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio8" /></td>
+	</tr>
+	<tr>
+		<td><img src="resources/blau-gelb-rot.png" alt="Farbschema9"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio9" /></td>
+	</tr>	
+	<tr>
+		<td><img src="resources/blau-gruen-gelb.png" alt="Farbschema10"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio10" /></td>
+	</tr>	
+	<tr>
+		<td><img src="resources/gelb-gruen-blau.png" alt="Farbschema11"
+			class="colorscheme"></td>
+		<td class="schemeselect"><input id="colRadio11" /></td>
+	</tr>
+</table>
+</form>
+</div>
+<div dojoType="dijit.layout.ContentPane" title="Optionen">
+<form id="refSelect">
+
+</form>
+<form id="optionSelect"><br>
+<table id="optionTable">
+	<tr><td>Merkmalsauspr&auml;gungen einblenden (ma&szlig;stabsabh.)</td><td><input id="infosCheck" name="INFOS" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+
+	<tr>
+		<td><br></td>
+	</tr>
+	<tr><td>Optionale Karteninhalte:</td></tr>
+<tr><td>Nachbarstaaten</td><td><input id="boundsCheck" name="BOUNDS" value="true" dojoType="dijit.form.CheckBox" checked></td></tr>
+<tr><td>Bundeslandsgrenzen</td><td><input id="fedstatesCheck" name="FEDSTATES" value="true" dojoType="dijit.form.CheckBox" checked></td></tr>
+<tr><td>Bundeslandsnamen</td><td><input id="fedstatenamesCheck" name="FEDSTATENAMES" value="true" dojoType="dijit.form.CheckBox" checked></td></tr>
+<tr><td>Flüsse</td><td><input id="streamsCheck" name="STREAMS" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+<tr><td>Hauptstädte</td><td><input id="capsCheck" name="CAPS" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+<tr><td>Autobahnen (maßstabsabh.)</td><td><input id="routesCheck" name="ROUTES" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+<tr><td>Bahntrassen (maßstabsabh.)</td><td><input id="railsCheck" name="RAILS" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+<tr><td>Flughäfen (maßstabsabh.)</td><td><input id="airportsCheck" name="AIRPORTS" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+<tr><td>Geländerelief</td><td><input id="reliefCheck" name="RELIEF" value="true" dojoType="dijit.form.CheckBox"></td></tr>
+
+</table>
+</form>
+<form id="textcolorSelect">
+<table><tr><td>Textfarbe:<br></td></tr>
+<tr>
+<td><span style="color: rgb(102,102,102);">Merkmalsausprägungen</span><br>
+<span style="color: rgb(102,102,102);">Bundeslandsnamen</span><br>
+<span style="color: rgb(0,0,0);">Hauptstädte</span><br>
+<span style="color: rgb(20,20,200);">Flughäfen (maßstabsabh.)</span></td>
+<td class="textcolselect"><input id="tcradio1"/></td>
+</tr>
+<tr>
+<td><span style="color: rgb(51,102,204);">Merkmalsausprägungen</span><br>
+<span style="color: rgb(102,102,102);">Bundeslandsnamen</span><br>
+<span style="color: rgb(51,51,102);">Hauptstädte</span><br>
+<span style="color: rgb(20,20,200);">Flughäfen (maßstabsabh.)</span></td>
+<td class="textcolselect"><input id="tcradio2"/></td>
+</tr>
+<tr>
+<td><span style="color: rgb(255,153,0);">Merkmalsausprägungen</span><br>
+<span style="color: rgb(102,102,102);">Bundeslandsnamen</span><br>
+<span style="color: rgb(255,102,0);">Hauptstädte</span><br>
+<span style="color: rgb(20,20,200);">Flughäfen (maßstabsabh.)</span></td>
+<td class="textcolselect"><input id="tcradio3"/></td>
+</tr>
+</table>
+
+</form>
+<form id="fontsizeSelect">
+<table><tr><td>Schriftgr&ouml;&szlig;e:</td></tr></table>
+<table><tr>
+<td>Klein</td><td class="fontsizeselect"><input id="fsradio1" /></td>
+<td>Mittel</td><td class="fontsizeselect"><input id="fsradio2" /></td>
+<td>Gro&szlig;</td><td class="fontsizeselect"><input id="fsradio3" /></td>
+</tr></table>
+
+</form>
+</div>
+</div>
+<div dojoType="dijit.layout.ContentPane" region="bottom"
+	style="width: 250px; height: 50px;">
+<button dojoType="dijit.form.Button" onclick="requestNewMap()"
+	style="position: relative; top: 15px; float: right;">Karte anzeigen</button>
+</div>
+</div>
+<div dojoType="dijit.layout.ContentPane" region="center" splitter="true"
+	id="map"></div>
+<div dojoType="dijit.layout.ContentPane" region="trailing"
+	splitter="true" id="information" style="width:250px; overflow:auto;">
+
+<div id="heading">Regionalatlas Deutschland <br>Indikatoren des Themenbereichs "Bevölkerung" <br></div><div id="selection">Bevölkerungsdichte (Einwohner je qkm) [Anzahl]<br><br>Jahr: 2011<br>Kreise und kreisfreie Städte<br>5 Klassen, gleiche Besetzungen</div><div id="legend"><table id="legendTabID"><tr><th>Farbe</th><th>Wert [Anzahl]</th><th>Anzahl</th></tr><tr><td><div class="colorfield" style="background-color:rgb(102,204,102);"></div></td><td style="padding-left:15px;">38,1 bis unter 107,3</td><td>81</td></tr><tr><td><div class="colorfield" style="background-color:rgb(178,204,51);"></div></td><td style="padding-left:15px;">107,3 bis unter 155,3</td><td>80</td></tr><tr><td><div class="colorfield" style="background-color:rgb(255,204,0);"></div></td><td style="padding-left:15px;">155,3 bis unter 280,2</td><td>80</td></tr><tr><td><div class="colorfield" style="background-color:rgb(230,102,26);"></div></td><td style="padding-left:15px;">280,2 bis unter 868,1</td><td>81</td></tr><tr><td><div class="colorfield" style="background-color:rgb(204,0,51);"></div></td><td style="padding-left:15px;">868,1 bis 4.435,7</td><td>80</td></tr><tr><td><div class="colorfield" style="background-color:rgb(153,153,153);"></div></td><td style="padding-left:15px;">Keine Daten vorhanden</td><td>0</td></tr><tr><td><div class="colorfield" style="background-color:rgb(204,204,204);"></div></td><td style="padding-left:15px;">Nicht selektiert</td><td>0</td></tr></table></div>
+</div>
+<div dojoType="dijit.layout.ContentPane" region="bottom" id="bottomPane">
+<div id="impressum" style="width:20%; float:left; text-align:left; color:rgb(70,70,200);">
+<a href="javascript:loadImpressum()">Impressum</a></div>
+<div id="copyrightNotices" style="width:80%; float:right; text-align:right; font-size:8pt; color:rgb(153,153,153);">
+<div id="copyrightSection">© Statistische Ämter des Bundes  und der Länder, 2013  </div>
+© EuroGeographics bzgl. der Verwaltungsgrenzen<br>
+© GeoBasis-DE / BKG (2007) bzgl. Autobahnen, Bahntrassen und Geländerelief
+</div> <!-- copyrightNotices -->
+</div> <!-- bottomPane -->
+</div>
+
+<!-- Slider Dialogfelder -->
+<div dojoType="dijit.Dialog" id="slider_addborderformDialog" title="Neue Klassengrenze hinzuf&uuml;gen">
+    <table>
+        <tr>
+            <td>
+                <label for="name" id="sliderinputtext"></label>
+            </td>
+            <td>
+                <input dojoType="dijit.form.TextBox" type="text" name="slider_wert" id="slider_wert">
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <button dojoType="dijit.form.Button" type="button" onClick="sliderObj.addBorder(document.getElementById('classifInput'),document.getElementById('slider_wert').value); dijit.byId('slider_addborderformDialog').hide();">
+                    OK
+                </button>
+                <button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('slider_addborderformDialog').hide();">
+                    Abbrechen
+                </button>
+            </td>
+        </tr>
+    </table>
+</div> 
+<div dojoType="dijit.Dialog" id="delete_slider_border" title="Klassengrenze l&ouml;schen">
+    <table>
+        <tr>
+            <td>
+                <label for="name" id="sliderdeletetext"></label>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <button dojoType="dijit.form.Button" type="button" onClick="GVS_killBorder(); dijit.byId('delete_slider_border').hide();">
+                    OK
+                </button>
+                <button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('delete_slider_border').hide();">
+                    Abbrechen
+                </button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!-- Dialogfeld fuer Capabilities-URL -->
+<div dojoType="dijit.Dialog" id="capabilitiesDialog" title="Capabilities-URL">
+<table><tr><td>
+Nachfolgende URL kann zum Einbinden des hier angezeigten WMS-Kartendienstes in beliebige web- oder desktopbasierte Kartenviewer
+verwendet werden. Dazu einfach die URL markieren und kopieren.<br>Alle Einstellungen, die Sie auf dieser Seite getroffen haben
+(eingeblendete Ebenen, Farbschema etc.) werden in den Dienst &uuml;bernommen.<br><br>
+<div id="capabilitiesURL" style="color:blue; text-decoration:underline;"></div>
+<br>
+</td></tr>
+<tr><td align="center">
+<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('capabilitiesDialog').hide();" style="text-align:center;">Schlie&szlig;en</button>
+</td></tr></table>
+</div>
+
+
+<!-- Dialogfeld fuer Tabellenansicht -->
+<div dojoType="dijit.Dialog" id="tableviewDialog" title="Tabellarische Ansicht" style="width:550px; height:550px;">
+<div id="tableviewContainer" style="width:520px; height:450px;">
+</div>
+<table style="width:100%;"><tr><td align="center">
+<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('tableviewDialog').hide();" style="text-align:center;">Schlie&szlig;en</button>
+</td></tr></table>
+</div>
+
+
+
+<!-- Dialogfeld zur Anzeige der Statistik-Metadaten -->
+<div dojoType="dijit.Dialog" id="metadataDialog" title="Erl&auml;uterungen" style="width:550px; height:550px;">
+<div id="metadataContainer" style="width:520px; height:450px; overflow:auto;">
+</div>
+<br>
+<table style="width:100%;"><tr><td align="center">
+<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('metadataDialog').hide();" style="text-align:center;">Schlie&szlig;en</button>
+</td></tr></table>
+</div>
+
+
+
+<!-- Dialogfeld fuer Themenauswahl -->
+<div dojoType="dijit.Dialog" id="themeDialog" title="Verf&uuml;gbare Karten">
+﻿<div style="height:500px; width:500px; overflow:auto;">
+	<div dojoType="dojo.data.ItemFileReadStore" jsId="IndicatorStore" url="./resources/portal/regAtlas.json">
+	</div>
+	<div dojoType="dijit.tree.ForestStoreModel" jsId="indicatorModel" store="IndicatorStore"
+	query="{type:'Themenbereich'}" rootId="indicatorRoot" rootLabel="Indikatoren"
+	childrenAttrs="children">
+	</div>
+	<div dojoType="dijit.Tree" id="mytree" model="indicatorModel" openOnClick="true">
+		<script type="dojo/method" event="onClick" args="item">
+			window.location.href = IndicatorStore.getValue(item, "ref");
+		</script>
+	</div>
+</div>
+<br>
+
+<div align="center">
+<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('themeDialog').hide();" style="text-align:center;">Abbrechen</button>
+</div>
+</div>
+
+
+
+<!-- Dialogfeld zur Anzeige des Impressums -->
+<div dojoType="dijit.Dialog" id="impressumDialog" title="Impressum" style="width:550px; height:550px;">
+<div id="impressumContainer" style="width:520px; height:450px; overflow:auto;">
+<b>Statistische Ämter des Bundes und der Länder</b><br><br><a target="_blank" href="http://www.statistikportal.de">http://www.statistikportal.de</a><br><br><span style="text-decoration:underline;">Ansprechpartner für inhaltliche Fragen und Anregungen</span>:<br>Statistische Ämter des Bundes und der Länder<br>E-Mail: <a href="mailto:Statistik-Portal@stala.bwl.de">Statistik-Portal@stala.bwl.de</a><br><br><span style="text-decoration:underline;">Ansprechpartner für technische Fragen und Anregungen</span>:<br>Statistisches Bundesamt<br>Kontakt: <a target="_blank" href="https://www.destatis.de/DE/Service/Kontakt/Kontakt.html">Kontaktformular</a>
+</div>
+<br>
+<table style="width:100%;"><tr><td align="center">
+<button dojoType="dijit.form.Button" type="button" onClick="dijit.byId('impressumDialog').hide();" style="text-align:center;">Schlie&szlig;en</button>
+</td></tr></table>
+</div>
+
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 // 24. Juli 2013 12:16:13 GMT working on getting polygons on a map
+// test with github sync
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
@@ -20,13 +21,35 @@ var options = {
 var map = new OpenLayers.Map('map', options);
 var colzones, controls;
 
-var fromjson = new OpenLayers.Layer.Vector("Payment Status (Red/Green)", {		 
+var spinopts = {
+  lines: 13, // The number of lines to draw
+  length: 20, // The length of each line
+  width: 10, // The line thickness
+  radius: 30, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 14, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: 'auto' // Left position relative to parent in px
+};
+var target = document.getElementById('map');
+var spinner = new Spinner(spinopts); //.spin(target);
+
+var fromjson = new OpenLayers.Layer.Vector("Payment Status (Real Time)", {		 
 	    visibility: false,
 	    eventListeners: {"visibilitychanged": getpolygons,
  						 //"featureadded": function(){alert("Feature added")}
  						 }
      });
-     	  var icolor=0, colzonecolor=''; //used in onSketchComplete
+     
+var icolor=0, colzonecolor=''; //used in onSketchComplete
 var startcolor = '#F5E8E2'; //used in onSketchComplete
 //var colors = ['#EBC137','#E38C2D','#DB4C2C','#771E10','#48110C']; //used in onSketchComplete
 
@@ -66,7 +89,12 @@ var styleNeutral = {
             fillColor: "#FFFF99",
             fillOpacity: 0.6,
 	};
+	
+	
 function init(){
+
+//make drawing tools invisible
+ document.getElementById("controls").style.visibility="hidden";
 
    var sm = new OpenLayers.StyleMap({
     			fillColor: "#666666",
@@ -198,8 +226,8 @@ function init(){
 	map.addLayer(gmap);
 	map.addLayer(kmlsub);
 	map.addLayer(kml);
-	map.addLayer(colzones);
 	map.addLayer(fromjson);
+	map.addLayer(colzones);
 				
 // polygon drawing for collector zones  	
 	if (console && console.log) {
@@ -213,7 +241,8 @@ function init(){
 			"vertexmodified": report,
 			"sketchmodified": report,
 			"sketchstarted": report,
-			"sketchcomplete": onSketchComplete
+			"sketchcomplete": onSketchComplete,
+			"visibilitychanged": onVisibiltyChangedcz
 		});
 	}
 	controls = {
@@ -230,13 +259,17 @@ function init(){
 // end polygon drawing for collector zones  	
 // kml.feature
 
-   select = new OpenLayers.Control.SelectFeature([kml, kmlsub, colzones]); 
+   select = new OpenLayers.Control.SelectFeature([kml, kmlsub, fromjson, colzones]); 
             kml.events.on({
                 "featureselected": onFeatureSelect,
                 "featureunselected": onFeatureUnselect
             });
 			kmlsub.events.on({
                 "featureselected": onFeatureSelectSub,
+                "featureunselected": onFeatureUnselect
+            });
+			fromjson.events.on({
+                "featureselected": onFeatureSelectFJ,
                 "featureunselected": onFeatureUnselect
             });
 			colzones.events.on({
@@ -258,17 +291,24 @@ function init(){
     // Add Navigation controls
     var navigation = new OpenLayers.Control.Navigation();
     var history = new OpenLayers.Control.NavigationHistory();
+    history.previous.title = "Return to previous map view";
+	history.next.title = "Go to next map view";      
     var panzoom= new OpenLayers.Control.PanZoomBar();
     var pan=new OpenLayers.Control.PanPanel();
     var zoomPan=new OpenLayers.Control.ZoomPanel();
-//    var zoomMax= new OpenLayers.Control.ZoomToMaxExtent({title:"Zoom to the max extent"});
+    var zoomIn=new OpenLayers.Control.ZoomIn({title:"Zoom in"});
+	var zoomOut=new OpenLayers.Control.ZoomOut({title:"Zoom out"});
+
+    var zoomMax= new OpenLayers.Control.ZoomToMaxExtent({title:"Zoom to the max extent"});
     var zb = new OpenLayers.Control.ZoomBox({title:"Zoom box: Selecting it you can zoom on an area by clicking and dragging."});
 
-    var panel = new OpenLayers.Control.Panel({defaultControl: zb});
+	var container = document.getElementById("tools");
+
+    var panel = new OpenLayers.Control.Panel({div: container});
 //    panel.addControls([history, history.next, history.previous, panzoom]);
-//   panel.addControls([zb, history.next, history.previous]);
+   panel.addControls([history.next, history.previous, zoomIn, zoomOut]);
   
-    map.addControls([navigation, history, pan, zoomPan, layerSwitch]);
+    map.addControls([navigation, history, panel, panzoom, layerSwitch]);
 
     var bogoso = new OpenLayers.LonLat(-2.012644, 5.567).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
 
@@ -302,6 +342,7 @@ function onFeatureSelect(evt) {
 					callback: handler
                 });
             } 
+            
 function onFeatureSelectSub(evt) {
                 feature = evt.feature;
                 var request = OpenLayers.Request.POST({
@@ -314,10 +355,23 @@ function onFeatureSelectSub(evt) {
 					callback: handler
                 });
             } 
+function onFeatureSelectFJ(evt) {
+                feature = evt.feature;
+//                alert('features: '+feature.attributes.upn);
+                var request = OpenLayers.Request.POST({
+                    url: "php/connection.php", 
+                    data: OpenLayers.Util.getParameterString({clickfeature: feature.attributes.upn,
+															  sub: "false"}),
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded"
+					},
+					callback: handler
+                });
+            } 
 
  function onFeatureSelectcz(evt) {
                 feature = evt.feature;
-                content = feature.id;
+                content = 'Collector ID: '+feature.id.substring(feature.id.indexOf('_')+1,feature.id.length)+'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000)+'sq km';
     var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
                                          feature.geometry.getBounds().getCenterLonLat(),
                                          new OpenLayers.Size(100,100),
@@ -374,15 +428,17 @@ function onFeatureSelectSub(evt) {
 // function to draw polygones from the boundaries stored in the table KML_From_LUPMIS
 function getpolygons() {  
 //   alert("inside getpolygones");
-   if (!fromjson.visible) {
-                var request = OpenLayers.Request.POST({
-                    url: "php/getlocalplan.php", 
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded"
-					},
-					callback: polyhandler
-                });
-     };           
+   var jsonVisible = fromjson.getVisibility();
+   if (jsonVisible) {
+	  spinner.spin(target);
+		var request = OpenLayers.Request.POST({
+			url: "php/getlocalplan.php", 
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: polyhandler
+		});
+     }else{spinner.stop()};           
 
 } //end of function getpolygons
 
@@ -400,6 +456,7 @@ function getpolygons() {
         // tell the user to trim their request a bit
     }
     // the browser's parser may have failed
+
     if(!request.responseXML) {
         // get the response from php and read the json encoded data
        feed=JSON.parse(request.responseText);
@@ -444,6 +501,8 @@ var i = 0
 	  } // end of for 
 	  fromjson.redraw();
 	}
+   		spinner.stop();
+
  } // end of function polyhandler
 
 function onPopupClose(evt) {
@@ -470,7 +529,16 @@ function onPopupClose(evt) {
         colzonecolor=startcolor;
         }
         colzones.redraw();
-}          
+}      
+
+   function onVisibiltyChangedcz(){
+      var czVisible = colzones.getVisibility();
+     if (czVisible) {
+     document.getElementById("controls").style.visibility="visible";
+     }else{
+     document.getElementById("controls").style.visibility="hidden";
+     }
+     }
  		
 	function update() {
 		select.deactivate();

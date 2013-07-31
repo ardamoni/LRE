@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--31. Juli 2013 09:21:24 GMT First time sync with GitHUB-->
 <html>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -31,11 +32,14 @@
 				width: 400px;
 			}   
 			.olControlPanel div { 
+              position: relative;
+              left: 5px;
 			  display:block;
 			  width:  24px;
 			  height: 24px;
 			  margin: 5px;
-			  background-color:white;
+			  float: left;
+    		  background-color:white;
 			}
 			.olControlPanel .olControlZoomToMaxExtentItemInactive { 
 			  width:  18px;  
@@ -53,6 +57,18 @@
 			  height: 22px;
 			  background-color: blue;
 			  background-image: url("../img/drag-rectangle-on.png");
+			}
+			.olControlPanel .olControlZoomInItemInactive { 
+			  width:  22px;  
+			  height: 22px;
+			  background-color: white;
+			  background-image: url("../theme/default/img/zoomin.png");
+			}
+			.olControlPanel .olControlZoomOutItemInactive { 
+			  width:  22px;  
+			  height: 22px;
+			  background-color: white;
+			  background-image: url("../theme/default/img/zoomout.png");
 			}
 			.olControlPanPanel .olControlPanNorthItemInactive {
 				 left:50%;
@@ -82,12 +98,19 @@
 				 right: 23px;
 				 top: 150px;
 		   } 
-
+		.olControlPanZoomBar {
+			left:450px;
+		}
 		</style>
         <style>
     table.mouse_location_sample tr td {
         border: 1px solid #ccc;
+        border-color:#ffcc00;
         width: 200px;
+    }
+    table.map_area tr td {
+        border: 1px solid #ccc;
+        border-color:#ffcc00;
     }
 </style>
     </head>
@@ -107,6 +130,10 @@
             <span id="epsg2">0.0</span> <br/>
             Lon: <strong><span id="lon2">0.0</span></strong> <br/>
             Lat: <strong><span id="lat2">0.0</span></strong> <br/>
+        </td>
+        <td>
+            <strong><span><center>Navigation Tools</center></span></strong>
+            <center><span id="tools" class="olControlPanel"></span> </center>
         </td>
      </tr>
 	</table>
@@ -173,7 +200,8 @@
         </p>
     </div>
     <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
-    <script src="lib/OpenLayers/OpenLayers.js"></script>
+    <script src="../lib/OpenLayers.js"></script>
+    <script src="../lib/spin/spin.js"></script>
     <script src="dbgeojsonpoly.js"></script>
     </body>
 </html>
