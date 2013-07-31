@@ -334,12 +334,9 @@ function onFeatureSelect(evt) {
                 feature = evt.feature;
                 dbact="feedUPNinfo";
                 var request = OpenLayers.Request.POST({
-                    url: "php/dbaction.php", 
-					data: OpenLayers.Util.getParameterString(
-                    {clickfeature: feature.attributes.upn,
-   				     sub: "false",
-   				     dbaction: dbact,
-                     }),
+                    url: "php/connection.php", 
+					data: OpenLayers.Util.getParameterString({clickfeature: feature.attributes.upn,
+   				     sub: "false"}),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
