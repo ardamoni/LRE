@@ -7,7 +7,7 @@
 	// details of the connection
 	$host		=	"localhost";
 	$user		=	"root"; 
-	$pass		=	"Adm1n1strat0r"; 
+	$pass		=	"root"; 
 	$db 		=	"lupmis"; // revenue 
 	
 	// Connect to the Server
