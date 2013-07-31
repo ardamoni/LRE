@@ -329,13 +329,14 @@ function init(){
     }
 
   
-
 function onFeatureSelect(evt) {
                 feature = evt.feature;
                 dbact="feedUPNinfo";
                 var request = OpenLayers.Request.POST({
-                    url: "php/connection.php", 
-					data: OpenLayers.Util.getParameterString({clickfeature: feature.attributes.upn,
+                    url: "php/dbaction.php", 
+					data: OpenLayers.Util.getParameterString(
+					{dbaction: "feedUPNinfo",
+					 clickfeature: feature.attributes.UPN.value,
    				     sub: "false"}),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
@@ -350,7 +351,7 @@ function onFeatureSelectSub(evt) {
                     url: "php/dbaction.php", 
                     data: OpenLayers.Util.getParameterString(
                     {dbaction: "feedUPNinfo",
-                     clickfeature: feature.attributes.upn,
+                     clickfeature: feature.attributes.description,
    				     sub: "true"}),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
@@ -439,7 +440,7 @@ function getpolygons() {
 		var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
-			{action: "getlocalplan",}),
+			{dbaction: "getlocalplan"}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
