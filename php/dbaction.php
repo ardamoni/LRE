@@ -6,10 +6,10 @@
 	require_once( "configuration.php"	);
 	
 
-	$dbaction = $_POST['action'];
+	$dbaction = $_POST['dbaction'];
 	$clickfeature = $_POST['clickfeature'];
 	$sub = $_POST['sub'];
-//	$dbget = $_GET['action'];
+//	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
 //	$sub = $_GET['sub'];
 
@@ -26,12 +26,11 @@
 		//retrieves information according to the passed UPN
 		//expects clickfeature and sub as $_POST parameters
 //-----------------------------------------------------------------------------
-function feedUPNinfo()
+function feedUPNinfo($dbaction,$clickfeature,$sub)
 {
   	// upn
-	global $clickfeature;
 	$dataFromJS = $clickfeature;
-	
+//echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
 	// sub==true indicates that the hand-over was done with CDATA content
 	if( $sub == "true" ) 
 	{

@@ -332,12 +332,14 @@ function init(){
 
 function onFeatureSelect(evt) {
                 feature = evt.feature;
+                dbact="feedUPNinfo";
                 var request = OpenLayers.Request.POST({
                     url: "php/dbaction.php", 
 					data: OpenLayers.Util.getParameterString(
-                    {action: "feedUPNinfo",
-                     clickfeature: feature.attributes.upn,
-   				     sub: "false"}),
+                    {clickfeature: feature.attributes.upn,
+   				     sub: "false",
+   				     dbaction: dbact,
+                     }),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
@@ -350,7 +352,7 @@ function onFeatureSelectSub(evt) {
                 var request = OpenLayers.Request.POST({
                     url: "php/dbaction.php", 
                     data: OpenLayers.Util.getParameterString(
-                    {action: "feedUPNinfo",
+                    {dbaction: "feedUPNinfo",
                      clickfeature: feature.attributes.upn,
    				     sub: "true"}),
 					headers: {
@@ -365,7 +367,7 @@ function onFeatureSelectFJ(evt) {
                 var request = OpenLayers.Request.POST({
                     url: "php/dbaction.php", 
                     data: OpenLayers.Util.getParameterString(
-                    {action: "feedUPNinfo",
+                    {dbaction: "feedUPNinfo",
                      clickfeature: feature.attributes.upn,
    				     sub: "false"}),
 					headers: {
