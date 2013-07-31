@@ -4,16 +4,15 @@
 	// remove this lines, 
 	// if history shows
 	// Arben 
+	// 31.07.13 13:45 clean-up Ekke
 	
 	// DB connection
 	require_once( "configuration.php"	);
 
 	// upn
 	$dataFromJS = $_POST['clickfeature'];
-	//$clickupn=$_GET['clickfeature'];
-	//$clickupn='574-0600-1620';
 
-	// subupn
+	// sub==true indicates that the hand-over was done with CDATA content
 	if( $_POST['sub'] == "true" ) 
 	{
 		$upn = strstr( $dataFromJS, 'UPN: ' );
@@ -23,14 +22,11 @@
 	{
 		$upn = $dataFromJS;
 	}
-	//echo $clickupn.": clickupn<br>".$upn.": upn<br>".$dataFromJS.": data<br>";
-
 	
 	$data = array();
 	
 	// match UPN
 	$query = mysql_query( "SELECT * FROM property WHERE upn = '".$upn."'" );	
-	//echo $query.": query<br>";
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{
