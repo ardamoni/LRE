@@ -129,7 +129,7 @@ function init(){
             })
         });
 //KMLsub      
-      var kmlsub =  new OpenLayers.Layer.Vector("Local Plan", {
+      var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
             strategies: [new OpenLayers.Strategy.Fixed()],
             styleMap: sm,
             visibility: false,
@@ -224,7 +224,7 @@ function init(){
 // Add Layers
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
-	map.addLayer(kmlsub);
+	map.addLayer(kmlLocalPlan);
 	map.addLayer(kml);
 	map.addLayer(fromjson);
 	map.addLayer(colzones);
@@ -259,12 +259,12 @@ function init(){
 // end polygon drawing for collector zones  	
 // kml.feature
 
-   select = new OpenLayers.Control.SelectFeature([kml, kmlsub, fromjson, colzones]); 
+   select = new OpenLayers.Control.SelectFeature([kml, kmlLocalPlan, fromjson, colzones]); 
             kml.events.on({
                 "featureselected": onFeatureSelect,
                 "featureunselected": onFeatureUnselect
             });
-			kmlsub.events.on({
+			kmlLocalPlan.events.on({
                 "featureselected": onFeatureSelectSub,
                 "featureunselected": onFeatureUnselect
             });
@@ -333,9 +333,11 @@ function init(){
 function onFeatureSelect(evt) {
                 feature = evt.feature;
                 var request = OpenLayers.Request.POST({
-                    url: "php/connection.php", 
-                    data: OpenLayers.Util.getParameterString({clickfeature: feature.attributes.UPN.value,
-															  sub: "false"}),
+                    url: "php/dbaction.php", 
+					data: OpenLayers.Util.getParameterString(
+                    {action: "feedUPNinfo",
+                     clickfeature: feature.attributes.upn,
+   				     sub: "false"}),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
@@ -346,9 +348,11 @@ function onFeatureSelect(evt) {
 function onFeatureSelectSub(evt) {
                 feature = evt.feature;
                 var request = OpenLayers.Request.POST({
-                    url: "php/connection.php", 
-                    data: OpenLayers.Util.getParameterString({clickfeature: feature.attributes.description,
-															   sub: "true"}),
+                    url: "php/dbaction.php", 
+                    data: OpenLayers.Util.getParameterString(
+                    {action: "feedUPNinfo",
+                     clickfeature: feature.attributes.upn,
+   				     sub: "true"}),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
@@ -359,9 +363,11 @@ function onFeatureSelectFJ(evt) {
                 feature = evt.feature;
 //                alert('features: '+feature.attributes.upn);
                 var request = OpenLayers.Request.POST({
-                    url: "php/connection.php", 
-                    data: OpenLayers.Util.getParameterString({clickfeature: feature.attributes.upn,
-															  sub: "false"}),
+                    url: "php/dbaction.php", 
+                    data: OpenLayers.Util.getParameterString(
+                    {action: "feedUPNinfo",
+                     clickfeature: feature.attributes.upn,
+   				     sub: "false"}),
 					headers: {
 						"Content-Type": "application/x-www-form-urlencoded"
 					},
@@ -432,7 +438,9 @@ function getpolygons() {
    if (jsonVisible) {
 	  spinner.spin(target);
 		var request = OpenLayers.Request.POST({
-			url: "php/getlocalplan.php", 
+			url: "php/dbaction.php", 
+			data: OpenLayers.Util.getParameterString(
+			{action: "getlocalplan",}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},

@@ -8,7 +8,8 @@
 	$host		=	"localhost";
 	$user		=	"root"; 
 	$pass		=	"root"; 
-	$db 		=	"lupmis"; // revenue 
+	$db 		=	"LUPMIS"; // revenue 
+	
 	
 	// Connect to the Server
 	$con = mysql_connect($host, $user, $pass);
@@ -33,6 +34,5 @@
 	
 	//$cache_expire = session_cache_expire();
 	set_time_limit(600);  						// seconds 
-
 
 ?>
