@@ -51,9 +51,25 @@ var map = new OpenLayers.Map('map', options);
                 })
             })
         });
+//KML-Districts      
+      var kmldistricts =  new OpenLayers.Layer.Vector("Districts in Ghana", {
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            visibility: true,
+            styleMap: sm,
+            projection: map.displayProjection,
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "kml/Ghana_districts.kml",
+                format: new OpenLayers.Format.KML({
+                    extractStyles: true, 
+                    extractAttributes: true,
+                    maxDepth: 2
+                })
+            })
+        });
 // Add Layers
 			map.addLayer(mapnik);
             map.addLayer(gmap);
+            map.addLayer(kmldistricts);
             map.addLayer(kml);
 				
  //Add Markers as Vectors
