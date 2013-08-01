@@ -241,6 +241,7 @@ var styleNeutral = {
 		colzones.events.on({
 			"beforefeaturemodified": report,
 			"featuremodified": report,
+//			"featureadded": onFeatureAddedCZ,
 			"afterfeaturemodified": report,
 			"vertexmodified": report,
 			"sketchmodified": report,
@@ -287,9 +288,13 @@ var styleNeutral = {
     OpenLayers.Util.getElement("epsg1").innerHTML = map.getProjection();
     OpenLayers.Util.getElement("epsg2").innerHTML = "EPSG:4326";
     
-    OpenLayers.Event.observe(map.div, 'mousemove', mouseMoveListener);
-    
-
+//    OpenLayers.Event.observe(map.div, 'mousemove', mouseMoveListenerA);
+            map.events.register("mousemove", map, mouseMoveListener);
+/*            function(e) {
+                var position = this.events.getMousePosition(e);
+                OpenLayers.Util.getElement("lon1").innerHTML = position;
+            });
+*/
     var layerSwitch = new OpenLayers.Control.LayerSwitcher();
 
     // Add Navigation controls
@@ -319,3 +324,15 @@ var styleNeutral = {
     map.setCenter(bogoso, 15);
     document.getElementById('noneToggle').checked = true;
 //} //end init()
+
+function mouseMoveListener(event) {
+//    var position = this.events.getMousePosition(e);
+	var lonlat = map.getLonLatFromPixel(event.xy);
+			
+	OpenLayers.Util.getElement("lon1").innerHTML = lonlat.lon;
+	OpenLayers.Util.getElement("lat1").innerHTML = lonlat.lat;
+	
+	lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+	OpenLayers.Util.getElement("lon2").innerHTML = lonlat.lon;
+	OpenLayers.Util.getElement("lat2").innerHTML = lonlat.lat;
+}
