@@ -1,9 +1,6 @@
 // 24. Juli 2013 12:16:13 GMT working on getting polygons on a map
 // 01.08.13 11:30 created the LREinit from dbgeojsonpoly.js and placed all the functions in lib/jsfunctions.js
 
-    OpenLayers.Util.getElement("epsg1").innerHTML = 'inside LREinit.js';
-
-
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
@@ -45,7 +42,7 @@ var spinopts = {
 };
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
-
+var globalfeatureid;
 var fromjson = new OpenLayers.Layer.Vector("Payment Status (Real Time)", {		 
 	    visibility: false,
 	    eventListeners: {"visibilitychanged": getpolygons,
@@ -240,8 +237,8 @@ var styleNeutral = {
 		}
 		colzones.events.on({
 			"beforefeaturemodified": report,
-			"featuremodified": report,
-//			"featureadded": onFeatureAddedCZ,
+			"featuremodified": onFeatureModifiedCZ,
+			"featureadded": onFeatureAddedCZ,
 			"afterfeaturemodified": report,
 			"vertexmodified": report,
 			"sketchmodified": report,

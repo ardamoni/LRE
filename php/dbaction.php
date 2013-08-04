@@ -9,6 +9,10 @@
 	$dbaction = $_POST['dbaction'];
 	$clickfeature = $_POST['clickfeature'];
 	$sub = $_POST['sub'];
+	$polygon = $_POST['polygon'];
+	$collector = $_POST['collector'];
+	$zonecolour = $_POST['zonecolour'];
+	$zoneid = $_POST['zoneid'];
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
 //	$sub = $_GET['sub'];
@@ -16,6 +20,8 @@
   if ($dbaction=='feedUPNinfo'){feedUPNinfo($dbaction,$clickfeature,$sub);}
 
   if ($dbaction=='getlocalplan'){getlocalplan();}
+
+  if ($dbaction=='insertCZ'){insertCZ($zoneid,$polygon,$collector,$zonecolour);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -96,6 +102,43 @@ function getlocalplan()
 	 }//end while
 	header("Content-type: application/json");
 	echo json_encode($data);
-//	mysql_close($con);
+}
+//-----------------------------------------------------------------------------
+				//function insertCZ() 
+				//inserts or updates polygon information into table collectorzones 
+				//expects  zoneid, polygon, collector, zonecolour as $_POST parameters
+//-----------------------------------------------------------------------------
+function insertCZ($zoneid,$polygon,$collector,$zonecolour) 
+{
+/*   if (!$zoneid=="99"){
+   	$data 				= array();
+//   if (!empty($query)){
+	$json 				= array();
+	$json['text'] 		= 'Collector zone was updated in the database';
+	$data[] 			= $json;
+
+   }else{
+	// insert new collector zone 
+*/	
+    $run = "INSERT INTO collectorzones (polygon, collectorid, zone_colour) VALUES ('".$polygon."', '".$collector."', '".$zonecolour."');";
+	$query = mysql_query($run);  
+
+	$run = "SELECT * FROM collectorzones WHERE polygon = '".$polygon."';";
+	$query = mysql_query($run);  
+	$data 				= array();
+//   if (!empty($query)){
+	$json 				= array();
+		while ($row = mysql_fetch_assoc($query)) {
+			$json['text'] 		= 'New collector zone stored in database';
+			$json['id'] 		= $row['id'];
+			$json['zid']		= $zoneid;
+			$json['collectorid']		= $row['collectorid'];
+		}
+	
+    $data[] 			= $json;
+//	 }//end if
+//	}//end else 
+	header("Content-type: application/json");
+	echo json_encode($data);
 }
 ?>
