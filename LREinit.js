@@ -21,6 +21,7 @@ var options = {
 
 var map = new OpenLayers.Map('map', options);
 var colzones, controls;
+var globalinsertCZ = true;
 
 var spinopts = {
   lines: 13, // The number of lines to draw

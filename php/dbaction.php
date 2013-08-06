@@ -13,6 +13,7 @@
 	$collector = $_POST['collector'];
 	$zonecolour = $_POST['zonecolour'];
 	$zoneid = $_POST['zoneid'];
+	$districtid = $_POST['districtid'];
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
 //	$sub = $_GET['sub'];
@@ -22,6 +23,8 @@
   if ($dbaction=='getlocalplan'){getlocalplan();}
 
   if ($dbaction=='insertCZ'){insertCZ($zoneid,$polygon,$collector,$zonecolour);}
+
+  if ($dbaction=='getCZ'){getCZ($districtid);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -110,7 +113,7 @@ function getlocalplan()
 //-----------------------------------------------------------------------------
 function insertCZ($zoneid,$polygon,$collector,$zonecolour) 
 {
-/*   if (!$zoneid=="99"){
+   if (!$zoneid>="1"){
    	$data 				= array();
 //   if (!empty($query)){
 	$json 				= array();
@@ -129,13 +132,40 @@ function insertCZ($zoneid,$polygon,$collector,$zonecolour)
 //   if (!empty($query)){
 	$json 				= array();
 		while ($row = mysql_fetch_assoc($query)) {
-			$json['text'] 		= 'New collector zone stored in database';
-			$json['id'] 		= $row['id'];
-			$json['zid']		= $zoneid;
-			$json['collectorid']		= $row['collectorid'];
+			$json['text'] 			= 'New collector zone stored in database';
+			$json['zoneid'] 		= $row['id'];
+			$json['collectorid']	= $row['collectorid'];
 		}
 	
     $data[] 			= $json;
+//	 }//end if
+//	}//end else 
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+
+//-----------------------------------------------------------------------------
+				//function getCZ() 
+				//collects the existing polygon information from table collectorzones 
+				//expects  districtid as $_POST parameters
+//-----------------------------------------------------------------------------
+function getCZ($districtid) 
+{
+	$run = "SELECT * FROM collectorzones WHERE districtid = '".$districtid."';";
+	$query = mysql_query($run);  
+	$data 				= array();
+//   if (!empty($query)){
+	$json 				= array();
+		while ($row = mysql_fetch_assoc($query)) {
+			$json['id'] 				= $row['id'];
+			$json['districtid'] 		= $row['districtid'];
+			$json['polygon'] 			= $row['polygon'];
+			$json['collectorid'] 		= $row['collectorid'];
+			$json['zone_colour'] 		= $row['zone_colour'];
+
+			$data[] 					= $json;
+		}
+	
 //	 }//end if
 //	}//end else 
 	header("Content-type: application/json");
