@@ -14,6 +14,7 @@
 	$zonecolour = $_POST['zonecolour'];
 	$zoneid = $_POST['zoneid'];
 	$districtid = $_POST['districtid'];
+	
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
 //	$sub = $_GET['sub'];
@@ -122,7 +123,6 @@ function insertCZ($zoneid,$polygon,$collector,$zonecolour)
 
    }else{
 	// insert new collector zone 
-*/	
     $run = "INSERT INTO collectorzones (polygon, collectorid, zone_colour) VALUES ('".$polygon."', '".$collector."', '".$zonecolour."');";
 	$query = mysql_query($run);  
 
@@ -139,7 +139,7 @@ function insertCZ($zoneid,$polygon,$collector,$zonecolour)
 	
     $data[] 			= $json;
 //	 }//end if
-//	}//end else 
+	}//end else 
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
