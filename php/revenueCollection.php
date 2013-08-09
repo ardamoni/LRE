@@ -92,7 +92,7 @@
 		// TEST 
 		if($sql1)
 		{
-			echo "Successful</br>Print";
+			echo "Successful @ Property</br>";
 		}
 		else 
 		{
@@ -102,7 +102,7 @@
 		// TEST 
 		if($sql2)
 		{
-			echo "Successful<BR>";
+			echo "Successful @ Payment for Property<BR>";
 		}
 		else 
 		{

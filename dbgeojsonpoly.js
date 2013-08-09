@@ -3,6 +3,10 @@
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
+// global variables, CLEAN before populating them
+var global_upn = '';
+var global_subupn = [];
+
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
 			  numZoomLevels: 26,
@@ -328,22 +332,7 @@ function init(){
         OpenLayers.Util.getElement("lat2").innerHTML = lonlat.lat;
     }
 
-  
-function onFeatureSelect(evt) {
-                feature = evt.feature;
-                dbact="feedUPNinfo";
-                var request = OpenLayers.Request.POST({
-                    url: "php/dbaction.php", 
-					data: OpenLayers.Util.getParameterString(
-					{dbaction: "feedUPNinfo",
-					 clickfeature: feature.attributes.UPN.value,
-   				     sub: "false"}),
-					headers: {
-						"Content-Type": "application/x-www-form-urlencoded"
-					},
-					callback: handler
-                });
-            } 
+ 
             
 function onFeatureSelectSub(evt) {
                 feature = evt.feature;
@@ -387,50 +376,130 @@ function onFeatureSelectFJ(evt) {
                 popup.feature = feature;
                 map.addPopup(popup, true);
             } 
-               
-  function handler(request) {
-    // the server could report an error
-    if(request.status == 500) {
-        // do something to calm the user
+   
+// ARBEN
+function onFeatureSelect(evt) 
+{
+	feature = evt.feature;
+	dbact = "feedUPNinfo";
+	var request = OpenLayers.Request.POST(
+	{
+		url: "php/dbaction.php", 
+		data: OpenLayers.Util.getParameterString(
+		{
+			dbaction: "feedUPNinfo",
+			clickfeature: feature.attributes.UPN.value,
+			sub: "false"
+		}),
+		headers: 
+		{
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		callback: handler
+	});	
+} 
+			
+// ARBEN   
+function handler(request) 
+{    
+	// erro 5xx and 4xx are same 
+	// http://www.w3.org/Protocols/HTTP/HTRESP.html
+    if( request.status == 500  || request.status == 413 ) 
+	{
+        // TODO: do something to calm the user
     }
-    // the server could say you sent too much stuff
-    if(request.status == 413) {
-        // tell the user to trim their request a bit
-    }
+    
     // the browser's parser may have failed
-    if(!request.responseXML) {
+    if( !request.responseXML ) 
+	{
         // get the response from php and read the json encoded data
-       feed=JSON.parse(request.responseText);
+		feed = JSON.parse(request.responseText);
 
-	var html = '';
+		var html = '';
+		
+		// cleaning the global valiables before use
+		global_upn = null;
+		global_subupn = [];
 
-    // build html for each feed item
-    for (var i = 0; i < feed.length; i++) {
-
-        html += '<h3>Owner: '+ feed[i]['owner'] +'</h3>';
-        html += '<p>Street: '+ feed[i]['streetname'] +'</p>';
-        html += '<p>House Nr: '+ feed[i]['housenumber'] +'</p>';
-        html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
-        html += '<p>SUBUPN: '+ feed[i]['subupn'] +'</p>';
-        html += '<div><strong>Revenue Balance: '+ feed[i]['revenue_balance'] +'</strong></div>';
-        html += '<p>Payment Status: '+ feed[i]['pay_status'] +'</p>';
-        html += '<p>Payment Due: '+ feed[i]['revenue_due'] +'</p>';
-        html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
-        html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
-        html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';
-        html += '<hr />';
+		for( var i = 0; i < feed.length; i++ ) 
+		{			
+			global_upn = feed[i]['upn'];
+			global_subupn[i] = feed[i]['subupn'];
 		}
-    var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
-                                         feature.geometry.getBounds().getCenterLonLat(),
-                                         new OpenLayers.Size(100,100),
-                                         html, 
-                                         null, true, onPopupClose);
-                feature.popup = popup;
-                popup.feature = feature;
-                map.addPopup(popup, true);
-	  }
-	}
+		
+		// build html for each feed item
+		for( var i = 0; i < feed.length; i++ ) 
+		{
+			html += '<h3>Owner: '+ feed[i]['owner'] +'</h3>';
+			html += '<p>Street: '+ feed[i]['streetname'] +'</p>';
+			html += '<p>House Nr: '+ feed[i]['housenumber'] +'</p>';
+			html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
+			html += '<p>SUBUPN: '+ feed[i]['subupn'] +'</p>';
+			html += '<div><strong>Revenue Balance: '+ feed[i]['revenue_balance'] +'</strong></div>';
+			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +'</p>';
+			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +'</p>';
+			html += '<p>Date payed: '+ feed[i]['date_payment'] +'</p>';
+			html += '<p>Payment Status: '+ feed[i]['pay_status'] +'</p>';			
+			html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
+			html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
+			html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';									
+			html += '<hr />';
+		}
+		
+		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick()' >";	
+		//html += "<button onclick='collectRevenueOnClick(\''+upn+'\', \''+subupn+'\')'>Revenue Collection</button>";	
+		//html += ("<input type='button' value='Revenue Collection' />").find('input[type=button]').click( function(){ collectRevenueOnClick(upn, subupn); } );
+		
+		
+		var popup = new OpenLayers.Popup.FramedCloud(
+										"featurePopup",
+                                        feature.geometry.getBounds().getCenterLonLat(),
+                                        new OpenLayers.Size(100,100),
+                                        html, 
+                                        null, true, onPopupClose);
 
+		feature.popup = popup;
+		popup.feature = feature;
+		map.addPopup(popup, true);		
+	}
+	
+}  // end of handler function
+
+//  on mouse-click activation to create the window for revenue payments
+function collectRevenueOnClick( ) 
+{	
+	var upn = this.global_upn;
+	var subupn = this.global_subupn;
+	
+	var popupWindow = null;
+	popupWindow = window.open('php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn, 'Revenue Collection', 'height=500, width=500, left=500, top=200, resizable=yes');	
+	
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+	//popupWindow.document.write( 'upn' );
+	//popwindow.creator = self;
+	
+	/*var f = document.getElementById( 'upn' );
+	f.upn.value = upn;
+	f.subupn.value = subupn;
+	f.submit();
+	*/
+	return false;
+		
+}	
+
+
+// TODO: refresh parent window
+function parent_refresh() 
+{
+	if( popupWindow.closed )
+	{
+		// refresh parent window
+	}	
+}	
+	
 // function to draw polygones from the boundaries stored in the table KML_From_LUPMIS
 function getpolygons() {  
 //   alert("inside getpolygones");
