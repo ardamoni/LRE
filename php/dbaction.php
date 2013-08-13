@@ -3,7 +3,7 @@
 //-------- loader ---------------------------------------------------------------------
 
 	// DB connection
-	require_once( "configuration.php"	);
+	require_once( "../lib/configuration.php"	);
 	
 
 	$dbaction = $_POST['dbaction'];

@@ -5,20 +5,19 @@
 	 */
 
 	// DB connection
-	require_once( "configuration.php" );
+	require_once( "../lib/configuration.php" );
 	require_once( "../lib/Revenue.php" );
 	
 	$Data = new Revenue;
 	
 	// passed from parent
-	$upn 		= $_POST["upn"];	
-	$subupn 	= $_POST["subupn"];
-		
-	// Get values from form 			
+	$upn 			= $_POST["upn"];	
+	$subupn 		= $_POST["subupn"];				
 	$paymentDate 	= $_POST['paymentdate']; 
 	$payedBy 		= $_POST['payedby'];
 	$payedValue		= $_POST['payedvalue']; 
-	$paymentType	= $_POST['paymenttype']; 
+	$paymentType	= $_POST['paymenttype'];
+	$treceipt		= $_POST['treceipt'];	
 	
 	if( !$paymentDate )
 	{		
@@ -52,13 +51,13 @@
 	$collectorID = 100;
 		
 	// Insert data into tables 	
-	$sql1 = mysql_query( "INSERT INTO `property` (  `id`, 
+	/*$sql1 = mysql_query( "INSERT INTO `property` (  `id`, 
 													`upn`, 
 													`subupn` )
 											VALUES(  NULL, 
 													'".$upn."', 
 													'".$subupn."' ) ");	
-	
+	*/
 	
 	
 
@@ -90,29 +89,84 @@
 															'".$collectorID."') " ); 
 																
 		// TEST 
-		if($sql1)
-		{
-			echo "Successful @ Property</br>";
+		if($sql2)
+		{			
+			// receipt in HTML
+			?>			
+				<input type="button" onClick="window.print()" value="Print this page"/>			 
+			
+				<table width = '100%' border = '1' align = 'center' cellpadding = '10' style = 'border: 1px solid #dbdbdb;'>
+					<tr>
+						<td id = 'layout' bgcolor = '#efefef'> &nbsp; <b><center><?php echo "PAYMENT RECEIPT"; ?></center></td>
+					</tr>
+				</table>
+				<table width = '100%' border = '1'>
+					<tr>
+						<td>Manual Receipt:</td>						
+						<td><?php echo "TODO: enter a field in payment, pass it here";?></td>		
+					</tr>
+					<tr>
+						<td>Automatic system Receipt:</td>						
+						<td><?php echo $Data->getPropertyPaymentsInfo( $upn, $subupn, "id");?></td>	
+					</tr>
+				</table>
+				<table width = '100%' border = '1'>
+					<!--UPN, SUBUPN, ADDRESS, OWNER, PRE 2013, (2013): FEE, PAID SO FAR, BALANCE-->
+					<tr>
+						<td>UPN:</td>						
+						<td><?php echo $upn;?></td>		
+					</tr>
+					<tr>
+						<td>SUBUPN:</td>						
+						<td><?php echo $subupn;?></td>		
+					</tr>
+					<tr>
+						<td>ADDRESS:</td>						
+						<td><?php echo $Data->getPropertyInfo( $upn, $subupn, "streetname")," ", $Data->getPropertyInfo( $upn, $subupn, "housenumber");?></td>		
+					</tr>
+					<tr>
+						<td>OWNER:</td>						
+						<td><?php echo $Data->getPropertyInfo( $upn, $subupn, "owner");?></td>		
+					</tr>
+					<tr>
+						<td>Pre 2013:</td>						
+						<td><?php echo $Data->getPropertyPaymentsInfo( $upn, $subupn, "Later");?></td>		
+					</tr>
+					<tr>
+						<td>2013 due:</td>						
+						<td><?php echo $Data->getPropertyPaymentsInfo( $upn, $subupn, "balance_old");?></td>		
+					</tr>
+					<tr>
+						<td>2013 last payment:</td>						
+						<td><?php echo $Data->getPropertyPaymentsInfo( $upn, $subupn, "payment");?></td>		
+					</tr>
+					<tr>
+						<td>2013 total payments:</td>						
+						<td><?php echo $Data->getPropertyPaymentsInfo( $upn, $subupn, "payment");?></td>		
+					</tr>
+					<tr>
+						<td>2013 balance:</td>						
+						<td><?php echo $Data->getPropertyPaymentsInfo( $upn, $subupn, "balance_new");?></td>		
+					</tr>
+				</table>
+				</br>
+				<table>
+				<!-- receipt in PDF -->
+					<tr>
+						<td id = 'layout' height = '25'> &nbsp; <img src = '../icons/sign.gif' border = '0'> &nbsp; 
+							<a href = 'Reports/ReceiptOfPayment.php?upn=<?php echo $upn;?>&subupn=<?php echo $subupn;?>'><?php echo "Print in PDF"; ?></a></td>
+							<!--<a href = 'Reports/ReceiptOfPayment.php?upn=<?php// echo $upn; ?>&subupn=<?php //echo $subupn; ?>'><?php //echo "Receipt of Payment"; ?></a></td>-->
+					</tr>
+				</table>
+
+			<br />
+			
+			<?php
 		}
 		else 
 		{
 			echo "ERROR";
 		}
 		
-		// TEST 
-		if($sql2)
-		{
-			echo "Successful @ Payment for Property<BR>";
-		}
-		else 
-		{
-			echo "ERROR";
-		}
-			
-	
-
-	
-	
-
-
+		window.close();
 ?>

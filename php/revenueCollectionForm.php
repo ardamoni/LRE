@@ -11,7 +11,7 @@
 
 	<table width="400" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
-			<form id="form1" name="form1" method="post" action="revenueCollection.php">
+			<form id="form1" name="form1" method="post" action="RevenueCollection.php">
 				<td>
 				<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">
 					<tr>
@@ -57,6 +57,11 @@
 						<td>Type of payment</td>
 						<td>:</td>
 						<td><input name="paymenttype" type="text" id="paymenttype" size="50"></td>
+					</tr>
+					<tr>
+						<td>Ticketing receipt</td>
+						<td>:</td>
+						<td><input name="treceipt" type="text" id="treceipt" size="50"></td>
 					</tr>
 					<tr>
 						<td>&nbsp;</td>

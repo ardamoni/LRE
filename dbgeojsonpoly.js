@@ -478,16 +478,8 @@ function collectRevenueOnClick( )
 	{
 		popupWindow.focus();
 	}
-	//popupWindow.document.write( 'upn' );
-	//popwindow.creator = self;
-	
-	/*var f = document.getElementById( 'upn' );
-	f.upn.value = upn;
-	f.subupn.value = subupn;
-	f.submit();
-	*/
+
 	return false;
-		
 }	
 
 

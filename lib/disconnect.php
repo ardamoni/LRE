@@ -4,6 +4,6 @@
 	require_once( "configuration.php" );	
 
 	// close connection
-	mysql_close();
+	mysql_close( $con );
 
 ?>

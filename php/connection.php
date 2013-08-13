@@ -7,7 +7,7 @@
 	// 31.07.13 13:45 clean-up Ekke
 	
 	// DB connection
-	require_once( "configuration.php"	);
+	require_once( "../lib/configuration.php" );
 
 	// upn
 	$dataFromJS = $_POST['clickfeature'];

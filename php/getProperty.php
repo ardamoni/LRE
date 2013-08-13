@@ -1,7 +1,7 @@
 <?php
 
 	// DB connection
-	require_once( "configuration.php"	);
+	require_once( "../lib/configuration.php"	);
 
 	// upn
 	$dataFromJS = $_POST['clickfeature'];

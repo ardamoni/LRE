@@ -34,5 +34,4 @@
 	
 	//$cache_expire = session_cache_expire();
 	set_time_limit(600);  						// seconds 
-
 ?>
