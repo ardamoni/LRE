@@ -23,6 +23,9 @@ var map = new OpenLayers.Map('map', options);
 var colzones, controls;
 var globalinsertCZ = true;
 
+var w = new Stopwatch(); 
+//w.setListener(updateClock);
+
 var spinopts = {
   lines: 13, // The number of lines to draw
   length: 20, // The length of each line
