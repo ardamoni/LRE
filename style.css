@@ -85,9 +85,6 @@ h6 {
     display: none;
 }
 
-#docs p {
-    margin-bottom: 0.5em;
-}
 /* mobile specific */
 @media only screen and (max-width: 600px) {
     body {
@@ -101,7 +98,7 @@ h6 {
         width      : 100%;
     }
     #map {
-        border : 0;
+        /*border : 0;*/
         height : 250px;
     }
     #title {
@@ -131,7 +128,7 @@ h6 {
        width: 25%;
     }
     #map {
-        width: 70%;
+        width: 100%;
     }
     #docs {
         font-size: 12px;
@@ -141,3 +138,31 @@ body {
     -webkit-text-size-adjust: none;
 }
 
+#container1 {
+    float:left;
+    width:100%;
+}
+#col1 {
+    float:left;
+    width:150px;
+}
+#col2 {
+    float:left;
+    width:80%;
+}
+#col3 {
+    float:left;
+    width:0px;
+}
+
+/* Footer styles */
+#footer {
+	clear:both;
+	float:left;
+	width:100%;
+	border-top:1px solid #000;
+}
+#footer p {
+	padding:0px;
+	margin:0;
+}
