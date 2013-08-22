@@ -1,6 +1,9 @@
 // 24. Juli 2013 12:16:13 GMT working on getting polygons on a map
 // 01.08.13 11:30 created the LREinit from dbgeojsonpoly.js and placed all the functions in lib/jsfunctions.js
 
+//make drawing tools invisible
+ document.getElementById("controls").style.visibility="hidden";
+
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
@@ -98,8 +101,6 @@ var styleNeutral = {
 	
 //function init(){
 
-//make drawing tools invisible
- document.getElementById("controls").style.visibility="hidden";
 
    var sm = new OpenLayers.StyleMap({
     			fillColor: "#666666",
