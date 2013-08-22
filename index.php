@@ -14,46 +14,33 @@
 	 */
 	require_once("lib/configuration.php");			// Configuration File
 	require_once("lib/user.php");					// User Functions
-
-	
 	
 	$User = new User;
-	
-
 
 	/*
 	 *	Start the Session
-	 *	-----------------------------------------------------------------------
-	 */
+	 */		
 	session_start();
-	
-	
-		
 	 
 	/*
-	 *	Login Function
-	 *	-----------------------------------------------------------------------
+	 *	Login Function	 
 	 */
 	if( isset( $_POST['user'] ) )		
-		$User->UserLogin($_POST['user'], $_POST['pass']);
-	
+		$User->UserLogin($_POST['user'], $_POST['pass']);	
 
 	/*
 	 *	Header File
-	 *	-----------------------------------------------------------------------
 	 */ 
 	//include("header.php");
 
 
 	/*
 	 *	Main Content DIV
-	 *	-----------------------------------------------------------------------
 	 */	
 	echo "<div id = 'sysContent'><div style = 'height: 500px;'>";		
 
 		/*
-		 *	Login Form File
-		 *	-----------------------------------------------------------------------
+		 *	Login Form File		
 		 */
 		echo "<div id = 'system-login'>  <h1 id = 'title1'> " 
 			 . "Login Form"
@@ -66,7 +53,6 @@
 		
 	/*
 	 *	Footer File
-	 *	-----------------------------------------------------------------------
 	 */
 	//include("footer.php");
 	

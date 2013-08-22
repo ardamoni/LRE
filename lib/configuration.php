@@ -8,7 +8,7 @@
 	$host		=	"localhost";
 	$user		=	"root"; 
 	$pass		=	"root"; 
-	$db 		=	"LUPMIS"; // revenue 
+	$db 		=	"revenue"; // revenue 
 	
 	
 	// Connect to the Server

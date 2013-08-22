@@ -1,15 +1,13 @@
-<?php
+<?php	
 	
 	/*
 	 *	User Class
-	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */	
 	class User
 	{
 
 		/*
-		 *	Get User Information
-	 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+		 *	Get User Information	 	
 		 */	
 		function GetInformation($user = "", $f = "")
 		{
@@ -22,7 +20,6 @@
 		
 		/*
 		 *	Update User Information
-	 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 		 */	
 		function UpdateInformation($user = "", $f = "", $v = "")
 		{
@@ -32,7 +29,6 @@
 				
 		/*
 		 *	Get User Role
-	 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 		 */	
 		function GetUserRole($user = "", $f = "")
 		{
@@ -47,17 +43,44 @@
 		
 		/*
 		 *	User Login
-		 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 		 */
 		function UserLogin($user = "", $pass = "")
-		{		
-			/*
-			 *	Log In and Start The System
-			 */ 
-			echo '<meta http-equiv="REFRESH" content="0;url=dbgeojsonpoly.html">';
-			exit;		
-		}		
-	}
+		{				
+			$u = mysql_real_escape_string(htmlentities($user));
+			$p = md5(mysql_real_escape_string(htmlentities($pass)));
+			
+			$q = mysql_query("SELECT * FROM `usr_users` 							
+								WHERE	`username`	= '".$u."' 
+										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
+			
+			if( mysql_num_rows($q) == 1 )
+			{				
+				session_regenerate_id();
+				/*
+				 *	Put User Info in the Session
+				 */			
+				$_SESSION['user']['user']		=	$r['username'];	
+				$_SESSION['user']['name']		=	$r['name'];					
+				$_SESSION['sys']['login'] 		=	true;
+				
+				// user is regional district
+				$qdistrict	= 	mysql_query("SELECT `districtid` FROM `usr_user_district` WHERE `username` = '".$r['username']."'");
+				$district	= 	mysql_fetch_array($qdistrict);
+			
+				$_SESSION['user']['districtid']	=	$district['districtid'];
+				
+				// update log
+				//mysql_query("UPDATE `usr_users` SET `loged` = '1' WHERE `username` = '".$u."'");				
+				
+				/*
+	 			 *	Log In and Start The System
+		 		 */ 
+				echo '<meta http-equiv="REFRESH" content="0;url=dbgeojsonpoly.html">';
+				exit;
+				
+			}			
+		} // end of function UserLogin		
+	} // end of class USER
 
 
 ?>
