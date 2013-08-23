@@ -7,6 +7,10 @@
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
+// global variables, CLEAN before populating them
+var global_upn = '';
+var global_subupn = [];
+
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
 			  numZoomLevels: 26,
