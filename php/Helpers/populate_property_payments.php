@@ -5,7 +5,7 @@
 	 */
 
 	// DB connection
-	require_once( "../lib/configuration.php" );
+	require_once( "../../lib/configuration.php" );
 	
 	echo "start: ", "<br>";
 	
@@ -36,6 +36,7 @@
 														'".$BOR['payer']."',
 														'".$BOR['paid_for']."'
 													)");
+													
 		echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], "<br>";
 		$i++;
 	}
