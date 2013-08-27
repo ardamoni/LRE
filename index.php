@@ -7,6 +7,7 @@
 	 *	-----------------------------------------------------------------------
 	 */ 
 	define( 'VALID_REVENUE', 1 );
+	
 		
 	/*
 	 *	Include the Library Code
@@ -19,7 +20,7 @@
 
 	/*
 	 *	Start the Session
-	 */		
+	 */	
 	session_start();
 	 
 	/*

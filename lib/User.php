@@ -54,7 +54,7 @@
 										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
 			
 			if( mysql_num_rows($q) == 1 )
-			{				
+			{					
 				session_regenerate_id();
 				/*
 				 *	Put User Info in the Session
@@ -62,6 +62,7 @@
 				$_SESSION['user']['user']		=	$r['username'];	
 				$_SESSION['user']['name']		=	$r['name'];					
 				$_SESSION['sys']['login'] 		=	true;
+				
 				
 				// user is regional district
 				$qdistrict	= 	mysql_query("SELECT `districtid` FROM `usr_user_district` WHERE `username` = '".$r['username']."'");
