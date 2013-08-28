@@ -9,7 +9,7 @@
 	
 	echo "start: ", "<br>";
 	
-	$q1 = mysql_query("SELECT * from `property` WHERE `id` > 1 LIMIT 3000");
+	$q1 = mysql_query("SELECT * from `property` WHERE `id` > 1 ");
 		
 	$i=1;
 	while($BOR = mysql_fetch_array($q1))

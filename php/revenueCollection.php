@@ -70,7 +70,7 @@
 	// calculations
 	$revenuePaid = $revenueCollected + $payedValue;
 	$revenuePaidTotal = $revenueCollectedPrevious + $revenuePaid;	
-	$revenueBalance = $revenueBalanceOld - $revenueCollected;
+	$revenueBalance = $revenueBalanceOld - $revenuePaid;
 	$revenueBalanceTotal = $revenueBalancePrevious + $revenueBalance;
 	
 	
@@ -107,11 +107,9 @@
 							WHERE 	`upn` = '".$upn."' AND
 									`subupn` = '".$subupn."' AND
 									`districtid` = '".$districtid."' AND
-									`year` '".$currentYear."' " );
-	
-																
+									`year` = '".$currentYear."' " );																
 		
-	if($sql2)
+	if( $sql2 && $query )
 	{			
 		// receipt in HTML
 		?>			

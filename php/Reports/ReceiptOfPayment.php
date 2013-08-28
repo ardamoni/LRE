@@ -8,11 +8,15 @@
 	 */
 	require_once(	"../../lib/configuration.php"	);	
 	require_once(	"../../lib/System.PDF.php"		);
+	require_once( 	"../../lib/Revenue.php"				);
+	
+	$Data = new Revenue;
 	
 	$PDF		= new PDF('P','mm','A4');
 	
 	$upn = $_GET['upn'];
 	$subupn = $_GET['subupn'];
+	$currentYear = "2013";
 	
 	//echo "upn: ", $upn, ", subupn: ", $subupn, "</br>";
 	
@@ -35,76 +39,114 @@
 	// 1st row
 	$PDF->SetFont('Arial','B',8);
 	$PDF->SetFillColor(225,225,225);
-	$PDF->Cell(95,5, "UPN",1,0,'C',true);
-	$PDF->Cell(95,5, "SUBUPN",1,0,'C',true);			
+	$PDF->Cell(43,5, "UPN",1,0,'C',true);
+	$PDF->Cell(43,5, "SUBUPN",1,0,'C',true);
+	$PDF->Cell(42,5, "TICKET RECEIPT",1,0,'C',true);
+	$PDF->Cell(42,5, "ELECTRONIC RECEIPT",1,0,'C',true);
 	$PDF->Ln();
 	
+	$qqq = mysql_query("SELECT * 	FROM	`property_payments` 
+									WHERE 	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."'  
+									ORDER BY `id` DESC LIMIT 1");
 	
-	$q = mysql_query("SELECT DISTINCT( `p`.`upn`) AS `upn`, 
-										`p`.`subupn` AS `subupn`
-		
-								FROM	`property` `p`,
-										`payments_property` `v`
-								
-								WHERE	`p`.`upn` = '".$upn."' AND
-										`p`.`subupn` = '".$subupn."' AND
-										`v`.`upn` = '".$upn."' 
-									
-								ORDER BY `p`.`upn` ASC");
+	//$ropay = mysql_num_rows($qqq);  $PDF->Cell(85,5, $ropay, 1,0,'C',true); $PDF->Ln(10);
+	$rqus = mysql_fetch_array($qqq);
+				
+	$PDF->SetFont('Arial','',8);	
+	$PDF->SetFillColor(255,255,255);		
+	$PDF->Cell(43,5, $upn, 1,0,'C',true);
+	$PDF->Cell(43,5, $subupn, 1,0,'C',true);
+	$PDF->Cell(42,5, $rqus['receipt_payment'], 1,0,'C',true);
+	$PDF->Cell(42,5, $rqus['id'], 1,0,'C',true);
+	$PDF->Ln(10);				
 	
-	while($r = mysql_fetch_array($q))
-	{			
-		$PDF->SetFont('Arial','',8);	
-		$PDF->SetFillColor(255,255,255);		
-		$PDF->Cell(95,5, $upn,1,0,'C',true);
-		$PDF->Cell(95,5, $subupn,1,0,'C',true);																		
-		$PDF->Ln();			
-	}
-
-	$PDF->Ln(10);			
+	$que = mysql_query("SELECT * FROM	`property` 
+								WHERE 	`upn` = '".$upn."' AND
+										`subupn` = '".$subupn."' ");	
 	
-	$q2 = mysql_query("SELECT * FROM `property` WHERE `upn` = '".$upn."' LIMIT 1");		
-	$r2 = mysql_fetch_array($q2);
+	//$rows = mysql_num_rows($que);  $PDF->Cell(85,5, $rows, 1,0,'C',true); $PDF->Ln(10);
+	$rq = mysql_fetch_array($que);
 	
 	$PDF->SetFillColor(225,225,225);
-	$PDF->Cell(30,5, "ADDRESS",1,0,'C',true);
+	$PDF->Cell(30,5, "ADDRESS", 1,0,'C',true);
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(160,5, $r2['streetname']." ".$r2['housenumber'] ,1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(140,5, $rq['streetname']." ".$rq['housenumber'] ,1,0,'C',true); $PDF->Ln();
 	//$PDF->MultiCell(0,5,$r2['streetname']." ".$r2['housenumber'],1,0,'C',true);
 	
+	$PDF->SetFillColor(225,225,225);
+	$PDF->Cell(30,5, "OWNER", 1,0,'C',true); 
+	$PDF->SetFillColor(255,255,255);
+	$PDF->Cell(140,5, $rq['owner'], 1,0,'C',true); $PDF->Ln();
+	
+	$revenueBalancePrevious = 0.0;
+	for( $years = "2012"; $years<$currentYear; $years++ )
+	{
+		$revenueBalancePrevious += $Data->getPropertyBalanceInfo( $upn, $subupn, $years, "balance" );
+	}	
 	
 	$PDF->SetFillColor(225,225,225);
-	$PDF->Cell(30,5, "OWNER",1,0,'C',true); 
+	$PDF->Cell(30,5, "Pre ".$currentYear." Balance *", 1,0,'C',true);
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(160,5, $r2['owner'] ,1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(140,5, $revenueBalancePrevious, 1,0,'C',true); $PDF->Ln();
 	
-	$q3 = mysql_query("SELECT * FROM `payments_property` WHERE `upn` = '".$upn."' ORDER BY DESC ");		
-	$r3 = mysql_fetch_array($q3);	
+	$query = mysql_query("SELECT * 	FROM	`property_balance` 
+									WHERE 	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."' AND
+											`year` = '".$currentYear."' ");
+	
+	//$robal = mysql_num_rows($query);  $PDF->Cell(85,5, $robal, 1,0,'C',true); $PDF->Ln(10);
+	$results = mysql_fetch_array($query);
 	
 	$PDF->SetFillColor(225,225,225);
-	$PDF->Cell(30,5, "Pre 2013",1,0,'C',true);
+	$PDF->Cell(30,5, $currentYear, 1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(30,5, "DUE", 1,0,'C',true); 
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(160,5, $r3['balance_old'],1,0,'C',true); $PDF->Ln(10);
+	$PDF->Cell(140,5, $results['due'], 1,0,'C',true); $PDF->Ln();
+	$PDF->SetFillColor(225,225,225);
+	$PDF->Cell(30,5, "FEES & FINES", 1,0,'C',true); 
+	$PDF->SetFillColor(255,255,255);
+	$PDF->Cell(140,5, $results['feefi_value'], 1,0,'C',true); $PDF->Ln();
+	
+	$qqq = mysql_query("SELECT * 	FROM	`property_payments` 
+									WHERE 	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."'  
+									ORDER BY `id` DESC LIMIT 1");
+	
+	//$ropay = mysql_num_rows($qqq);  $PDF->Cell(85,5, $ropay, 1,0,'C',true); $PDF->Ln(10);
+	$rqus = mysql_fetch_array($qqq);
 	
 	$PDF->SetFillColor(225,225,225);
-	$PDF->Cell(190,5, "2013",1,0,'C',true); $PDF->Ln();
-	$PDF->Cell(30,5, "DUE",1,0,'C',true); 
+	$PDF->Cell(30,5, "LAST COLLECTION",1,0,'C',true); 
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(160,5, $r2['revenue_due'],1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(140,5, $rqus['payment_value'],1,0,'C',true); $PDF->Ln();
+	
+	$query = mysql_query("SELECT * 	FROM	`property_balance` 
+									WHERE 	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."' AND
+											`year` = '".$currentYear."' ");
+	
+	//$robal = mysql_num_rows($query);  $PDF->Cell(85,5, $robal, 1,0,'C',true); $PDF->Ln(10);
+	$results = mysql_fetch_array($query);
 	
 	$PDF->SetFillColor(225,225,225);
 	$PDF->Cell(30,5, "COLLECTED",1,0,'C',true); 
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(160,5, $r2['revenue_collected'],1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(140,5, $results['payed'],1,0,'C',true); $PDF->Ln();
 	
 	$PDF->SetFillColor(225,225,225);
-	$PDF->Cell(30,5, "BALANCE",1,0,'C',true); 
+	$PDF->Cell(30,5, "BALANCE *",1,0,'C',true); 
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(160,5, $r2['revenue_balance'],1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(140,5, $results['balance'],1,0,'C',true); $PDF->Ln();
 	
-	
+	$PDF->SetFillColor(225,225,225);
+	$PDF->Cell(30,5, "OVERALL BALANCE *",1,0,'C',true);
+	$PDF->SetFillColor(255,255,255);
+	$PDF->Cell(140,5, $results['balance']+$revenueBalancePrevious, 1,0,'C',true); $PDF->Ln();
 	
 
+	$PDF->Ln(20);
+	$PDF->Cell(180,5, "* negative value indicates credit",0,0,'L',false);
 	$PDF->Ln();
 	$PDF->Output();
 
