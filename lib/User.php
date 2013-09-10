@@ -76,7 +76,7 @@
 				/*
 	 			 *	Log In and Start The System
 		 		 */ 
-				echo '<meta http-equiv="REFRESH" content="0;url=dbgeojsonpoly.html">';
+				echo '<meta http-equiv="REFRESH" content="0;url=LREinit.html">';
 				exit;
 				
 			}			

@@ -3,9 +3,16 @@
 
 //make drawing tools invisible
  document.getElementById("controls").style.visibility="hidden";
-
+ 
+//get the user name from $_SESSION
+ getSessionUser();
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
+
+//			  var session_name = "<?php echo json_encode($_SESSION['user']['name']); ?>";
+//			  var session_name = "<?php=$_SESSION['user'];?>";
+
+//     		   document.getElementById("wcUser").innerHTML=session_name;
 
 // global variables, CLEAN before populating them
 var global_upn = '';
