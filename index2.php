@@ -44,9 +44,9 @@
 		 *	Login Form File		
 		 */
 		echo "<div id = 'system-login'>  <h1 id = 'title1'> " 
-			 . "Login Form"
+			 . "Login to dlRev"
 			 . "</h1>";
-		include("login.php");
+		include("login2.php");
 		echo "</div>";		
 		
 	echo "</div>";

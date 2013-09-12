@@ -1,5 +1,7 @@
-<?php 
-if(isset($_SESSION['user']['name']))
+<?php
+session_start();
+
+if (isset($_SESSION['user']['name']))
 	$_SESSION['user']['name']=$_SESSION['user']['name']+1;
 else
 	$_SESSION['user']['name']='ekke - no isset';
