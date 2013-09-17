@@ -23,7 +23,9 @@
 
   if ($dbaction=='getlocalplan'){getlocalplan();}
 
-  if ($dbaction=='insertCZ'){insertCZ($zoneid,$polygon,$collector,$zonecolour);}
+  if ($dbaction=='getdistrictmap'){getdistrictmap();}
+
+  if ($dbaction=='insertCZ'){insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour);}
 
   if ($dbaction=='getCZ'){getCZ($districtid);}
 
@@ -108,22 +110,60 @@ function getlocalplan()
 	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
+				//function getdistrictmap() 
+				//collects polygon information 
+				//expects no $_POST parameters
+//-----------------------------------------------------------------------------
+function getdistrictmap() 
+{
+	// get the polygons out of the database 
+	$run = "SELECT * from `KML_from_districts`;";
+	$query = mysql_query($run);
+
+	$data 				= array();
+
+	while ($row = mysql_fetch_assoc($query)) {
+	$json 				= array();
+	$json['id'] 		= $row['id'];
+	$json['boundary'] 	= $row['boundary'];
+	$json['districtname'] 	= $row['districtname'];
+	$data[] 			= $json;
+	 }//end while
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+//-----------------------------------------------------------------------------
 				//function insertCZ() 
 				//inserts or updates polygon information into table collectorzones 
 				//expects  zoneid, polygon, collector, zonecolour as $_POST parameters
 //-----------------------------------------------------------------------------
-function insertCZ($zoneid,$polygon,$collector,$zonecolour) 
+function insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour) 
 {
-   if (!$zoneid>="1"){
+   if (empty($zoneid)){
    	$data 				= array();
-//   if (!empty($query)){
+
+	// insert new collector zone 
+    $run = "INSERT INTO collectorzones (polygon, collectorid, zone_colour, districtid) VALUES ('".$polygon."', '".$collector."', '".$zonecolour."', '".$districtid."');";
+	$query = mysql_query($run);  
+
+	$run = "SELECT * FROM collectorzones WHERE polygon = '".$polygon."';";
+	$query = mysql_query($run);  
+	$data 				= array();
+
 	$json 				= array();
-	$json['text'] 		= 'Collector zone was updated in the database';
-	$data[] 			= $json;
+		while ($row = mysql_fetch_assoc($query)) {
+			$json['text'] 			= 'New collector zone stored in database';
+			$json['zoneid'] 		= $row['id'];
+			$json['collectorid']	= $row['collectorid'];
+			$json['districtid']	= $row['districtid'];
+		}
+	
+    $data[] 			= $json;
 
    }else{
-	// insert new collector zone 
-    $run = "INSERT INTO collectorzones (polygon, collectorid, zone_colour) VALUES ('".$polygon."', '".$collector."', '".$zonecolour."');";
+	// update existing collector zone 
+	
+    $run = "UPDATE collectorzones SET polygon='".$polygon."', collectorid='".$collector."', zone_colour='".$zonecolour."', districtid='".$districtid."' WHERE id='".$zoneid."';";
 	$query = mysql_query($run);  
 
 	$run = "SELECT * FROM collectorzones WHERE polygon = '".$polygon."';";
@@ -132,9 +172,10 @@ function insertCZ($zoneid,$polygon,$collector,$zonecolour)
 //   if (!empty($query)){
 	$json 				= array();
 		while ($row = mysql_fetch_assoc($query)) {
-			$json['text'] 			= 'New collector zone stored in database';
+			$json['text'] 		= 'Collector zone was updated in the database';
 			$json['zoneid'] 		= $row['id'];
 			$json['collectorid']	= $row['collectorid'];
+			$json['districtid']	= $row['districtid'];
 		}
 	
     $data[] 			= $json;
@@ -157,7 +198,7 @@ function getCZ($districtid)
 //   if (!empty($query)){
 	$json 				= array();
 		while ($row = mysql_fetch_assoc($query)) {
-			$json['id'] 				= $row['id'];
+			$json['zoneid'] 				= $row['id'];
 			$json['districtid'] 		= $row['districtid'];
 			$json['polygon'] 			= $row['polygon'];
 			$json['collectorid'] 		= $row['collectorid'];

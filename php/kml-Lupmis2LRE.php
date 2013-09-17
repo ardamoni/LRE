@@ -7,7 +7,7 @@ $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
 
 $tmp4='';
 //print_r($xml);
-$con=mysqli_connect("localhost","root","root","LUPMIS");
+$con=mysqli_connect("localhost","root","root","revenue");
 // Check connection
 if (mysqli_connect_errno())
   {

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document><Folder><name>LRE-pilots</name>
+<Schema name="bogoso_layout_with_styles_2" id="bogoso_layout_with_styles_2">
+	<SimpleField name="Name" type="string"></SimpleField>
+	<SimpleField name="Description" type="string"></SimpleField>
+	<SimpleField name="CAPTION" type="string"></SimpleField>
+</Schema>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Bolgatanga Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Not started</SimpleData>
+		<SimpleData name="CAPTION">Bolgatanga</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-0.8597442563171734,10.8281216314894 -0.8885833676453117,10.805864948687386 -0.866954034149217,10.753083042478021 -0.8317634518738352,10.79304974612884 -0.8303901608581838,10.827615816140138 -0.8597442563171734,10.8281216314894</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Wa Municipality Assembly</SimpleData>
+		<SimpleData name="Description">From 1998</SimpleData>
+		<SimpleData name="CAPTION">Wa</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-2.5137016232604794,10.093135468169608 -2.531897729217554,10.063558274690038 -2.526232903778145,10.031442825139026 -2.4989387448425333,10.026202633556334 -2.469241326629676,10.040739730578151 -2.4716445859070117,10.08198095968902 -2.4920722897644567,10.096177539777818 -2.5137016232604794,10.093135468169608</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Tamale Metropolitan Assembly</SimpleData>
+		<SimpleData name="Description">Started</SimpleData>
+		<SimpleData name="CAPTION">Tamale</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-0.8508178647156197,9.468915668986593 -0.896479790985127,9.437420243660728 -0.8789703305359144,9.372388336198972 -0.7893630917663739,9.368662180001117 -0.7941696103210635,9.42421162759884 -0.8508178647156197,9.468915668986593</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Techiman Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Partly</SimpleData>
+		<SimpleData name="CAPTION">Techiman</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-1.9511672909851225,7.628863742370003 -1.9745132382507098,7.5676082609684885 -1.929194634735169,7.529489343196536 -1.8962356503601485,7.58802772501395 -1.9511672909851225,7.628863742370003</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Kumasi Metropolitan Assembly</SimpleData>
+		<SimpleData name="Description">Partly</SimpleData>
+		<SimpleData name="CAPTION">Kumasi</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-1.6586563046570193,6.717332479979084 -1.6421768124695089,6.658682811673481 -1.5941116269226117,6.664138891399233 -1.588618462860168,6.717332479979084 -1.6256973202819989,6.7268794328448935 -1.6586563046570193,6.717332479979084</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Suhum Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Not started</SimpleData>
+		<SimpleData name="CAPTION">Suhum</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-0.46286315280146656,6.04074262552586 -0.45736998873897816,6.026402947380631 -0.4429504330749269,6.030841459716457 -0.44878691989131925,6.045181020407465 -0.46286315280146656,6.04074262552586</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Ho Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Partly</SimpleData>
+		<SimpleData name="CAPTION">Ho</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>0.4833343569641783,6.646065395073662 0.4304626528625914,6.594910395610047 0.4713180605774451,6.563532713948227 0.5056503359680717,6.60411868641237 0.4833343569641783,6.646065395073662</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Ketu South Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Not started</SimpleData>
+		<SimpleData name="CAPTION">Denu</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>1.1446383540039191,6.101980715518847 1.135196978271451,6.092592749893865 1.141720110595687,6.0837167041157265 1.165924364746101,6.095323811385117 1.1542513911132624,6.109149596732026 1.1446383540039191,6.101980715518847</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+ <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Agona West Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Started - Street Naming Committee has been formed</SimpleData>
+		<SimpleData name="CAPTION">Swedru</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-0.71250171023562,5.5528581924279745 -0.7234880383606328,5.517489976502532 -0.6896707471008664,5.501428350395512 -0.6517335827942179,5.556104444266824 -0.6877824719543637,5.561742628615058 -0.71250171023562,5.5528581924279745</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Cape Coast Metropolitan Assembly</SimpleData>
+		<SimpleData name="Description">Started</SimpleData>
+		<SimpleData name="CAPTION">Cape Coast</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-1.2576982434387747,5.1315518436735905 -1.2642213757630105,5.10180178824993 -1.2309190686340596,5.1024857130887735 -1.21478289920048,5.128474315924111 -1.23950213748179,5.132919629020057 -1.2576982434387747,5.1315518436735905</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Komenda Edna Eguafo Abirim (KEEA) Municipal Assembly</SimpleData>
+		<SimpleData name="Description">Partly</SimpleData>
+		<SimpleData name="CAPTION">Elmina</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-1.504676049529749,5.079688716785861 -1.4978095944516723,5.043780411247045 -1.3422843869321628,5.083792396029498 -1.3306114132993245,5.104310399618994 -1.37798995333836,5.117304795940184 -1.4758369382017187,5.10294255310223 -1.504676049529749,5.079688716785861</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+  <Placemark>
+	<Style><LineStyle><color>461400F0</color></LineStyle><PolyStyle><fill>1</fill><color>46F03C14</color></PolyStyle></Style>
+	<ExtendedData><SchemaData schemaUrl="#LRE-pilots">
+		<SimpleData name="Name">Sekondi-Takoradi Metropolitan Assembly</SimpleData>
+		<SimpleData name="Description">Started, almost finished</SimpleData>
+		<SimpleData name="CAPTION">Sekondi</SimpleData>
+	</SchemaData></ExtendedData>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>-1.763755982696559,4.955938322225001 -1.801521485626251,4.9063407805598915 -1.7639276440735245,4.870594057898357 -1.6822168286438355,4.941401495746026 -1.7270204480286595,4.951833838874879 -1.763755982696559,4.955938322225001</coordinates></LinearRing></outerBoundaryIs></Polygon>
+  </Placemark>
+</Folder></Document></kml>
