@@ -85,38 +85,41 @@ var styleDistricts = {
             fillColor: "#66FFFF",
             fillOpacity: 0.1,
 	};
+var districtselectStyle = new OpenLayers.Style({
+	    fillColor: "#ffcc00",
+        fillOpacity: 0.4, 
+        hoverFillColor: "white",
+        hoverFillOpacity: 0.6,
+        strokeColor: "#ff9900",
+        strokeOpacity: 0.6,
+        strokeWidth: 2,
+        strokeLinecap: "round",
+        strokeDashstyle: "solid",
+        hoverStrokeColor: "red",
+        hoverStrokeOpacity: 1,
+        hoverStrokeWidth: 0.2,
+        pointRadius: 6,
+        hoverPointRadius: 1,
+        hoverPointUnit: "%",
+        pointerEvents: "visiblePainted",
+        cursor: "pointer"
+        });    
+        
+var zoneStyleMap = new OpenLayers.StyleMap({
+		 'default': styleDistricts,
+		 'select': districtselectStyle});
+//		 'temporary': temporaryStyle});    	
 
 var mapLogin = new OpenLayers.Map('mapLogin', options);
 //Mapnik
   var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
 
-//KML-Districts    
-/*
-      var kmldistricts =  new OpenLayers.Layer.Vector("Districts in Ghana", {
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            visibility: true,
-            styleMap: sm,
-            projection: mapLogin.displayProjection,
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: "kml/Ghana_districts.kml",
-                format: new OpenLayers.Format.KML({
-                    extractStyles: true, 
-                    extractAttributes: false,
-                    maxDepth: 0
-                })
-            })
-        });
-*/
    var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {		 
 	    visibility: true,
 	    isBaseLayer: true,
-//	    eventListeners: {"added": getpolygons,
- 						 //"featureadded": function(){alert("Feature added")}
- //						 }
-     });
+	    styleMap: zoneStyleMap});
         
 	mapLogin.addLayer(mapnik);     
-//	mapLogin.addLayer(kmldistricts);
 	mapLogin.addLayer(districtmap);
 	var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
@@ -159,22 +162,6 @@ var report = function(e) {
     mapLogin.setCenter(ghana, 7);
     
     
-
-//-----------------------------------------------------------------------------
-		//function getpolygons() 
-//-----------------------------------------------------------------------------
-function getpolygons() {  
-		var request = OpenLayers.Request.POST({
-			url: "php/dbaction.php", 
-			data: OpenLayers.Util.getParameterString(
-			{dbaction: "getdistrictmap"}),
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
-			},
-			callback: polyhandler
-		});
-
-} //end of function getpolygons
 
 //-----------------------------------------------------------------------------
 		//function polyhandler() 
