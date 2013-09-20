@@ -873,7 +873,7 @@ CREATE TABLE `system_labels` (
 -- ===================================================
 
 CREATE TABLE `tickets` (
-  `id` varchar(50) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `starting` varchar(50) NOT NULL,
   `ending` varchar(50) NOT NULL,
   `username` varchar(30) NOT NULL,
