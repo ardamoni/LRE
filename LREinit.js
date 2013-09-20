@@ -17,6 +17,8 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 // global variables, CLEAN before populating them
 var global_upn = '';
 var global_subupn = [];
+var global_out_property;
+var global_out_business;
 
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
@@ -61,13 +63,18 @@ var spinopts = {
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
 var globalfeatureid;
-var fromjson = new OpenLayers.Layer.Vector("Payment Status (Real Time)", {		 
+var fromjson = new OpenLayers.Layer.Vector("Property Status (Real Time)", {		 
 	    visibility: false,
 	    eventListeners: {"visibilitychanged": getpolygons,
  						 //"featureadded": function(){alert("Feature added")}
  						 }
      });
-     
+var fromBusiness = new OpenLayers.Layer.Vector("Business Status (Real Time)", {		 
+	    visibility: false,
+	    eventListeners: {"visibilitychanged": getBusiness,
+ 						 //"featureadded": function(){alert("Feature added")}
+ 						 }
+     });     
 var icolor=0, colzonecolor=''; //used in onSketchComplete
 var startcolor = '#F5E8E2'; //used in onSketchComplete
 //var colors = ['#EBC137','#E38C2D','#DB4C2C','#771E10','#48110C']; //used in onSketchComplete
@@ -130,7 +137,7 @@ var styleNeutral = {
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
 //KML      
-      var kmlRedGreen =  new OpenLayers.Layer.Vector("Payment Status", {
+/*      var kmlRedGreen =  new OpenLayers.Layer.Vector("Payment Status", {
             strategies: [new OpenLayers.Strategy.Fixed()],
             styleMap: sm,
             visibility: false,
@@ -145,6 +152,7 @@ var styleNeutral = {
                 })
             })
         });
+*/
 //KMLsub      
     var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
             strategies: [new OpenLayers.Strategy.Fixed()],
@@ -242,8 +250,9 @@ var styleNeutral = {
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
 	map.addLayer(kmlLocalPlan);
-	map.addLayer(kmlRedGreen);
+//	map.addLayer(kmlRedGreen);
 	map.addLayer(fromjson);
+	map.addLayer(fromBusiness);
 	map.addLayer(colzones);
 				
 // polygon drawing for collector zones  	
@@ -277,17 +286,25 @@ var styleNeutral = {
 // end polygon drawing for collector zones  	
 // kml.feature
 
-   select = new OpenLayers.Control.SelectFeature([kmlRedGreen, kmlLocalPlan, fromjson, colzones]); 
-            kmlRedGreen.events.on({
-                "featureselected": onFeatureSelect,
-                "featureunselected": onFeatureUnselect,
-            });
+//   select = new OpenLayers.Control.SelectFeature([kmlRedGreen, kmlLocalPlan, fromjson, colzones]); 
+   select = new OpenLayers.Control.SelectFeature([fromBusiness, kmlLocalPlan, fromjson, colzones]); 
+//            kmlRedGreen.events.on({
+//                "featureselected": onFeatureSelect,
+//                "featureunselected": onFeatureUnselect,
+//            });
 			kmlLocalPlan.events.on({
                 "featureselected": onFeatureSelectSub,
                 "featureunselected": onFeatureUnselect
             });
 			fromjson.events.on({
                 "featureselected": onFeatureSelectFJ,
+                "featureunselected": onFeatureUnselect,
+//       			"loadend": onloadendRedGreen,
+//				"visibilitychanged": onVisibiltyChangedRedGreen
+
+            });
+			fromBusiness.events.on({
+                "featureselected": onFeatureSelectBus,
                 "featureunselected": onFeatureUnselect,
 //       			"loadend": onloadendRedGreen,
 //				"visibilitychanged": onVisibiltyChangedRedGreen

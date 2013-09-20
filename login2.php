@@ -71,6 +71,7 @@ var options = {
 			//	new OpenLayers.Control.OverviewMap(),
 				new OpenLayers.Control.Attribution(),
 				new OpenLayers.Control.KeyboardDefaults()],};
+        OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
 
 var sm = new OpenLayers.StyleMap({
 			fillColor: "#666666",
@@ -78,7 +79,7 @@ var sm = new OpenLayers.StyleMap({
 
 var styleDistricts = { 
 		// style_definition
-		 strokeColor: "#3300CC",
+		 strokeColor: "#FFAC62",
             strokeOpacity: 0.6,
             strokewidth: 1,
             fillColor: "#66FFFF",
@@ -108,6 +109,7 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 */
    var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {		 
 	    visibility: true,
+	    isBaseLayer: true,
 //	    eventListeners: {"added": getpolygons,
  						 //"featureadded": function(){alert("Feature added")}
  //						 }
@@ -126,9 +128,37 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 			callback: polyhandler
 		});
 
+var report = function(e) {
+                OpenLayers.Console.log(e.type, e.feature.id);
+            };
+            		
+	 var highlightCtrl = new OpenLayers.Control.SelectFeature(districtmap, {
+                hover: true,
+                highlightOnly: true,
+                renderIntent: "temporary",
+                eventListeners: {
+                    beforefeaturehighlighted: report,
+                    featurehighlighted: report,
+                    featureunhighlighted: report
+                }
+            });
+
+            var selectCtrl = new OpenLayers.Control.SelectFeature(districtmap,
+                {clickout: true}
+            );
+
+            mapLogin.addControl(highlightCtrl);
+            mapLogin.addControl(selectCtrl);
+
+            highlightCtrl.activate();
+            selectCtrl.activate();
+	
+
     var ghana = new OpenLayers.LonLat(-1.1759874280090854,8.173345828918867).transform(new OpenLayers.Projection("EPSG:4326"),mapLogin.getProjectionObject());
 
     mapLogin.setCenter(ghana, 7);
+    
+    
 
 //-----------------------------------------------------------------------------
 		//function getpolygons() 
