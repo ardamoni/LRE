@@ -130,7 +130,7 @@ var styleNeutral = {
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
 //KML      
-      var kml =  new OpenLayers.Layer.Vector("Payment Status", {
+      var kmlRedGreen =  new OpenLayers.Layer.Vector("Payment Status", {
             strategies: [new OpenLayers.Strategy.Fixed()],
             styleMap: sm,
             visibility: false,
@@ -146,7 +146,7 @@ var styleNeutral = {
             })
         });
 //KMLsub      
-      var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
+    var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
             strategies: [new OpenLayers.Strategy.Fixed()],
             styleMap: sm,
             visibility: false,
@@ -242,7 +242,7 @@ var styleNeutral = {
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
 	map.addLayer(kmlLocalPlan);
-	map.addLayer(kml);
+	map.addLayer(kmlRedGreen);
 	map.addLayer(fromjson);
 	map.addLayer(colzones);
 				
@@ -277,10 +277,10 @@ var styleNeutral = {
 // end polygon drawing for collector zones  	
 // kml.feature
 
-   select = new OpenLayers.Control.SelectFeature([kml, kmlLocalPlan, fromjson, colzones]); 
-            kml.events.on({
+   select = new OpenLayers.Control.SelectFeature([kmlRedGreen, kmlLocalPlan, fromjson, colzones]); 
+            kmlRedGreen.events.on({
                 "featureselected": onFeatureSelect,
-                "featureunselected": onFeatureUnselect
+                "featureunselected": onFeatureUnselect,
             });
 			kmlLocalPlan.events.on({
                 "featureselected": onFeatureSelectSub,
@@ -288,7 +288,10 @@ var styleNeutral = {
             });
 			fromjson.events.on({
                 "featureselected": onFeatureSelectFJ,
-                "featureunselected": onFeatureUnselect
+                "featureunselected": onFeatureUnselect,
+//       			"loadend": onloadendRedGreen,
+//				"visibilitychanged": onVisibiltyChangedRedGreen
+
             });
 			colzones.events.on({
                 "featureselected": onFeatureSelectcz,
