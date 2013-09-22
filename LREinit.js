@@ -232,17 +232,17 @@ var styleNeutral = {
         graphicName: "cross"
     });
     zoneStyleMap = new OpenLayers.StyleMap({
- //  "default": OpenLayers.Feature.Vector.style['default'],
-   				   'default': zoneStyle,
-                         'select': zoneselectStyle,
-                         'temporary': temporaryStyle});    			
+				 'default': zoneStyle,
+				 'select': zoneselectStyle,
+				 'temporary': temporaryStyle});    			
 
  //modifies the default "default" style settings of OpenLayers
     			
 	colzones = new OpenLayers.Layer.Vector("Collector Zones", {
 		renderers: renderer,
 		 visibility: false,
-		styleMap: zoneStyleMap });
+         hover: true,
+         styleMap: zoneStyleMap });
 
     map.addControl(new OpenLayers.Control.ModifyFeature(colzones, {vertexRenderIntent: "vertex"}));    
 

@@ -14,6 +14,7 @@
 	$zonecolour = $_POST['zonecolour'];
 	$zoneid = $_POST['zoneid'];
 	$districtid = $_POST['districtid'];
+	$searchupn = $_POST['searchupn'];
 	
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
@@ -32,6 +33,8 @@
   if ($dbaction=='insertCZ'){insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour);}
 
   if ($dbaction=='getCZ'){getCZ($districtid);}
+
+  if ($dbaction=='searchupn'){searchupn($searchupn);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -296,4 +299,31 @@ function getCZ($districtid)
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
+//-----------------------------------------------------------------------------
+				//function searchupn() 
+				//searches for a upn and returns
+//-----------------------------------------------------------------------------
+function searchupn($searchupn) 
+{
+	$run = "SELECT * FROM collectorzones WHERE districtid = '".$districtid."';";
+	$query = mysql_query($run);  
+	$data 				= array();
+//   if (!empty($query)){
+	$json 				= array();
+		while ($row = mysql_fetch_assoc($query)) {
+			$json['zoneid'] 				= $row['id'];
+			$json['districtid'] 		= $row['districtid'];
+			$json['polygon'] 			= $row['polygon'];
+			$json['collectorid'] 		= $row['collectorid'];
+			$json['zone_colour'] 		= $row['zone_colour'];
+
+			$data[] 					= $json;
+		}
+	
+//	 }//end if
+//	}//end else 
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+
 ?>
