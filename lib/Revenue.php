@@ -8,8 +8,7 @@
 	{
 		/*
 		 *	PROPERTY
-		 */
-		
+		 */		
 		// 	get the data out of property table
 		function getPropertyInfo( $upn = "", $subupn = "", $year = 2013, $f = "" )
 		{
@@ -61,11 +60,20 @@
 			$q = mysql_query("SELECT * FROM `property_payments` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND 
-												`year` = '".$year."' 
-										ORDER BY `id` DESC 
-										LIMIT 1 ");
+												`payment_date` > '".$year."' 
+										ORDER BY `id` DESC LIMIT 1 ");
+										
 			$r = mysql_fetch_array($q);
-			return $r[$f];
+			$count = mysql_num_rows($q);
+			if( $count != 1 )
+			{
+				//echo "ERROR: ", $count, "<br>";
+				return 'error '.$count;
+			}
+			else
+			{
+				return $r[$f];
+			}
 		}
 		
 		//   get sum of payments for one year

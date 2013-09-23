@@ -15,14 +15,14 @@
 									WHERE 	`upn` like '".$find."' OR 
 											`subupn` like '".$find."' ");
 		$r = mysql_fetch_array($q);
-		$anymatches = mysql_num_rows($data); 
+		$anymatches = mysql_num_rows($q); 
 		if( $anymatches == 0 ) 
 		{ 
 			echo "Sorry, but we can not find an entry to match your query <br>"; 
 		} 
 		
 		//And we display the results 
-		while( $r = mysql_fetch_array( $data ) ) 
+		while( $r = mysql_fetch_array( $q ) ) 
 		{ 
 			echo "UPN: ", $r['upn'], "<br>"; 
 			echo "SUBUPN: ", $r['subupn'], "<br>"; 
