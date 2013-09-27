@@ -8,6 +8,8 @@
 	require_once( "../lib/configuration.php" );
 	require_once( "../lib/Revenue.php" );
 	
+	session_start();
+	
 	$Data = new Revenue;
 	
 	// passed from parent
@@ -30,10 +32,9 @@
 	
 	// static values 
 	// TODO change them to dynamic, from the map
-	$station = "Station1";
-	$receipt = "Receipt1";	
-	$collectorID = "100";	
-	$districtid = "1840";
+	$station = "Station1";		
+	$collectorID = "100";			// TODO through session
+	$districtid = "1840";			// TODO through session
 		
 	$currentYear = date("Y");
 	
@@ -94,7 +95,7 @@
 															'".$payedValue."',
 															'".$collectorID."',
 															'".$station."',
-															'".$receipt."',
+															'".$treceipt."',
 															'".$paymentType."',
 															'".$payedBy."'
 															) " ); 
@@ -122,8 +123,8 @@
 			</table>
 			<table width = '100%' border = '1'>
 				<tr>
-					<td>Manual Receipt:</td>						
-					<td><?php echo "TODO: enter a field in payment, pass it here";?></td>		
+					<td>Ticket Receipt:</td>						
+					<td><?php echo $treceipt; ?></td>		
 				</tr>
 				<tr>
 					<td>Automatic system Receipt:</td>						
@@ -138,11 +139,23 @@
 				</tr>
 				<tr>
 					<td>SUBUPN:</td>						
-					<td><?php echo $subupn;?></td>		
+					<td>
+					<?php 
+						if( !$subupn ) 
+							//echo "no subupn is specified";
+						else
+							echo $subupn;
+					?>
+					</td>		
 				</tr>
 				<tr>
 					<td>ADDRESS:</td>						
-					<td><?php echo $Data->getPropertyInfo( $upn, $subupn, $currentYear, "streetname")," ", $Data->getPropertyInfo( $upn, $subupn, "housenumber");?></td>		
+					<td>
+					<?php 
+						echo 	$Data->getPropertyInfo( $upn, $subupn, $currentYear, "streetname")," ", 
+								$Data->getPropertyInfo( $upn, $subupn, "housenumber");
+					?>
+					</td>		
 				</tr>
 				<tr>
 					<td>OWNER:</td>						
