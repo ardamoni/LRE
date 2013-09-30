@@ -1142,3 +1142,24 @@ function searchupn() {
 } 
 // end of function searchupn
 
+//-----------------------------------------------------------------------------
+		//function tableshow() 
+		//opens a window to show tabular data about the corresponding map
+		//
+//-----------------------------------------------------------------------------
+function tableshow() {
+html='inside tableshow';
+//alert(html);
+
+	var popupWindow = null;
+	popupWindow = window.open('php/revenueCollectionForm.php','Table View', 'height=500, width=1000, left=500, top=200, resizable=yes');	
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+
+} 
+// end of function tableshow
