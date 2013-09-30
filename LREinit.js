@@ -1,5 +1,6 @@
 // 24. Juli 2013 12:16:13 GMT working on getting polygons on a map
 // 01.08.13 11:30 created the LREinit from dbgeojsonpoly.js and placed all the functions in lib/jsfunctions.js
+// 27. September 2013 10:10:43 GMT moved previous code from LREinit and created init() in order to keep file count low
 
 //make drawing tools invisible
  document.getElementById("controls").style.visibility="hidden";
@@ -299,15 +300,11 @@ var styleNeutral = {
 			fromjson.events.on({
                 "featureselected": onFeatureSelectFJ,
                 "featureunselected": onFeatureUnselect,
-//       			"loadend": onloadendRedGreen,
-//				"visibilitychanged": onVisibiltyChangedRedGreen
 
             });
 			fromBusiness.events.on({
                 "featureselected": onFeatureSelectBus,
                 "featureunselected": onFeatureUnselect,
-//       			"loadend": onloadendRedGreen,
-//				"visibilitychanged": onVisibiltyChangedRedGreen
 
             });
 			colzones.events.on({
@@ -321,13 +318,8 @@ var styleNeutral = {
     OpenLayers.Util.getElement("epsg1").innerHTML = map.getProjection();
     OpenLayers.Util.getElement("epsg2").innerHTML = "EPSG:4326";
     
-//    OpenLayers.Event.observe(map.div, 'mousemove', mouseMoveListenerA);
             map.events.register("mousemove", map, mouseMoveListener);
-/*            function(e) {
-                var position = this.events.getMousePosition(e);
-                OpenLayers.Util.getElement("lon1").innerHTML = position;
-            });
-*/
+
     var layerSwitch = new OpenLayers.Control.LayerSwitcher();
 
     // Add Navigation controls
@@ -357,15 +349,3 @@ var styleNeutral = {
     map.setCenter(bogoso, 15);
     document.getElementById('noneToggle').checked = true;
 //} //end init()
-
-function mouseMoveListener(event) {
-//    var position = this.events.getMousePosition(e);
-	var lonlat = map.getLonLatFromPixel(event.xy);
-			
-	OpenLayers.Util.getElement("lon1").innerHTML = lonlat.lon;
-	OpenLayers.Util.getElement("lat1").innerHTML = lonlat.lat;
-	
-	lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-	OpenLayers.Util.getElement("lon2").innerHTML = lonlat.lon;
-	OpenLayers.Util.getElement("lat2").innerHTML = lonlat.lat;
-}

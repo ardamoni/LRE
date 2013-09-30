@@ -117,6 +117,13 @@
 		.olControlPanZoomBar {
 			left:450px;
 		}
+		.tableshow { 
+			  width:  24px;  
+			  height: 24px;
+			  background-color: white;
+			  background-image: url("img/tableview.png");
+			}
+
 		</style>
         <style>
 			table.mouse_location_sample tr td {
@@ -139,20 +146,23 @@
 		<tr>
 			<td>
 				<span id="epsg1">0.0</span> <br/>
-				Lon: <strong><span id="lon1">0.0</span></strong> <br/>
-				Lat: <strong><span id="lat1">0.0</span></strong> <br/>
+				Lon: <strong><small><span id="lon1">0.0</span></small></strong> <br/>
+				Lat: <strong><small><span id="lat1">0.0</span></small></strong> <br/>
 			</td>
 			<td>
 				<span id="epsg2">0.0</span> <br/>
-				Lon: <strong><span id="lon2">0.0</span></strong> <br/>
-				Lat: <strong><span id="lat2">0.0</span></strong> <br/>
+				Lon: <strong><small><span id="lon2">0.0</span></small></strong> <br/>
+				Lat: <strong><small><span id="lat2">0.0</span></small></strong> <br/>
 			</td>
 			<td>
 				<strong><span><center>Navigation Tools</center></span></strong>
 				<center><span id="tools" class="olControlPanel"></span> </center>
 			</td>
 			<td>
-				<center id="debug1"></center>
+				<strong><span><center>Tools</center></span></strong>
+				<center><span id="tableview" class="tableshow"></span> </center>
+				<center><span> <button type="button" class="tableshow" href="javascript:;" onclick="alert('click');" value="" ></button> </span> </center>
+
 			</td> 
 			<td>
 				<center id="debug2"></center>
@@ -233,7 +243,7 @@
 				//init();
 				window.onload = function()
 				{
-					//init();
+					init();
 				};
 			</script>
 		</div>
@@ -241,12 +251,16 @@
 		<!-- right most column, col3 -->
 		<div id="col3">
 		
-			<div id="tags"> vertices, digitizing, draw, drawing </div>
 
 		<table class="map_area">
 		<tr>
 			<td> <div id="map" class="smallmap"></div> </td>
 			<td>
+			<table>
+			<tr><td><center id="debug1"></center></td></tr>
+			<tr>
+			<td>
+			<div id="tags"> vertices, digitizing, draw, drawing </div>
 				<div id="controls">
 					<ul id="controlToggle">
 						<li> <input type="radio" name="type" value="none" id="noneToggle"
@@ -280,6 +294,9 @@
 					</ul>
 				</div>
 			</td>
+			</tr>
+			</table>
+			</td>
 		   </tr>
 		  </table>
 		</div> <!-- end of rightmost column -->  
@@ -297,7 +314,7 @@
 			<script src="lib/spin/spin.js"></script>
 			<script src="lib/stopwatch.js"></script>
 			<script src="lib/jsfunctions.js"></script>
-			<script src="LREinit.js"></script>
+			<script src="lib/jsfunction.js"></script>
 			<script type="text/javascript" >
 //			  var session_name = <?php echo json_encode($_SESSION['user']['name']); ?>;
 //     		   document.getElementById("wcUser").innerHTML="Welcome Ekke"; //session_name;
