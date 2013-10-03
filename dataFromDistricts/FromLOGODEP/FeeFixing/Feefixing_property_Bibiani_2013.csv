@@ -1,0 +1,30 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+100,Residential,,,,,,,,,-99
+111,Residential - 1st Class Area -  Block House,,30,,,,,,,-99
+112,Residential - 1st Class Area - Other Construction Material,,25,,,,,,,-99
+121,Residential - 2nd Class Area -  Block House,,20,,,,,,,-99
+122,Residential - 2nd Class Area - Other Construction Material,,15,,,,,,,-99
+131,Residential - 3rd Class Area -  Block House,,10,,,,,,,-99
+132,Residential - 3rd Class Area - Other Construction Material,,5,,,,,,,-99
+200,Commercial,,,,,,,,,-99
+201,Commercial - 1st Class Area,,50,,,,,,,-99
+202,Commercial - 2nd Class Area,,20,,,,,,,-99
+203,Commercial - 3rd Class Area,,12,,,,,,,-99
+300,Mixed Development - 1st & 2nd Class Area,,20,,,,,,,-99
+400,Industrial,,,,,,,,,-99
+401,Industrial - 1st Class,,300,,,,,,,-99
+402,Industrial - 2nd Class,,300,,,,,,,-99
+500,Corporations etc,,100,,,,,,,-99
+510,Civic & Culture,,0,,,,,,,-99
+520,Sanitary Facility,,0,,,,,,,-99
+530,Other Properties,,10,,,,,,,-99
+601,COCOBOD Shed,,70,,,,,,,-99
+602,Ghana Food Dist Corp. Silos,,60,,,,,,,-99
+603,Non-Desc’t  Depts.(all types of properties),,50,,,,,,,-99
+604,Sub vented Parastatals (all types of  properties),,150,,,,,,,-99
+610,Mining Companies - Residential Properties - Chirano Gold Mines/ King Ross,,57507.16,,,,,,,-99
+611,Mining Companies: Awaso Bauxite limited - Residential Properties Offices Workshops ,,11576.04,,,,,,,-99
+612,Mining Companies:   - Offices  - Noble Gold Ltd  Old Administration,,11000,,,,,,,-99
+613,Mining Companies - Residential Properties - Noble Gold Ltd Owiredu Estates ,,10000,,,,,,,-99
+614,Mining Companies - Residential Properties - Noble Gold Ltd  Junior Staff Village,,10792,,,,,,,-99
+615,Mining Companies: Workshops - Noble Gold Ltd,,11000,,,,,,,-99
