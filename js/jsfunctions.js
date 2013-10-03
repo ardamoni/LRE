@@ -487,7 +487,6 @@ function onFeatureSelectcz(evt) {
    	{ 	html = 'Please open either the Properties or the Business Map!';
    		alert(html);
    	}
-spinner.spin(target);
 	// check each feature from layer below if intersecting with the collector zone polygon
 		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
 		{
@@ -500,12 +499,11 @@ spinner.spin(target);
 				}
 			}			
 		}
-spinner.stop();
 	content = 'Collector ID: '+feature.attributes.collectorid+
 				'<br>District ID: '+feature.attributes.districtid+
 				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000)+'sq km'+
 				'<br>Properties: '+intersectedUPNs.toString()+
-				'<br>Outstanding: '+revbalance.toString()+' GHC'+
+				'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
 				'<br>Zoneid: '+feature.attributes.zoneid;
 	var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
 					feature.geometry.getBounds().getCenterLonLat(),
@@ -647,7 +645,7 @@ function getPropertyPolygons() {
 		});
      }else{
      if (jsonVisible) {
-     		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+global_out_property.toString()+' GHC';					
+     		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';					
 		}else{
      		document.getElementById("debug2").innerHTML=' - ';					
      		}
@@ -702,7 +700,7 @@ function polyhandler(request) {
 					var n = num.valueOf(); 
 					revbalance = revbalance+num;
 					global_out_property = revbalance;
-					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+revbalance.toString()+' GHC';
+					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';
 				  break;
 				case 9:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleGreen);		
@@ -746,7 +744,7 @@ function getBusinessPolygons() {
 		});
      }else{
      if (jsonBVisible) {
-     		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+global_out_business.toString()+' GHC';	
+     		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';	
      		}else{
      		document.getElementById("debug2").innerHTML=' - ';					
      		}
@@ -801,7 +799,7 @@ function Businesshandler(request) {
 					var n = num.valueOf(); 
 					revbalance = revbalance+num;
 					global_out_business = revbalance;
-					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+revbalance.toString()+' GHC';					
+					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';					
 //					document.getElementById("debug2").innerHTML=typeof(num);
 				  break;
 				case 9:  
