@@ -64,15 +64,15 @@ var spinopts = {
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
 var globalfeatureid;
-var fromjson = new OpenLayers.Layer.Vector("Property Status (Real Time)", {		 
+var fromProperty = new OpenLayers.Layer.Vector("Property Status (Real Time)", {		 
 	    visibility: false,
-	    eventListeners: {"visibilitychanged": getpolygons,
+	    eventListeners: {"visibilitychanged": getPropertyPolygons,
  						 //"featureadded": function(){alert("Feature added")}
  						 }
      });
 var fromBusiness = new OpenLayers.Layer.Vector("Business Status (Real Time)", {		 
 	    visibility: false,
-	    eventListeners: {"visibilitychanged": getBusiness,
+	    eventListeners: {"visibilitychanged": getBusinessPolygons,
  						 //"featureadded": function(){alert("Feature added")}
  						 }
      });     
@@ -252,7 +252,7 @@ function init(){
 	map.addLayer(gmap);
 	map.addLayer(kmlLocalPlan);
 //	map.addLayer(kmlRedGreen);
-	map.addLayer(fromjson);
+	map.addLayer(fromProperty);
 	map.addLayer(fromBusiness);
 	map.addLayer(colzones);
 				
@@ -287,8 +287,8 @@ function init(){
 // end polygon drawing for collector zones  	
 // kml.feature
 
-//   select = new OpenLayers.Control.SelectFeature([kmlRedGreen, kmlLocalPlan, fromjson, colzones]); 
-   select = new OpenLayers.Control.SelectFeature([fromBusiness, kmlLocalPlan, fromjson, colzones]); 
+//   select = new OpenLayers.Control.SelectFeature([kmlRedGreen, kmlLocalPlan, fromProperty, colzones]); 
+   select = new OpenLayers.Control.SelectFeature([fromBusiness, kmlLocalPlan, fromProperty, colzones]); 
 //            kmlRedGreen.events.on({
 //                "featureselected": onFeatureSelect,
 //                "featureunselected": onFeatureUnselect,
@@ -297,7 +297,7 @@ function init(){
                 "featureselected": onFeatureSelectSub,
                 "featureunselected": onFeatureUnselect
             });
-			fromjson.events.on({
+			fromProperty.events.on({
                 "featureselected": onFeatureSelectFJ,
                 "featureunselected": onFeatureUnselect,
 
@@ -475,21 +475,37 @@ function onFeatureSelectBus(evt) {
 function onFeatureSelectcz(evt) {
 	feature = evt.feature;
 	var intersectedUPNs=0;
+	var revbalance=0;
+	var jsonPVisible = fromProperty.getVisibility();
+  	var jsonBVisible = fromBusiness.getVisibility();
+   	if (jsonPVisible){
+   		var searchlayer=fromProperty.id;
+   	}
+   	else if (jsonBVisible)
+   	{	var searchlayer=fromBusiness.id; }
+   	else
+   	{ 	html = 'Please open either the Properties or the Business Map!';
+   		alert(html);
+   	}
+spinner.spin(target);
 	// check each feature from layer below if intersecting with the collector zone polygon
-		for( var i = 0; i < fromjson.features.length; i++ ) 
+		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
 		{
-			if (feature.geometry.intersects(fromjson.features[i].geometry)) { 
-                var checkPoint = new OpenLayers.Geometry.Point(fromjson.features[i].geometry.getBounds().getCenterLonLat().lon,fromjson.features[i].geometry.getBounds().getCenterLonLat().lat);
+			if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
+                var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
 				if (feature.geometry.containsPoint(checkPoint)){
-// colouring for testing 					fromjson.drawFeature(fromjson.features[i], {fillColor: "#99FF33", strokeColor: "#00ffff"});			
+// colouring for testing 					fromProperty.drawFeature(fromProperty.features[i], {fillColor: "#99FF33", strokeColor: "#00ffff"});			
 					intersectedUPNs++;
+					revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
 				}
 			}			
 		}
+spinner.stop();
 	content = 'Collector ID: '+feature.attributes.collectorid+
 				'<br>District ID: '+feature.attributes.districtid+
 				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000)+'sq km'+
 				'<br>Properties: '+intersectedUPNs.toString()+
+				'<br>Outstanding: '+revbalance.toString()+' GHC'+
 				'<br>Zoneid: '+feature.attributes.zoneid;
 	var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
 					feature.geometry.getBounds().getCenterLonLat(),
@@ -608,16 +624,16 @@ function parent_refresh()
 }	
 
 //-----------------------------------------------------------------------------
-		//function getpolygons() 
+		//function getPropertyPolygons() 
 		//is the onvisibilitychanged event for the Collector Zone Layer
 		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones 
 		//from the boundaries stored in the table KML_From_LUPMIS
 		//it calls a polyhandler() to actually create the polygones based on the returned data
 //-----------------------------------------------------------------------------
-function getpolygons() {  
+function getPropertyPolygons() {  
 //   alert("inside getpolygones");
-   var jsonVisible = fromjson.getVisibility();
-   if (fromjson.features.length<1) {
+   var jsonVisible = fromProperty.getVisibility();
+   if (fromProperty.features.length<1) {
 	  spinner.spin(target);
 	  w.start();
 		var request = OpenLayers.Request.POST({
@@ -638,12 +654,12 @@ function getpolygons() {
 			spinner.stop()
 	};           
 
-} //end of function getpolygons
+} //end of function getPropertyPolygons
 
 //-----------------------------------------------------------------------------
 		//function polyhandler() 
-		//is the callback handler for getpolygons()
-		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromjson
+		//is the callback handler for getPropertyPolygons()
+		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
 //-----------------------------------------------------------------------------
 
 function polyhandler(request) {
@@ -674,7 +690,8 @@ function polyhandler(request) {
 				polypoints.push(point);
 			}
 				// create some attributes for the feature
-			var attributes = {upn: feed[i]['upn']};
+			var attributes = {upn: feed[i]['upn'],
+								revbalance: feed[i]['revenue_balance']};
 				// create a linear ring by combining the just retrieved points
 			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
 				//the switch checks on the payment status and 
@@ -693,10 +710,10 @@ function polyhandler(request) {
 				default:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);		
 				}
-			  fromjson.addFeatures([polygonFeature]);
+			  fromProperty.addFeatures([polygonFeature]);
 
 		  } // end of for 
-		  fromjson.redraw();
+		  fromProperty.redraw();
 	}
 		spinner.stop();
 		w.stop();  
@@ -706,13 +723,13 @@ function polyhandler(request) {
 } // end of function polyhandler
 
 //-----------------------------------------------------------------------------
-		//function getBusiness() 
-		//is the onvisibilitychanged event for the Collector Zone Layer
+		//function getBusinessPolygons() 
+		//is the onvisibilitychanged event for the Buisness Layer
 		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones 
 		//from the boundaries stored in the table KML_From_LUPMIS
 		//it calls a polyhandler() to actually create the polygones based on the returned data
 //-----------------------------------------------------------------------------
-function getBusiness() {  
+function getBusinessPolygons() {  
 //   alert("inside getpolygones");
    var jsonBVisible = fromBusiness.getVisibility();
    if (fromBusiness.features.length<1) {
@@ -735,12 +752,12 @@ function getBusiness() {
      		}
 			spinner.stop()};           
 
-} //end of function getBusiness
+} //end of function getBusinessPolygons
 
 //-----------------------------------------------------------------------------
 		//function polyhandler() 
-		//is the callback handler for getpolygons()
-		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromjson
+		//is the callback handler for getPropertyPolygons()
+		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
 //-----------------------------------------------------------------------------
 
 function Businesshandler(request) {
@@ -772,7 +789,8 @@ function Businesshandler(request) {
 				polypoints.push(point);
 			}
 				// create some attributes for the feature
-			var attributes = {upn: feed[i]['upn']};
+			var attributes = {upn: feed[i]['upn'],
+								revbalance: feed[i]['revenue_balance']};
 				// create a linear ring by combining the just retrieved points
 			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
 				//the switch checks on the payment status and 
@@ -1112,10 +1130,10 @@ function sessionuserhandler(request) {
 function searchupn() {
   var s = document.getElementById('searchBox').value;
    s = s.trim();
-  var jsonPVisible = fromjson.getVisibility();
+  var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
    if (jsonPVisible){
-   		var searchlayer=fromjson.id;
+   		var searchlayer=fromProperty.id;
    }
    else if (jsonBVisible)
    {	var searchlayer=fromBusiness.id; }
@@ -1148,11 +1166,29 @@ function searchupn() {
 		//
 //-----------------------------------------------------------------------------
 function tableshow() {
-html='inside tableshow';
-//alert(html);
+  var jsonPVisible = fromProperty.getVisibility();
+  var jsonBVisible = fromBusiness.getVisibility();
+  var popupWindow = null;
+  
+   if (jsonPVisible && jsonBVisible){
+   		html = 'Table view is only available for data from one map.  \nPlease close either the Properties or the Business Map! ';
+   		alert(html);
+   }
+   else if (jsonBVisible || jsonPVisible)  {
+		popupWindow = window.open("php/showtable.php","Table View", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
+	}
+   else
+   { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';
+   		alert(html);
+   	}
+   
 
-	var popupWindow = null;
-	popupWindow = window.open('php/revenueCollectionForm.php','Table View', 'height=500, width=1000, left=500, top=200, resizable=yes');	
+	
+//	popupWindow = window.open("","_blank","resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
+//	popupWindow.document.open();
+//	popupWindow.document.writeln("<html><head><title>Table View</title></head>");
+//	popupWindow.document.writeln("this is ekke</html>");
+	
 
 	if(popupWindow && !popupWindow.closed)
 	{

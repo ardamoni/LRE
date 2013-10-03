@@ -83,7 +83,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$json['owneraddress'] 		= $row['owneraddress'];
 		$json['owner_tel'] 			= $row['owner_tel'];
 		$json['owner_email'] 		= $row['owner_email'];
-		$json['business_name'] 				= 'property';
+		$json['business_name'] 				= 'property'; //this is the identifier for the handler to not display the business_name
 
 		$data[] 					= $json;
 		//echo $row["upn"];
