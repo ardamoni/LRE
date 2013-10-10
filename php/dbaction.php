@@ -4,8 +4,12 @@
 
 	// DB connection
 	require_once( "../lib/configuration.php"	);
-	
+	require_once( "../lib/System.php" );
 
+	$System = new System;
+	
+	$year = $System->GetConfiguration("RevenueCollectionYear");
+	
 	$dbaction = $_POST['dbaction'];
 	$clickfeature = $_POST['clickfeature'];
 	$sub = $_POST['sub'];
@@ -49,7 +53,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 {
   	// upn
 	$dataFromJS = $clickfeature;
-//echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
+	//echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
 	// sub==true indicates that the hand-over was done with CDATA content
 	if( $sub == "true" ) 
 	{
@@ -64,15 +68,16 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 	$data = array();
 	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM property WHERE upn = '".$upn."'" );	
+	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."' AND `year` = '2013' " );	
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
-	{
+	{		
 		$json 						= array();
 		
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
+		$json['year']	 			= $row['year'];
 		$json['pay_status'] 		= $row['pay_status'];
 		$json['revenue_due'] 		= $row['revenue_due'];
 		$json['revenue_collected'] 	= $row['revenue_collected'];

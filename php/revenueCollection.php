@@ -8,6 +8,7 @@
 	require_once( "../lib/configuration.php" );
 	require_once( "../lib/Revenue.php" );
 	
+	ob_start(); // prevent adding duplicate data with refresh (F5)
 	session_start();
 	
 	$Data = new Revenue;
@@ -71,8 +72,8 @@
 	// calculations
 	$revenuePaid = $revenueCollected + $payedValue;
 	$revenuePaidTotal = $revenueCollectedPrevious + $revenuePaid;	
-	$revenueBalance = $revenueBalanceOld - $revenuePaid;
-	$revenueBalanceTotal = $revenueBalancePrevious + $revenueBalance;
+	$revenueBalance = $revenueDue - $revenueBalanceOld - $revenuePaid;
+	$revenueBalanceTotal =  - ($revenueDuePrevious - $revenueBalancePrevious - $revenueBalance);
 	
 	
 	// add new payments
@@ -128,7 +129,7 @@
 				</tr>
 				<tr>
 					<td>Automatic system Receipt:</td>						
-					<td><?php echo $Data->getPropertyLastPaymentInfo( $upn, $subupn, $currentYear, "id" );?></td>	
+					<td><?php echo $Data->getLastPropertyPaymentInfo( $upn, $subupn, $currentYear, "id" );?></td>	
 				</tr>
 			</table>
 			<table width = '100%' border = '1'>
@@ -140,11 +141,12 @@
 				<tr>
 					<td>SUBUPN:</td>						
 					<td>
-					<?php 
-						if( !$subupn ) 
-							//echo "no subupn is specified";
-						else
+					<?php echo $subupn;
+						/*if( $subupn ) 
 							echo $subupn;
+						else
+							echo "no subupn is specified";
+							*/
 					?>
 					</td>		
 				</tr>
@@ -159,31 +161,34 @@
 				</tr>
 				<tr>
 					<td>OWNER:</td>						
-					<td><?php echo $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid");?></td>		
+					<td><?php  
+							$ownerid = $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid" );
+							echo $Data->getOwnerInfo( $ownerid, 'name' );
+						?></td>		
 				</tr>
 				<tr>
 					<td>Pre 2013 balance:</td>						
-					<td><?php echo $revenueBalancePrevious;?></td>		
+					<td><?php echo number_format($revenueBalancePrevious, 2,'.','');?></td>		
 				</tr>
 				<tr>
 					<td>2013 due:</td>						
-					<td><?php echo $revenueDue;?></td>		
+					<td><?php echo number_format($revenueDue, 2,'.','');?></td>		
 				</tr>
 				<tr>
 					<td>2013 last payment:</td>						
-					<td><?php echo $payedValue;?></td>		
+					<td><?php echo number_format($payedValue, 2,'.','');?></td>		
 				</tr>
 				<tr>
 					<td>2013 total payments:</td>						
-					<td><?php echo $revenuePaid;?></td>		
+					<td><?php echo number_format($revenuePaid, 2,'.','');?></td>		
 				</tr>
 				<tr>
 					<td>2013 balance:</td>						
-					<td><?php echo $revenueBalance;?></td>		
+					<td><?php echo number_format($revenueBalance, 2,'.','');?></td>		
 				</tr>
 				<tr>
 					<td>Overall balance:</td>						
-					<td><?php echo $revenueBalanceTotal;?></td>		
+					<td><?php echo number_format($revenueBalanceTotal, 2,'.','');?></td>		
 				</tr>
 			</table>
 			</br>

@@ -1,18 +1,28 @@
 <?php
 
 	require_once( "../lib/configuration.php" );
+	require_once( "../lib/Revenue.php"		 );
+	require_once( "../lib/System.php"		 );
+		
+	$Data = new Revenue;
+	$System = new System;
+	
+	$year = $System->GetConfiguration("RevenueCollectionYear");
 	
 	// collector's ticket validation	
 	// TODO must match the username session - 
 	// for the time beeing there is no session and every user loged 
 	// is converted to collector1
+	
+	$usedTickets = $Data->getTicketsPaymentInfo( $_POST['upn'], $_POST['subupn'], $year, $_POST['treceipt'] );
+	
 	$q = mysql_query( "SELECT * FROM 	`tickets` 
 								WHERE 	`starting` <= '".trim($_POST['treceipt'])."' AND 
 										`ending` >= '".trim($_POST['treceipt'])."' ");
 	
 	$anymatches = mysql_num_rows( $q ); 
-	if( $anymatches == 1 ) 
-	{
+	if( $anymatches == 1 && $usedTickets == false ) 
+	{	
 		$t = mysql_fetch_array( $q );
 		$user123 = $t['username'];		
 		

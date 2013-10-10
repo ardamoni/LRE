@@ -10,12 +10,32 @@
 		 *	PROPERTY
 		 */		
 		// 	get the data out of property table
-		function getPropertyInfo( $upn = "", $subupn = "", $year = 2013, $f = "" )
+		function getPropertyInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
-			$q = mysql_query("SELECT * 	FROM 	`property` 
-										WHERE 	`upn` = '".$upn."' AND 
-												`subupn` = '".$subupn."' AND 
-												`year` = '".$year."' ");
+			if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+			{
+				$q = mysql_query("SELECT * 	FROM 	`property` 
+											WHERE 	`upn` = '".$upn."' AND 
+													`subupn` = '".$subupn."' AND 
+													`year` = '".$year."' ");
+			}
+			else
+			{
+				$q = mysql_query("SELECT * 	FROM 	`property` 
+											WHERE 	`upn` = '".$upn."' AND 													
+													`year` = '".$year."' ");
+			}
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
+		
+		/*
+		 *	OWN_OWNER
+		 */		
+		// 	get the owner
+		function getOwnerInfo( $id = "", $f = "" )
+		{
+			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`ownerid` = '".$id."' ");
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
@@ -54,13 +74,13 @@
 		 *	PROPERTY_PAYMENTS
 		 */
 		//   get the last entry from the property_payments table
-		function getPropertyLastPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		function getLastPropertyPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
 			$q = mysql_query("SELECT * FROM `property_payments` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND 
-												`payment_date` > '".$year."' 
+												YEAR(`payment_date`) = '".$year."' 
 										ORDER BY `id` DESC LIMIT 1 ");
 										
 			$r = mysql_fetch_array($q);
@@ -83,11 +103,34 @@
 									FROM 	`property_payments` 
 									WHERE	`upn` = '".$upn."' AND 
 											`subupn` = '".$subupn."' AND 
-											`payment_date` > '".$year."' ");											
+											YEAR(`payment_date`) = '".$year."' ");											
 			$r = mysql_fetch_array($q);
 			return $r['val'];
 		}
 
+		//   get the used tickets
+		function getTicketsPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		{
+			// the newest entry in the table 
+			$q = mysql_query("SELECT * 	FROM `property_payments` 
+										WHERE 	`upn` = '".$upn."' AND 
+												`subupn` = '".$subupn."' AND 
+												YEAR(`payment_date`) = '".$year."' AND
+												`receipt_payment` = '".$f."'
+										ORDER BY `id` DESC");
+										
+			$count = mysql_num_rows($q);
+			// Unused ticket returns no rows
+			if( $count == 0 )
+			{				
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		
 		
 		/*
 		 *	PROPERTY_BALANCE
@@ -101,6 +144,17 @@
 												`year` = '".$year."' ");
 			$r = mysql_fetch_array($q);
 			return $r[$f];
+		}
+		
+		//   get balance for one year
+		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
+		{
+			$q	= mysql_query("SELECT `balance` FROM `property_balance` 
+										WHERE 	`upn` = '".$upn."' AND 
+												`subupn` = '".$subupn."' AND
+												`year` = '".$year."' ");											
+			$r = mysql_fetch_array($q);
+			return $r['balance'];
 		}
 		
 		
