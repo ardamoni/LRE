@@ -51,6 +51,7 @@
 		echo "<div id = 'system-login'>  <h1 id = 'title1'> " 
 			 . "Login to dLRev"
 			 . "</h1>";
+		echo "<center id='district1'></center>";	 
 		include("login2.php");
 		echo "</div>";		
 		

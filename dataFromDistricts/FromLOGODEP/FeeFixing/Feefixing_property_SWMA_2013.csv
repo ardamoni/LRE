@@ -1,0 +1,39 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+111,Residential,1st Class Residential Block House - Residential,80,year,,0.006,,,,-99
+121,Residential,2nd Class Residential Block House - Residential,50,year,,,,,,-99
+131,Residential,3rd Class Residential Block House  - Residential,30,year,,,,,,-99
+141,Residential,Sand Crete Block House Type A.,25,year,,,,,,-99
+142,Residential,Sand Crete Block House Type B.,20,year,,,,,,-99
+143,Residential,Sand Crete Block House Type C,17,year,,,,,,-99
+151,Residential,Swish Building Type A,15,year,,,,,,-99
+152,Residential,Swish Building Type B,10,year,,,,,,-99
+153,Residential,Swish Building Type C,7,year,,,,,,-99
+161,Residential,Single Storey,25,year,,,,,,-99
+162,Residential,Single storey (Boys Quarters Detached),30,year,,,,,,-99
+171,Residential,Two Storey,50,year,,,,,,-99
+181,Residential,Three or More Storey,100,year,,,,,,-99
+211,Commercial,1st Class Commercial Block House -Category B,200,year,,0.0168,,,,-99
+212,Commercial,1st Class Commercial Block House - Category A,300,year,,0.0168,,,,-99
+221,Commercial,2nd Class Commercial Block House - Category B,150,year,,,,,,-99
+222,Commercial,2nd Class Commercial Block House - Category A,200,year,,,,,,-99
+231,Commercial,3rd Class Commercial Block House - Category B,100,year,,,,,,-99
+232,Commercial,3rd Class Commercial Block House - Category A,150,year,,,,,,-99
+301,Mixed,1st Class Residential Block House - Mixed,120,year,,0.0114,,,,-99
+302,Mixed,2nd Class Residential Block House - Mixed,80,year,,,,,,-99
+303,Mixed,3rd Class Residential Block House - Mixed,50,year,,,,,,-99
+311,Mixed,Sand Crete Block House Type A. - Mixed,40,year,,,,,,-99
+312,Mixed,Sand Crete Block House Type B. - Mixed,30,year,,,,,,-99
+313,Mixed,Sand Crete Block House Type C - Mixed,25,year,,,,,,-99
+321,Mixed,Swish Building Type A  - Mixed,20,year,,,,,,-99
+322,Mixed,Swish Building Type B - Mixed,15,year,,,,,,-99
+323,Mixed,Swish Building Type C - Mixed,10,year,,,,,,-99
+331,Mixed,Single Storey - Mixed,40,year,,,,,,-99
+332,Mixed,Single storey (Boys Quarters Detached) - Mixed,45,year,,,,,,-99
+341,Mixed,Two Storey - Mixed,80,year,,,,,,-99
+352,Mixed,Three or More Storey - Mixed,250,year,,,,,,-99
+500,Civic and Culture,Civic and Culture,0,year,,,,,,-99
+600,Sanitary Facility,Sanitary Facility,0,year,,,,,,-99
+701,Corporation & Other,1st Class Commercial - ECG etc,20000,year,,,,,,-99
+702,Corporation & Other,1st Class Commercial - SSB  GRA  BUADAC,5000,year,,,,,,-99
+703,Corporation & Other,1st Class Commercial - Armajaro etc,3000,year,,,,,,-99
+704,Corporation & Other,1st Class Commercial - Other Cocoa Buying Companies,2000,year,,0.018,,,,-99

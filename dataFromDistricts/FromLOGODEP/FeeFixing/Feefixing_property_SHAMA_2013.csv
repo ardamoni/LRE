@@ -1,0 +1,26 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+101,Residential,1st Class Residential:    a) 6 Rooms or more,40,Per Annum,,0.02,,,,-99
+102,Residential,1st Class Residential:   b) 5 Rooms,30,Per Annum,,0.02,,,,-99
+103,Residential,1st Class Residential:   c) Up to 4 Rooms,25,Per Annum,,0.02,,,,-99
+111,Residential,2nd Class Residential:  a) 6 Rooms or more,25,Per Annum,,0.02,,,,-99
+112,Residential,2nd Class Residential: b) 5 Rooms,15,Per Annum,,0.02,,,,-99
+113,Residential,2nd Class Residential: c) Up to 4 Rooms,10,Per Annum,,0.02,,,,-99
+121,Residential,3rd  Class Residential:  a) 6 Rooms or more,15,Per Annum,,0.0015,,,,-99
+122,Residential,3rd  Class Residential: b) 5 Rooms,10,Per Annum,,0.0015,,,,-99
+123,Residential,3rd  Class Residential:  c) Up to 4 Rooms,5,Per Annum,,0.0015,,,,-99
+131,Residential,Single Parcel,10,Per Annum,,,,,,-99
+132,Residential,Double Parcel,20,Per Annum,,,,,,-99
+141,Residential,"LandCrete Houses (2nd Class Areas): CAT ""A"" 1 - 6 Rooms or more",5,Per Annum,,,,,,-99
+142,Residential,"LandCrete Houses (2nd Class Areas): CAT ""B"":  1 - 5 Rooms",3,Per Annum,,,,,,-99
+143,Residential,"LandCrete Houses (2nd Class Areas): CAT ""C"" Up to 4 Rooms",2.5,Per Annum,,,,,,-99
+151,Residential,"LandCrete Houses (3rd Class Areas): CAT ""A"" 1 - 6 Rooms or more",5,Per Annum,,,,,,-99
+152,Residential,"LandCrete Houses (3rd Class Areas): CAT ""B"" 5 Rooms",3,Per Annum,,,,,,-99
+153,Residential,"LandCrete Houses (3rd Class Areas): CAT ""C"" Up to 4 Rooms",2.5,Per Annum,,,,,,-99
+201,Commercial,Commercial Area - A,200,Per Annum,,0.018,,,,-99
+202,Commercial,Commercial Area - B,150,Per Annum,,0.015,,,,-99
+301,Mixed,1st Class -Mixed Development,70,Per Annum,,0.01,,,,-99
+302,Mixed,2nd Class - Mixed Development,65,Per Annum,,0.01,,,,-99
+303,Mixed,3rd Class - Mixed Development,60,Per Annum,,0.01,,,,-99
+401,Industrial,Industrial Area,300,Per Annum,,0.025,,,,-99
+500,Civic & Culture,Civic & Culture,0,Per Annum,,,,,,-99
+600,Sanitary Facility,Sanitary Facility,0,Per Annum,,,,,,-99

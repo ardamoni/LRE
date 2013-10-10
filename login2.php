@@ -77,14 +77,37 @@ var sm = new OpenLayers.StyleMap({
 			fillColor: "#666666",
 			lineColor: "#0033FF"});
 
+var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+    renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+
 var styleDistricts = { 
 		// style_definition
 		 strokeColor: "#FFAC62",
             strokeOpacity: 0.6,
             strokewidth: 1,
             fillColor: "#66FFFF",
-            fillOpacity: 0.1,
+            fillOpacity: 0.1
 	};
+
+var zoneStyle = new OpenLayers.Style({
+  		fillColor: "#66FFFF",
+        fillOpacity: 0.4, 
+        hoverFillColor: "#587498",
+        hoverFillOpacity: 0.8,
+        strokeColor: "#FFAC62",
+        strokeOpacity: 0.8,
+        strokeWidth: 1,
+        strokeLinecap: "round",
+        strokeDashstyle: "solid",
+        hoverStrokeColor: "red",
+        hoverStrokeOpacity: 1,
+        hoverStrokeWidth: 0.2,
+        pointRadius: 6,
+        hoverPointRadius: 1,
+        hoverPointUnit: "%",
+        pointerEvents: "visiblePainted",
+        cursor: "inherit"});   
+        
 var districtselectStyle = new OpenLayers.Style({
 	    fillColor: "#ffcc00",
         fillOpacity: 0.4, 
@@ -104,17 +127,39 @@ var districtselectStyle = new OpenLayers.Style({
         pointerEvents: "visiblePainted",
         cursor: "pointer"
         });    
-        
-var zoneStyleMap = new OpenLayers.StyleMap({
-		 'default': styleDistricts,
-		 'select': districtselectStyle});
-//		 'temporary': temporaryStyle});    	
 
+   var temporaryStyle = new OpenLayers.Style({
+        fillColor: "#587058",
+        fillOpacity: 0.4, 
+        hoverFillColor: "white",
+        hoverFillOpacity: 0.8,
+        strokeColor: "#587498",
+        strokeOpacity: 0.8,
+        strokeLinecap: "round",
+        strokeWidth: 2,
+        strokeDashstyle: "solid",
+        hoverStrokeColor: "red",
+        hoverStrokeOpacity: 1,
+        hoverStrokeWidth: 0.2,
+        pointRadius: 6,
+        hoverPointRadius: 1,
+        hoverPointUnit: "%",
+        pointerEvents: "visiblePainted",
+        cursor: "inherit",
+        graphicName: "cross"
+    });
+    
+var zoneStyleMap = new OpenLayers.StyleMap({
+		 'default': zoneStyle,
+		 'select': districtselectStyle,
+		 'temporary': temporaryStyle});    	
+		 
 var mapLogin = new OpenLayers.Map('mapLogin', options);
 //Mapnik
   var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
 
-   var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {		 
+   var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {	
+   		renderers: renderer,
 	    visibility: true,
 	    isBaseLayer: true,
 	    styleMap: zoneStyleMap});
@@ -135,7 +180,7 @@ var report = function(e) {
                 OpenLayers.Console.log(e.type, e.feature.id);
             };
             		
-	 var highlightCtrl = new OpenLayers.Control.SelectFeature(districtmap, {
+/*	 var highlightCtrl = new OpenLayers.Control.SelectFeature(districtmap, {
                 hover: true,
                 highlightOnly: true,
                 renderIntent: "temporary",
@@ -145,17 +190,32 @@ var report = function(e) {
                     featureunhighlighted: report
                 }
             });
-
+ */
+ var selectControlHover = new OpenLayers.Control.SelectFeature(districtmap, {
+          hover: true,
+          highlightOnly: true,
+          renderIntent: "temporary",
+          overFeature: function(feature) {
+            console.log('hover: number of selected features: ' + districtmap.selectedFeatures.length);
+            document.getElementById("title1").innerHTML="Login to dLRev - "+feature.attributes.districtname;
+			districtmap.drawFeature(districtmap.getFeatureById(feature.id), {fillColor: "#FFCC00", fillOpacity: 0.1, strokeColor: "#00ffff"});			
+          },
+          outFeature: function(feature) {
+            console.log('hover out: number of selected features: ' + districtmap.selectedFeatures.length);
+			districtmap.drawFeature(districtmap.getFeatureById(feature.id));			
+          },
+        });
+        
             var selectCtrl = new OpenLayers.Control.SelectFeature(districtmap,
                 {clickout: true}
             );
 
-            mapLogin.addControl(highlightCtrl);
-            mapLogin.addControl(selectCtrl);
+            mapLogin.addControl(selectControlHover);
+            selectControlHover.activate();
 
-            highlightCtrl.activate();
-            selectCtrl.activate();
-	
+//            mapLogin.addControl(selectCtrl);
+//            selectCtrl.activate();
+
 
     var ghana = new OpenLayers.LonLat(-1.1759874280090854,8.173345828918867).transform(new OpenLayers.Projection("EPSG:4326"),mapLogin.getProjectionObject());
 
@@ -201,7 +261,7 @@ function polyhandler(request) {
 		    // create a linear ring by combining the just retrieved points
 		var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
 		    //the switch checks on the payment status and 
-				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleDistricts);		
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
 		  districtmap.addFeatures([polygonFeature]);
 		  } // end of for 
 		  districtmap.redraw();
