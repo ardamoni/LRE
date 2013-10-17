@@ -5,8 +5,6 @@
 //make drawing tools invisible
  document.getElementById("controls").style.visibility="hidden";
  
-//get the user name from $_SESSION
- getSessionUser();
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
@@ -16,10 +14,14 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 //     		   document.getElementById("wcUser").innerHTML=session_name;
 
 // global variables, CLEAN before populating them
-var global_upn = '';
-var global_subupn = [];
-var global_out_property;
-var global_out_business;
+	var global_upn = '';
+	var global_subupn = [];
+	var global_out_property;
+	var global_out_business;
+	var globalfeatureid;
+	var globaldistrictid='';
+	var globaldistrictboundary='';
+	var globaldistrictcenter='';
 
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
@@ -63,7 +65,16 @@ var spinopts = {
 };
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
-var globalfeatureid;
+
+
+//define the vector layers
+var fromLocalplan = new OpenLayers.Layer.Vector("Local Plan (Real Time)", {		 
+	    visibility: false,
+	    eventListeners: {"visibilitychanged": getLocalplanPolygons,
+ 						 //"featureadded": function(){alert("Feature added")}
+ 						 }
+     });
+
 var fromProperty = new OpenLayers.Layer.Vector("Property Status (Real Time)", {		 
 	    visibility: false,
 	    eventListeners: {"visibilitychanged": getPropertyPolygons,
@@ -75,7 +86,9 @@ var fromBusiness = new OpenLayers.Layer.Vector("Business Status (Real Time)", {
 	    eventListeners: {"visibilitychanged": getBusinessPolygons,
  						 //"featureadded": function(){alert("Feature added")}
  						 }
-     });     
+     });  
+
+//specify the colours used for collector zones     
 var icolor=0, colzonecolor=''; //used in onSketchComplete
 var startcolor = '#F5E8E2'; //used in onSketchComplete
 //var colors = ['#EBC137','#E38C2D','#DB4C2C','#771E10','#48110C']; //used in onSketchComplete
@@ -92,6 +105,58 @@ var colors = ['#1FCB4A', 	'#59955C', 	'#48FB0D', 	'#2DC800', 	'#59DF00', 	'#9D9D
 '#EEEEA2', 	'#FFE920', 	'#FFDD75', 	'#FFC848', 	'#FFD586', 	'#FFC48E', 	'#FFC895',
 '#F1F1B1', 	'#FFF06A', 	'#FFE699', 	'#FFD062', 	'#FFDEA2', 	'#FFCFA4', 	'#FFCEA2'];
 
+//specify the styles for the real time localplan vector layer
+var LUPMISdefault = {
+			strokeColor: "#FFFFFF",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#FFFFFF",
+            fillOpacity: 0.15,
+};
+var LUPMIScolour01 = {
+			strokeColor: "#CC5B1D",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#E7D4C3",
+            fillOpacity: 0.15,
+};
+var LUPMIScolour02 = {
+			strokeColor: "#0E00A0",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#CCDBEC",
+            fillOpacity: 0.15,
+};
+var LUPMIScolour03 = {
+			strokeColor: "#C71110",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#F2BEBC",
+            fillOpacity: 0.15,
+};
+var LUPMIScolour04 = {
+			strokeColor: "#DCDD3B",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#F0EEBE",
+            fillOpacity: 0.15,
+};
+var LUPMIScolour05 = {
+			strokeColor: "#76C533",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#E4F0C4",
+            fillOpacity: 0.15,
+};
+var LUPMIScolour06 = {
+			strokeColor: "#CB00D4",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#F0BFEB",
+            fillOpacity: 0.15,
+};
+
+//define styles for the RedGreen vector layer
 var styleRed = { 
 		// style_definition
 		 strokeColor: "#FFAC62",
@@ -238,7 +303,8 @@ function init(){
 				 'temporary': temporaryStyle});    			
 
  //modifies the default "default" style settings of OpenLayers
-    			
+
+//define the collector zone vector layer    			
 	colzones = new OpenLayers.Layer.Vector("Collector Zones", {
 		renderers: renderer,
 		 visibility: false,
@@ -251,7 +317,7 @@ function init(){
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
 	map.addLayer(kmlLocalPlan);
-//	map.addLayer(kmlRedGreen);
+	map.addLayer(fromLocalplan);
 	map.addLayer(fromProperty);
 	map.addLayer(fromBusiness);
 	map.addLayer(colzones);
@@ -285,10 +351,13 @@ function init(){
 	}
 
 // end polygon drawing for collector zones  	
-// kml.feature
 
-//   select = new OpenLayers.Control.SelectFeature([kmlRedGreen, kmlLocalPlan, fromProperty, colzones]); 
-   select = new OpenLayers.Control.SelectFeature([fromBusiness, kmlLocalPlan, fromProperty, colzones]); 
+//   on click events for vector layers
+   select = new OpenLayers.Control.SelectFeature([fromBusiness, fromLocalplan, kmlLocalPlan, fromProperty, colzones],{
+                hover: false,
+                highlightOnly: false,
+                renderIntent: "temporary",
+            }); 
 //            kmlRedGreen.events.on({
 //                "featureselected": onFeatureSelect,
 //                "featureunselected": onFeatureUnselect,
@@ -296,6 +365,11 @@ function init(){
 			kmlLocalPlan.events.on({
                 "featureselected": onFeatureSelectSub,
                 "featureunselected": onFeatureUnselect
+            });
+			fromLocalplan.events.on({
+                "featureselected": onFeatureSelectLocalplan,
+                "featureunselected": onFeatureUnselect,
+
             });
 			fromProperty.events.on({
                 "featureselected": onFeatureSelectFJ,
@@ -343,10 +417,14 @@ function init(){
    panel.addControls([history.next, history.previous, zoomIn, zoomOut]);
   
     map.addControls([navigation, history, panel, panzoom, layerSwitch]);
+    
+//get the user name from $_SESSION
+//this also calls the districtcenter function to determine the center of the map
+//finally it draws the map and centers it according to the district center
+ getSessionUser();
 
     var bogoso = new OpenLayers.LonLat(-2.012644, 5.567).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
-
-    map.setCenter(bogoso, 15);
+//    map.setCenter(globaldistrictcenter, 10); //globaldistrictcenter
     document.getElementById('noneToggle').checked = true;
 } //end init()
 
@@ -398,6 +476,30 @@ function onFeatureSelect(evt)
 	});	
 } 
             
+//-----------------------------------------------------------------------------
+		//function onFeatureSelectLocalplan() 
+		//called by the click event on the localplan layer
+		//it displays the attribute information UPN, landuse, and ParcelOf in a popup
+//-----------------------------------------------------------------------------
+function onFeatureSelectLocalplan(evt) {
+	feature = evt.feature;
+    var curpos = new OpenLayers.Geometry.Point(feature.geometry.getBounds().getCenterLonLat().lon,feature.geometry.getBounds().getCenterLonLat().lat);
+
+    content = 'UPN: '+feature.attributes.upn+
+				'<br>Parcel Of: '+feature.attributes.ParcelOf+
+				'<br>Land use: '+feature.attributes.landuse;
+
+		var popup = new OpenLayers.Popup.FramedCloud(
+										"featurePopup",
+                                        feature.geometry.getBounds().getCenterLonLat(),
+                                        new OpenLayers.Size(100,100),
+                                        content, 
+                                        null, true, onPopupClose);
+
+		feature.popup = popup;
+		popup.feature = feature;
+		map.addPopup(popup, true);		} 
+
 //-----------------------------------------------------------------------------
 		//function onFeatureSelectSub() 
 		//called by the click event on the map
@@ -622,6 +724,109 @@ function parent_refresh()
 }	
 
 //-----------------------------------------------------------------------------
+		//function getLocalplanPolygons() 
+		//is the onvisibilitychanged event for the Collector Zone Layer
+		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones 
+		//from the boundaries stored in the table KML_From_LUPMIS
+		//it calls a polyhandler() to actually create the polygones based on the returned data
+//-----------------------------------------------------------------------------
+function getLocalplanPolygons() {  
+//   alert("inside getpolygones");
+   var jsonVisible = fromLocalplan.getVisibility();
+   if (fromLocalplan.features.length<1) {
+	  spinner.spin(target);
+	  w.start();
+		var request = OpenLayers.Request.POST({
+			url: "php/dbaction.php", 
+			data: OpenLayers.Util.getParameterString(
+			{dbaction: "getlocalplan"}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: polylocalplanhandler
+		});
+     }else{
+			spinner.stop()
+	};           
+
+} //end of function getLocalplanPolygons
+
+//-----------------------------------------------------------------------------
+		//function polyhandler() 
+		//is the callback handler for getPropertyPolygons()
+		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
+//-----------------------------------------------------------------------------
+
+function polylocalplanhandler(request) {
+	// the server could report an error
+	if(request.status == 500) {
+		// do something to calm the user
+	}
+	// the server could say you sent too much stuff
+	if(request.status == 413) {
+		// tell the user to trim their request a bit
+	}
+	// the browser's parser may have failed
+
+	if(!request.responseXML) {
+		// get the response from php and read the json encoded data
+	   feed=JSON.parse(request.responseText);
+		var boundary = [];
+		var i = 0;
+		var revbalance = 0;
+		// build geometry for each feed item
+		for (var i = 0; i < feed.length; i++) {
+			boundary = feed[i]['boundary'];       	
+			var coordinates = boundary.split(" ");
+			var polypoints = [];
+			for (var j=0;j < coordinates.length; j++) {
+				points = coordinates[j].split(",");
+				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+				polypoints.push(point);
+			}
+				// create some attributes for the feature
+			var attributes = {upn: feed[i]['upn'],
+								landuse: feed[i]['Landuse'],
+								ParcelOf: feed[i]['ParcelOf']};
+				// create a linear ring by combining the just retrieved points
+			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+				//the switch checks on the colouring and land use 
+//				document.getElementById("debug2").innerHTML='ekke: '+parseInt(feed[i]['LUPMIS_color'].substr(14,2))+' '+feed[i]['LUPMIS_color'].substr(14,2)+' '+feed[i]['LUPMIS_color'];
+				switch(parseInt(feed[i]['LUPMIS_color'].substr(14,2) )) {
+				case 1:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour01);		
+					break;
+				case 2:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour02);		
+					break;
+				case 3:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour03);		
+					break;
+				case 4:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour04);		
+					break;
+				case 5:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour05);		
+					break;
+				case 6:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
+					break;
+				default:	
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault);		
+				}	
+			  fromLocalplan.addFeatures([polygonFeature]);
+
+		  } // end of for 
+		  fromLocalplan.redraw();
+	}
+		spinner.stop();
+		w.stop();  
+		document.getElementById("debug1").innerHTML=w.toString();
+
+//       alert(w.toString());
+} // end of function polyhandler
+
+//-----------------------------------------------------------------------------
 		//function getPropertyPolygons() 
 		//is the onvisibilitychanged event for the Collector Zone Layer
 		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones 
@@ -637,7 +842,7 @@ function getPropertyPolygons() {
 		var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
-			{dbaction: "getlocalplan"}),
+			{dbaction: "getproperty"}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
@@ -1094,12 +1299,19 @@ function updateClock(watch) {
     	OpenLayers.Util.getElement("tools").innerHTML = watch.toString();
 }
 
+//-----------------------------------------------------------------------------
+		//function getSessionUser() 
+		//is the first function to be called and gets the PHP $SESSION info
+		//calls sessionuserhandler
+//-----------------------------------------------------------------------------
 function getSessionUser(){
 var request = OpenLayers.Request.GET({
     url: "php/getsession.php", 
     callback: sessionuserhandler
 });
 }
+// end of function getSessionUser
+
 //-----------------------------------------------------------------------------
 		//function sessionuserhandler() 
 		//is the handler for getSessionUser 
@@ -1109,16 +1321,51 @@ function sessionuserhandler(request) {
 	// the browser's parser may have failed
 	if(!request.responseXML) {
 	var html ='';
+	var userdistrict='';
+	var userdistrictname='';
+	var districtboundary='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
-			html += feed[i]}
-   document.getElementById("wcUser").innerHTML='Welcome: '+html//request.responseText;
-// alert(request.responseText);
+			html += feed[i]['username'];
+			userdistrict += feed[i]['userdistrict'];
+			userdistrictname += feed[i]['userdistrictname'];
+			districtboundary += feed[i]['districtboundary']};
+   document.getElementById("wcUser").innerHTML='Welcome: '+html;
+  globaldistrictid=userdistrict;
+  globaldistrictboundary=districtboundary;
+  document.getElementById("districtname").innerHTML=userdistrictname;
+
+getdistrictcenter(districtboundary);
 	} // else{  alert('inside inserthandler');}
 } 
 // end of function sessionuserhandler
 
+//-----------------------------------------------------------------------------
+		//function getdistrictcenter() 
+		//defines a polygon from globaldistrictboundary and stores the lon lat in globaldistrictcenter
+		//
+//-----------------------------------------------------------------------------
+function getdistrictcenter(districtboundary){
+		// build geometry for each feed item
+//  alert('Before the poly thingy '+globaldistrictboundary+' '+' '+globaldistrictid);
+			var coordinates = districtboundary.split(" ");
+			var polypoints = [];
+			for (var j=0;j < coordinates.length; j++) {
+				points = coordinates[j].split(",");
+				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()); //transform(projWGS84,proj900913);
+				polypoints.push(point);
+			}
+				// create a linear ring by combining the just retrieved points
+			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+			var attributes = {districtid: globaldistrictid};
+
+			//the switch checks on the payment status and 
+			var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);		
+			var districtcenter = new OpenLayers.LonLat(polygonFeature.geometry.getBounds().getCenterLonLat().lon,polygonFeature.geometry.getBounds().getCenterLonLat().lat);
+    map.setCenter(districtcenter, 12); //globaldistrictcenter
+}
+// end of function getdistrictcenter
 
 //-----------------------------------------------------------------------------
 		//function searchupn() 
@@ -1128,6 +1375,7 @@ function sessionuserhandler(request) {
 function searchupn() {
   var s = document.getElementById('searchBox').value;
    s = s.trim();
+  var jsonLPVisible = fromLocalplan.getVisibility();
   var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
    if (jsonPVisible){
@@ -1135,8 +1383,10 @@ function searchupn() {
    }
    else if (jsonBVisible)
    {	var searchlayer=fromBusiness.id; }
+   else if (jsonLPVisible)
+   {	var searchlayer=fromLocalplan.id; }
    else
-   { 	html = 'Please open either the Properties or the Business Map! \n Search for '+s+' is only possible in these two Maps';
+   { 	html = 'Please open either the Local Plan, Properties or the Business Map! \n Search for '+s+' is only possible in these Maps';
    		alert(html);
    	}
    
@@ -1149,7 +1399,11 @@ function searchupn() {
 	foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', s);
 	if (foundUPN.length > 0){
 	for (var i = 0; i < foundUPN.length; i++) {
-			map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id), {fillColor: "#99FF33", fillOpacity: 0.8, strokeColor: "#00ffff"});			
+//			map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id), {fillColor: "#99FF33", fillOpacity: 0.8, strokeColor: "#00ffff"});			
+           var curpos = new OpenLayers.LonLat(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id).geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).getFeatureById(foundUPN[i].id).geometry.getBounds().getCenterLonLat().lat);
+		   map.panTo(curpos);
+           map.setCenter(curpos, 17);
+			select.select(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id));
 			}
 	}else{
 	html = 'UPN: '+s+' could not be found!\nPlease check your entry';
@@ -1197,3 +1451,38 @@ function tableshow() {
 
 } 
 // end of function tableshow
+
+//-----------------------------------------------------------------------------
+		//function fileopendialog() 
+		//opens a file open dialog to select a KML file for import
+		//should be moved to an external helper file 
+		//
+//-----------------------------------------------------------------------------
+function fileopendialog(){
+	popupWindow = window.open("","_blank","width=500,height=150,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
+//	popupWindow.document.open();
+	popupWindow.document.writeln("<input type='file' id='files' name='files[]' multiple />");
+	popupWindow.document.writeln("<output id='list'></output>");
+	popupWindow.document.writeln("<html><head><title>Table View</title></head>");
+//	popupWindow.document.writeln("this is ekke</html>");
+
+
+
+//<script>
+//  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+
+    // files is a FileList of File objects. List some properties.
+    var output = [];
+    for (var i = 0, f; f = files[i]; i++) {
+      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                  f.size, ' bytes, last modified: ',
+                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                  '</li>');
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+//  }
+
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+//</script>
+}

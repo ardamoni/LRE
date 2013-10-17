@@ -1,10 +1,10 @@
 <?
-$completeurl = "../kml/bogoso.kml";
+$completeurl = "../kml/Prestea_status_igf_prop.kml";
  print("Start import into database, please have some patience");
 
 if (file_exists($completeurl)) {
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
-
+$districtid=130;
 $tmp4='';
 //print_r($xml);
 $con=mysqli_connect("localhost","root","root","revenue");
@@ -65,9 +65,9 @@ if (mysqli_connect_errno())
 	  }
 		$cor_d1 = substr($cor_d1,1,strlen($cor_d1)-2);
 //Get geo coordinates
-  		$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\'';
-//  		echo $query;
-		$run .="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf) VALUES (".$query." );";
+  		$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
+  		echo $query;
+		$run .="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
 //		print($i);
 //		if ($iCount2 < 25) {
 //		echo "i ".$i." - "; 

@@ -140,7 +140,8 @@
 	<body>	
 	
 	<div id="header">  
-		<h1 id="title">Bogoso, Local Plan</h1>
+	<!--the following districtid is hidden, but can be used anywhere in the programme. It contains the districtid, which it gets from the function getsesseionuser()-->
+		<h1> <div id="districtname"></div></h1> 
 		<div id="tags">GeoJSON</div>
 		<table class="mouse_location_sample">
 		<tr>
@@ -169,7 +170,7 @@
 			</td> 
 			<td>
 				 <center>Quick Search</center>
-				 <input type="text" id="searchBox" value="" style="width: 200px;" > 
+				 <input type="text" id="searchBox" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchupn();}"  > 
 				 <center><input type="submit" href="javascript:;" onclick="searchupn();" value="SEARCH" ></center>
 			</td>
 			<td>
@@ -199,9 +200,13 @@
 						<a href="#">Owner</a>
 						<a href="#">Address</a>			
 				   </div>
-					   <p class="menu_head">Contacts</p>
-					   <p class="menu_head">News</p>
-					   <p class="menu_head">Manual</p>
+				   <p class="menu_head">Contacts</p>
+				   <p class="menu_head">News</p>
+				   <p class="menu_head">Manual</p>
+					<div class="menu_body">
+						<a href=""javascript:;" onclick="fileopendialog();"">KML to DB conversion</a>
+				   </div>
+
 					   <p class="menu_head">Log out</p>
 				</div>  
 			</div>

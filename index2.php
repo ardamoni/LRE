@@ -22,7 +22,6 @@
 	
 	$User = new User;
 
-	 
 	/*
 	 *	Login Function	 
 	 */
