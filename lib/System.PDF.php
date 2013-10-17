@@ -22,12 +22,12 @@
 			//$this->Image('Icons/Gov.Logo.png',10,4,18);
 			
 			$this->SetFont('Arial','',8);
-			$this->Cell(0,3,'Date: '.date('d.m.Y').' ('.date('H:i:s').')',0,1,'R');
+			$this->Cell(0,3,'Date: '.date('d.m.Y').' ('.date('H:i:s').')'.'   ',0,1,'R');
 			
 			
-			$this->SetFont('Arial','',8);
+			$this->SetFont('Arial','B',8);
 			$this->SetTextColor(0);
-			$this->Cell(0,3,'MINISTRY of LOCAL GOVERNMENT',0,1,'C');
+			$this->Cell(0,3,'MINISTRY OF LOCAL GOVERNMENT',0,1,'C');
 			
 		
 			$this->Ln(5);
@@ -42,7 +42,7 @@
 			$this->SetY(-10);			
 			$this->SetFont('Arial','I',6);
 			$this->SetTextColor(128);
-			$this->Cell(0,10,'Faqe '.$this->PageNo(),0,0,'C');
+			$this->Cell(0,10,'Page '.$this->PageNo(),0,0,'C');
 		}		
 		
 		/*

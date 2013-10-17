@@ -8,7 +8,10 @@
 	
 	// DB connection
 	require_once( "../lib/configuration.php" );
+	require_once( "../lib/System.php" );
 
+	$System = new System;
+	
 	// upn
 	$dataFromJS = $_POST['clickfeature'];
 
@@ -25,8 +28,10 @@
 	
 	$data = array();
 	
+	$year = $System->GetConfiguration("RevenueCollectionYear");
+	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM property WHERE upn = '".$upn."'" );	
+	$query = mysql_query( "SELECT * FROM property WHERE upn = '".$upn."' AND year = '".$year."' ");	
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{
@@ -35,6 +40,7 @@
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
+		$json['year'] 				= $row['year'];
 		$json['pay_status'] 		= $row['pay_status'];
 		$json['revenue_due'] 		= $row['revenue_due'];
 		$json['revenue_collected'] 	= $row['revenue_collected'];

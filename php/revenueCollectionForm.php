@@ -44,10 +44,12 @@
 		function check_availability()
 		{
 			//get the treceipt
+			var upn = $('#upn').val();
+			var subupn = $('#subupn').val();
 			var treceipt = $('#treceipt').val();
 			
 			//use ajax to run the check
-			$.post("formValidation.php", { treceipt: treceipt },
+			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt },
 				function(result)
 				{				
 					if( result == 1 )
@@ -121,7 +123,7 @@
 					<input type="reset" id="Reset" name="Reset" value="Reset" /></td>
 			</tr>
 			<tr>
-				<td> <div id="treceipt_availability_result">temp</div> </td>
+				<td> <div id="treceipt_availability_result">Availability Message</div> </td>
 			</tr>
 		</table>
 	</form>

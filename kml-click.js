@@ -138,6 +138,7 @@ function onPopupClose(evt) {
 										+ "<b>UPN: </b>" + feature.attributes.UPN.value + "<br>" 
 										+ "<b>Owner: </b>" + feature.attributes.Owner.value + "<br>" 
 										+ "<b>SubUPN: </b>" + feature.attributes.SubUPN.value + "<br>" 
+										//+ "<b>Year: </b>" + feature.attributes.Year.value + "<br>" 
 										+ "<b>Payment Status: </b>" + feature.attributes.PayStatus.value + "<br>" 
 										+ "<b>Revenue Due: </b>" + feature.attributes.RevenueDue.value + "<br>" 
 										+ "<b>Revenue Collected: </b>" + feature.attributes.RevenueCollected.value + "<br>" 
