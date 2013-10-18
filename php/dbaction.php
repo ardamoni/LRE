@@ -70,7 +70,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 	$data = array();
 	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."' AND `year` = '2013' " );	
+	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."'" ); //$upn."' AND `year` = '2013' " );	
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{		
