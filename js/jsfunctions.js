@@ -761,7 +761,8 @@ function getLocalplanPolygons() {
 		var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
-			{dbaction: "getlocalplan"}),
+			{dbaction: "getlocalplan",
+			 districtid: globaldistrictid}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
@@ -864,7 +865,8 @@ function getPropertyPolygons() {
 		var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
-			{dbaction: "getproperty"}),
+			{dbaction: "getproperty",
+			 districtid: globaldistrictid}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
@@ -963,7 +965,8 @@ function getBusinessPolygons() {
 		var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
-			{dbaction: "getbusiness"}),
+			{dbaction: "getbusiness",
+			 districtid: globaldistrictid}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
@@ -1085,7 +1088,7 @@ function onFeatureAddedCZ(event) {
 			data: OpenLayers.Util.getParameterString(
 			{dbaction: "insertCZ",
 			 zoneid: "",
-			 districtid: "234",
+			 districtid: globaldistrictid, // "234",
 			 polygon: feature.geometry,
 			 collector: "",
 			 zonecolour: feature.style.fillColor}),
@@ -1105,7 +1108,7 @@ function onFeatureAddedCZ(event) {
 function onFeatureModifiedCZ(event) {
 	var featureCZ = event.feature;
 	globalfeatureid = featureCZ.id;
-	var districtid ="234";
+	var districtid = globaldistrictid; //"234";
   	//the colors are defined at the beginning of the main .js file
 	var request = OpenLayers.Request.POST({
 		url: "php/dbaction.php", 
@@ -1209,7 +1212,7 @@ function onVisibiltyChangedcz(){
 		url: "php/dbaction.php", 
 		data: OpenLayers.Util.getParameterString(
 		{dbaction: "getCZ",
-		 districtid: "234"}), //HARDCODED !!!
+		 districtid: globaldistrictid}), //"234"}), //HARDCODED !!!
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded"
 		},
@@ -1479,7 +1482,7 @@ function tableshow() {
 		//
 //-----------------------------------------------------------------------------
 function fileopendialog(){
-	popupWindow = window.open("","_blank","width=500,height=150,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
+	popupWindow = window.open("","_blank","width=500,height=150,top=400,left=200,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
 //	popupWindow.document.open();
 	popupWindow.document.writeln("<input type='file' id='files' name='files[]' multiple />");
 	popupWindow.document.writeln("<output id='list'></output>");
@@ -1503,6 +1506,19 @@ function fileopendialog(){
     document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
 //  }
 
-  document.getElementById('files').addEventListener('change', handleFileSelect, false);
+//  document.getElementById('files').addEventListener('change', handleFileSelect, false);
 //</script>
+}
+
+function fileopen(){
+	popupWindow = window.open("","_blank","width=500,height=150,top=400,left=200,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
+//	popupWindow.document.open();
+	popupWindow.document.writeln('<form enctype="multipart/form-data" action="php/kml-Lupmis2LRE.php" method="POST">');
+//	popupWindow.document.writeln('<input type="text" id="getdistrictid" value="" style="width: 50px;"> '); 
+//	popupWindow.document.writeln(' Enter district id: <br /> '); 
+	
+	popupWindow.document.writeln('<input type="hidden" name="MAX_FILE_SIZE" value="100000" />');
+	popupWindow.document.writeln('Choose a file to upload: <input name="uploadedfile" type="file" /><br />');
+	popupWindow.document.writeln('<input type="submit" value="Upload File" />');
+	popupWindow.document.writeln('</form>');
 }

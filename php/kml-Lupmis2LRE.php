@@ -1,10 +1,22 @@
 <?
-$completeurl = "../kml/Prestea_status_igf_prop.kml";
+// Where the file is going to be placed 
+$target_path = "../kml/";
+
+/* Add the original filename to our target path.  
+Result is "uploads/filename.extension" */
+$target_path = $target_path . basename( $_FILES['uploadedfile']['name']); 
+
+$completeurl = $target_path; // "../kml/Prestea_status_igf_prop.kml";
+
+$getDistrictid = 125; //$_GET['getdistrictid'];
+
  print("Start import into database, please have some patience");
+ print($getDistrictid.' - '.$completeurl);
+// break;
 
 if (file_exists($completeurl)) {
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
-$districtid=130;
+$districtid=123;
 $tmp4='';
 //print_r($xml);
 $con=mysqli_connect("localhost","root","root","revenue");
