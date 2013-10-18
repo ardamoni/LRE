@@ -20,8 +20,6 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 	var global_out_business;
 	var globalfeatureid;
 	var globaldistrictid='';
-	var globaldistrictboundary='';
-	var globaldistrictcenter='';
 
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
@@ -1357,7 +1355,6 @@ function sessionuserhandler(request) {
 			districtboundary += feed[i]['districtboundary']};
    document.getElementById("wcUser").innerHTML='Welcome: '+html;
   globaldistrictid=userdistrict;
-  globaldistrictboundary=districtboundary;
   document.getElementById("districtname").innerHTML=userdistrictname;
 
 getdistrictcenter(districtboundary);
@@ -1366,13 +1363,12 @@ getdistrictcenter(districtboundary);
 // end of function sessionuserhandler
 
 //-----------------------------------------------------------------------------
-		//function getdistrictcenter() 
-		//defines a polygon from globaldistrictboundary and stores the lon lat in globaldistrictcenter
+		//function getdistrictcenter(districtboundary) 
+		//defines a polygon from districtboundary and centres the map accordingly
 		//
 //-----------------------------------------------------------------------------
 function getdistrictcenter(districtboundary){
 		// build geometry for each feed item
-//  alert('Before the poly thingy '+globaldistrictboundary+' '+' '+globaldistrictid);
 			var coordinates = districtboundary.split(" ");
 			var polypoints = [];
 			for (var j=0;j < coordinates.length; j++) {
