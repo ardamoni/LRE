@@ -28,9 +28,11 @@
 
   if ($dbaction=='feedBusinessinfo'){feedBusinessinfo($dbaction,$clickfeature,$sub);}
 
-  if ($dbaction=='getlocalplan'){getlocalplan();}
+  if ($dbaction=='getlocalplan'){getlocalplan($districtid);}
 
-  if ($dbaction=='getbusiness'){getbusiness();}
+  if ($dbaction=='getproperty'){getpropertypoly($districtid);}
+
+  if ($dbaction=='getbusiness'){getbusiness($districtid);}
 
   if ($dbaction=='getdistrictmap'){getdistrictmap();}
 
@@ -68,7 +70,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 	$data = array();
 	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."' AND `year` = '2013' " );	
+	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."'" ); //$upn."' AND `year` = '2013' " );	
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{		
@@ -156,10 +158,38 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 				//collects polygon information 
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getlocalplan() 
+function getlocalplan($districtid) 
 {
 	// get the polygons out of the database 
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, property d2 WHERE d1.`UPN` = d2.`upn`;";
+	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d1.LUPMIS_color, d1.Address, d1.Landuse, d1.ParcelOf from `KML_from_LUPMIS` d1 WHERE d1.`districtid`='".$districtid."';";
+	$query = mysql_query($run);
+
+	$data 				= array();
+//$row = mysql_fetch_assoc($query);
+	while ($row = mysql_fetch_assoc($query)) {
+	$json 				= array();
+	$json['id'] 		= $row['id'];
+	$json['upn'] 		= $row['UPN'];
+	$json['boundary'] 	= $row['boundary'];
+	$json['LUPMIS_color'] 	= $row['LUPMIS_color'];
+	$json['Address'] 	= $row['Address'];
+	$json['Landuse'] 	= $row['Landuse'];
+	$json['ParcelOf'] 	= $row['ParcelOf'];
+	
+	$data[] 			= $json;
+	 }//end while
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+//-----------------------------------------------------------------------------
+				//function getpropertypoly() 
+				//collects polygon information 
+				//expects no $_POST parameters
+//-----------------------------------------------------------------------------
+function getpropertypoly($districtid) 
+{
+	// get the polygons out of the database 
+	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, property d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -181,10 +211,10 @@ function getlocalplan()
 				//collects polygon information 
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getbusiness() 
+function getbusiness($districtid) 
 {
 	// get the polygons out of the database 
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, business d2 WHERE d1.`UPN` = d2.`upn`;";
+	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, business d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();

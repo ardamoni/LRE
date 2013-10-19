@@ -52,6 +52,7 @@
 			$q = mysql_query("SELECT * FROM `usr_users` 							
 								WHERE	`username`	= '".$u."' 
 										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
+			$r	= 	mysql_fetch_array($q);
 			
 			if( mysql_num_rows($q) == 1 )
 			{					
@@ -69,6 +70,13 @@
 				$district	= 	mysql_fetch_array($qdistrict);
 			
 				$_SESSION['user']['districtid']	=	$district['districtid'];
+
+				// user district name
+				$qdistrictname	= 	mysql_query("SELECT `district_name` FROM `area_district` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
+				$districtname	= 	mysql_fetch_array($qdistrictname);
+			
+				$_SESSION['user']['districtname']	=	$districtname['district_name'];
+				
 				
 				// update log
 				//mysql_query("UPDATE `usr_users` SET `loged` = '1' WHERE `username` = '".$u."'");				

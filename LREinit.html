@@ -38,7 +38,7 @@
 			}
 			#map {
 				width: 1024px;
-				height: 550px;
+				height: 650px;
 			}
 
 			.olControlAttribution { 
@@ -140,7 +140,8 @@
 	<body>	
 	
 	<div id="header">  
-		<h1 id="title">Bogoso, Local Plan</h1>
+	<!--the following districtid is hidden, but can be used anywhere in the programme. It contains the districtid, which it gets from the function getsesseionuser()-->
+		<h1> <div id="districtname"></div></h1> 
 		<div id="tags">GeoJSON</div>
 		<table class="mouse_location_sample">
 		<tr>
@@ -161,7 +162,7 @@
 			<td>
 				<strong><span><center>Tools</center></span></strong>
 				<center><span id="tableview" class="tableshow"></span> </center>
-				<center><span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" ></button> </span> </center>
+				<center><span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span> </center>
 
 			</td> 
 			<td>
@@ -169,7 +170,7 @@
 			</td> 
 			<td>
 				 <center>Quick Search</center>
-				 <input type="text" id="searchBox" value="" style="width: 200px;" > 
+				 <input type="text" id="searchBox" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchupn();}"  > 
 				 <center><input type="submit" href="javascript:;" onclick="searchupn();" value="SEARCH" ></center>
 			</td>
 			<td>
@@ -199,9 +200,13 @@
 						<a href="#">Owner</a>
 						<a href="#">Address</a>			
 				   </div>
-					   <p class="menu_head">Contacts</p>
-					   <p class="menu_head">News</p>
-					   <p class="menu_head">Manual</p>
+				   <p class="menu_head">Contacts</p>
+				   <p class="menu_head">News</p>
+				   <p class="menu_head">Manual</p>
+					<div class="menu_body">
+						<a href=""javascript:;" onclick="fileopen();"">KML to DB conversion</a>
+				   </div>
+
 					   <p class="menu_head">Log out</p>
 				</div>  
 			</div>
@@ -306,7 +311,7 @@
 	<div id="footer">	
 		<div id="docs">
 			<p>
-				Information provided by TCPD, <?php echo "name"; ?>, this follows
+				Information provided by TCPD
 			</p>
 		</div>
 		    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
@@ -315,13 +320,6 @@
 			<script src="lib/stopwatch.js"></script>
 			<script src="lib/numberformat.js"></script>
 			<script src="js/jsfunctions.js"></script>
-			<script type="text/javascript" >
-//			  var session_name = <?php echo json_encode($_SESSION['user']['name']); ?>;
-//     		   document.getElementById("wcUser").innerHTML="Welcome Ekke"; //session_name;
-//			   var session_name = "'<?php .$_SESSION['user']['name']. ?>'";
-//			   var session_name = "<?php echo json_encode($_SESSION['user']['name']) ?>";;
-//     		   document.getElementById("wcUser").innerHTML="Welcome: >"+session_name;
-			</script>  
 
 	</div>	<!-- end of footer -->
 	

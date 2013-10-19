@@ -22,7 +22,6 @@
 	
 	$User = new User;
 
-	 
 	/*
 	 *	Login Function	 
 	 */
@@ -38,15 +37,21 @@
 	/*
 	 *	Main Content DIV
 	 */	
+	echo "<title>Local Revenue for Districts</title>";	
+	 
+	echo "<link rel='stylesheet' href='lib/OpenLayers/theme/default/style.css' type='text/css'>";
+    echo "<link rel='stylesheet' href='style.css' type='text/css'>";
+
 	echo "<div id = 'sysContent'><div style = 'height: 500px;'>";		
 
 		/*
 		 *	Login Form File		
 		 */
 		echo "<div id = 'system-login'>  <h1 id = 'title1'> " 
-			 . "Login Form"
+			 . "Login to dLRev"
 			 . "</h1>";
-		include("login.php");
+		echo "<center id='district1'></center>";	 
+		include("login2.php");
 		echo "</div>";		
 		
 	echo "</div>";
