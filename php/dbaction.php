@@ -189,7 +189,7 @@ function getlocalplan($districtid)
 function getpropertypoly($districtid) 
 {
 	// get the polygons out of the database 
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, property d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+	$run = "SELECT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, property d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -214,7 +214,7 @@ function getpropertypoly($districtid)
 function getbusiness($districtid) 
 {
 	// get the polygons out of the database 
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, business d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+	$run = "SELECT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, business d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();

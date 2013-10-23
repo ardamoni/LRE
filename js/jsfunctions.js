@@ -575,44 +575,80 @@ function onFeatureSelectBus(evt) {
 function onFeatureSelectcz(evt) {
 	feature = evt.feature;
 	var intersectedUPNs=0;
+	var intersectedParcels=0;
 	var revbalance=0;
+	var jsonLPVisible = fromLocalplan.getVisibility();
 	var jsonPVisible = fromProperty.getVisibility();
   	var jsonBVisible = fromBusiness.getVisibility();
-   	if (jsonPVisible){
-   		var searchlayer=fromProperty.id;
-   	}
-   	else if (jsonBVisible)
-   	{	var searchlayer=fromBusiness.id; }
-   	else
-   	{ 	html = 'Please open either the Properties or the Business Map!';
-   		alert(html);
-   	}
-	// check each feature from layer below if intersecting with the collector zone polygon
-		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
-		{
-			if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
-                var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
-				if (feature.geometry.containsPoint(checkPoint)){
-// colouring for testing 					fromProperty.drawFeature(fromProperty.features[i], {fillColor: "#99FF33", strokeColor: "#00ffff"});			
-					intersectedUPNs++;
-					revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
-				}
-			}			
+
+   	if (!jsonLPVisible)
+   	{	html = 'Please open the Local Plan!';
+   		alert(html); 
+   	}else{	
+//   	  spinner.spin(target);
+
+		if (jsonPVisible){
+			var searchlayer=fromProperty.id;
 		}
-	content = 'Collector ID: '+feature.attributes.collectorid+
-				'<br>District ID: '+feature.attributes.districtid+
-				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000)+'sq km'+
-				'<br>Properties: '+intersectedUPNs.toString()+
-				'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
-				'<br>Zoneid: '+feature.attributes.zoneid;
-	var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
-					feature.geometry.getBounds().getCenterLonLat(),
-					new OpenLayers.Size(100,100),
-					content, 
-					null, true, onPopupClose);
-	feature.popup = popup;
-	popup.feature = feature;
-	map.addPopup(popup, true);
+		else if (jsonBVisible)
+		{	var searchlayer=fromBusiness.id; }
+		else
+		{ 	html = 'Please open either the Properties or the Business Map!';
+			alert(html);
+		}
+		
+		// check each feature from Localplan layer if intersecting with the collector zone polygon
+			for( var i = 0; i < map.getLayer(fromLocalplan.id).features.length; i++ ) 
+			{
+				if (feature.geometry.intersects(map.getLayer(fromLocalplan.id).features[i].geometry)) { 
+					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(fromLocalplan.id).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(fromLocalplan.id).features[i].geometry.getBounds().getCenterLonLat().lat);
+					if (feature.geometry.containsPoint(checkPoint)){
+						intersectedParcels++;
+// for debugging
+//	if (console && console.log) {
+//			console.log(fromLocalplan.features[i].attributes.upn);
+//		}
+
+					}
+				}			
+			}
+		// check each feature from layer below if intersecting with the collector zone polygon
+			console.log('property layer');
+			for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
+			{
+				if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
+					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
+					if (feature.geometry.containsPoint(checkPoint)){
+						intersectedUPNs++;
+						revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
+// for debugging
+//	if (console && console.log) {
+//			console.log(map.getLayer(searchlayer).features[i].attributes.upn, intersectedUPNs.toString());
+//		}
+					}
+				}			
+			}
+		content = 'Collector ID: '+feature.attributes.collectorid+
+					'<br>District ID: '+feature.attributes.districtid+
+					'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000)+'sq km'+
+					'<br>Parcels: '+intersectedParcels.toString();
+		if (jsonPVisible){			
+		content +=	'<br>Properties: '+intersectedUPNs.toString();
+		}else if (jsonBVisible){
+		content +=	'<br>Businesses: '+intersectedUPNs.toString();
+		}
+		content +=	'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
+					'<br>Zoneid: '+feature.attributes.zoneid;
+		var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+						feature.geometry.getBounds().getCenterLonLat(),
+						new OpenLayers.Size(100,100),
+						content, 
+						null, true, onPopupClose);
+//		spinner.stop();				
+		feature.popup = popup;
+		popup.feature = feature;
+		map.addPopup(popup, true);
+   	}
 } 
 
 //-----------------------------------------------------------------------------
@@ -1356,11 +1392,10 @@ function sessionuserhandler(request) {
 			userdistrict += feed[i]['userdistrict'];
 			userdistrictname += feed[i]['userdistrictname'];
 			districtboundary += feed[i]['districtboundary']};
-   document.getElementById("wcUser").innerHTML='Welcome: '+html;
+  document.getElementById("wcUser").innerHTML='Welcome: '+html;
   globaldistrictid=userdistrict;
   document.getElementById("districtname").innerHTML=userdistrictname;
-
-getdistrictcenter(districtboundary);
+  getdistrictcenter(districtboundary);
 	} // else{  alert('inside inserthandler');}
 } 
 // end of function sessionuserhandler
