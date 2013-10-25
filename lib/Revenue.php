@@ -29,17 +29,7 @@
 			return $r[$f];
 		}
 		
-		/*
-		 *	OWN_OWNER
-		 */		
-		// 	get the owner
-		function getOwnerInfo( $id = "", $f = "" )
-		{
-			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`ownerid` = '".$id."' ");
-			$r = mysql_fetch_array($q);
-			return $r[$f];
-		}
-
+		
 		
 		/*
 		 *	PROPERTY_DUE
@@ -166,6 +156,30 @@
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
+		
+		/*
+		 *	OWN_OWNER
+		 */		
+		// 	get the owner
+		function getOwnerInfo( $id = "", $f = "" )
+		{
+			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`ownerid` = '".$id."' ");
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
+
+		
+		/*
+		 *	District Area
+		 */		
+		// 	get the district info
+		function getDistrictInfo( $id = "", $f = "" )
+		{
+			$q = mysql_query("SELECT * 	FROM `area_district` WHERE 	`districtid` = '".$id."' ");
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
+
 	}
 
 

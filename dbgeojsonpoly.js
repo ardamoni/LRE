@@ -435,6 +435,7 @@ function handler(request)
 			html += '<p>House Nr: '+ feed[i]['housenumber'] +'</p>';
 			html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
 			html += '<p>SUBUPN: '+ feed[i]['subupn'] +'</p>';
+			html += '<p>YEAR: '+ feed[i]['year'] +'</p>';
 			html += '<div><strong>Revenue Balance: '+ feed[i]['revenue_balance'] +'</strong></div>';
 			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +'</p>';
 			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +'</p>';
@@ -446,7 +447,8 @@ function handler(request)
 			html += '<hr />';
 		}
 		
-		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick()' >";	
+		//html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick()' >";	
+		html += "<input type='button' value='UPN History' onclick='UPNHistoryOnClick()' >";	
 		//html += "<button onclick='collectRevenueOnClick(\''+upn+'\', \''+subupn+'\')'>Revenue Collection</button>";	
 		//html += ("<input type='button' value='Revenue Collection' />").find('input[type=button]').click( function(){ collectRevenueOnClick(upn, subupn); } );
 		
@@ -465,6 +467,23 @@ function handler(request)
 	
 }  // end of handler function
 
+//  on mouse-click activation to create the window for UPN history
+function UPNHistoryOnClick( ) 
+{	
+	var upn = this.global_upn;
+	var subupn = this.global_subupn;
+	
+	var popupWindow = null;
+	popupWindow = window.open('php/Reports/UPNHistory.php?upn='+upn+'&subupn='+subupn, 'UPN History', 'height=500, width=500, left=500, top=200, resizable=yes');	
+	
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+}	
+
 //  on mouse-click activation to create the window for revenue payments
 function collectRevenueOnClick( ) 
 {	
@@ -481,7 +500,6 @@ function collectRevenueOnClick( )
 
 	return false;
 }	
-
 
 // TODO: refresh parent window
 function parent_refresh() 
