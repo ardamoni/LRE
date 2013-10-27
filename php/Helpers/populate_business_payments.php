@@ -5,7 +5,7 @@
 	 */
 
 	// DB connection
-	require_once( "../lib/configuration.php" );
+	require_once( "../../lib/configuration.php" );
 	
 	echo "start: ", "<br>";
 	

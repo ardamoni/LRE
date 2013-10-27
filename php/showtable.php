@@ -1,3 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Table view</title>
+<link rel="stylesheet" href="css/ex.css" type="text/css" />
+<style type="text/css">
+table.demoTbl {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+#tblCap {
+    font-weight:bold;
+    margin:1em auto .4em;
+}
+
+table.demoTbl .title {
+    width:200px;
+}
+table.demoTbl .prices {
+    width:120px;
+}
+
+table.demoTbl td, table.demoTbl th {
+    padding: 6px;
+}
+
+table.demoTbl th.first {
+    text-align:left;
+    }
+table.demoTbl td.num {
+    text-align:right;
+    }
+    
+table.demoTbl td.foot {
+    text-align: center;
+}
+
+</style>
+</head>
+<body>
+    
+
 <?php
 	// DB connection
 	require_once( "../lib/configuration.php"	);
@@ -6,9 +50,7 @@ session_start();
 	// match UPN
 	$query = mysql_query( "SELECT * FROM property");	
 	
-	echo	'<form id="form1" name="form1" method="post" action="RevenueCollection.php">';
-
-	echo "<table border='1' cellpadding='3' cellspacing='1' bgcolor='#FFFFFF'>
+	echo "<table class='demoTbl' border='1' cellpadding='10' cellspacing='1' bgcolor='#FFFFFF'>
 			<tr>
 			<th>UPN</th>
 			<th>Subupn</th>
@@ -90,3 +132,7 @@ session_start();
 	
    echo "</table>";
 ?>
+<p>Back to <a href="index.html">Index</a></p>
+
+</body>
+</html>

@@ -1,3 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Revenue Collection Form</title>
+<link rel="stylesheet" href="css/ex.css" type="text/css" />
+<!--<link rel="stylesheet" href="../style.css" type="text/css">-->
+<style type="text/css">
+form.demoForm fieldset {
+    width: 900px;
+    margin-bottom: 1em;
+	border-color:#ffcc00;
+}
+
+table.formTblContainer {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-color:#ffcc00;
+}
+
+table.formTbl {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-color:#ffcc00;
+}
+table.formTbl tr td {
+	border: 1px solid #ccc;
+	border-color:#ffcc00;
+	width: 300px;
+	font-size:0.875em;
+}
+
+form.demoForm p {font-size:0.875em;}
+
+form.demoForm submit {
+	font-size:1em;
+	float:right;}
+
+form.demoForm lable {font-size:0.5em;}
+
+</style>
+
+
+<script type="text/javascript">
+function checkBeforeSubmit(frm) {
+    // JavaScript validation here
+    // return false if error(s)
+    
+    //alert('This is just a demo form with no place to go.');
+    //return false;
+    
+    return true; // to submit
+}
+
+</script>
+</head>
+<body>
+    
+<h1>Enter revenue for this property</h1>
+    
 <?php
 	require_once( "../lib/configuration.php" );
 

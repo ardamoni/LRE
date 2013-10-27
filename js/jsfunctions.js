@@ -706,10 +706,11 @@ function handler(request)
 			html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
 			html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
 			html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';									
+		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn)' >";	
+		html += "<input type='button' value='Property Details' onclick='propertyDetailsOnClick(global_upn, global_subupn)' >";	
 			html += '<hr />';
 		}
 
-		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick()' >";	
 		html += "<input type='button' value='UPN History' onclick='UPNHistoryOnClick()' >";	
 		//html += "<button onclick='collectRevenueOnClick(\''+upn+'\', \''+subupn+'\')'>Revenue Collection</button>";	
 		//html += ("<input type='button' value='Revenue Collection' />").find('input[type=button]').click( function(){ collectRevenueOnClick(upn, subupn); } );
@@ -718,7 +719,7 @@ function handler(request)
 		var popup = new OpenLayers.Popup.FramedCloud(
 										"featurePopup",
                                         feature.geometry.getBounds().getCenterLonLat(),
-                                        new OpenLayers.Size(100,100),
+                                        new OpenLayers.Size(200,200),
                                         html, 
                                         null, true, onPopupClose);
 
@@ -733,13 +734,34 @@ function handler(request)
 		//  on mouse-click activation to create the window for revenue payments
 
 //-----------------------------------------------------------------------------
-function collectRevenueOnClick( ) 
+function collectRevenueOnClick(global_upn, global_subupn ) 
 {	
-	var upn = this.global_upn;
-	var subupn = this.global_subupn;
+	var upn = global_upn;
+	var subupn = global_subupn;
 
 	var popupWindow = null;
 	popupWindow = window.open('php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn, 'Revenue Collection', 'height=500, width=500, left=500, top=200, resizable=yes');	
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+}	
+
+//-----------------------------------------------------------------------------
+		//function propertyDetailsOnClick() 
+		//  on mouse-click activation to create the window for revenue payments
+
+//-----------------------------------------------------------------------------
+function propertyDetailsOnClick(global_upn, global_subupn ) 
+{	
+	var upn = global_upn;
+	var subupn = global_subupn;
+
+	var popupWindow = null;
+	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn, 'Property Details', 'height=700, width=1024, left=500, top=200, resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
 	{
