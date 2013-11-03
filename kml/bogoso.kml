@@ -35,7 +35,7 @@
 <Folder><name>Features</name><open>0</open><visibility>1</visibility>
 
 
-<Placemark><description><![CDATA[Parcel of Bogoso:<br><br>Address:  <b>Ameyaw Ave 8</b><br>Use:  <b>Residential high density</b><br>UPN:  <b>608-0615-0336</b><br>]]></description><name></name><Snippet></Snippet><styleUrl>#LUPMIS_color_01</styleUrl>
+<Placemark><description><![CDATA[Parcel- of Bogoso:<br><br>Address:  <b>Ameyaw Ave 8</b><br>Use:  <b>Residential high density</b><br>UPN:  <b>608-0615-0336</b><br>]]></description><name></name><Snippet></Snippet><styleUrl>#LUPMIS_color_01</styleUrl>
 <Polygon><tessellate>0</tessellate><extrude>0</extrude><altitudeMode>clampedToGround</altitudeMode>
 <outerBoundaryIs><LinearRing><coordinates>
 -2.023139,5.567491,0
