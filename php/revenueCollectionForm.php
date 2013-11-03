@@ -5,6 +5,7 @@
 <title>Revenue Collection Form</title>
 <link rel="stylesheet" href="css/ex.css" type="text/css" />
 <!--<link rel="stylesheet" href="../style.css" type="text/css">-->
+<link rel="stylesheet" href="../style.css" type="text/css">
 <style type="text/css">
 form.demoForm fieldset {
     width: 900px;
@@ -15,19 +16,34 @@ form.demoForm fieldset {
 table.formTblContainer {
     border-collapse: collapse;
     border-spacing: 0;
-    border-color:#ffcc00;
+//    border-color:#ffcc00;
+//	border: 1px solid #ccc;
+	position:fixed;
+	top:10%;
+	left:7.25%;
+	width:85%
 }
 
-table.formTbl {
-    border-collapse: collapse;
-    border-spacing: 0;
-    border-color:#ffcc00;
-}
-table.formTbl tr td {
+table.formTblContainer tr {
 	border: 1px solid #ccc;
 	border-color:#ffcc00;
-	width: 300px;
-	font-size:0.875em;
+	font-size:1em;
+	padding:2px;
+//	width: 2em;
+}
+
+table.formTblContainer td{
+	font-size:1em;
+	text-align:left;
+	padding:5px;
+	left:5px;
+//	width: 100%;
+	border-color:#ffcc00;
+}
+
+table.formTblContainer td.c {
+	text-align:left;
+	padding:10px;
 }
 
 form.demoForm p {font-size:0.875em;}
@@ -56,13 +72,16 @@ function checkBeforeSubmit(frm) {
 </head>
 <body>
     
-<h1>Enter revenue for this property</h1>
+<h1><center>Enter revenue for this property</center></h1>
+
     
 <?php
 	require_once( "../lib/configuration.php" );
 
-	$upn = $_GET["upn"];
-	$subupn = $_GET["subupn"];	
+	$upn 			= $_GET["upn"];
+	$subupn 		= $_GET["subupn"];
+	$districtid 	= $_GET['distictid'];	
+
 		
 	$options = explode(",",$subupn);	// array
 	$name = 'subupn_dropDown';		 
@@ -107,9 +126,10 @@ function checkBeforeSubmit(frm) {
 			var upn = $('#upn').val();
 			var subupn = $('#subupn').val();
 			var treceipt = $('#treceipt').val();
+			var districtid = $('#districtid').val();
 			
 			//use ajax to run the check
-			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt },
+			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt, districtid: districtid },
 				function(result)
 				{				
 					if( result == 1 )
@@ -125,30 +145,33 @@ function checkBeforeSubmit(frm) {
 			});
 		}  
 	</script>
-	
-		<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">
+<!--		<table class='formTblContainer'>
+		<tr>
+		<td>-->
+<!--		<table class='formTbl' width="90%"><!-- border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">-->
+		<table class='formTblContainer'><!-- border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">-->
 			<tr>
 				<td colspan="3" bgcolor="#E6E6E6"><center><strong>Payment Form</strong></center></td>
 			</tr>					
 			<tr>
-				<td width="14%">UPN</td>
+				<td width="25%">UPN</td>
 				<td width="2%">:</td>
-				<td width="84%"><input name="upn" type="hidden" id="upn" value = "<?php echo $upn;?>"><?php echo $upn;?></td>
+				<td class='c' width="50%"><input name="upn" type="hidden" id="upn" value = "<?php echo $upn;?>"><?php echo $upn;?></td>
 			</tr>					
 			<tr>
-				<td width="14%">SUB-UPN</td>
+				<td width="20%">SUB-UPN</td>
 				<td width="2%">:</td>						
 				
 				<!-- TODO: fix the dropdown choice -->
 				<!--<td width="84%"><select name="subupn" id="subupn">
 				<option value="<?php //echo $choice;?>">Please make your selection</option></select></td> -->
 				<!-- TEMP: until the drop down is fixed -->
-				<td width="84%"><input name="subupn" type="text" id="subupn" size="50">
+				<td class='c' width="50%"><input name="subupn" type="hidden" id="subupn" size="50" value = "<?php echo $subupn;?>"><?php echo $subupn;?></td>
 			</tr>				
 			<tr>
-				<td width = "30">Payment date</td>
-				<td width = "2">:</td>
-				<td width = "68"><input type="hidden" name="paymentdate" id="paymentdate" size="50">
+				<td width = "25%">Payment date</td>
+				<td width = "2%">:</td>
+				<td class='c' width = "50%"><input type="hidden" name="paymentdate" id="paymentdate" size="50">
 					<script language="JavaScript">
 						today = new Date();
 						//document.write("(YYYY-MM-DD) ", today.getFullYear(), "-", today.getMonth()+1, "-", today.getDate() );								
@@ -159,33 +182,36 @@ function checkBeforeSubmit(frm) {
 			<tr>
 				<td>Payed by</td>
 				<td>:</td>
-				<td><input name="payedby" type="text" id="payedby" size="50"></td>
+				<td class='c'><input name="payedby" type="text" id="payedby" size="30"></td>
 			</tr>
 			<tr>
 				<td>Value</td>
 				<td>:</td>
-				<td><input name="payedvalue" type="text" id="payedvalue" size="50"></td>
+				<td class='c'><input name="payedvalue" type="text" id="payedvalue" size="10"></td>
 			</tr>
 			<tr>
 				<td>Type of payment</td>
 				<td>:</td>
-				<td><input name="paymenttype" type="text" id="paymenttype" size="50"></td>
+				<td class='c'><input name="paymenttype" type="text" id="paymenttype" size="10"></td>
 			</tr>
 			<tr>
 				<td>Ticketing receipt</td>
 				<td>:</td>
-				<td><input name="treceipt" type="text" id="treceipt" size="50"></td>
+				<td class='c'><input name="treceipt" type="text" id="treceipt" size="10"></td>
 			</tr>
 			<tr>
+<!--				<td>&nbsp;</td>
 				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td><input type="button" id="Submit" name="Submit" value="Submit" /> 
+-->				<td colspan="3" style="background-color:#E6E6E6;text-align:center;"><input type="button" id="Submit" name="Submit" value="Submit" /> 
 					<input type="reset" id="Reset" name="Reset" value="Reset" /></td>
 			</tr>
 			<tr>
 				<td> <div id="treceipt_availability_result">Availability Message</div> </td>
 			</tr>
 		</table>
+<!--		</td>
+		</tr>
+		</table>-->
 	</form>
 
 <?php
@@ -213,3 +239,5 @@ function checkBeforeSubmit(frm) {
 		return $dropdown;
 	}	
 ?>
+</body>
+</html>

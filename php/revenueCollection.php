@@ -21,6 +21,7 @@
 	$payedValue		= $_POST['payedvalue']; 
 	$paymentType	= $_POST['paymenttype'];
 	$treceipt		= $_POST['treceipt'];	
+	$districtid 	= $_POST['districtid'];	
 	
 	if( !$paymentDate )
 	{		
@@ -35,7 +36,7 @@
 	// TODO change them to dynamic, from the map
 	$station = "Station1";		
 	$collectorID = "100";			// TODO through session
-	$districtid = "1840";			// TODO through session
+	$districtid = "130";			// TODO through session
 		
 	$currentYear = date("Y");
 	

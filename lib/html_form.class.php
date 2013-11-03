@@ -96,7 +96,7 @@ class HTML_Form {
     // $bVal false if text serves as value (no value attr)
     function addSelectList($name, $option_list, $bVal = true, $selected_value = NULL,
             $header = NULL, $attr_ar = array() ) {
-        $str = "<select name=\"$name\"";
+        $str = "<select name=\"$name\" "; 
         if ($attr_ar) {
             $str .= $this->addAttributes( $attr_ar );
         }

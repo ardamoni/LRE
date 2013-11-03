@@ -674,7 +674,7 @@ function handler(request)
 		feed = JSON.parse(request.responseText);
 
 		var html = '';
-
+		var supnid= '';
 		// cleaning the global valiables before use
 		global_upn = null;
 		global_subupn = [];
@@ -706,8 +706,8 @@ function handler(request)
 			html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
 			html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
 			html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';									
-		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn)' >";	
-		html += "<input type='button' value='Property Details' onclick='propertyDetailsOnClick(global_upn, global_subupn)' >";	
+		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+")' >";	
+		html += "<input type='button' value='Property Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+")' >";	
 			html += '<hr />';
 		}
 
@@ -734,13 +734,21 @@ function handler(request)
 		//  on mouse-click activation to create the window for revenue payments
 
 //-----------------------------------------------------------------------------
-function collectRevenueOnClick(global_upn, global_subupn ) 
+function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supnid ) 
 {	
 	var upn = global_upn;
-	var subupn = global_subupn;
+	var subupn = global_subupn[supnid];
 
 	var popupWindow = null;
-	popupWindow = window.open('php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn, 'Revenue Collection', 'height=500, width=500, left=500, top=200, resizable=yes');	
+	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+	var title = 'Revenue Collection';
+	var w = 450;
+	var h = 400;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+//	popupWindow = window.open('php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn, 'Revenue Collection', 'height=500, width=500, left=500, top=200, resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
 	{
@@ -755,13 +763,20 @@ function collectRevenueOnClick(global_upn, global_subupn )
 		//  on mouse-click activation to create the window for revenue payments
 
 //-----------------------------------------------------------------------------
-function propertyDetailsOnClick(global_upn, global_subupn ) 
+function propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, supnid ) 
 {	
 	var upn = global_upn;
-	var subupn = global_subupn;
-
+	var subupn = global_subupn[supnid];
+	
 	var popupWindow = null;
-	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn, 'Property Details', 'height=700, width=1024, left=500, top=200, resizable=yes');	
+	var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+	var title = 'Property Details';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+//	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
 	{
@@ -1414,6 +1429,12 @@ function sessionuserhandler(request) {
 			userdistrict += feed[i]['userdistrict'];
 			userdistrictname += feed[i]['userdistrictname'];
 			districtboundary += feed[i]['districtboundary']};
+
+//check if there is a session, if not log out			
+	if(userdistrictname=='null') {
+		setTimeout("location.href = 'logout.php';",1000);
+	}			 
+
   document.getElementById("wcUser").innerHTML='Welcome: '+html;
   globaldistrictid=userdistrict;
   document.getElementById("districtname").innerHTML=userdistrictname;
@@ -1532,40 +1553,6 @@ function tableshow() {
 } 
 // end of function tableshow
 
-//-----------------------------------------------------------------------------
-		//function fileopendialog() 
-		//opens a file open dialog to select a KML file for import
-		//should be moved to an external helper file 
-		//
-//-----------------------------------------------------------------------------
-function fileopendialog(){
-	popupWindow = window.open("","_blank","width=500,height=150,top=400,left=200,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
-//	popupWindow.document.open();
-	popupWindow.document.writeln("<input type='file' id='files' name='files[]' multiple />");
-	popupWindow.document.writeln("<output id='list'></output>");
-	popupWindow.document.writeln("<html><head><title>Table View</title></head>");
-//	popupWindow.document.writeln("this is ekke</html>");
-
-
-
-//<script>
-//  function handleFileSelect(evt) {
-    var files = evt.target.files; // FileList object
-
-    // files is a FileList of File objects. List some properties.
-    var output = [];
-    for (var i = 0, f; f = files[i]; i++) {
-      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                  f.size, ' bytes, last modified: ',
-                  f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                  '</li>');
-    }
-    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-//  }
-
-//  document.getElementById('files').addEventListener('change', handleFileSelect, false);
-//</script>
-}
 
 function fileopen(){
 	popupWindow = window.open("","_blank","width=500,height=150,top=400,left=200,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");

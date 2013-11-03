@@ -271,9 +271,9 @@ function insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour)
 	$run = "SELECT * FROM collectorzones WHERE polygon = '".$polygon."';";
 	$query = mysql_query($run);  
 	$data 				= array();
-
 	$json 				= array();
-		while ($row = mysql_fetch_assoc($query)) {
+
+ 			while ($row = mysql_fetch_assoc($query)) {
 			$json['text'] 			= 'New collector zone stored in database';
 			$json['zoneid'] 		= $row['id'];
 			$json['collectorid']	= $row['collectorid'];

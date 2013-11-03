@@ -5,10 +5,11 @@ $target_path = "../kml/";
 /* Add the original filename to our target path.  
 Result is "uploads/filename.extension" */
 $target_path = $target_path . basename( $_FILES['uploadedfile']['name']); 
+//$target_path = $target_path . "bogoso.kml"; //basename( $_FILES['uploadedfile']['name']); 
 
 $completeurl = $target_path; // "../kml/Prestea_status_igf_prop.kml";
 
-$getDistrictid = 125; //$_GET['getdistrictid'];
+$getDistrictid = 130; //$_GET['getdistrictid'];
 
  print("Start import into database, please have some patience");
  print($getDistrictid.' - '.$completeurl);
@@ -16,7 +17,7 @@ $getDistrictid = 125; //$_GET['getdistrictid'];
 
 if (file_exists($completeurl)) {
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
-$districtid=123;
+$districtid=130;
 $tmp4='';
 //print_r($xml);
 $con=mysqli_connect("localhost","root","root","revenue");
@@ -76,18 +77,23 @@ if (mysqli_connect_errno())
 		}
 	  }
 		$cor_d1 = substr($cor_d1,1,strlen($cor_d1)-2);
-//Get geo coordinates
-  		$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
-  		echo $query;
-		$run .="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
-//		print($i);
-//		if ($iCount2 < 25) {
-//		echo "i ".$i." - "; 
-//		}else{
-//		echo "i ".$i." - <br>";
-//		}
-//		$iCount2++;
-		 mysqli_query($con,$run) or die ('Error updating database: ' . mysqli_error());
+//Check whether this record already exists in KML_from_LUPMIS
+		$run .="SELECT * from KML_from_LUPMIS WHERE `upn`='".$upn."';";
+		$found = mysqli_query($con,$run) or die ('Error updating database: ' . mysqli_error());
+//if the upn already exist, then do an UPDATE, if not do an INSERT
+
+		if (!empty($found))
+		{
+			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
+			print_r($run);
+			 mysqli_query($con,$run) or die ('UPDATE - Error updating database: ' . mysqli_error());
+		 }else
+		{       
+			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
+			echo $query;
+			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
+			 mysqli_query($con,$run) or die ('Error updating database: ' . mysqli_error());
+		} 
 	  }
 
   }else {
