@@ -161,7 +161,7 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 function getlocalplan($districtid) 
 {
 	// get the polygons out of the database 
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d1.LUPMIS_color, d1.Address, d1.Landuse, d1.ParcelOf from `KML_from_LUPMIS` d1 WHERE d1.`districtid`='".$districtid."';";
+	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d1.LUPMIS_color, d1.Address, d1.Landuse, d1.ParcelOf, d2.unit_planning from `KML_from_LUPMIS` d1, `property` d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."' ORDER BY d1.UPN;";
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -175,6 +175,7 @@ function getlocalplan($districtid)
 	$json['Address'] 	= $row['Address'];
 	$json['Landuse'] 	= $row['Landuse'];
 	$json['ParcelOf'] 	= $row['ParcelOf'];
+	$json['unit_planning'] 	= $row['unit_planning'];
 	
 	$data[] 			= $json;
 	 }//end while

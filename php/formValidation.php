@@ -36,7 +36,7 @@
 		$result = mysql_fetch_array( $query );	
 		$rows = mysql_num_rows( $query ); 		
 		//echo "user: ",  $user123, "roelid: ", $result['rid'],  ", districtid ", $result['did'], ", rows: ", $rows, "<br>";
-		if( $result['rid'] == '100' && $result['did'] == '1840' && $rows == 1 )
+		if( $result['rid'] == '100' && $result['did'] == '130' && $rows == 1 )
 		{
 			echo 1;
 		}

@@ -107,7 +107,7 @@ var colors = ['#1FCB4A', 	'#59955C', 	'#48FB0D', 	'#2DC800', 	'#59DF00', 	'#9D9D
 var LUPMISdefault = {
 			strokeColor: "#FFFFFF",
             strokeOpacity: 0.8,
-            strokewidth: 2,
+            strokewidth: 4,
             fillColor: "#FFFFFF",
             fillOpacity: 0.15,
 };
@@ -314,7 +314,7 @@ function init(){
 // Add Layers
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
-	map.addLayer(kmlLocalPlan);
+//	map.addLayer(kmlLocalPlan);
 	map.addLayer(fromLocalplan);
 	map.addLayer(fromProperty);
 	map.addLayer(fromBusiness);
@@ -683,6 +683,7 @@ function handler(request)
 		{			
 			global_upn = feed[i]['upn'];
 			global_subupn[i] = feed[i]['subupn'];
+			pushBusiness = feed[i]['business_name'];
 		}
 
 		// build html for each feed item
@@ -702,12 +703,15 @@ function handler(request)
 		//check whether called from property or business
 		    if (feed[i]['business_name']!='property'){
 				html += '<p>Business Name: '+ feed[i]['business_name'] +'</p>';
+				var title = 'Business';
+		    }else {
+				var title = 'Property';
 		    }
 			html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
 			html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
 			html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';									
-		html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+")' >";	
-		html += "<input type='button' value='Property Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+")' >";	
+			html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+")' >";	
+			html += "<input type='button' value='"+title+" Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += '<hr />';
 		}
 
@@ -734,7 +738,7 @@ function handler(request)
 		//  on mouse-click activation to create the window for revenue payments
 
 //-----------------------------------------------------------------------------
-function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supnid ) 
+function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supnid) 
 {	
 	var upn = global_upn;
 	var subupn = global_subupn[supnid];
@@ -743,7 +747,7 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 	var title = 'Revenue Collection';
 	var w = 450;
-	var h = 400;
+	var h = 500;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
@@ -763,14 +767,19 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 		//  on mouse-click activation to create the window for revenue payments
 
 //-----------------------------------------------------------------------------
-function propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, supnid ) 
+function propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, supnid, callproperty ) 
 {	
 	var upn = global_upn;
 	var subupn = global_subupn[supnid];
-	
+	var ifproperty = callproperty;
 	var popupWindow = null;
-	var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
-	var title = 'Property Details';
+	if (ifproperty=='property'){
+		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+		var title = 'Property Details';
+	}else{
+		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+		var title = 'Business Details';
+	}
 	var w = 1024;
 	var h = 650;
     var left = (screen.width/2)-(w/2);
@@ -808,7 +817,32 @@ function UPNHistoryOnClick( )
 	return false;
 }	
 
+//-----------------------------------------------------------------------------
+		//function propertyAnnualBillOnClick() 
+		//  on mouse-click activation to create the window for revenue bills printing
 
+//-----------------------------------------------------------------------------
+function propertyAnnualBillOnClick() 
+{	
+	var upn = global_upn;
+//	var subupn = global_subupn[supnid];
+	var popupWindow = null;
+	var pageURL = 'php/Reports/PropertyAnnualBill.php?districtid='+globaldistrictid;
+	var title = 'Property Annual Bill Printing';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+//	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+}	
 // TODO: refresh parent window
 function parent_refresh() 
 {
@@ -872,14 +906,24 @@ function polylocalplanhandler(request) {
 		var revbalance = 0;
 		// build geometry for each feed item
 		for (var i = 0; i < feed.length; i++) {
-			boundary = feed[i]['boundary'];       	
+			boundary = feed[i]['boundary'].trim();       	
 			var coordinates = boundary.split(" ");
 			var polypoints = [];
 			for (var j=0;j < coordinates.length; j++) {
 				points = coordinates[j].split(",");
+//debug
+//	if (console && console.log) {
+//	if (feed[i]['upn']=='608-0614-0033') {
+//	if (points.length>1){
+//		console.log('ekke', feed[i]['upn'], j, points, boundary);
+//		}}
+//}
+		//sometimes there is garbage at the end of the boundaries and the points array is missing one coordinate. 
+		//this will result in polygones missing the final closure and hence the line will not be drawn around the entire polygone
+		if (points.length>1){
 				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
 				polypoints.push(point);
-			}
+			}}
 				// create some attributes for the feature
 			var attributes = {upn: feed[i]['upn'],
 								landuse: feed[i]['Landuse'],
@@ -907,8 +951,29 @@ function polylocalplanhandler(request) {
 				case 6:
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
 					break;
-				default:	
-					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault);		
+				default: {	
+					switch(true){
+						case ((feed[i]['unit_planning']<=10) && (feed[i]['unit_planning']!=null)):
+							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour01);		
+							break;
+						case ((feed[i]['unit_planning']>10) && (feed[i]['unit_planning']<30) ):
+							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour02);		
+							break;
+						case ((feed[i]['unit_planning']>=30) && (feed[i]['unit_planning']<60) ):
+							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour03);		
+							break;
+						case ((feed[i]['unit_planning']>=60) && (feed[i]['unit_planning']<70) ):
+							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour04);		
+							break;
+						case ((feed[i]['unit_planning']>=70) && (feed[i]['unit_planning']<80) ):
+							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour05);		
+							break;
+						case ((feed[i]['unit_planning']>=80) && (feed[i]['unit_planning']<90) ):
+							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
+							break;
+						default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault);		
+						}
+					}
 				}	
 			  fromLocalplan.addFeatures([polygonFeature]);
 
@@ -981,13 +1046,15 @@ function polyhandler(request) {
 		var revbalance = 0;
 		// build geometry for each feed item
 		for (var i = 0; i < feed.length; i++) {
-			boundary = feed[i]['boundary'];       	
+			boundary = feed[i]['boundary'].trim();       	
 			var coordinates = boundary.split(" ");
 			var polypoints = [];
 			for (var j=0;j < coordinates.length; j++) {
 				points = coordinates[j].split(",");
-				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
-				polypoints.push(point);
+				if (points.length>1){
+					point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+					polypoints.push(point);
+				}
 			}
 				// create some attributes for the feature
 			var attributes = {upn: feed[i]['upn'],
@@ -1081,13 +1148,15 @@ function Businesshandler(request) {
 		var revbalance = 0;
 		// build geometry for each feed item
 		for (var i = 0; i < feed.length; i++) {
-			boundary = feed[i]['boundary'];       	
+			boundary = feed[i]['boundary'].trim();       	
 			var coordinates = boundary.split(" ");
 			var polypoints = [];
 			for (var j=0;j < coordinates.length; j++) {
 				points = coordinates[j].split(",");
-				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
-				polypoints.push(point);
+				if (points.length>1){
+					point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+					polypoints.push(point);
+				}
 			}
 				// create some attributes for the feature
 			var attributes = {upn: feed[i]['upn'],

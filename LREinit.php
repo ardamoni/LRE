@@ -194,6 +194,7 @@
 						<a href="#">Weekly</a>
 						<a href="#">Monthly</a>	
 						<a href="#">Annualy</a>	
+						<a href=""javascript:;" onclick="propertyAnnualBillOnClick();"">Print Bills for Property Rates</a>
 					</div>
 					<p class="menu_head">Search</p>
 					<div class="menu_body">

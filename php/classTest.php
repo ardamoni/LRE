@@ -6,14 +6,14 @@
 
 	// DB connection
 	require_once( "../lib/configuration.php" );
-	require_once( "../lib/PropertyDetails.php" );
+	require_once( "../lib/BusinessDetails.php" );
 	
 	ob_start(); // prevent adding duplicate data with refresh (F5)
 	session_start();
-	$upn = '608-0615-0292';
-//	$upn = '608-0615-0315';
-//	$subupn = '608-0615-0315B';
-	$subupn = '';
+//	$upn = '608-0615-0292';
+	$upn = '608-0615-0250';
+	$subupn = '608-0615-0250A';
+//	$subupn = '';
 	
 	$currentdate = getdate();
 	$currentyear = $currentdate['year'];
@@ -22,8 +22,9 @@
 	echo $currentyear;
 
 
-	$Data = new propertyDetailsClass;
-    $fromClass = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
+	$Data = new businessDetailsClass;
+	
+    $fromClass = $Data->getBInfo( $upn, $subupn, $currentyear, $districtid ) ;
     var_dump($fromClass);
     echo "<br><br>";
     echo $fromClass['owner'];
