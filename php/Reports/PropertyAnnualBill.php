@@ -19,8 +19,8 @@
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 	
 	// TODO: Session on District
-	$districtId = $_GET['districtid'];
-	//$districtId = 1840;
+	//$districtId = $_GET['districtid'];
+	$districtId = 130;
 	
 	/*
 	 * PDF Generation
