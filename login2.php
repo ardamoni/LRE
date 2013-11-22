@@ -26,6 +26,7 @@
 
 <form name = "login" action = "index.php" method = "POST">
 <<<<<<< HEAD
+<<<<<<< HEAD
 <noscript>
         <div class="noscript">
             <div class="noscript-inner">
@@ -34,9 +35,6 @@
             </div>
         </div>
 </noscript>
-=======
->>>>>>> 06bdda98d89d5932c276012341fd87c5ebd21466
-
 <table class="map_area" border = "1">
  	<tr>
 		<td> <div id="mapLogin" class="smallmap"></div> </td>
