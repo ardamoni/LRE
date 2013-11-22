@@ -23,6 +23,11 @@
 	$treceipt		= $_POST['treceipt'];	
 	$districtid 	= $_POST['districtid'];	
 	
+	if( !$subupn )
+	{		
+		$subupn = '';
+	}
+	
 	if( !$paymentDate )
 	{		
 		$paymentDate = date("Y-m-d");
@@ -35,8 +40,8 @@
 	// static values 
 	// TODO change them to dynamic, from the map
 	$station = "Station1";		
-	$collectorID = "100";			// TODO through session
-	$districtid = "130";			// TODO through session
+	$collectorID = "100";						// TODO through session
+	$districtid = $_SESSION['user']['user'];			
 		
 	$currentYear = date("Y");
 	

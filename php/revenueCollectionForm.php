@@ -1,3 +1,12 @@
+<?php
+	
+	if( session_status() != 2 )
+	{
+		session_start();
+	}
+	//echo " post: ", $_SESSION['user']['user'];	
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,9 +138,10 @@ function checkBeforeSubmit(frm) {
 			var districtid = $('#districtid').val();
 			
 			//use ajax to run the check
-			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt, districtid: districtid },
+			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt },
 				function(result)
 				{				
+					//$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + result + '</b></span>');
 					if( result == 1 )
 					{
 						//show that the treceipt is available
@@ -140,8 +150,8 @@ function checkBeforeSubmit(frm) {
 					else
 					{
 						//show that the treceipt is NOT available
-						$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + treceipt + '</b> is not Available</span>');
-					}
+						$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + treceipt + '</b> is NOT available or was Used previously </span>');
+					}					
 			});
 		}  
 	</script>
@@ -167,7 +177,12 @@ function checkBeforeSubmit(frm) {
 				<option value="<?php //echo $choice;?>">Please make your selection</option></select></td> -->
 				<!-- TEMP: until the drop down is fixed -->
 				<td class='c' width="50%"><input name="subupn" type="hidden" id="subupn" size="50" value = "<?php echo $subupn;?>"><?php echo $subupn;?></td>
-			</tr>				
+			</tr>	
+			<tr>
+				<td width="25%">District ID</td>
+				<td width="2%">:</td>
+				<td class='c' width="50%"><input name="did" type="hidden" id="did" value = "<?php echo $districtid;?>"><?php echo $districtid;?></td>
+			</tr>	
 			<tr>
 				<td width = "25%">Payment date</td>
 				<td width = "2%">:</td>

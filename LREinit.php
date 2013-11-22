@@ -1,3 +1,8 @@
+<?php
+	session_start();
+?>
+
+
 <!DOCTYPE html>
 <!--31. Juli 2013 09:21:24 GMT First time sync with GitHUB-->
 <html>
@@ -193,7 +198,7 @@
 						<a href="#">Daily</a>
 						<a href="#">Weekly</a>
 						<a href="#">Monthly</a>	
-						<a href="#">Annualy</a>	
+						<a href="#">Annualy</a>								
 						<a href=""javascript:;" onclick="propertyAnnualBillOnClick();"">Print Bills for Property Rates</a>
 					</div>
 					<p class="menu_head">Search</p>
@@ -314,6 +319,9 @@
 		<div id="docs">
 			<p>
 				Information provided by TCPD
+				<?php
+				//echo $_SESSION['user']['user'];
+				?>
 			</p>
 		</div>
 		    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
@@ -325,8 +333,6 @@
 
 	</div>	<!-- end of footer -->
     
-<?php
-session_start();
-?>	
+	
 	</body>	
 </html>

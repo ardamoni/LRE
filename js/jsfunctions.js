@@ -742,7 +742,7 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 {	
 	var upn = global_upn;
 	var subupn = global_subupn[supnid];
-
+	var districtid = globaldistrictid;
 	var popupWindow = null;
 	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 	var title = 'Revenue Collection';

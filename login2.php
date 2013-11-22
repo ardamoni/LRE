@@ -24,7 +24,7 @@
         <link rel="stylesheet" href="style.css" type="text/css">
 
 
-<form name = "login" action = "index2.php" method = "POST">
+<form name = "login" action = "index.php" method = "POST">
 
 <table class="map_area" border = "1">
  	<tr>
