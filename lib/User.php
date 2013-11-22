@@ -64,6 +64,12 @@
 				$_SESSION['user']['name']		=	$r['name'];					
 				$_SESSION['sys']['login'] 		=	true;
 				
+				// user role
+				$qrole	= 	mysql_query("SELECT `roleid` FROM `usr_user_role` WHERE `username` = '".$r['username']."'");
+				$role	= 	mysql_fetch_array($qrole);
+			
+				$_SESSION['user']['roleid']		=	$role['roleid'];
+
 				
 				// user is regional district
 				$qdistrict	= 	mysql_query("SELECT `districtid` FROM `usr_user_district` WHERE `username` = '".$r['username']."'");

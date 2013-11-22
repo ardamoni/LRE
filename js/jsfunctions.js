@@ -742,7 +742,7 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 {	
 	var upn = global_upn;
 	var subupn = global_subupn[supnid];
-
+	var districtid = globaldistrictid;
 	var popupWindow = null;
 	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 	var title = 'Revenue Collection';
@@ -834,7 +834,6 @@ function propertyAnnualBillOnClick()
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-//	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
 	{
@@ -843,6 +842,7 @@ function propertyAnnualBillOnClick()
 
 	return false;
 }	
+
 // TODO: refresh parent window
 function parent_refresh() 
 {
