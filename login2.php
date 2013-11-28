@@ -25,8 +25,6 @@
 
 
 <form name = "login" action = "index.php" method = "POST">
-<<<<<<< HEAD
-<<<<<<< HEAD
 <noscript>
         <div class="noscript">
             <div class="noscript-inner">
