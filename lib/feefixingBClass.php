@@ -5,9 +5,9 @@
 require_once('database.php');
 require_once('database_object.php');
 
-class Feefix extends DatabaseObject {
+class FeefixBusiness extends DatabaseObject {
 	
-	protected static $table_name="fee_fixing_property";
+	protected static $table_name="fee_fixing_business";
 
 	protected static $db_fields = array('id', 'districtid', 'code', 'class', 'category', 'rate', 'year', 'unit', 'assessed', 'rate_impost', 'code_of_zone', 'name_of_zone', 'comments');
 
@@ -37,5 +37,5 @@ class Feefix extends DatabaseObject {
 	
 }
 
-$feefixp = new Feefix();
+$feefixb = new FeefixBusiness();
 ?>

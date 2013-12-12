@@ -3,33 +3,33 @@
 	/*	
 	 * 	this file is used to insert the revenue collection into tables
 	 */
+    require_once("../lib/initialize.php");
 
-	// DB connection
-	require_once( "../lib/configuration.php" );
-	require_once( "../lib/BusinessDetails.php" );
-	
-	ob_start(); // prevent adding duplicate data with refresh (F5)
-	session_start();
-//	$upn = '608-0615-0292';
-	$upn = '608-0615-0250';
-	$subupn = '608-0615-0250A';
-//	$subupn = '';
-	
-	$currentdate = getdate();
-	$currentyear = $currentdate['year'];
-	$districtid = '130';
-	
-	echo $currentyear;
+	$ffix = new FeefixProperty;
 
+//$class = Feefix::find_by_code(122);	
+//echo $class->class."<br />";
 
-	$Data = new businessDetailsClass;
+// $ffix->districtid=999;
+// $ffix->code=999;
+// $ffix->class='Test Class by Ekke';
+// $ffix->category='Test Category ';
+// $ffix->rate=99;
+// $ffix->year=2014;
+// $ffix->unit='test';
+// $ffix->rate_impost=0.99999;
+// $ffix->comments='This is the first INCLUDE';
+// 
+// $ffix->save();
 	
-    $fromClass = $Data->getBInfo( $upn, $subupn, $currentyear, $districtid ) ;
-    var_dump($fromClass);
-    echo "<br><br>";
-    echo $fromClass['owner'];
-    
-//    $fromClass = $Data->getPropertyInfo( $upn, $currentyear ) ;
-//    var_dump($fromClass);
+    $fromClassall = FeefixProperty::find_all() ;    
+    foreach($fromClassall as $record) {
+	  echo "Id: ". $recordr->id ."<br />";
+	  echo "Code: ". $record->code ."<br />";
+	  echo "Class: ". $record->class ."<br />";
+}
+
+//    var_dump($fromClassall);
+    echo "<br>test<br>";
     
 ?>

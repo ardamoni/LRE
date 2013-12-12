@@ -1,5 +1,5 @@
 <?php
-//    require_once("../lib/initialize.php");
+//require_once("../lib/initialize.php");
 
 error_reporting(E_ALL);
 set_time_limit(0);
@@ -22,8 +22,8 @@ date_default_timezone_set('Europe/London');
 <h1>PHPExcel Workbook Upload</h1>
 <h2>Fee Fixing Upload</h2>
 <?php
-require_once('../lib/feefixingClass.php');
-global $feefixp;
+require_once('../lib/feefixingBClass.php');
+global $feefixb;
 
 /** Include path **/
 set_include_path(get_include_path() . PATH_SEPARATOR . '../lib/PHPExcel179/Classes/');
@@ -42,11 +42,7 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 	$inputYear = $_POST['year'];
 //check which tables need to be used
 
-	if ($_POST['ifproperty']=='1'){	    
-		$targetTable = $feefixp->tell_table_name();
-	}elseif ($_POST['ifproperty']=='0'){
-//		$targetTable = $feefixb->tell_table_name();
-	}
+	$targetTable = $feefixb->tell_table_name();
 	
 
 	//echo $inputFileName;
@@ -116,26 +112,26 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 		foreach ($sheetData as $cellData) {
 			 echo "<tr>";
 //var_dump($cellData);
-				$feefixp->code=$cellData['A'];
-				$feefixp->class=$cellData['B'];
-				$feefixp->category=$cellData['C'];
-				$feefixp->rate=$cellData['D'];
-				$feefixp->unit=$cellData['E'];
-				$feefixp->assessed=$cellData['F'];
-				$feefixp->rate_impost=$cellData['G'];
-				$feefixp->code_of_zone=$cellData['H'];
-				$feefixp->name_of_zone=$cellData['I'];
-				$feefixp->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'];
-				$feefixp->districtid=$_POST['districtid'];	  
-				$feefixp->year=$_POST['year'];	  
+				$feefixb->code=$cellData['A'];
+				$feefixb->class=ltrim($cellData['B'],' ');
+				$feefixb->category=$cellData['C'];
+				$feefixb->rate=$cellData['D'];
+				$feefixb->unit=$cellData['E'];
+				$feefixb->assessed=$cellData['F'];
+				$feefixb->rate_impost=$cellData['G'];
+				$feefixb->code_of_zone=$cellData['H'];
+				$feefixb->name_of_zone=$cellData['I'];
+				$feefixb->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'];
+				$feefixb->districtid=$_POST['districtid'];	  
+				$feefixb->year=$_POST['year'];	  
 
 				if ($firstrow > 1){
-						$feefixp->save();
+						$feefixb->save();
 					}
 
 			$firstrow++;
-				unset($feefixp->id);
-				
+				unset($feefixb->id);
+			 
 			foreach ($cellData as $key => $value){
 				  echo "<td>" . $value . "</td>";
 				  }

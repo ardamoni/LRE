@@ -33,7 +33,8 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 //	echo '<br> <br>';
 //var_dump($_POST);
 //$goodtogo = true;
-
+$a_upload_district=explode(" ",$_POST['district']);
+$upload_district=$a_upload_district[0];
 //If you have received a submission.
     if ($_POST['submit'] == "Upload File"){
       $goodtogo = true;
@@ -130,7 +131,23 @@ if ($goodtogo){
 	//$objReader = PHPExcel_IOFactory::load($inputFileName);
 
 	$worksheetData = $objReader->listWorksheetInfo($inputFileName);
-	
+
+	if ($_POST['ifproperty']=='1'){	    
+		echo '<form id="form1" name="form1" method="post" action="uploadFeeFixingToDB.php">';
+	}elseif ($_POST['ifproperty']=='0'){
+		echo '<form id="form1" name="form1" method="post" action="uploadFeeFixingToBusinessDB.php">';
+	}
+
+?>
+	<input name="year" type="hidden" id="year" value = "<?php echo $_POST['year'];?>">
+	<input name="inputFileName" type="hidden" id="inputFileName" value = "<?php echo $inputFileName;?>">
+	<input name="ifproperty" type="hidden" id="ifproperty" value = "<?php echo $_POST['ifproperty'];?>">
+	<input name="districtid" type="hidden" id="districtid" value = "<?php echo $upload_district;?>">
+	<br>
+	<strong>Are you sure you want to upload the following data into the database?: </strong><input type="submit" id="Submit" name="Submit" value="Upload" />
+	</form>
+
+<?php
 
 	echo '<h3>Worksheet Information</h3>';
 	echo '<ol>';
@@ -155,7 +172,7 @@ if ($goodtogo){
 
 		echo "<table class='demoTbl' border='1' cellpadding='10' cellspacing='1' bgcolor='#FFFFFF'>";
 		//echo "<tr>";
-
+		
 		foreach ($sheetData as $cellData) {
 			 echo "<tr>";
 			foreach ($cellData as $key => $value)
@@ -174,12 +191,6 @@ if ($goodtogo){
 //} else { echo "No POST";}
 
 ?>
-	<form id="form1" name="form1" method="post" action="uploadFeeFixingToDB.php">
-	<input name="year" type="hidden" id="year" value = "<?php echo $_POST['year'];?>">
-	<input name="inputFileName" type="hidden" id="inputFileName" value = "<?php echo $inputFileName;?>">
-	<input name="ifproperty" type="hidden" id="ifproperty" value = "<?php echo $_POST['ifproperty'];?>">
-	Are you sure you want to upload this data into the database?: <input type="submit" id="Submit" name="Submit" value="Upload" />
-	</form>
 
 <body>
 </html>

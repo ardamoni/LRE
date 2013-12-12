@@ -17,8 +17,7 @@
 	 *	Include the Library Code
 	 *	-----------------------------------------------------------------------
 	 */
-	require_once("lib/configuration.php");			// Configuration File
-	require_once("lib/user.php");					// User Functions
+    require_once("lib/initialize.php");
 	
 	$User = new User;
 
