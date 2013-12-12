@@ -1643,7 +1643,7 @@ function fileopen(){
 }
 
 function uploadxls(){
-	var pageURL = 'php/testfopen.php';
+	var pageURL = 'php/uploadXLSfopen.php';
 	var title = 'Upload XLS';
 	var w = 1024;
 	var h = 650;
