@@ -1610,14 +1610,6 @@ function tableshow() {
    		alert(html);
    	}
    
-
-	
-//	popupWindow = window.open("","_blank","resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
-//	popupWindow.document.open();
-//	popupWindow.document.writeln("<html><head><title>Table View</title></head>");
-//	popupWindow.document.writeln("this is ekke</html>");
-	
-
 	if(popupWindow && !popupWindow.closed)
 	{
 		popupWindow.focus();
