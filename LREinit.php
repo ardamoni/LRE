@@ -208,10 +208,11 @@
 						<a href="#">Address</a>			
 				   </div>
 				   <p class="menu_head">Contacts</p>
-				   <p class="menu_head">News</p>
 				   <p class="menu_head">Manual</p>
+				   <p class="menu_head">Admin</p>
 					<div class="menu_body">
 						<a href=""javascript:;" onclick="fileopen();"">KML to DB conversion</a>
+						<a href=""javascript:;" onclick="uploadxls();"">Upload Fee Fixing information</a>
 				   </div>
 
 					   <p class="menu_head">Log out</p>

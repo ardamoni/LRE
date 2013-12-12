@@ -17,6 +17,7 @@
 		mysql_query("INSERT INTO `property_payments` (	`id`,
 														`upn`, 
 														`subupn`,
+														`districtid`,
 														`payment_date`,
 														`payment_value`,
 														`station_payment`,
@@ -28,6 +29,7 @@
 											VALUES 	( 	NULL,
 														'".$BOR['upn']."',
 														'".$BOR['subupn']."',
+														'".$BOR['districtid']."',
 														'".$BOR['date_payment']."',
 														'".$BOR['payment']."',
 														'".$BOR['station_payment']."',
@@ -42,7 +44,7 @@
 	}
 	
 	// update empty columns
-	mysql_query( "UPDATE `property_payments` SET `districtid` = '1840'" );
+//	mysql_query( "UPDATE `property_payments` SET `districtid` = '1840'" );
 	
 	
 	

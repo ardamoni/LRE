@@ -88,8 +88,9 @@
 		else
 		{
 			echo "WARNING: ", $BOR['upn'], " & ", $BOR['subupn'], " does NOT exist in property_balance", "<br>";
-			j++;
+			$j++;
 		}
-	}	
 	
+	}	
+
 ?>

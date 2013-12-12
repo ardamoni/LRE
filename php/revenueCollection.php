@@ -22,7 +22,7 @@
 	$paymentType	= $_POST['paymenttype'];
 	$treceipt		= $_POST['treceipt'];	
 	$districtid 	= $_POST['districtid'];	
-	
+//var_dump($_POST);	
 	if( !$subupn )
 	{		
 		$subupn = '';
@@ -168,8 +168,9 @@
 				<tr>
 					<td>OWNER:</td>						
 					<td><?php  
-							$ownerid = $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid" );
-							echo $Data->getOwnerInfo( $ownerid, 'name' );
+//							$ownerid = $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid" );
+//							echo $Data->getOwnerInfo( $ownerid, 'name' );
+							echo $Data->getPropertyInfo( $upn, $subupn, $currentYear, "owner" );
 						?></td>		
 				</tr>
 				<tr>
@@ -214,6 +215,7 @@
 	else 
 	{
 		echo "ERROR";
+		print_r(mysql_error_list($con));
 	}
 	
 	window.close();

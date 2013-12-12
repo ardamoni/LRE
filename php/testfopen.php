@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -24,13 +27,12 @@
 			table.formTbl tr  {
 				border: 1px solid #ccc;
 				border-color:#ffcc00;
-				width: 300px;
 				height: 3em;
 				font-size:1em;
 				text-align:left;
 			}
 			table.formTbl td  {
-				width: 300px;
+				width: 700px;
 				font-size:1em;
 				text-align:left;
 				padding:5px;
@@ -43,6 +45,34 @@
 <?php
 		require_once('../lib/html_form.class.php');
 		require_once( "../lib/configuration.php"	);
+
+//get the districts from feefixing for the drop-down list
+$run = "SELECT districtid, district_name from `area_district` ORDER BY `districtid` ;";
+
+$query 	= mysql_query($run);
+
+$district	= array();
+//$duse = '130 : Prestea Huni Valley';
+while ($row = mysql_fetch_array($query)) {
+	//check which district is stored in $SESSION
+    if ($_SESSION['user']['districtid']==$row['districtid'])
+    {
+     $duse = $row['districtid'].' : '.$row['district_name'];
+    }
+
+    $json = $row['districtid'].' : '.$row['district_name'];
+	//put the list into the drop down list
+	$dlist[] 			= $json;
+ }//end while
+
+
+$currentdate = getdate();
+$yearuse = $currentdate['year'];
+ 
+for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
+  {
+  $yearlist[] = $x;
+  }
 	// create instance of HTML_Form
 		$frm = new HTML_Form();
 
@@ -59,12 +89,23 @@
    
 	   // wrap form elements in paragraphs 
 		$frm->startTag('label') . $newcell.'Select District where the Fee Fixing is coming from: ' .$endcell.$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('constructMaterial', $cmlist, false, $cmuse ) .
+		$frm->addSelectList('district', $dlist, false, $duse ) .
 		$frm->endTag('label') . $endcell. $endrow . 
 		$frm->startTag('p') . 
+		
+		$frm->startTag('label') .$newcell. 'Select Year: ' .$endcell.$newcell. 
+		$frm->addSelectList('year', $yearlist, false, $yearuse ) .
+		$frm->endTag('label') . $endcell. $endrow . 
+		$frm->startTag('p') .
+
+		$frm->addLabelFor('ifproperty', $newcell.'Select category: '.$endcell) .$newcell.
+		// using html5 required attribute
+		$frm->addInput('radio', 'ifproperty', '1', array('id'=>'ifproperty', 'checked'=>'1')  ) . ' Property Rates ' . PHP_EOL .
+		$frm->addInput('radio', 'ifproperty', '0', array('checked'=>'0')) . ' Business Licenses' . 
+
+		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
+		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
+
 
 		$frm->addLabelFor('uploadedfile', $newcell.'Choose a file to upload: '.$endcell) .$newcell.
 		// using html5 required attribute
@@ -84,15 +125,5 @@
 // finally, output the long string
 echo $frmStr;
 ?>
-	
-<!--   	<form enctype="multipart/form-data" action="readXLSX.php" method="POST">
-	<input type="text" id="getdistrictid" value="" style="width: 50px;">
-	 Enter district id: <br />
-	
-	<input type="hidden" name="MAX_FILE_SIZE" value="100000" />
-	Choose a file to upload: <input name="uploadedfile" type="file" /><br />
-	<input type="submit" value="Upload File" />
-	</form>'
---!>
-    </body>
+</body>
 </html>

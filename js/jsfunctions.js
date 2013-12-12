@@ -710,7 +710,7 @@ function handler(request)
 			html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
 			html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
 			html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';									
-			html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+")' >";	
+			html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += "<input type='button' value='"+title+" Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += '<hr />';
 		}
@@ -738,14 +738,20 @@ function handler(request)
 		//  on mouse-click activation to create the window for revenue payments
 
 //-----------------------------------------------------------------------------
-function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supnid) 
+function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supnid, callproperty) 
 {	
 	var upn = global_upn;
 	var subupn = global_subupn[supnid];
+	var ifproperty = callproperty;
 	var districtid = globaldistrictid;
 	var popupWindow = null;
-	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
-	var title = 'Revenue Collection';
+	if (ifproperty=='property'){
+	var title = 'Property Revenue Collection';
+	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+	}else{
+	var title = 'Business Revenue Collection';
+	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+	}
 	var w = 450;
 	var h = 500;
     var left = (screen.width/2)-(w/2);
@@ -1634,4 +1640,21 @@ function fileopen(){
 	popupWindow.document.writeln('Choose a file to upload: <input name="uploadedfile" type="file" /><br />');
 	popupWindow.document.writeln('<input type="submit" value="Upload File" />');
 	popupWindow.document.writeln('</form>');
+}
+
+function uploadxls(){
+	var pageURL = 'php/testfopen.php';
+	var title = 'Upload XLS';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
 }

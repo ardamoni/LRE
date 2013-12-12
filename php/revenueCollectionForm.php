@@ -11,7 +11,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Revenue Collection Form</title>
+<?php echo "<title>".$_GET["title"]."</title>"; ?>
 <link rel="stylesheet" href="css/ex.css" type="text/css" />
 <!--<link rel="stylesheet" href="../style.css" type="text/css">-->
 <link rel="stylesheet" href="../style.css" type="text/css">
@@ -81,22 +81,42 @@ function checkBeforeSubmit(frm) {
 </head>
 <body>
     
-<h1><center>Enter revenue for this property</center></h1>
 
     
 <?php
 	require_once( "../lib/configuration.php" );
+	require_once("../lib/Revenue.php");
 
+	$Data = new Revenue;
+	
 	$upn 			= $_GET["upn"];
 	$subupn 		= $_GET["subupn"];
-	$districtid 	= $_GET['distictid'];	
+	$districtid 	= $_GET['districtid'];	
+	$ifproperty 	= $_GET['ifproperty'];	
 
+     $districtinfo = $Data->getDistrictInfo( $districtid, 'district_name' ).' ('.$districtid.')';
+//var_dump($_GET);
+
+	if ($ifproperty == 'property'){
+		echo "<h1><center>Enter revenue for this property</center></h1>";
+	} else {
+		echo "<h1><center>Enter revenue for this business</center></h1>";
+	}
+	if ($subupn == "" || $subupn == NULL || $subupn == 'null' || $subupn == "0")
+//		if ($subupn == 'null')
+	{ $subupn = ' - '; }
 		
 	$options = explode(",",$subupn);	// array
 	$name = 'subupn_dropDown';		 
 	$selected = -1; 					// default selection is first on the list	
 	$choice = dropdown( $name, $options, $selected );
 	
+//Options for type of payment selection
+$paymentType = array(
+	'cash' => 'cash',
+	'cheque' => 'cheque',
+	'bank transfer' => 'bank transfer'
+);
 ?>
 
 	
@@ -166,7 +186,7 @@ function checkBeforeSubmit(frm) {
 			<tr>
 				<td width="25%">UPN</td>
 				<td width="2%">:</td>
-				<td class='c' width="50%"><input name="upn" type="hidden" id="upn" value = "<?php echo $upn;?>"><?php echo $upn;?></td>
+				<td class='c' width="50%"><input name="upn" type="hidden" id="upn" value = "<?php echo $upn;?>"><?php echo $upn;?><input name="ifproperty" type="hidden" id="ifproperty" value = "<?php echo $ifproperty;?>"></td>
 			</tr>					
 			<tr>
 				<td width="20%">SUB-UPN</td>
@@ -181,7 +201,7 @@ function checkBeforeSubmit(frm) {
 			<tr>
 				<td width="25%">District ID</td>
 				<td width="2%">:</td>
-				<td class='c' width="50%"><input name="did" type="hidden" id="did" value = "<?php echo $districtid;?>"><?php echo $districtid;?></td>
+				<td class='c' width="50%"><input name="did" type="hidden" id="did" value = "<?php echo $districtid;?>"><?php echo $districtinfo;?></td>
 			</tr>	
 			<tr>
 				<td width = "25%">Payment date</td>
@@ -207,7 +227,8 @@ function checkBeforeSubmit(frm) {
 			<tr>
 				<td>Type of payment</td>
 				<td>:</td>
-				<td class='c'><input name="paymenttype" type="text" id="paymenttype" size="10"></td>
+				<td class='c'><?php echo generateSelect('paymenttype', $paymentType);?></td>
+				<!--<input name="paymenttype" type="text" id="paymenttype" size="10"></td>-->
 			</tr>
 			<tr>
 				<td>Ticketing receipt</td>
@@ -230,6 +251,15 @@ function checkBeforeSubmit(frm) {
 	</form>
 
 <?php
+
+function generateSelect($name = '', $options = array()) {
+	$html = '<select name="'.$name.'">';
+	foreach ($options as $option => $value) {
+		$html .= '<option value='.$value.'>'.$option.'</option>';
+	}
+	$html .= '</select>';
+	return $html;
+}
 	// drop down 
 	function dropdown( $name, array $options, $selected=null )
 	{

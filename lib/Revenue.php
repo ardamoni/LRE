@@ -163,7 +163,7 @@
 		// 	get the owner
 		function getOwnerInfo( $id = "", $f = "" )
 		{
-			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`ownerid` = '".$id."' ");
+			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`id` = '".$id."' ");
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}

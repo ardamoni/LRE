@@ -73,7 +73,8 @@
 		// Data
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Owner: ',0,0,'L');	
-		$PDF->Cell(90,5, $Data->getOwnerInfo( $r['owner_id'], "name" ) ,1,1,'C');	
+		$PDF->Cell(90,5, $Data->getOwnerInfo( $r['ownerid'], "name" ) ,1,1,'C');	
+//		$PDF->Cell(90,5, $r['owner'],1,1,'C');	
 		$PDF->Cell(30,5, 'UPN: ',0,0,'L');
 		$PDF->Cell(90,5, $r['upn'],1,0,'C');
 		$PDF->SetFont('Arial','',6);

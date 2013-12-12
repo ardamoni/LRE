@@ -12,13 +12,13 @@ date_default_timezone_set('Europe/London');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<title>PHPExcel Generic Excel Workbook Information</title>
+<title>PHPExcel Upload Fee Fixing information to database</title>
 
 </head>
 <body>
 
-<h1>PHPExcel Workbook Information</h1>
-<h2>Excel Workbook Information</h2>
+<h1>PHPExcel Workbook Upload</h1>
+<h2>Fee Fixing Upload</h2>
 <?php
 
 /** Include path **/
@@ -26,73 +26,24 @@ set_include_path(get_include_path() . PATH_SEPARATOR . '../lib/PHPExcel179/Class
 
 /** PHPExcel_IOFactory */
 include 'PHPExcel/IOFactory.php';
+/** database configuration */
+require_once( "../lib/configuration.php"	);
+
 define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 
-
-//	var_dump($_FILES);
-//	echo '<br> <br>';
 //var_dump($_POST);
-//$goodtogo = true;
 
-//If you have received a submission.
-    if ($_POST['submit'] == "Upload File"){
-      $goodtogo = true;
-     } 
-      //Check for a blank submission.
+//get the variables passed from parent	
+	$inputFileName = $_POST['inputFileName'];
+	$inputYear = $_POST['year'];
+//check which tables need to be used
 
-      try {
-        if ($_FILES['uploadedfile']['size'] == 0){
-          $goodtogo = false;
-        throw new exception ("Sorry, you must upload a spreadsheet (XLS, XLSX, CSV)");
-        }
-      } catch (exception $e) {
-        echo $e->getmessage();
-      }
-      //Check for the file size.
-      try {
-		if ($_FILES['uploadedfile']['size'] > 500000){
-		$goodtogo = false;
-		//Echo an error message.
-		throw new exception ("Sorry, the file is too big at approx: " . intval ($_FILES['uploadedfile']['size'] / 1000) . "KB");
-        }
-      } catch (exception $e) {
-        echo $e->getmessage();
-      }
-      //Ensure that you have a valid mime type.
-
-	$allowedmimes = array ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv");
-      try {
-		if (!in_array ($_FILES['uploadedfile']['type'],$allowedmimes)){ $goodtogo = false;
-		throw new exception ("Sorry, the file must be of type .xls. Yours is: " . $_FILES['uploadedfile']['type'] . "");
-        }
-       } 
-       catch (exception $e) {
-        echo $e->getmessage ();
-      }
-      //If you have a valid submission, move it, then show it.
-      if ($goodtogo){
-		try {
-		if (!move_uploaded_file ($_FILES['uploadedfile']['tmp_name'],"../uploads/".$_FILES['uploadedfile']['name'])){
-            $goodtogo = false;
-            throw new exception ("There was an error moving the file.");
-          }
-        } catch (exception $e) {
-          echo $e->getmessage ();
-	} }
-  
-if ($goodtogo){
-
-	// Where the file is going to be placed
-	$target_path = "../uploads/" ;
+	if ($_POST['ifproperty']=='1'){
+		$targetTable = 'fee_fixing_property';
+	}elseif ($_POST['ifproperty']=='0'){
+		$targetTable = 'fee_fixing_business';
+	}
 	
-	/* Add the original filename to our target path.
-	Result is "uploads/filename.extension" */
-	$target_path = $target_path . basename( $_FILES['uploadedfile']['name']);
-	
-//	echo '<br>'.$target_path.'<br>'.'<br>';
-	
-	$inputFileName = $target_path; //'../xls/Property.xlsx';
-//$inputFileName = '../xls/Business.xlsx';
 
 	//echo $inputFileName;
 
@@ -143,8 +94,8 @@ if ($goodtogo){
 		echo 'Loading Sheet "',$worksheet['worksheetName'],'" only<br />';
 		$objReader->setLoadSheetsOnly($worksheet);
 	//	echo 'Loading Sheet using configurable filter<br />';
-//		$filterrows = $worksheet['totalRows'];
-		$filterrows = 10;
+		$filterrows = $worksheet['totalRows'];
+//		$filterrows = 1;
 		$filterSubset = new MyReadFilter(1,$filterrows,range('A', '')); //$lastCL));
 		$objReader->setReadFilter($filterSubset);
 		$objPHPExcel = $objReader->load($inputFileName);
@@ -160,6 +111,7 @@ if ($goodtogo){
 			 echo "<tr>";
 			foreach ($cellData as $key => $value)
 				  echo "<td>" . $value . "</td>";
+				  
 		   echo "</tr>";
 		}
 	
@@ -170,16 +122,12 @@ if ($goodtogo){
 		echo '<hr />';
 
 	} // end foreach
-} // if gooodtogo
-//} else { echo "No POST";}
 
 ?>
-	<form id="form1" name="form1" method="post" action="uploadFeeFixingToDB.php">
-	<input name="year" type="hidden" id="year" value = "<?php echo $_POST['year'];?>">
+<!--	<form id="form1" name="form1" method="post" action="propertyDetails.php">
 	<input name="inputFileName" type="hidden" id="inputFileName" value = "<?php echo $inputFileName;?>">
-	<input name="ifproperty" type="hidden" id="ifproperty" value = "<?php echo $_POST['ifproperty'];?>">
 	Are you sure you want to upload this data into the database?: <input type="submit" id="Submit" name="Submit" value="Upload" />
 	</form>
-
+-->
 <body>
 </html>
