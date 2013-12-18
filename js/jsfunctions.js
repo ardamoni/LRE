@@ -194,9 +194,11 @@ function init(){
 
 //Google Streets      
   	  var gmap = new OpenLayers.Layer.Google(
-					"Google Streets", // the default
-					{numZoomLevels: 20,
-					visibility: false
+					"Google Hybrid",
+					{type: google.maps.MapTypeId.HYBRID,
+// 					"Google Streets", // the default
+// 					{numZoomLevels: 20,
+ 					visibility: false
 					});
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );

@@ -88,6 +88,13 @@ for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
 
    
 	   // wrap form elements in paragraphs 
+		$frm->endTag('p') .
+		$frm->addLabelFor('uploadedfile', $newcell.'Choose a file to upload: '.$endcell) .$newcell.
+		// using html5 required attribute
+		$frm->addInput('hidden', 'MAX_FILE_SIZE', '100000', array('id'=>'MAX_FILE_SIZE', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('file', 'uploadedfile', '', array('id'=>'uploadedfile', 'size'=>30, 'required'=>true) ) . 
+		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
+
 		$frm->startTag('label') . $newcell.'Select District where the Fee Fixing is coming from: ' .$endcell.$newcell. 
 		$frm->addSelectList('district', $dlist, false, $duse ) .
 		$frm->endTag('label') . $endcell. $endrow . 
@@ -104,13 +111,7 @@ for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
 		$frm->addInput('radio', 'ifproperty', '0', array('checked'=>'0')) . ' Business Licenses' . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
-
-
-		$frm->addLabelFor('uploadedfile', $newcell.'Choose a file to upload: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('hidden', 'MAX_FILE_SIZE', '100000', array('id'=>'MAX_FILE_SIZE', 'size'=>30, 'required'=>true) ) . 
-		$frm->addInput('file', 'uploadedfile', '', array('id'=>'uploadedfile', 'size'=>30, 'required'=>true) ) . 
+		$frm->endTag('p') .
 	    $frm->startTag('submit') .    
 		$frm->addInput('submit', 'submit', 'Upload File') .
 		$frm->endTag('submit') . PHP_EOL .

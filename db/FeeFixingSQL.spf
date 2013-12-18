@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>revenue</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>8322158460140863864</string>
+			<key>name</key>
+			<string>localhost</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>latin1</string>
+			<key>contentFilter</key>
+			<dict>
+				<key>filterComparison</key>
+				<string>=</string>
+				<key>filterComparisonTag</key>
+				<integer>0</integer>
+				<key>filterField</key>
+				<string>code</string>
+				<key>filterValue</key>
+				<string>131</string>
+				<key>firstBetweenField</key>
+				<string></string>
+				<key>menuLabel</key>
+				<string>`code` = '131'</string>
+				<key>secondBetweenField</key>
+				<string></string>
+			</dict>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoK8QDwcIFRYXGBkfICEoLDA0OFUkbnVs
+			bNMJCgsMEBRXTlMua2V5c1pOUy5vYmplY3RzViRjbGFzc6MNDg+A
+			AoADgASjERITgAWABoAKgA5UdHlwZVRyb3dzVGtleXNfECZTZWxl
+			Y3Rpb25EZXRhaWxUeXBlUHJpbWFyeUtleWVkRGV0YWlsc9MJCgsa
+			HB6hG4AHoR2ACIAJVDI3NDMJ0iIjJCVaJGNsYXNzbmFtZVgkY2xh
+			c3Nlc18QE05TTXV0YWJsZURpY3Rpb25hcnmjJCYnXE5TRGljdGlv
+			bmFyeVhOU09iamVjdNIKCykroSqAC4AN0gstLi9ZTlMuc3RyaW5n
+			gAxSaWTSIiMxMl8QD05TTXV0YWJsZVN0cmluZ6MxMydYTlNTdHJp
+			bmfSIiM1Nl5OU011dGFibGVBcnJheaM1NydXTlNBcnJhedIiIyY5
+			oiYnXxAPTlNLZXllZEFyY2hpdmVy0Tw9VGRhdGGAAQAIABEAGgAj
+			AC0AMgA3AEkATwBWAF4AaQBwAHQAdgB4AHoAfgCAAIIAhACGAIsA
+			kACVAL4AxQDHAMkAywDNAM8A1ADVANoA5QDuAQQBCAEVAR4BIwEl
+			AScBKQEuATgBOgE9AUIBVAFYAWEBZgF1AXkBgQGGAYkBmwGeAaMA
+			AAAAAAACAQAAAAAAAAA+AAAAAAAAAAAAAAAAAAABpQ==
+			</data>
+			<key>contentSortCol</key>
+			<string>code</string>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 1943}, {1329, 785}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>select DISTINCT d1.`districtid`, d1.year, d2.`district_name` from `fee_fixing_property`d1, `area_district` d2 where d1.districtid = d2.`districtid`;
+
+select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`;
+
+select d3.`district_name`, d2.year, sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`;
+
+select DISTINCT d1.`districtid`, d1.year, d2.`district_name` from `fee_fixing_business` d1, `area_district` d2 where d1.districtid = d2.`districtid`;
+
+select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=131 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`;
+
+select  d3.`district_name`, d2.year, sum(d2.`rate`) as TotalRevenueExpected from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`districtid`=d3.`districtid`  GROUP BY d1.`districtid`, d2.`year`;
+
+update `property` a set a.`year`='2013';
+
+select distinct a.`districtid`, b.`district_name` from `business` a, `area_district` b where a.`districtid`=b.`districtid` ;</string>
+			<key>table</key>
+			<string>fee_fixing_business</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>202</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>select  d3.`district_name`, d2.year, sum(d2.`rate`) as TotalRevenueExpected from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`districtid`=d3.`districtid`  GROUP BY d1.`districtid`, d2.`year`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=131 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=131 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select DISTINCT d1.`districtid`, d1.year, d2.`district_name` from `fee_fixing_business` d1, `area_district` d2 where d1.districtid = d2.`districtid`</string>
+		<string>select distinct a.`districtid`, b.`district_name` from `business` a, `area_district` b where a.`districtid`=b.`districtid`</string>
+		<string>select distinct a.`districtid` from `business` a</string>
+		<string>select d3.`district_name`, d2.year, sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d2.year, d1.`districtid`, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d2.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid` AND d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=d1.`year` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid` OR d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid` AND d2.`year`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d1.year, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected, d1.`districtid`, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`</string>
+		<string>update `property` a set a.`year`='2013'</string>
+		<string>update a.`year` from `property` a set a.`year`='2013'</string>
+		<string>update a.`year` from `property` a set a.`year`=2013</string>
+		<string>update a.`year` from property a set a.`year`=2013</string>
+		<string>update year from property set `year`=2013</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=125 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=125 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=140 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`owner`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=125 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=125 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=130 AND d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`business_class` =d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d2.`year`, d1.`business_class`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `business` d1, `fee_fixing_business` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.business_class`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`;</string>
+		<string>select d1.`upn`, d1.`subupn`, d2.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2013 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`year`=2014 AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year`, sum(d2.`rate`) as TotalRevenueExpected, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year` d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.5.25</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>

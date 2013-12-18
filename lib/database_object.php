@@ -139,7 +139,4 @@ class DatabaseObject {
 		// but, for example, we can't call $user->update() 
 		// after calling $user->delete().
 	}
-
-	// I'm waiting for Late Static Bindings in PHP 5.3
-	// http://www.php.net/lsb
 }
