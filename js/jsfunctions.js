@@ -202,7 +202,7 @@ function init(){
 					});
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
-//KML      
+//KML we are not using this anymore     
 /*      var kmlRedGreen =  new OpenLayers.Layer.Vector("Payment Status", {
             strategies: [new OpenLayers.Strategy.Fixed()],
             styleMap: sm,
@@ -219,7 +219,7 @@ function init(){
             })
         });
 */
-//KMLsub      
+//kmlLocalPlan      
     var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
             strategies: [new OpenLayers.Strategy.Fixed()],
             styleMap: sm,
