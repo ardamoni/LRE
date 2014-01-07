@@ -40,6 +40,8 @@
 
   if ($dbaction=='getCZ'){getCZ($districtid);}
 
+  if ($dbaction=='deleteCZ'){deleteCZ($zoneid);}
+
   if ($dbaction=='searchupn'){searchupn($searchupn);}
 
 //----------end of loader -------------------------------------------------------------------
@@ -332,6 +334,27 @@ function getCZ($districtid)
 	
 //	 }//end if
 //	}//end else 
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+//-----------------------------------------------------------------------------
+				//function deleteCZ() 
+				//deletes the record for the selected zoneid from table collectorzones 
+				//expects  zoneid as $_POST parameters
+//-----------------------------------------------------------------------------
+function deleteCZ($zoneid) 
+{
+	$run = "DELETE FROM collectorzones WHERE id = '".$zoneid."' LIMIT 1;";
+	
+	$query = mysql_query($run);  
+
+	$affectedrows = (mysql_affected_rows($con)== 1) ? true : false;
+	$data 				= array();
+//   if (!empty($query)){
+	$json 				= array();
+			$json['deleted'] 				= $affectedrows;
+			$data[] 					= $json;
+	
 	header("Content-type: application/json");
 	echo json_encode($data);
 }

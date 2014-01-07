@@ -575,6 +575,7 @@ function onFeatureSelectBus(evt) {
 		//
 //-----------------------------------------------------------------------------
 function onFeatureSelectcz(evt) {
+	paraevt = evt;
 	feature = evt.feature;
 	var intersectedUPNs=0;
 	var intersectedParcels=0;
@@ -630,9 +631,10 @@ function onFeatureSelectcz(evt) {
 					}
 				}			
 			}
+
 		content = 'Collector ID: '+feature.attributes.collectorid+
 					'<br>District ID: '+feature.attributes.districtid+
-					'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000)+'sq km'+
+					'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+'sq km'+
 					'<br>Parcels: '+intersectedParcels.toString();
 		if (jsonPVisible){			
 		content +=	'<br>Properties: '+intersectedUPNs.toString();
@@ -641,11 +643,14 @@ function onFeatureSelectcz(evt) {
 		}
 		content +=	'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
 					'<br>Zoneid: '+feature.attributes.zoneid;
+		content += "<br><input type='button' class='deletezone' value='' title='Delete the selected collector zone' onclick='deletezone(paraevt)' >";	
+
 		var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
 						feature.geometry.getBounds().getCenterLonLat(),
 						new OpenLayers.Size(100,100),
 						content, 
 						null, true, onPopupClose);
+
 //		spinner.stop();				
 		feature.popup = popup;
 		popup.feature = feature;
@@ -1362,7 +1367,7 @@ function onVisibiltyChangedcz(){
 		url: "php/dbaction.php", 
 		data: OpenLayers.Util.getParameterString(
 		{dbaction: "getCZ",
-		 districtid: globaldistrictid}), //"234"}), //HARDCODED !!!
+		 districtid: globaldistrictid}), 
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded"
 		},
@@ -1376,7 +1381,7 @@ function onVisibiltyChangedcz(){
 //-----------------------------------------------------------------------------
 		//function getCZhandler() 
 		//is the handler for onFeatureAddedCZ and reacts on error or success messages from dbaction.php:insertCZ
-		//
+		//this function creates the features, adds the attributes and displays them as a new layer 'colzones' on the map 
 //-----------------------------------------------------------------------------
 function getCZhandler(request) {
 	// the server could report an error
@@ -1451,6 +1456,29 @@ function update() {
 
 
 //-----------------------------------------------------------------------------
+		//function deletezone() 
+		//is used to delete Collector Zones 
+		//
+//-----------------------------------------------------------------------------
+function deletezone(evt) {
+ feature = evt.feature;
+ var request = OpenLayers.Request.POST({
+		url: "php/dbaction.php", 
+		data: OpenLayers.Util.getParameterString(
+		{dbaction: "deleteCZ",
+		 zoneid: feature.attributes.zoneid}), 
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		callback:  alert('Zone with id: '+feature.attributes.zoneid+ ' was deleted from database')
+	});
+ map.removePopup(feature.popup);
+ colzones.removeFeatures( [ feature ] );
+}    
+
+
+// end of function getCZhandler
+//-----------------------------------------------------------------------------
 		//function toggleControl() 
 		//is used for Collector Zones and
 		//is used by the drawing controls 
@@ -1465,6 +1493,9 @@ function toggleControl(element) {
 			control.deactivate();
 		}
 	}
+			if(element.value == 'deletezone'){
+			deletezone(element);
+			}
 	if(element.id == "noneToggle"){
 			select.activate();				
 		}

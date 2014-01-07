@@ -128,6 +128,12 @@
 			  background-color: white;
 			  background-image: url("img/tableview.png");
 			}
+		.deletezone { 
+			  width:  20px;  
+			  height: 20px;
+			  background-color: white;
+			  background-image: url("img/delete2.png");
+			}
 
 		</style>
         <style>
@@ -282,9 +288,6 @@
 						</li>
 						<li> <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(this);" />
 							<label for="polygonToggle">draw polygon</label>
-						</li>
-						<li> <input type="radio" name="type" value="delete" id="deleteToggle" onclick="toggleControl(this);" />
-							<label for="polygonToggle">delete polygon</label>
 						</li>
 						<li> <input type="radio" name="type" value="modify" id="modifyToggle"
 								   onclick="toggleControl(this);" />
