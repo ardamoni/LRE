@@ -94,6 +94,7 @@ if (!empty($subupn) && $subupn != "null" ){
 //get the current database entries from property
 	$Data = new propertyDetailsClass;
     $r = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
+//var_dump($r);
     
  //check Planning Permit   
  if (empty($r['planningpermit']))
@@ -219,8 +220,25 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 
    
 	   // wrap form elements in paragraphs 
+   	    '<strong>Property Location</strong>' . $endcell . $newcell . $endcell .$endrow .
 		$frm->startTag('p') .    
 		// label and text input with optional attributes
+		$frm->addLabelFor('street', $newcell.'Street name: '.$endcell) . $newcell. 
+		// using html5 required attribute
+		$frm->addInput('text', 'street', $r['streetname'], array('id'=>'street', 'size'=>30, 'required'=>true) ).
+		$frm->startTag('p') . PHP_EOL . $endcell . $endrow .  
+		// label and text input with optional attributes
+		$frm->addLabelFor('housenumber', $newcell.'Housenumber: '.$endcell) . $newcell. 
+		// using html5 required attribute
+		$frm->addInput('text', 'Nr.', $r['housenumber'], array('id'=>'housenumber', 'size'=>10, 'required'=>true) ) . 
+
+		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
+		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
+
+		$frm->startTag('p') .    
+		// label and text input with optional attributes
+	    '<strong>Owner Information</strong>' . $endcell .$newcell . $endcell . $endrow .
+		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
 		$frm->addLabelFor('owner', 'Owner: '.$endcell) . $newcell. 
 		// using html5 required attribute
 		$frm->addInput('text', 'owner', $r['owner'], array('id'=>'owner', 'size'=>30, 'required'=>true) ) . 
@@ -298,21 +316,6 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
-
-		$frm->startTag('p') . 
-		$frm->addLabelFor('localCode', $newcell.'Locality code: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'localCode', $r['locality_code'], array('id'=>'localCode', 'size'=>30, 'required'=>true) ) . 
-
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
-
-		$frm->startTag('label') . $newcell .'Property Type: ' .$endcell .$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('propertyUse', $ptypelist, false, $ptypeuse ) .
-		$frm->endTag('label') . $endcell. $endrow . 
 	
 		"</table>" . 
     $newcell . 
@@ -326,8 +329,23 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
     $newcell .
 		"<table class='formTbl'>" . $newrow . $newcell . //border='1' cellpadding='10' cellspacing='1' bgcolor='#FFFFFF'
 	
+		$frm->startTag('p') .
+		'<strong>Property Information</strong>' . $endcell .$newcell . $endcell . $endrow .
+		$frm->addLabelFor('localCode', $newcell.'Locality code: '.$endcell) .$newcell.
+		// using html5 required attribute
+		$frm->addInput('text', 'localCode', $r['locality_code'], array('id'=>'localCode', 'size'=>30, 'required'=>true) ) . 
 
-		$frm->startTag('label') .'Structure: ' .$endcell.$newcell. 
+		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
+		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
+
+		$frm->startTag('label') . $newcell .'Property Type: ' .$endcell .$newcell. 
+		// arguments: name, array containing option text/values
+		// include values attributes (boolean),
+		// optional arguments: selected value, header, additional attributes in associative array
+		$frm->addSelectList('propertyUse', $ptypelist, false, $ptypeuse ) .
+		$frm->endTag('label') . $endcell. $endrow . 
+
+		$frm->startTag('label') .$newcell.'Structure: ' .$endcell.$newcell. 
 		// arguments: name, array containing option text/values
 		// include values attributes (boolean),
 		// optional arguments: selected value, header, additional attributes in associative array

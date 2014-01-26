@@ -585,9 +585,9 @@ function onFeatureSelectcz(evt) {
   	var jsonBVisible = fromBusiness.getVisibility();
 
    	if (!jsonLPVisible)
-   	{	html = 'Please open the Local Plan!';
+   	{	html = 'Please open the Local Plan! \nThis will enable the calculation of numbers of Parcels';
    		alert(html); 
-   	}else{	
+   	}//else{	
 //   	  spinner.spin(target);
 
 		if (jsonPVisible){
@@ -596,7 +596,7 @@ function onFeatureSelectcz(evt) {
 		else if (jsonBVisible)
 		{	var searchlayer=fromBusiness.id; }
 		else
-		{ 	html = 'Please open either the Properties or the Business Map!';
+		{ 	html = 'Please open either the Properties or the Business Map!\nThis will enable the calculation of numbers of Properties or Businesses';
 			alert(html);
 		}
 		
@@ -615,6 +615,7 @@ function onFeatureSelectcz(evt) {
 					}
 				}			
 			}
+		if (jsonPVisible || jsonBVisible) {
 		// check each feature from layer below if intersecting with the collector zone polygon
 			console.log('property layer');
 			for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
@@ -631,6 +632,8 @@ function onFeatureSelectcz(evt) {
 					}
 				}			
 			}
+		}
+  // 	}
 
 		content = 'Collector ID: '+feature.attributes.collectorid+
 					'<br>District ID: '+feature.attributes.districtid+
@@ -655,7 +658,6 @@ function onFeatureSelectcz(evt) {
 		feature.popup = popup;
 		popup.feature = feature;
 		map.addPopup(popup, true);
-   	}
 } 
 
 //-----------------------------------------------------------------------------
@@ -794,7 +796,7 @@ function propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, sup
 		var title = 'Business Details';
 	}
 	var w = 1024;
-	var h = 650;
+	var h = 750;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);

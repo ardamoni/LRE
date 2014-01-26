@@ -83,7 +83,7 @@ $currentyear = $currentdate['year'];
 
 //var_dump($_GET);
 
-if (!empty($subupn) && $subupn != "null" ){
+if (!empty($subupn) && $subupn != 'null' ){
 //  if (!empty($subupn) || $subupn != "" || $subupn != null || $subupn != NULL || $subupn != "0" || strlen(trim($subupn))==0){
 		echo "<h1>Enter business details for UPN: ".$upn." and SubUPN: ".$subupn."</h1>";
 	}
