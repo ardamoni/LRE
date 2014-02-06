@@ -1,0 +1,312 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+100, Advertising Agency, Advertising Agency,,year,,,,,,-99
+101,    Advertising Agency - Category A (eg. Afromedia), Advertising Agency,200,year,,,,,,-99
+102,   Advertising Agency -  Category B, Advertising Agency,150,year,,,,,,-99
+103,    Advertising Agency - Category C, Advertising Agency,100,year,,,,,,-99
+200,Art Studios/Signwriters,Art Studios/Signwriters,,year,,,,,,-99
+201,   Art Studios/Signwriters - Category A,Art Studios/Signwriters,10,year,,,,,,-99
+202,  Art Studios/Signwriters -  Category  B,Art Studios/Signwriters,5,year,,,,,,-99
+203,  Art Studios/Signwriters -  Category  C,Art Studios/Signwriters,4,year,,,,,,-99
+300,Artisans,Artisans,,year,,,,,,-99
+301,Artisans - Category A,Artisans,7,year,,,,,,-99
+302,Artisans - Category B,Artisans,6,year,,,,,,-99
+303,Artisans -  Category C,Artisans,5,year,,,,,,-99
+400, Block making Factories, Block making Factories,,year,,,,,,-99
+401,   Block making Factories - Category A (machines), Block making Factories,10,year,,,,,,-99
+402,    Block making Factories - Category B(manual), Block making Factories,10,year,,,,,,-99
+500, Bill-Boards (Adverts), Bill-Boards (Adverts),,year,,,,,,-99
+501,    Bill-Boards (Adverts) - Prismatic, Bill-Boards (Adverts),35,year,,,,,,-99
+502,    Bill-Boards (Adverts) - Bulletin, Bill-Boards (Adverts),30,year,,,,,,-99
+503,    Bill-Boards (Adverts) - Flexi (Extra Large), Bill-Boards (Adverts),40,year,,,,,,-99
+504,    Bill-Boards (Adverts) -Large (96 sheets), Bill-Boards (Adverts),25,year,,,,,,-99
+505,    Bill-Boards (Adverts) - Medium  (16 - 48 sheets), Bill-Boards (Adverts),15,year,,,,,,-99
+506,    Bill-Boards (Adverts) - Signboard   Small, Bill-Boards (Adverts),10,year,,,,,,-99
+507,    Bill-Boards (Adverts) - Banners, Bill-Boards (Adverts),10,year,,,,,,-99
+600,  Boutiques,  Boutiques,,year,,,,,,-99
+601,   Boutiques - Category A,  Boutiques,50,year,,,,,,-99
+602,   Boutiques - Category B,  Boutiques,40,year,,,,,,-99
+603,   Boutiques - Category C,  Boutiques,35,year,,,,,,-99
+701, Bookshops/Stationery Shops, Bookshops/Stationery Shops,,year,,,,,,-99
+702,  Bookshops/Stationery Shops  - Category A     (large), Bookshops/Stationery Shops,35,year,,,,,,-99
+703,   Bookshops/Stationery Shops  - Category B    ( meduim), Bookshops/Stationery Shops,30,year,,,,,,-99
+704,  Bookshops/Stationery Shops  - Category C      (small and rural), Bookshops/Stationery Shops,25,year,,,,,,-99
+800,  Bakeries,  Bakeries,,year,,,,,,-99
+801,Bakeries - Pastries,  Bakeries,20,year,,,,,,-99
+802,   Bakeries - Flour Kneading (per machine),  Bakeries,15,year,,,,,,-99
+900, Building Materials/Hardware shops, Building Materials/Hardware shops,,year,,,,,,-99
+901,Building Materials/Hardware shops - Category A (eg.  Peacestone), Building Materials/Hardware shops,10,year,,,,,,-99
+902,Building Materials/Hardware shops - Category B (eg. Urban areas : General ), Building Materials/Hardware shops,8,year,,,,,,-99
+903,Building Materials/Hardware shops -  Category C (eg. Urban areas: Cement Only), Building Materials/Hardware shops,6,year,,,,,,-99
+904,Building Materials/Hardware shops -  Category D (eg. Rural areas: General), Building Materials/Hardware shops,5,year,,,,,,-99
+905,Building Materials/Hardware shops - Category E (eg. Rural areas: Cement Only), Building Materials/Hardware shops,3,year,,,,,,-99
+1000,Blacksmiths,Blacksmiths,,year,,,,,,-99
+1001,Blacksmiths,Blacksmiths,7,year,,,,,,-99
+1100, Car Washing Bay, Car Washing Bay,,year,,,,,,-99
+1101,Car Washing Bay -  Category A (Pressure machine), Car Washing Bay,10,year,,,,,,-99
+1102,Car Washing Bay -  Category B (Manual), Car Washing Bay,5,year,,,,,,-99
+1201,Chain-saw/Water pump/Generator,Chain-saw/Water pump/Generator,20,year,,,,,,-99
+1300,Charcoal/Firewood,Charcoal/Firewood,,year,,,,,,-99
+1301, Charcoal/Firewood - Charcoal Burners / Dealers,Charcoal/Firewood,10,year,,,,,,-99
+1302,Charcoal/Firewood - Cane Cutters,Charcoal/Firewood,10,year,,,,,,-99
+1303,Charcoal/Firewood - Firewood Cutters,Charcoal/Firewood,10,year,,,,,,-99
+1304,Charcoal/Firewood - Firewood Dealers,Charcoal/Firewood,10,year,,,,,,-99
+1400,Chemical/Pharmacy/Agro-Chemical,Chemical/Pharmacy/Agro-Chemical,,year,,,,,,-99
+1401,Chemical/Pharmacy/Agro-Chemical -  Category A ( Pharmacy),Chemical/Pharmacy/Agro-Chemical,20,year,,,,,,-99
+1402, Chemical/Pharmacy/Agro-Chemical -  Category B (Urban:Chemical Stores/Agro Chemicals),Chemical/Pharmacy/Agro-Chemical,10,year,,,,,,-99
+1403,Chemical/Pharmacy/Agro-Chemical -  Category C (Large: Rural),Chemical/Pharmacy/Agro-Chemical,8,year,,,,,,-99
+1404, Chemical/Pharmacy/Agro-Chemical -   Category D ( Small:Rural),Chemical/Pharmacy/Agro-Chemical,6,year,,,,,,-99
+1500,Commercial House/Dept. Stores,Commercial House/Dept. Stores,,year,,,,,,-99
+1501,Commercial House/Dept. Stores - Category A Large eg. Melcom,Commercial House/Dept. Stores,20,year,,,,,,-99
+1502,Commercial House/Dept. Stores - Category B Medium eg.,Commercial House/Dept. Stores,15,year,,,,,,-99
+1503,Commercial House/Dept. Stores - Category C Small,Commercial House/Dept. Stores,10,year,,,,,,-99
+1504,Commercial House/Dept. Stores - Category D,Commercial House/Dept. Stores,8,year,,,,,,-99
+1505,Commercial House/Dept. Stores - Category E  Table Top,Commercial House/Dept. Stores,7,year,,,,,,-99
+1601,Cigaratte Wholesale Outlets/supplier,Cigaratte Wholesale Outlets/supplier,50,year,,,,,,-99
+1700,Car Dealers,Car Dealers,,year,,,,,,-99
+1701,Car Dealers - Category A(Sellers),Car Dealers,100,year,,,,,,-99
+1702,Car Dealers - Category B(Rentals :Ablo - Grade 1),Car Dealers,50,year,,,,,,-99
+1703,Car Dealers - Category C(Rentals-saloon cars),Car Dealers,30,year,,,,,,-99
+1801,Computer School,Computer School,50,year,,,,,,-99
+1901,Commissioner of Oaths,Commissioner of Oaths,5,year,,,,,,-99
+2000,Cold Store,Cold Store,,year,,,,,,-99
+2001,Cold Store - Category A,Cold Store,30,year,,,,,,-99
+2002,Cold Store - Category B,Cold Store,20,year,,,,,,-99
+2003,Cold Store - Category C,Cold Store,15,year,,,,,,-99
+2004,Cold Store - Category D,Cold Store,10,year,,,,,,-99
+2100,Cocoa Buying Companies,Cocoa Buying Companies,,year,,,,,,-99
+2101,Cocoa Buying Companies - Category A( Agencies),Cocoa Buying Companies,10000,year,,,,,,-99
+2102,Cocoa Buying Companies - Category B(Sub agents),Cocoa Buying Companies,7500,year,,,,,,-99
+2201,Courier Services (eg. DHL  EMS  FEDEX),Courier Services (eg. DHL  EMS  FEDEX),100,year,,,,,,-99
+2300, Distribution of Drinks/Wholesale, Distribution of Drinks/Wholesale,,year,,,,,,-99
+2301,Distribution of Drinks/Wholesale - Category A (Coca Cola), Distribution of Drinks/Wholesale,10,year,,,,,,-99
+2302,Distribution of Drinks/Wholesale -  Category B (By His Grace  Big Apple), Distribution of Drinks/Wholesale,10,year,,,,,,-99
+2303,Distribution of Drinks/Wholesale -  Category C, Distribution of Drinks/Wholesale,5,year,,,,,,-99
+2304,Distribution of Drinks/Wholesale - Category D, Distribution of Drinks/Wholesale,3,year,,,,,,-99
+2305,Distribution of Drinks/Wholesale - Category E, Distribution of Drinks/Wholesale,3,year,,,,,,-99
+2306,Distribution of Drinks/Wholesale - Akpeteshie/others, Distribution of Drinks/Wholesale,20,year,,,,,,-99
+2400,Drinking Bars,Drinking Bars,,year,,,,,,-99
+2401,Drinking Bars - Category A(General),Drinking Bars,10,year,,,,,,-99
+2402,Drinking Bars - Category B(Akpeteshie only),Drinking Bars,3,year,,,,,,-99
+2500,Distillers/Breweries,Distillers/Breweries,,year,,,,,,-99
+2501,Distillers/Breweries - Category A (  Akpeteshie,Distillers/Breweries,20,year,,,,,,-99
+2502,Distillers/Breweries - Category A (Pito/Palm-wine,Distillers/Breweries,10,year,,,,,,-99
+2503,Distillers/Breweries - Category A  ( Akpeteshie Exportation),Distillers/Breweries,20,year,,,,,,-99
+2600,Driving School,Driving School,,year,,,,,,-99
+2601,Driving School - Category A(license D to F),Driving School,50,year,,,,,,-99
+2602,Driving School - Category B(license A to C),Driving School,50,year,,,,,,-99
+2700,Electricals Shop,Electricals Shop,,year,,,,,,-99
+2701,Electricals Shop - Category A,Electricals Shop,50,year,,,,,,-99
+2702,Electricals Shop - Category B,Electricals Shop,40,year,,,,,,-99
+2703,Electricals Shop - Category C (Rewinding),Electricals Shop,35,year,,,,,,-99
+2704,Electricals Shop - Electronic Appliance Shop,Electricals Shop,30,year,,,,,,-99
+2800,Electronic Shop,Electronic Shop,,year,,,,,,-99
+2801,Electronic Shop - Category A  - (eg. Brand new),Electronic Shop,40,year,,,,,,-99
+2802,Electronic Shop - Category B ( Second Hand Shop),Electronic Shop,35,year,,,,,,-99
+2803,Electronic Shop - Category C (Radio/Electonic repairers),Electronic Shop,30,year,,,,,,-99
+2900,Florist(Flower shop),Florist(Flower shop),,year,,,,,,-99
+3000,Furniture/Carpentry Shop,Furniture/Carpentry Shop,,year,,,,,,-99
+3001,Furniture/Carpentry Shop - Category A (Showroom),Furniture/Carpentry Shop,50,year,,,,,,-99
+3002,Furniture/Carpentry Shop - Category B   Coffin Producers/Sellers,Furniture/Carpentry Shop,40,year,,,,,,-99
+3003,Furniture/Carpentry Shop - Category C (Upholstry),Furniture/Carpentry Shop,30,year,,,,,,-99
+3004,Furniture/Carpentry Shop - Others Category D,Furniture/Carpentry Shop,25,year,,,,,,-99
+3100,Financial Institutions,Financial Institutions,,year,,,,,,-99
+3101,Financial Institutions -  Category A (Commercial Banks),Financial Institutions,3000,year,,,,,,-99
+3102,Financial Institutions - Category B (Rural/Community Banks),Financial Institutions,2000,year,,,,,,-99
+3103,Financial Institutions - Category C (Rural Banks Agency),Financial Institutions,1000,year,,,,,,-99
+3104,Non-Banking Institutions - Category A (Main Branch eg. SSNIT SIC etc),Non-Banking Institutions,20,year,,,,,,-99
+3105,Non-Banking Institutions - Category B (Agencies),Non-Banking Institutions,10,year,,,,,,-99
+3200,Fast Food,Fast Food,,year,,,,,,-99
+3201,Fast Food - Category A,Fast Food,10,year,,,,,,-99
+3202,Fast Food - Category B (Wayside),Fast Food,5,year,,,,,,-99
+3301,Gold Dealers,Gold Dealers,200,year,,,,,,-99
+3401,Goldsmiths,Goldsmiths,150,year,,,,,,-99
+3500,Hair Dressing Saloons,Hair Dressing Saloons,,year,,,,,,-99
+3501,Hair Dressing Saloons- Category A (Urban),Hair Dressing Saloons,7,year,,,,,,-99
+3502,Hair Dressing Saloons - Category B (Rural),Hair Dressing Saloons,5,year,,,,,,-99
+3600,Hotels,Hotels,,year,,,,,,-99
+3601,Hotel - Category A Kenroses Minado Buelahland,Hotels,60,year,,,,,,-99
+3602,Hotel - Category B ( eg Kokoroko),Hotels,50,year,,,,,,-99
+3603,Hotel - Category C (Heaven view),Hotels,40,year,,,,,,-99
+3604,Hotel - Category D (Guest houses eg.Mikemay Continental),Hotels,30,year,,,,,,-99
+3605,Hotel - Category E Hostel Operators,Hotels,20,year,,,,,,-99
+3701,Ice Cream/Lolly Distributor (eg. Fan Ice),Ice Cream/Lolly Distributor (eg. Fan Ice),150,year,,,,,,-99
+3801,Ice Cream/Lolly Distributor (eg. Fan Ice),Importers (General Merchant),150,year,,,,,,-99
+3900,Industrial Service Companies,Industrial Service Companies,,year,,,,,,-99
+3901,Industrial Service Companies - Category A (eg. AEL  Taywood etc.),Industrial Service Companies,100,year,,,,,,-99
+3902,Industrial Service Companies - Category B (Drilling Explosive Cos:St Lambert T & E),Industrial Service Companies,100,year,,,,,,-99
+3903,Industrial Service Companies - Category C (Toyota  Catrol  G5 Barbex Banlaw),Industrial Service Companies,100,year,,,,,,-99
+3904,Industrial Service Companies - Category D,Industrial Service Companies,100,year,,,,,,-99
+3905,Industrial Service Companies - Category E (eg.Swaako  Antrak Liner  Crown Resources etc),Industrial Service Companies,100,year,,,,,,-99
+3906,Industrial Service Companies - Category F (Indegerious Mining Service),Industrial Service Companies,100,year,,,,,,-99
+4000,Industrial Laboratory,Industrial Laboratory,,year,,,,,,-99
+4001,Industrial Laboratory - Category A (Large Scale eg. SGS),Industrial Laboratory,150,year,,,,,,-99
+4002,Industrial Laboratory - Category B (Medium Scale eg. Baysfield  Transworld),Industrial Laboratory,150,year,,,,,,-99
+4100,Internet Services,Internet Services,,year,,,,,,-99
+4101,Internet Services - Category A  5 or Less Machines,Internet Services,150,year,,,,,,-99
+4102,Internet Services - Category B  6 - 9 Machines,Internet Services,150,year,,,,,,-99
+4103,Internet Services - Category C  10 Above Machines,Internet Services,150,year,,,,,,-99
+4201,Key Cutters,Key Cutters,150,year,,,,,,-99
+4300,Kiosks,Kiosks,,year,,,,,,-99
+4301,    Kiosks(Urban),Kiosks,5,year,,,,,,-99
+4302,    Kiosk ( Rural),Kiosks,4,year,,,,,,-99
+4303,    Lotto Kiosk,Kiosks,3,year,,,,,,-99
+4400,Laundries/Dry Cleaners,Laundries/Dry Cleaners,,year,,,,,,-99
+4401,Laundries/Dry Cleaners - Category A,Laundries/Dry Cleaners,35,year,,,,,,-99
+4402,Laundries/Dry Cleaners - Category B,Laundries/Dry Cleaners,35,year,,,,,,-99
+4500,Liquified Petroleum Gas Station,Liquified Petroleum Gas Station,,year,,,,,,-99
+4501,Category A Filling Station,Liquified Petroleum Gas Station,20,year,,,,,,-99
+4502,Category B Door-to-Door,Liquified Petroleum Gas Station,10,year,,,,,,-99
+4600,Lotto,Lotto,,year,,,,,,-99
+4601,Category A (Lotto Sellers),Lotto,20,year,,,,,,-99
+4602,Category B (Lotto Agents),Lotto,20,year,,,,,,-99
+4700,Mobile Van Sales,Mobile Van Sales,,year,,,,,,-99
+4701,Mobile Van Sales - Category A (General),Mobile Van Sales,5,year,,,,,,-99
+4702,Mobile Van Sales - Category B (single items),Mobile Van Sales,3,year,,,,,,-99
+4801,Medical Laboratory,Medical Laboratory,,year,,,,,,-99
+4901,Maternity Home,Maternity Home,60,year,,,,,,-99
+5000,Milling Machine,Milling Machine,,year,,,,,,-99
+5001,Milling Machine - Category A(Corn/Palm-Kernel/Rice Mills etc.,Milling Machine,20,year,,,,,,-99
+5002,Milling Machine - Category B(   Vegetable Mill ),Milling Machine,15,year,,,,,,-99
+5100,Mineral Mining/Marketing Firms,Mineral Mining/Marketing Firms,,year,,,,,,-99
+5101,Mineral Mining/Marketing Firms -- Category A ( Goldfields Gh.Ltd Darmang/Tarkwa  GSBPL ),Mineral Mining/Marketing Firms,5000,year,,,,,,-99
+5102,Mineral Mining/Marketing Firms - Category B (eg. Sankofa),Mineral Mining/Marketing Firms,2000,year,,,,,,-99
+5103,Mineral Mining/Marketing Firms - Category C (Small Scale Mining  -  Mechanised,Mineral Mining/Marketing Firms,1500,year,,,,,,-99
+5104,Mineral Mining/Marketing Firms - Category D (Small Scale Mining),Mineral Mining/Marketing Firms,1000,year,,,,,,-99
+5200,Metal Scrap Dealers,Metal Scrap Dealers,,year,,,,,,-99
+5201,Metal Scrap Dealers - Category A,Metal Scrap Dealers,8,year,,,,,,-99
+5202,Metal Scrap Dealers - Category B,Metal Scrap Dealers,5,year,,,,,,-99
+5300,Mineral Water Manufacturing,Mineral Water Manufacturing,,year,,,,,,-99
+5301,Mineral Water Manufacturing - Category A (within the District),Mineral Water Manufacturing,500,year,,,,,,-99
+5302,Mineral Water Manufacturing - Category B (outside the District),Mineral Water Manufacturing,400,year,,,,,,-99
+5401,Metal Aluminium Fabricatiors (Door/Windows),Metal Aluminium Fabricatiors (Door/Windows),40,year,,,,,,-99
+5500,MOBILE PHONE DEALERS,MOBILE PHONE DEALERS,,year,,,,,,-99
+5501,MOBILE PHONE DEALERS - Category A  Mobile phone sales and repairs,MOBILE PHONE DEALERS,60,year,,,,,,-99
+5502,MOBILE PHONE DEALERS - Category B  Mobile phone sales only,MOBILE PHONE DEALERS,55,year,,,,,,-99
+5503,MOBILE PHONE DEALERS - Category C  Mobile phone repairs only,MOBILE PHONE DEALERS,50,year,,,,,,-99
+5504,MOBILE PHONE DEALERS - Category D Phone Card Sellers,MOBILE PHONE DEALERS,45,year,,,,,,-99
+5600,Night Club,Night Club,,year,,,,,,-99
+5601,Night Club - Category A,Night Club,100,year,,,,,,-99
+5602,Night Club - Category B (Others),Night Club,80,year,,,,,,-99
+5603,Night Club/Restaurant,Night Club,50,year,,,,,,-99
+5700,Private Communication/Secretarial Services,Private Communication/Secretarial Services,,year,,,,,,-99
+5701,Private Communication/Secretarial Services - Category A (All Services including Internet),Private Communication/Secretarial Services,40,year,,,,,,-99
+5702,Private Communication/Secretarial Services - Category B (Telephone & Secretarial Services),Private Communication/Secretarial Services,35,year,,,,,,-99
+5703,Private Communication/Secretarial Services - Category C ( Secretarial Services or Comm Centre),Private Communication/Secretarial Services,30,year,,,,,,-99
+5704,Private Communication/Secretarial Services - Photocopying Only,Private Communication/Secretarial Services,20,year,,,,,,-99
+5800,Private News/Media Firms,Private News/Media Firms,,year,,,,,,-99
+5801,Private News/Media Firms - Radio,Private News/Media Firms,60,year,,,,,,-99
+5802,Private News/Media Firms - Print Media,Private News/Media Firms,40,year,,,,,,-99
+5803,Private News/Media Firms - Community Information Centres,Private News/Media Firms,30,year,,,,,,-99
+5804,Private News/Media Firms - News paper Vendors,Private News/Media Firms,5,year,,,,,,-99
+5900,Postal Service,Postal Service,,year,,,,,,-99
+5901,Postal Service - Category A (eg. Ghana post Sefwi Wiawso Branch,Postal Service,50,year,,,,,,-99
+5902,Postal Service - Category B (eg. Branches outside Wiawso,Postal Service,50,year,,,,,,-99
+6000,Petroleum Products/Retail Outlets,Petroleum Products/Retail Outlets,,year,,,,,,-99
+6001,Petroleum Products/Retail Outlets - Category A (Oil Companies Bulk Distribution (eg.Shell,Petroleum Products/Retail Outlets,70,year,,,,,,-99
+6002,Petroleum Products/Retail Outlets - Category B (Shell /Total Station          ),Petroleum Products/Retail Outlets,70,year,,,,,,-99
+6003,Petroleum Products/Retail Outlets - Category C (Filling Station/Surface Tanks),Petroleum Products/Retail Outlets,10,year,,,,,,-99
+6004,Petroleum Products/Retail Outlets - Category D (Kerosine),Petroleum Products/Retail Outlets,3,year,,,,,,-99
+6100,Printing Press,Printing Press,,year,,,,,,-99
+6101,Printing Press - Category A,Printing Press,10,year,,,,,,-99
+6102,Printing Press - Category B,Printing Press,5,year,,,,,,-99
+6200,Photography,Photography,,year,,,,,,-99
+6201,Category A (Photo Laboratory),Photography,10,year,,,,,,-99
+6202,Category B (Photo Studio),Photography,8,year,,,,,,-99
+6203,Category C (Freelance photographer),Photography,5,year,,,,,,-99
+6300,Professional Services,Professional Services,,year,,,,,,-99
+6301,Professional Services - Legal Firms,Professional Services,100,year,,,,,,-99
+6302,Professional Services - Accountancy Firms,Professional Services,100,year,,,,,,-99
+6304,Professional Services - Auctioneering,Professional Services,100,year,,,,,,-99
+6305,Professional Services - Consultancy,Professional Services,100,year,,,,,,-99
+6306,Professional Services - Surveyors ( etc),Professional Services,100,year,,,,,,-99
+6400,Private Hospital/Clinic,Private Hospital/Clinic,,year,,,,,,-99
+6401,Private Hospital/Clinic - Category A (Hospitals  Aseda),Private Hospital/Clinic,500,year,,,,,,-99
+6402,Private Hospital/Clinic - Category B (others  St. Edwards),Private Hospital/Clinic,300,year,,,,,,-99
+6403,Private Hospital/Clinic -Category C  (Homopathic Centres),Private Hospital/Clinic,150,year,,,,,,-99
+6500,Processing of Mineral/mining Documents,Processing of Mineral/mining Documents,,year,,,,,,-99
+6501,Precious /other related Minerals,Processing of Mineral/mining Documents,150,year,,,,,,-99
+6502,Non-Precious Minerals/others(sand stone etc),Processing of Mineral/mining Documents,150,year,,,,,,-99
+6600,Poultry,Poultry,,year,,,,,,-99
+6601,Poultry - Category A,Poultry,10,year,,,,,,-99
+6602,Poultry - Category B,Poultry,8,year,,,,,,-99
+6700,Private Schools,Private Schools,,year,,,,,,-99
+6701,Private Schools - Category A  (KG  Primary  and JHS),Private Schools,100,year,,,,,,-99
+6702,Private Schools - Category B (KG and Primary  or Primary and JHS),Private Schools,60,year,,,,,,-99
+6703,Private Schools - Category C (Pre-School  or Primary or JHS),Private Schools,40,year,,,,,,-99
+6704,Private Schools - Private SSS/Voc/Tech Schools,Private Schools,150,year,,,,,,-99
+6800,Palm Oil/kernel Processing,Palm Oil/kernel Processing,,year,,,,,,-99
+6801,Palm Oil/kernel Processing - Category A (Industrial Production of Palm Oil),Palm Oil/kernel Processing - Category A (Industrial Production of Palm Oil),5,year,,,,,,-99
+6802,Palm Oil/kernel Processing - Category B (Commercial palm oil production),Palm Oil/kernel Processing - Category B (Commercial palm oil production),3,year,,,,,,-99
+6900,Quarry,Quarry,,year,,,,,,-99
+6901,Quarry - Category A (Industrial),Quarry,200,year,,,,,,-99
+6902,Quarry - Category C (Commercial),Quarry,200,year,,,,,,-99
+6903,Quarry - Category B (Manual),Quarry,200,year,,,,,,-99
+7000,Sandwinning,Sandwinning,,year,,,,,,-99
+7001,Sandwinning - Single axle,Sandwinning,150,year,,,,,,-99
+7002,Sandwinning - Double axle,Sandwinning,200,year,,,,,,-99
+7101,Real Estate Developers,Real Estate Developers,300,year,,,,,,-99
+7200,Registration of Contractors,Registration of Contractors,,year,,,,,,-99
+7201,Category A (D1K1),Registration of Contractors,1000,year,,,,,,-99
+7202,Category B (D2K2),Registration of Contractors,500,year,,,,,,-99
+7203,Category C (D3K3),Registration of Contractors,300,year,,,,,,-99
+7204,Category D Unclassified,Registration of Contractors,2000,year,,,,,,-99
+7205,Category E Unclassified,Registration of Contractors,100,year,,,,,,-99
+7206,Sub contractors (Mining Companies,Registration of Contractors,2000,year,,,,,,-99
+7207,Renewals  of sub contract license (50% of amount),Registration of Contractors,500,year,,,,,,-99
+7300,Restaurants/Chop bars/Eating Houses),Restaurants/Chop bars/Eating Houses),,year,,,,,,-99
+7301,Category A,Restaurants/Chop bars/Eating Houses),15,year,,,,,,-99
+7302,Category B,Restaurants/Chop bars/Eating Houses),10,year,,,,,,-99
+7303,Category C (Chopbars-Urban),Restaurants/Chop bars/Eating Houses),8,year,,,,,,-99
+7304,Category D (chopbars- Rural),Restaurants/Chop bars/Eating Houses),5,year,,,,,,-99
+7305,Mining Catering Services eg.,Restaurants/Chop bars/Eating Houses),30,year,,,,,,-99
+7400,Renting of Property as Business,Renting of Property as Business,,year,,,,,,-99
+7401,Canopies  Tent  Chairs  Mattress  etc,Renting of Property as Business,6,year,,,,,,-99
+7501,Rubber/Cane Weavers,Rubber/Cane Weavers,10,year,,,,,,-99
+7600,Record Studio/Sellers,Record Studio/Sellers,,year,,,,,,-99
+7601,Category A (Record Studio),Record Studio/Sellers,10,year,,,,,,-99
+7602,Category B (Wayside - CD  Audio & Video Cassettes),Record Studio/Sellers,5,year,,,,,,-99
+7701,Rubber Stamps Making Shops,Rubber Stamps Making Shops,500,year,,,,,,-99
+7801,Spinning/Musical Band/Brass Band,Spinning/Musical Band/Brass Band,5,year,,,,,,-99
+7901,Sand/Stone Dealers,Sand/Stone Dealers,100,year,,,,,,-99
+8000,Spare parts Sales Outlets,Spare parts Sales Outlets,,year,,,,,,-99
+8001,Category A (Stores),Spare parts Sales Outlets,20,year,,,,,,-99
+8002,Category B (Table Top/Kiosk),Spare parts Sales Outlets,10,year,,,,,,-99
+8201,Susu Operators,Susu Operators,20,year,,,,,,-99
+8301,Money lender,Money lender,20,year,,,,,,-99
+8400,Second Hand Clothing/Shoe,Second Hand Clothing/Shoe,,year,,,,,,-99
+8401,Category A (Kiosk/ Stores),Second Hand Clothing/Shoe,20,year,,,,,,-99
+8402,Category B (Table Top),Second Hand Clothing/Shoe,15,year,,,,,,-99
+8500,Snack Bar,Snack Bar,8,year,,,,,,-99
+8600,Small Scale Mining Stone/Crusher,Small Scale Mining Stone/Crusher,,year,,,,,,-99
+8601,Monthly Renewal,Small Scale Mining Stone/Crusher,3000,year,,,,,,-99
+8701,Timber Concession Operators,Timber Concession Operators,5000,year,,,,,,-99
+8800,Timber Processing/Sales Outlets Sawnmills,Timber Processing/Sales Outlets Sawnmills,,year,,,,,,-99
+8801,Category A (Large Scale-Abuga),Timber Processing/Sales Outlets Sawnmills,200,year,,,,,,-99
+8802,Category B (medium),Timber Processing/Sales Outlets Sawnmills,100,year,,,,,,-99
+8803,Category C (Small Scale),Timber Processing/Sales Outlets Sawnmills,80,year,,,,,,-99
+8804,Category D (Sawn timber sellers),Timber Processing/Sales Outlets Sawnmills,50,year,,,,,,-99
+8805,Category E (timber- Conveyance fee),Timber Processing/Sales Outlets Sawnmills,30,year,,,,,,-99
+8900,Telecom Service,Telecom Service,,year,,,,,,-99
+8901,Category A (eg. MTN/TIGO/Vodafone),Telecom Service,3000,year,,,,,,-99
+8902,Category B (eg. ZAIN),Telecom Service,1500,year,,,,,,-99
+9000,Traditional Medical Practitioners,Traditional Medical Practitioners,,year,,,,,,-99
+9001,Category A (Large eg. Hans  Advance  etc,Traditional Medical Practitioners,100,year,,,,,,-99
+9002,Category B (Small  Pedlers),Traditional Medical Practitioners,60,year,,,,,,-99
+9003,Category C (Small  Pedlers),Traditional Medical Practitioners,50,year,,,,,,-99
+9100,Cocoa Purchasing Companies,Cocoa Purchasing Companies,,year,,,,,,-99
+9101,Cocoa Purchasing Companies - Category A (eg. COCOBOD  ADWUMAPA etc),Cocoa Purchasing Companies,5000,year,,,,,,-99
+9102,Category B (eg. FEDCO  KUAPA  ),Cocoa Purchasing Companies,4000,year,,,,,,-99
+9200,Tailoring/Dressmaking Shop,Tailoring/Dressmaking Shop,,year,,,,,,-99
+9201,Tailoring/Dressmaking Shop - Category A,Tailoring/Dressmaking Shop,25,year,,,,,,-99
+9202,Tailoring/Dressmaking Shop - Category B (General),Tailoring/Dressmaking Shop,20,year,,,,,,-99
+9300,Tyres Dealers,Tyres Dealers,,year,,,,,,-99
+9301,Category A (eg. Konadu Tyre Centre  ABC),Tyres Dealers,200,year,,,,,,-99
+9302,Category B (Home Use),Tyres Dealers,100,year,,,,,,-99
+9401,Video House,Video House,10,year,,,,,,-99
+9501,Video Rentals/Libraries,Video Rentals/Libraries,5,year,,,,,,-99
+9601,Video camera operators,Video camera operators,5,year,,,,,,-99
+9700,Vulcanizers,Vulcanizers,,year,,,,,,-99
+9701,Category A(Machine),Vulcanizers,7,year,,,,,,-99
+9702,Category B(Manual),Vulcanizers,5,year,,,,,,-99
+9801,Warehouse (eg. Liner  Antrak),Warehouse (eg. Liner  Antrak),200,year,,,,,,-99
+9901,Wax Print Retailer Shops,Wax Print Retailer Shops,15,year,,,,,,-99

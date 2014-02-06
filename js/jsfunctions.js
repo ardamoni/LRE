@@ -487,7 +487,11 @@ function onFeatureSelectLocalplan(evt) {
 
     content = 'UPN: '+feature.attributes.upn+
 				'<br>Parcel Of: '+feature.attributes.ParcelOf+
+				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)).toFixed(2)+'sq m'+
 				'<br>Land use: '+feature.attributes.landuse;
+	content += '<br><br><select><option value="property">Property</option><option value="business">Business</option><option value="other">Others</option></select>';
+	content += "<input type='button' class='' value='Add' title='Add details' onclick='addDetails()' >";	
+	
 
 		var popup = new OpenLayers.Popup.FramedCloud(
 										"featurePopup",
@@ -966,29 +970,29 @@ function polylocalplanhandler(request) {
 				case 6:
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
 					break;
-				default: {	
-					switch(true){
-						case ((feed[i]['unit_planning']<=10) && (feed[i]['unit_planning']!=null)):
-							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour01);		
-							break;
-						case ((feed[i]['unit_planning']>10) && (feed[i]['unit_planning']<30) ):
-							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour02);		
-							break;
-						case ((feed[i]['unit_planning']>=30) && (feed[i]['unit_planning']<60) ):
-							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour03);		
-							break;
-						case ((feed[i]['unit_planning']>=60) && (feed[i]['unit_planning']<70) ):
-							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour04);		
-							break;
-						case ((feed[i]['unit_planning']>=70) && (feed[i]['unit_planning']<80) ):
-							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour05);		
-							break;
-						case ((feed[i]['unit_planning']>=80) && (feed[i]['unit_planning']<90) ):
-							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
-							break;
-						default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault);		
-						}
-					}
+				default: {	var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault); }
+	// 				switch(true){
+// 						case ((feed[i]['unit_planning']<=10) && (feed[i]['unit_planning']!=null)):
+// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour01);		
+// 							break;
+// 						case ((feed[i]['unit_planning']>10) && (feed[i]['unit_planning']<30) ):
+// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour02);		
+// 							break;
+// 						case ((feed[i]['unit_planning']>=30) && (feed[i]['unit_planning']<60) ):
+// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour03);		
+// 							break;
+// 						case ((feed[i]['unit_planning']>=60) && (feed[i]['unit_planning']<70) ):
+// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour04);		
+// 							break;
+// 						case ((feed[i]['unit_planning']>=70) && (feed[i]['unit_planning']<80) ):
+// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour05);		
+// 							break;
+// 						case ((feed[i]['unit_planning']>=80) && (feed[i]['unit_planning']<90) ):
+// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
+// 							break;
+// 						default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault);		
+// 						}
+	//				}
 				}	
 			  fromLocalplan.addFeatures([polygonFeature]);
 
@@ -1685,3 +1689,15 @@ function uploadxls(){
 
 	return false;
 }
+//-----------------------------------------------------------------------------
+		//function addDetails() 
+		//opens a window for adding details to UPN based on the selection from a dropdown list
+		//
+//-----------------------------------------------------------------------------
+function addDetails() {
+
+	return false;
+
+} 
+// end of function tableshow
+
