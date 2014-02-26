@@ -217,8 +217,9 @@
 				   <p class="menu_head">Manual</p>
 				   <p class="menu_head">Admin</p>
 					<div class="menu_body">
-						<a href=""javascript:;" onclick="fileopen();"">KML to DB conversion</a>
+						<a href=""javascript:;" onclick="uploadkml();"">KML to DB conversion</a>
 						<a href=""javascript:;" onclick="uploadxls();"">Upload Fee Fixing information</a>
+						<a href=""javascript:;" onclick="uploadScannedData();"">Upload Data from Scanning Process</a>
 				   </div>
 
 					   <p class="menu_head">Log out</p>
@@ -312,6 +313,14 @@
 						</li>
 					</ul>
 				</div>
+			</td>
+			</tr>
+			<tr>
+			<td>
+				Legend:<br>
+				<canvas id="myCanvas" width="200" height="200" style="hidden">
+<!-- 				style="border:1px solid #d3d3d3;"> -->
+					Your browser does not support the HTML5 canvas tag.</canvas>
 			</td>
 			</tr>
 			</table>

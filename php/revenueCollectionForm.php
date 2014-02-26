@@ -91,7 +91,7 @@ function checkBeforeSubmit(frm) {
 	
 	$upn 			= $_GET["upn"];
 	$subupn 		= $_GET["subupn"];
-	$districtid 	= $_GET['districtid'];	
+	$districtid 	= $_SESSION['user']['districtid'];  //$_GET['districtid'];	
 	$ifproperty 	= $_GET['ifproperty'];	
 
      $districtinfo = $Data->getDistrictInfo( $districtid, 'district_name' ).' ('.$districtid.')';

@@ -7,11 +7,13 @@
 	// DB connection
 	require_once( "../lib/configuration.php" );
 	require_once( "../lib/Revenue.php" );
+	require_once( "../lib/System.php" );
 	
 	ob_start(); // prevent adding duplicate data with refresh (F5)
 	session_start();
 	
 	$Data = new Revenue;
+	$System = new System;
 	
 	// passed from parent
 	$upn 			= $_POST["upn"];	
@@ -21,8 +23,15 @@
 	$payedValue		= $_POST['payedvalue']; 
 	$paymentType	= $_POST['paymenttype'];
 	$treceipt		= $_POST['treceipt'];	
-	$districtid 	= $_POST['districtid'];	
-//var_dump($_POST);	
+	
+	$districtid 	= $_SESSION['user']['districtid'];
+	$roleid		 	= $_SESSION['user']['roleid'];	
+	
+	// static values 	
+	// TODO change them to dynamic, from the map
+	$station = "Station1";		
+	
+	
 	if( !$subupn )
 	{		
 		$subupn = '';
@@ -37,37 +46,46 @@
 		$paymentDate = $paymentDate;
 	}
 	
-	// static values 
-	// TODO change them to dynamic, from the map
-	$station = "Station1";		
-	$collectorID = "100";						// TODO through session
-	$districtid = $_SESSION['user']['user'];			
-		
-	$currentYear = date("Y");
+	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 	
-	// previous years	
+/*	
+	echo "upn: ", $upn, ", subupn: ", $subupn, ", payment date: ", $paymentDate, ", paid by: ", $payedBy, ", role: ", $roleid, "<br>"; 
+	echo ", paid value: ", $payedValue, ", payment type: ", $paymentType, ", ticket receipt: ", $treceipt, ", districtid: ", $districtid, "<br>";
+*/	
+	
+	/* 	
+	 * previous years
+	 */
+	 
+	// DUE
 	$revenueDuePrevious = 0.0;
-	for( $years = "2012"; $years<$currentYear; $years++ )
+	for( $years = $currentYear-4; $years<$currentYear; $years++ )
 	{
 		$revenueDuePrevious += $Data->getAnnualDueSum( $upn, $subupn, $years );
 	}
 	
+	// PAYMENTS
 	$revenueCollectedPrevious = 0.0;
-	for( $years = "2012"; $years<$currentYear; $years++ )
+	for( $years = $currentYear-4; $years<$currentYear; $years++ )
 	{
 		$revenueCollectedPrevious += $Data->getAnnualPaymentSum( $upn, $subupn, $years );
 	}
 	
+	// BALANCE
 	$revenueBalancePrevious = 0.0;
-	for( $years = "2012"; $years<$currentYear; $years++ )
+	for( $years = $currentYear-4; $years<$currentYear; $years++ )
 	{
 		$revenueBalancePrevious += $Data->getPropertyBalanceInfo( $upn, $subupn, $years, "balance" );
 	}
 	
-	// current year
+	
+	/* 
+	 * current year
+	 */
+	// DUE, PAYMENT, BALANCE 
 	$revenueDue = $Data->getAnnualDueSum( $upn, $subupn, $currentYear );	
 	$revenueCollected = $Data->getAnnualPaymentSum( $upn, $subupn, $currentYear );	
-	$revenueBalanceOld = $Data->getPropertyBalanceInfo( $upn, $subupn, $year, "balance" );	
+	$revenueBalanceOld = $Data->getPropertyBalanceInfo( $upn, $subupn, $currentYear, "balance" );	
 	
 	// assuring NULL values are converted to 0
 	if( !$revenueBalanceOld )
@@ -82,41 +100,81 @@
 	$revenueBalanceTotal =  - ($revenueDuePrevious - $revenueBalancePrevious - $revenueBalance);
 	
 	
-	// add new payments
+/*
+	echo "Revenue due: ", $revenueDue, ", revenue paid: ", $revenuePaid, ", balance: ", $revenueBalance, "<br>";
+*/	
+	
+	// add new rown into payments
 	$sql2 = mysql_query( "INSERT INTO `property_payments` ( `id`, 																
 															`upn`,
 															`subupn`, 
 															`districtid`, 
 															`payment_date`, 
 															`payment_value`,
+															`instalments`, 
+															`instalment_order`,
 															`collectorid`,	
 															`station_payment`,
 															`receipt_payment`,
 															`type_payment`,
-															`payer` )
+															`payer`,
+															`paid_for`, 
+															`demand_notice_no`, 
+															`demand_notice_sent`, 
+															`comments`)
 													VALUES( NULL, 															
 															'".$upn."',
 															'".$subupn."',
 															'".$districtid."',															
 															'".$paymentDate."', 
 															'".$payedValue."',
-															'".$collectorID."',
+															NULL,
+															NULL,
+															'".$roleid."',
 															'".$station."',
 															'".$treceipt."',
 															'".$paymentType."',
-															'".$payedBy."'
+															'".$payedBy."',
+															'',
+															NULL,
+															NULL,
+															NULL
 															) " ); 
-															
-	// update balance
-	
-	$query = mysql_query( " UPDATE 	`property_balance` 
+
+/// for testing															
+//	$sql2 = mysql_query( "INSERT INTO `property_payments`(`id`, `upn`, `subupn`, `districtid`, `payment_date`, `payment_value`, `instalments`, `instalment_order`, `collectorid`, `station_payment`, `receipt_payment`, `type_payment`, `payer`, `paid_for`, `demand_notice_no`, `demand_notice_sent`, `comments`) 
+//							VALUES (NULL,'608-0615-0339','', 130, '2013-01-01', 20, NULL, NULL, NULL, '', '', '', '', '', NULL, NULL, NULL) "); 
+
+/*
+	if( $sql2 )
+	{
+		echo $paymentDate, " , ", $currentYear, " Row was added in property_payment", "<br>";
+	}
+	else
+	{
+		echo $paymentDate, " , ", $currentYear, "error during property_payment", "<br>";
+	}
+*/
+
+	// update balance	
+	$query = mysql_query(" UPDATE 	`property_balance` 
 							SET 	`payed` = '".$revenuePaid."',
-									`balance` = '".$revenueBalance."' 
+									`balance`= '".$revenueBalance."' 
 							WHERE 	`upn` = '".$upn."' AND
 									`subupn` = '".$subupn."' AND
 									`districtid` = '".$districtid."' AND
-									`year` = '".$currentYear."' " );																
-		
+									`year` = '".$currentYear."' ");								
+/*
+	if( $query )
+	{
+		echo $paymentDate, " , ", $currentYear, "Row was modified in property_balance", "<br>";
+	}
+	else 
+	{
+		echo $paymentDate, " , ", $currentYear, "error during property_balance", "<br>";
+	}
+*/
+	
 	if( $sql2 && $query )
 	{			
 		// receipt in HTML
@@ -168,9 +226,8 @@
 				<tr>
 					<td>OWNER:</td>						
 					<td><?php  
-//							$ownerid = $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid" );
-//							echo $Data->getOwnerInfo( $ownerid, 'name' );
-							echo $Data->getPropertyInfo( $upn, $subupn, $currentYear, "owner" );
+							$ownerid = $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid" );
+							echo $Data->getOwnerInfo( $ownerid, 'name' );
 						?></td>		
 				</tr>
 				<tr>
@@ -215,7 +272,6 @@
 	else 
 	{
 		echo "ERROR";
-		print_r(mysql_error_list($con));
 	}
 	
 	window.close();

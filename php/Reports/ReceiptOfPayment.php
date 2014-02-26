@@ -16,7 +16,22 @@
 	
 	$upn = $_GET['upn'];
 	$subupn = $_GET['subupn'];
-	$currentYear = "2013";
+
+	$rsys_config = mysql_query("SELECT * 	FROM	`system_config`");	
+	$sys_config_content = array();
+	//now we put the result into a multi dimensional array
+	while ($rasys_config = mysql_fetch_assoc($rsys_config)) { //get the content of our query and store it in an array
+		$sys_config_content[] = array ( $rasys_config['variable'] => $rasys_config['value'] );
+	};
+	
+//	now get the corresponding value out of the multidimensional array
+	foreach($sys_config_content as $temp) {
+		foreach($temp as $key => $value) {
+			if ($key == 'RevenueCollectionYear') {
+				$currentYear = (int) $value;
+			}
+		}
+	}
 	
 	//echo "upn: ", $upn, ", subupn: ", $subupn, "</br>";
 	

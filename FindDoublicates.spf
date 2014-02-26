@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>revenue</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>8322158460140863864</string>
+			<key>name</key>
+			<string>localhost</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>latin1</string>
+			<key>contentFilter</key>
+			<dict>
+				<key>filterComparison</key>
+				<string>=</string>
+				<key>filterComparisonTag</key>
+				<integer>0</integer>
+				<key>filterField</key>
+				<string>upn</string>
+				<key>filterValue</key>
+				<string>576-0713-0246</string>
+				<key>firstBetweenField</key>
+				<string></string>
+				<key>menuLabel</key>
+				<string>`upn` = '576-0713-0246'</string>
+				<key>secondBetweenField</key>
+				<string></string>
+			</dict>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGNjdYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoK0HCBUWFxgZHSQoLDA0VSRudWxs0wkK
+			CwwQFFdOUy5rZXlzWk5TLm9iamVjdHNWJGNsYXNzow0OD4ACgAOA
+			BKMREhOABYAGgAiADFR0eXBlVHJvd3NUa2V5c18QJlNlbGVjdGlv
+			bkRldGFpbFR5cGVQcmltYXJ5S2V5ZWREZXRhaWxz0wkKCxobHKCg
+			gAfSHh8gIVokY2xhc3NuYW1lWCRjbGFzc2VzXxATTlNNdXRhYmxl
+			RGljdGlvbmFyeaMgIiNcTlNEaWN0aW9uYXJ5WE5TT2JqZWN00goL
+			JSehJoAJgAvSCykqK1lOUy5zdHJpbmeAClJpZNIeHy0uXxAPTlNN
+			dXRhYmxlU3RyaW5noy0vI1hOU1N0cmluZ9IeHzEyXk5TTXV0YWJs
+			ZUFycmF5ozEzI1dOU0FycmF50h4fIjWiIiNfEA9OU0tleWVkQXJj
+			aGl2ZXLRODlUZGF0YYABAAgAEQAaACMALQAyADcARQBLAFIAWgBl
+			AGwAcAByAHQAdgB6AHwAfgCAAIIAhwCMAJEAugDBAMIAwwDFAMoA
+			1QDeAPQA+AEFAQ4BEwEVARcBGQEeASgBKgEtATIBRAFIAVEBVgFl
+			AWkBcQF2AXkBiwGOAZMAAAAAAAACAQAAAAAAAAA6AAAAAAAAAAAA
+			AAAAAAABlQ==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {1352, 737}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>select `upn`, count(`upn`), `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property` group by `upn` having COUNT(`upn`) &gt; 1;
+
+SELECT
+    T2.`upn`, T2.`subupn`, T2.`owner`, T2.`streetname`, T2.`housenumber`, T2.`districtid`
+FROM
+    (
+    SELECT 
+       `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+    FROm
+       `property`
+    GROUP BY
+       `upn`, `subupn`
+    HAVING
+       COUNT(*) &gt; 1
+    ) T1
+    JOIN
+    `property` T2 ON T1.`upn` = T2.`upn` AND T1.`subupn` = T2.`subupn` AND
+                   T1.`owner` = T2.`owner` AND T1.`streetname` = T2.`streetname`;
+  
+  select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property`
+ where (`upn`) in
+  ( select `upn`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 ) order by `upn`;</string>
+			<key>table</key>
+			<string>property</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>202</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property_copy`
+ where (`upn`) in
+  ( select `upn`
+      from `property_copy`
+     group by `upn`
+    having count(1) &gt; 1 ) order by `upn`</string>
+		<string>select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property_copy`
+ where (`upn`) in
+  ( select `upn`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 ) order by `upn`</string>
+		<string>select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property`
+ where (`upn`) in
+  ( select `upn`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 ) order by `upn`</string>
+		<string>/* 11:30:07 localhost */ SHOW COLUMNS FROM `business`</string>
+		<string>select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property`
+ where (`upn`) in
+  ( select `upn`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 )</string>
+		<string>select * from `property`
+ where (`upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`) in
+  ( select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+      from `property`
+     group by `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+    having count(1) &gt; 1 )</string>
+		<string>SELECT
+    T2.`upn`, T2.`subupn`, T2.`owner`, T2.`streetname`, T2.`housenumber`, T2.`districtid`
+FROM
+    (
+    SELECT 
+       `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+    FROm
+       `property`
+    GROUP BY
+       `upn`, `subupn`
+    HAVING
+       COUNT(*) &gt; 1
+    ) T1
+    JOIN
+    `property` T2 ON T1.`upn` = T2.`upn` AND T1.`subupn` = T2.`subupn` AND
+                   T1.`owner` = T2.`owner` AND T1.`streetname` = T2.`streetname`</string>
+		<string>select `upn`, count(`upn`), `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property` group by `upn` having COUNT(`upn`) &gt; 1</string>
+		<string>SELECT
+    T2.`upn`, T2.`subupn`, T2.`owner`, T2.`streetname`, T2.`housenumber`, T2.`districtid`
+FROM
+    (
+    SELECT 
+       `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+    FROm
+       `property`
+    GROUP BY
+       `upn`, `subupn`
+    HAVING
+       COUNT(*) &gt;= 2
+    ) T1
+    JOIN
+    `property` T2 ON T1.`upn` = T2.`upn` AND T1.`subupn` = T2.`subupn` AND
+                   T1.`owner` = T2.`owner` AND T1.`streetname` = T2.`streetname`</string>
+		<string>SELECT
+    T2.*
+FROM
+    (
+    SELECT 
+       `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+    FROm
+       `property`
+    GROUP BY
+       `upn`, `subupn`
+    HAVING
+       COUNT(*) &gt;= 2
+    ) T1
+    JOIN
+    `property` T2 ON T1.`upn` = T2.`upn` AND T1.`subupn` = T2.`subupn` AND
+                   T1.`owner` = T2.`owner` AND T1.`streetname` = T2.`streetname`</string>
+		<string>SELECT
+    t2.*
+FROM
+    (
+    SELECT 
+       `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid`
+    FROm
+       `property`
+    GROUP BY
+       `upn`, `subupn`
+    HAVING
+       COUNT(*) &gt;= 2
+    ) T1
+    JOIN
+    `property` T2 ON T1.`upn` = T2.`upn` AND T1.`subupn` = T2.`subupn` AND
+                   T1.`owner` = T2.`owner` AND T1.`streetname` = T2.`streetname`</string>
+		<string>select `upn`, count(`upn`), `subupn`, `owner`, `streetname`, `housenumber` from `property` group by `upn` having COUNT(`upn`) &gt; 1</string>
+		<string>select `upn`, count(`upn`), `subupn`, `owner`, `streetname`, `housenumber` from `property` group by `upn` having COUNT(*) &gt; 1</string>
+		<string>select `upn`, count(`upn`), `subupn`, `owner`, `streetname`, `housenumber` from `property` group by `upn`</string>
+		<string>select `upn`, count(`upn`), `subupn` `owner`, `streetname`, `housenumber` from `property` group by `upn`</string>
+		<string>select `upn`, count(`upn`), `owner`, `streetname`, `housenumber` from `property` group by `upn`</string>
+		<string>select `upn`, count(`upn`), `owner`, `streetname`, `housenumber` from `property`</string>
+		<string>select * from `property`
+ where (`upn`) in
+  ( select `upn`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 )</string>
+		<string>select * from `property`
+ where (`upn`, `owner`, `streetname`, `housenumber`) in
+  ( select `upn`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 )</string>
+		<string>select * from `property`
+ where (`upn`, `owner`, `streetname`, `housenumber`) in
+  ( select `upn`, `owner`, `streetname`, `housenumber`
+      from `property`
+     group by `upn`
+    having count(1) &gt; 1 )</string>
+		<string>SELECT `upn`, `owner`, `streetname`, `housenumber`, COUNT(*) FROM `property`
+GROUP BY `upn`
+HAVING COUNT(*) &gt; 1</string>
+		<string>/* 15:20:58 localhost */ SELECT COUNT(1) FROM `property`</string>
+		<string>alter table `fee_fixing_rent` add `class` varchar(255) DEFAULT NULL, add `category` varchar(255) DEFAULT NULL, add `type` int(1) DEFAULT NULL</string>
+		<string>alter table `fee_fixing_property` add `class` varchar(255) DEFAULT NULL, add `category` varchar(255) DEFAULT NULL, add `type` int(1) DEFAULT NULL</string>
+		<string>alter table `fee_fixing_land` add `class` varchar(255) DEFAULT NULL, add `category` varchar(255) DEFAULT NULL, add `type` int(1) DEFAULT NULL</string>
+		<string>alter table `fee_fixing_investment` add `class` varchar(255) DEFAULT NULL, add `category` varchar(255) DEFAULT NULL, add `type` int(1) DEFAULT NULL</string>
+		<string>alter table `fee_fixing_investment` add `class` varchar(255) DEFAULT NULL, `category` varchar(255) DEFAULT NULL, `type` int(1) DEFAULT NULL</string>
+		<string>alter table `fee_fixing_investment` add `class` varchar(255) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `type` int(1) DEFAULT NULL</string>
+		<string>CREATE TABLE `hlp_unit` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` int NOT NULL,
+  `description` varchar(50) DEFAULT NULL,
+  `comments` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</string>
+		<string>SELECT * from KML_from_LUPMIS WHERE `upn`='613-0589-0001'</string>
+		<string>select sum(d2.`rate`) as TotalRevenueExpected from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>SELECT * FROM `business` WHERE `upn` = '609-0616-0029'</string>
+		<string>DELETE FROM collectorzones_copy WHERE id = 15 LIMIT 1</string>
+		<string>DELETE * FROM collectorzones_copy WHERE id = 15 LIMIT 1</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`year` d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d1.`year`=d2.`year` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`class`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE (d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`class`)</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE (d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`class`) AND d2.`districtid`=d3.`districtid`</string>
+		<string>select d1.`upn`, d1.`subupn`, d1.`property_use`, d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`,d2.`districtid`,d3.`district_name` from `property` d1, `fee_fixing_property` d2, `area_district` d3 WHERE d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`class` AND d2.`districtid`=d3.`districtid`</string>
+		<string>select DISTINCT d1.`districtid`, d1.year, d2.`district_name` from `fee_fixing_property`d1, `area_district` d2 where d1.districtid = d2.`districtid`</string>
+		<string>select DISTINCT d1.`districtid`, d2.`district_name` from `fee_fixing_property`d1, `area_district` d2 where d1.districtid = d2.`districtid`</string>
+		<string>select DISTINCT d1.`districtid`, d2.`district_name` from `fee_fixing_property`d1 `area_district` d2 where d1.districtid = d2.`districtid`</string>
+		<string>select DISTINCT d1.`districtid`, d2.`district_name` from `fee_fixing_property`d1 `area_district` d2 where d1.districtid = d2 districtid</string>
+		<string>select DISTINCT d1.`districtid`, d2.`district_name` from `fee_fixing_property`d1, `area_district` d2 where d1.districtid = d2 districtid</string>
+		<string>select DISTINCT d1.`districtid`, d2.`district_name` from `fee_fixing_property`, `area_district` d2 where d1.districtid = d2 districtid</string>
+		<string>select DISTINCT `districtid` from `fee_fixing_property`</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.5.25</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>

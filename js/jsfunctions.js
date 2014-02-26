@@ -105,7 +105,7 @@ var colors = ['#1FCB4A', 	'#59955C', 	'#48FB0D', 	'#2DC800', 	'#59DF00', 	'#9D9D
 
 //specify the styles for the real time localplan vector layer
 var LUPMISdefault = {
-			strokeColor: "#FFFFFF",
+			strokeColor: "#FF7F50",
             strokeOpacity: 0.8,
             strokewidth: 4,
             fillColor: "#FFFFFF",
@@ -183,6 +183,12 @@ var styleNeutral = {
 	
 function init(){
 
+//check if Internet connection exists
+// 		if (doesConnectionExist() == true) {
+// 			alert("connection exists!");
+// 		} else {
+// 			alert("connection doesn't exist!");
+// 		}
 
    var sm = new OpenLayers.StyleMap({
     			fillColor: "#666666",
@@ -423,7 +429,7 @@ function init(){
 //finally it draws the map and centers it according to the district center
  getSessionUser();
 
-    var bogoso = new OpenLayers.LonLat(-2.012644, 5.567).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
+ //   var bogoso = new OpenLayers.LonLat(-2.012644, 5.567).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
 //    map.setCenter(globaldistrictcenter, 10); //globaldistrictcenter
     document.getElementById('noneToggle').checked = true;
 } //end init()
@@ -897,7 +903,7 @@ function getLocalplanPolygons() {
      }else{
 			spinner.stop()
 	};           
-
+	showLegend();
 } //end of function getLocalplanPolygons
 
 //-----------------------------------------------------------------------------
@@ -1002,6 +1008,8 @@ function polylocalplanhandler(request) {
 		spinner.stop();
 		w.stop();  
 		document.getElementById("debug1").innerHTML=w.toString();
+		showLegend();
+
 
 //       alert(w.toString());
 } // end of function polyhandler
@@ -1032,8 +1040,10 @@ function getPropertyPolygons() {
      }else{
      if (jsonVisible) {
      		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';					
+			showLegend();
 		}else{
-     		document.getElementById("debug2").innerHTML=' - ';					
+     		document.getElementById("debug2").innerHTML=' - ';	
+			showLegend();
      		}
 			spinner.stop()
 	};           
@@ -1104,6 +1114,7 @@ function polyhandler(request) {
 		spinner.stop();
 		w.stop();  
 		document.getElementById("debug1").innerHTML=w.toString();
+		showLegend();
 
 //       alert(w.toString());
 } // end of function polyhandler
@@ -1134,8 +1145,10 @@ function getBusinessPolygons() {
      }else{
      if (jsonBVisible) {
      		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';	
+			showLegend();
      		}else{
-     		document.getElementById("debug2").innerHTML=' - ';					
+     		document.getElementById("debug2").innerHTML=' - ';
+			showLegend();
      		}
 			spinner.stop()};           
 
@@ -1207,6 +1220,8 @@ function Businesshandler(request) {
 		spinner.stop();
 		w.stop();  
 		document.getElementById("debug1").innerHTML=w.toString();
+		showLegend();
+
 
 //       alert(w.toString());
 } // end of function Businesshandler
@@ -1660,17 +1675,21 @@ function tableshow() {
 // end of function tableshow
 
 
-function fileopen(){
-	popupWindow = window.open("","_blank","width=500,height=150,top=400,left=200,resizable=no,scrollbars=no,location=no,menubar=no,status=no,toolbar=no");
-//	popupWindow.document.open();
-	popupWindow.document.writeln('<form enctype="multipart/form-data" action="php/kml-Lupmis2LRE.php" method="POST">');
-//	popupWindow.document.writeln('<input type="text" id="getdistrictid" value="" style="width: 50px;"> '); 
-//	popupWindow.document.writeln(' Enter district id: <br /> '); 
-	
-	popupWindow.document.writeln('<input type="hidden" name="MAX_FILE_SIZE" value="100000" />');
-	popupWindow.document.writeln('Choose a file to upload: <input name="uploadedfile" type="file" /><br />');
-	popupWindow.document.writeln('<input type="submit" value="Upload File" />');
-	popupWindow.document.writeln('</form>');
+function uploadkml(){
+	var pageURL = 'php/uploadKMLfopen.php';
+	var title = 'Upload KML';
+	var w = 500;
+	var h = 250;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
 }
 
 function uploadxls(){
@@ -1689,6 +1708,31 @@ function uploadxls(){
 
 	return false;
 }
+
+//-----------------------------------------------------------------------------
+		//function uploadScannedData() 
+		//opens a window to select a csv, xls, xlsx file for uploading into the db
+		//
+//-----------------------------------------------------------------------------
+function uploadScannedData() {
+	var pageURL = 'php/uploadScanDatafopen.php';
+	var title = 'Upload XLS';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+
+} 
+// end of function tableshow
+
 //-----------------------------------------------------------------------------
 		//function addDetails() 
 		//opens a window for adding details to UPN based on the selection from a dropdown list
@@ -1701,3 +1745,109 @@ function addDetails() {
 } 
 // end of function tableshow
 
+function checkConnection(e) {
+		if (doesConnectionExist() == true) {
+			alert("connection exists!");
+		} else {
+			alert("connection doesn't exist!");
+		}
+	}
+
+//-----------------------------------------------------------------------------
+		//function doesConnectionExist() 
+		//is used to determine, if the user has Internet access or not
+		//if not, maps from OpenStreetmap or Google are not loaded
+//-----------------------------------------------------------------------------
+function doesConnectionExist() {
+    var xhr = new XMLHttpRequest();
+    var file = "http://www.co-gmbh.com/Bild9.png";
+//    var file = "http://localgis.local/LRE/img/marker-green.png";
+    var randomNum = Math.round(Math.random() * 10000);
+    
+    xhr.open('HEAD', file + "?rand=" + randomNum, false);
+    
+    try {
+    	xhr.send();
+	    	alert(xhr.status);
+    	
+	    if (xhr.status >= 200 && xhr.status < 304) {
+	    	alert(xhr.status);
+	        return true;
+	    } else {
+	    	alert(xhr.status);
+	        return false;
+	    }
+    } catch (e) {
+    	return false;
+    }
+}
+//-----------------------------------------------------------------------------
+		//function showLegend() 
+		//is used to show a legend for the colours used in the map
+		//
+//-----------------------------------------------------------------------------
+function showLegend() {
+	var jsonLPVisible = fromLocalplan.getVisibility();
+	var jsonPVisible = fromProperty.getVisibility();
+	var jsonBVisible = fromBusiness.getVisibility();
+
+	var canv=document.getElementById("myCanvas");
+	var ctx=canv.getContext("2d");
+	var ystart=2;
+	var rectHeight=10;
+	var rectWidth=15;
+	ctx.clearRect(0,0,200,200);
+	ctx.font="12px Verdana";
+
+	if ((jsonPVisible) || (jsonBVisible)){
+		document.getElementById("myCanvas").style.visibility="visible";
+		ctx.fillStyle=styleGreen['fillColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("No outstanding items",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=styleRed['fillColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Outstanding items",20,ystart+(rectHeight)); 
+		ystart=ystart+20;
+		ctx.fillStyle=styleNeutral['fillColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillStyle="#000000";//styleNeutral['fillColor'];
+		ctx.fillText("No fiscal information available",20,ystart+(rectHeight)); 
+	}
+	else if (jsonLPVisible)
+	{		
+		document.getElementById("myCanvas").style.visibility="visible";
+		ctx.fillStyle=LUPMISdefault['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("No land use available",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=LUPMIScolour01['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Residential high density",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=LUPMIScolour02['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Market",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=LUPMIScolour03['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Place of worship",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=LUPMIScolour04['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("JHS",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=LUPMIScolour05['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Parks",20,ystart+(rectHeight));
+		ystart=ystart+20;
+		ctx.fillStyle=LUPMIScolour06['strokeColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Artisan production",20,ystart+(rectHeight));
+		ystart=ystart+20;
+	 }
+	else
+	{ 
+	 document.getElementById("myCanvas").style.visibility="hidden";
+	}
+}
