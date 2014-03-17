@@ -121,7 +121,7 @@
 	$PDF->SetFillColor(225,225,225);
 	$PDF->Cell(30,5, "FEES & FINES", 1,0,'C',true); 
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(140,5, $results['feefi_value'], 1,0,'C',true); $PDF->Ln();
+// not correct needs ATTENTION !!!	$PDF->Cell(140,5, $results['feefi_value'], 1,0,'C',true); $PDF->Ln();
 	
 	$qqq = mysql_query("SELECT * 	FROM	`property_payments` 
 									WHERE 	`upn` = '".$upn."' AND

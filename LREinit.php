@@ -206,6 +206,7 @@
 						<a href="#">Monthly</a>	
 						<a href="#">Annualy</a>								
 						<a href=""javascript:;" onclick="propertyAnnualBillOnClick();"">Print Bills for Property Rates</a>
+						<a href=""javascript:;" onclick="businessAnnualBillOnClick();"">Print Bills for Business Rates</a>
 					</div>
 					<p class="menu_head">Search</p>
 					<div class="menu_body">
@@ -317,7 +318,7 @@
 			</tr>
 			<tr>
 			<td>
-				Legend:<br>
+				<div id="legend" style="hidden"></div>
 				<canvas id="myCanvas" width="200" height="200" style="hidden">
 <!-- 				style="border:1px solid #d3d3d3;"> -->
 					Your browser does not support the HTML5 canvas tag.</canvas>

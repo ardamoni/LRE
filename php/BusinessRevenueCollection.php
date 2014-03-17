@@ -6,13 +6,13 @@
 
 	// DB connection
 	require_once( "../lib/configuration.php" );
-	require_once( "../lib/Revenue.php" );
+	require_once( "../lib/BusinessRevenueClass.php" );
 	require_once( "../lib/System.php" );
 	
 	ob_start(); // prevent adding duplicate data with refresh (F5)
 	session_start();
 	
-	$Data = new Revenue;
+	$Data = new BusinessRevenue;
 	$System = new System;
 	
 	// passed from parent
@@ -107,7 +107,7 @@
 */	
 	
 	// add new rown into payments
-	$sql2 = mysql_query( "INSERT INTO `property_payments` ( `id`, 																
+	$sql2 = mysql_query( "INSERT INTO `business_payments` ( `id`, 																
 															`upn`,
 															`subupn`, 
 															`districtid`, 
@@ -159,18 +159,67 @@
 */
 
 	// update balance	
-	$query = mysql_query(" UPDATE 	`property_balance` 
+	$query = mysql_query(" SELECT * FROM  `business_balance` 
+							WHERE 	`upn` = '".$upn."' AND
+									`subupn` = '".$subupn."' AND
+									`year` = '".$currentYear."' ");	
+//	echo 	mysql_affected_rows().' affected rows';							
+									
+	if (mysql_affected_rows()==1 ){
+	$query = mysql_query(" UPDATE 	`business_balance` 
 							SET 	`payed` = '".$revenuePaid."',
+									`due`= '".$revenueDue."',
 									`balance`= '".$revenueBalance."',
 									`comments`= '".$revenuPaidTotal."'
 									
 							WHERE 	`upn` = '".$upn."' AND
 									`subupn` = '".$subupn."' AND
-									`districtid` = '".$districtid."' AND
-									`year` = '".$currentYear."' ");								
-	// update property	
+									`year` = '".$currentYear."' ");	
+	}elseif (mysql_affected_rows()==0){
+	
+	echo 	mysql_affected_rows().' affected rows inside elseif';							
+	
+									
+		$qinfo = mysql_query(" SELECT	`b`.`upn`, `b`.`subupn`, `f`.`code`, `f`.`rate`
+						
+							FROM	`business` `b`,
+									`fee_fixing_business` `f`		
+									
+							WHERE	`b`.`upn` = '".$upn."' AND
+									`b`.`subupn` = '".$subupn."' AND
+									`b`.`districtid` = `f`.`districtid` AND
+									`b`.`business_class` = `f`.`code` AND
+									`f`.`year` = '".$year."' 
+							LIMIT 1 ");
+							
+//		while ($BOR = mysql_fetch_array($qinfo)){								
+		$BOR = mysql_fetch_array($qinfo);
+		echo $BOR['rate'];
+		$qinsert = mysql_query("INSERT INTO `business_balance` (	`id`,
+															`upn`, 
+															`subupn`,
+															`year`,	
+															`due`,														
+															`payed`,
+															`feefi_value`,
+															`balance`
+														) 
+												VALUES 	( 	NULL,
+															'".$upn."',
+															'".$subupn."',
+															'".$currentYear."',
+															'".$revenueDue."',
+															'".$payedValue."',
+															'".$BOR['rate']."',
+															'".$revenueBalance."'														
+														)");
+		echo $BOR['rate'].' '.mysql_affected_rows().' after insert';
+//		}
+	}	
+	
+	// update business	
 	if ($revenueBalance>0) { $payStatus = 1; } else { $payStatus = 9; }
-	$query = mysql_query(" UPDATE 	`property` 
+	$query = mysql_query(" UPDATE 	`business` 
 							SET 	`pay_status` = '".$payStatus."',
 									`lastentry_person`= '".$userName."',
 									`lastentry_date`= '".$paymentDate."'
@@ -229,19 +278,27 @@
 					</td>		
 				</tr>
 				<tr>
+					<td>Business Name:</td>						
+					<td>
+					<?php 
+						echo $Data->getBusinessInfo( $upn, $subupn, $currentYear, "business_name"); 
+					?>
+					</td>		
+				</tr>
+				<tr>
 					<td>ADDRESS:</td>						
 					<td>
 					<?php 
-						echo 	$Data->getPropertyInfo( $upn, $subupn, $currentYear, "streetname")," ", 
-								$Data->getPropertyInfo( $upn, $subupn, "housenumber");
+						echo 	$Data->getBusinessInfo( $upn, $subupn, $currentYear, "streetname")," ", 
+								$Data->getBusinessInfo( $upn, $subupn, "housenumber");
 					?>
 					</td>		
 				</tr>
 				<tr>
 					<td>OWNER:</td>						
 					<td><?php  
-							$ownerid = $Data->getPropertyInfo( $upn, $subupn, $currentYear, "ownerid" );
-							echo $Data->getOwnerInfo( $ownerid, 'name' );
+							echo $Data->getBusinessInfo( $upn, $subupn, $currentYear, "owner" );
+//							echo $Data->getOwnerInfo( $ownerid, 'name' );
 						?></td>		
 				</tr>
 				<tr>

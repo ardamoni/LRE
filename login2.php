@@ -28,7 +28,7 @@
 <noscript>
         <div class="noscript">
             <div class="noscript-inner">
-                <p><strong>JavaScript seem to be disabled in your browser.</strong></p>
+                <p><strong>JavaScript seems to be disabled in your browser.</strong></p>
                 <p>You must have JavaScript enabled in your browser to utilize the functionality of this website.</p>
             </div>
         </div>
@@ -72,7 +72,7 @@ var options = {
 			  controls:[
 //			new OpenLayers.Control.Navigation(),
 //				new OpenLayers.Control.PanZoomBar(),
-//				new OpenLayers.Control.LayerSwitcher({'ascending':false}), 
+			new OpenLayers.Control.LayerSwitcher({'ascending':false}), 
 //				new OpenLayers.Control.ScaleLine(),
 				new OpenLayers.Control.MousePosition(),
 			//	new OpenLayers.Control.OverviewMap(),
@@ -89,11 +89,11 @@ var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
 
 var styleDistricts = { 
 		// style_definition
-		 strokeColor: "#FFAC62",
+		 strokeColor: "#0000FF",
             strokeOpacity: 0.6,
             strokewidth: 1,
-            fillColor: "#66FFFF",
-            fillOpacity: 0.1
+//            fillColor: "#C0C0C0",
+            fillOpacity: 0.0
 	};
 
 var zoneStyle = new OpenLayers.Style({
@@ -159,7 +159,13 @@ var districtselectStyle = new OpenLayers.Style({
 var zoneStyleMap = new OpenLayers.StyleMap({
 		 'default': zoneStyle,
 		 'select': districtselectStyle,
-		 'temporary': temporaryStyle});    	
+		 'temporary': temporaryStyle});  
+
+var regionStyleMap = new OpenLayers.StyleMap({
+		 'default': styleDistricts,
+		 'select': districtselectStyle,
+		 'temporary': temporaryStyle});  
+		 
 		 
 var mapLogin = new OpenLayers.Map('mapLogin', options);
 //Mapnik
@@ -170,9 +176,17 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 	    visibility: true,
 	    isBaseLayer: true,
 	    styleMap: zoneStyleMap});
+
+   var regionmap = new OpenLayers.Layer.Vector("Regions from Database", {	
+   		renderers: renderer,
+	    visibility: true,
+	    isBaseLayer: true,
+	    styleMap: regionStyleMap});
         
 	mapLogin.addLayer(mapnik);     
+	mapLogin.addLayer(regionmap);
 	mapLogin.addLayer(districtmap);
+
 	var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
@@ -181,6 +195,16 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
 			callback: polyhandler
+		});
+
+	var regionrequest = OpenLayers.Request.POST({
+			url: "php/dbaction.php", 
+			data: OpenLayers.Util.getParameterString(
+			{dbaction: "getregionmap"}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: polyhandlerregion
 		});
 
 var report = function(e) {
@@ -199,24 +223,55 @@ var report = function(e) {
             });
  */
  var selectControlHover = new OpenLayers.Control.SelectFeature(districtmap, {
-          hover: true,
-          highlightOnly: true,
-          renderIntent: "temporary",
-          overFeature: function(feature) {
-            console.log('hover: number of selected features: ' + districtmap.selectedFeatures.length);
-            document.getElementById("title1").innerHTML="Login to dLRev - "+feature.attributes.districtname;
-			districtmap.drawFeature(districtmap.getFeatureById(feature.id), {fillColor: "#FFCC00", fillOpacity: 0.1, strokeColor: "#00ffff"});			
-          },
-          outFeature: function(feature) {
-            console.log('hover out: number of selected features: ' + districtmap.selectedFeatures.length);
-			districtmap.drawFeature(districtmap.getFeatureById(feature.id));			
-          },
+	hover: true,
+	highlightOnly: true,
+	renderIntent: "temporary",
+	overFeature: function(feature) {
+		console.log('hover: number of selected features: ' + districtmap.selectedFeatures.length);
+		document.getElementById("title1").innerHTML="Login to dLRev - "+feature.attributes.districtname;
+		districtmap.drawFeature(districtmap.getFeatureById(feature.id), {fillColor: "#FFCC00", fillOpacity: 0.1, strokeColor: "#00ffff"});			
+	},
+	outFeature: function(feature) {
+		console.log('hover out: number of selected features: ' + districtmap.selectedFeatures.length);
+		districtmap.drawFeature(districtmap.getFeatureById(feature.id));			
+	},
         });
         
-            var selectCtrl = new OpenLayers.Control.SelectFeature(districtmap,
-                {clickout: true}
-            );
+var selectControl = new OpenLayers.Control.SelectFeature(
+  regionmap, {
+    hover: true,
+    onBeforeSelect: function(feature) {
+       // add code to create tooltip/popup
+       popup = new OpenLayers.Popup(
+          "",
+          feature.geometry.getBounds().getCenterLonLat(),
+          new OpenLayers.Size(100,20),
+          "<div>"+feature.attributes.regionname+"</div>",
+          null,
+          true,
+          null);
 
+       feature.popup = popup;
+
+       mapLogin.addPopup(popup);
+       // return false to disable selection and redraw
+       // or return true for default behaviour
+       return true;
+    },
+    onUnselect: function(feature) {
+       // remove tooltip
+       mapLogin.removePopup(feature.popup);
+       feature.popup.destroy();
+       feature.popup=null;
+    }
+});
+
+//     var selectCtrl = new OpenLayers.Control.SelectFeature(districtmap,
+//                 {clickout: true}
+//             );
+
+            mapLogin.addControl(selectControl);
+            selectControl.activate();
             mapLogin.addControl(selectControlHover);
             selectControlHover.activate();
 
@@ -272,6 +327,45 @@ function polyhandler(request) {
 		  districtmap.addFeatures([polygonFeature]);
 		  } // end of for 
 		  districtmap.redraw();
+	}
+}	
+function polyhandlerregion(regionrequest) {
+   request=regionrequest;
+	// the server could report an error
+	if(request.status == 500) {
+		// do something to calm the user
+	}
+	// the server could say you sent too much stuff
+	if(request.status == 413) {
+		// tell the user to trim their request a bit
+	}
+	// the browser's parser may have failed
+
+	if(!request.responseXML) {
+		// get the response from php and read the json encoded data
+	   feed=JSON.parse(request.responseText);
+    
+		var boundary = [];
+		var i = 0
+		// build geometry for each feed item
+		for (var i = 0; i < feed.length; i++) {
+			boundary = feed[i]['boundary'];       	
+			var coordinates = boundary.split(" ");
+			var polypoints = [];
+			for (var j=0;j < coordinates.length; j++) {
+				points = coordinates[j].split(",");
+				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+				polypoints.push(point);
+			}
+			// create some attributes for the feature
+		var attributes = {regionname: feed[i]['regionname']};
+		    // create a linear ring by combining the just retrieved points
+		var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+		    //the switch checks on the payment status and 
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
+		  regionmap.addFeatures([polygonFeature]);
+		  } // end of for 
+		  regionmap.redraw();
 	}
 } // end of function polyhandler
 </script>

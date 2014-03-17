@@ -6,9 +6,9 @@
 
 	// DB connection
 	require_once( "../../lib/configuration.php" );
-	require_once( "../../lib/Revenue.php" );
+	require_once( "../../lib/BusinessRevenueClass.php" );
 	
-	$Data = new Revenue;
+	$Data = new BusinessRevenue;
 	
 	echo "start: ";
 	
@@ -18,25 +18,16 @@
 											`p`.`districtid` AS `districtid`,
 											`p`.`revenue_balance` AS `revenue_balance`,
 											`d`.`year` AS `year`,
-											`d`.`rate_value` AS `rate_value`,
-											`d`.`rate_impost_value` AS `rate_impost_value`,
-											`d`.`feefi_value` AS `feefi_value`,
-											`t`.`payment_date` AS `payment_date`,
-											`t`.`payment_value` AS `payment_value`
+											`d`.`bo_value` AS `rate_value`,
+											`d`.`bo_impost_value` AS `rate_impost_value`,
+											`d`.`feefi_value` AS `feefi_value`
 											
-									FROM 	`property` `p`, 
-											`property_due` `d`,
-											`property_payments` `t`	
+									FROM 	`business` `p`, 
+											`business_due` `d`	
 											
-									WHERE 	`p`.`id` > 1 AND 
-											`p`.`upn` = `d`.`upn` AND
-											`p`.`upn` = `t`.`upn` AND
-											`p`.`subupn` = `d`.`subupn` AND
-											`p`.`subupn` = `t`.`subupn` AND
-											`p`.`districtid` = `d`.`districtid` AND
-											`p`.`districtid` = `t`.`districtid` AND	
-											`t`.`payment_date` > '2013' 
-									ORDER BY `p`.`upn`, `p`.`subupn` ASC " );
+									WHERE 	`p`.`upn` = `d`.`upn` AND
+											`p`.`subupn` = `d`.`subupn` 
+									ORDER BY `p`.`upn`, `p`.`subupn` ASC ;" );
 	
 	$rows = mysql_num_rows($q1);
 	
@@ -45,29 +36,31 @@
 	
 	$i = 1; $j = 1;
 	
-	while( $BOR = mysql_fetch_array($q1) )
-	{	
+ 	while( $BOR = mysql_fetch_array($q1) )
+ 	{	
 		$due = $Data->getAnnualDueSum( $BOR['upn'], $BOR['subupn'], $BOR['year'] );
 		$value = $Data->getAnnualPaymentSum( $BOR['upn'], $BOR['subupn'], $BOR['year'] );
-		$verify = mysql_query( "SELECT 	`upn`, `subupn` 
-								FROM 	`property_balance` 
-								WHERE 	`upn` = '".$BOR['upn']."' AND										
-										`subupn` = '".$BOR['subupn']."' AND
-										`districtid` = '".$BOR['districtid']."' AND
-										`year` = '".$BOR['year']."' ");
-		
+// 		$verify = mysql_query( "SELECT 	`upn`, `subupn` 
+// 								FROM 	`business_balance` 
+// 								WHERE 	`upn` = '".$BOR['upn']."' AND										
+// 										`subupn` = '".$BOR['subupn']."' AND
+// 										`districtid` = '".$BOR['districtid']."' AND
+// 										`year` = '".$BOR['year']."' ");
+// 		
 		// property_balance must be there when a new property is added				
-		if( mysql_num_rows($verify) == 0 )
-		{
-			mysql_query("INSERT INTO `property_balance` (	`id`,
+// 		if( mysql_num_rows($verify) == 0 )
+// 		{
+			mysql_query("INSERT INTO `business_balance` (	`id`,
 															`upn`, 
 															`subupn`,
-															`districtid`,
+															`districtid`,	
 															`year`,	
 															`due`,														
 															`payed`,
 															`feefi_value`,
-															`balance`
+															`balance`,
+															`instalment`,
+															`comments`
 														) 
 												VALUES 	( 	NULL,
 															'".$BOR['upn']."',
@@ -78,7 +71,9 @@
 															'".$value."',
 															'".$BOR['feefi_value']."',
 															'".$BOR['rate_value']."' + '".$BOR['rate_impost_value']."' + 
-															'".$due."' - '".$value."'														
+															'".$due."' - '".$value."',
+															NULL,
+															'ekke - ".date("Y-m-d")."'
 														)");
 // substituted with $due															'".$BOR['rate_value']."' + '".$BOR['rate_impost_value']."',
 													
@@ -86,12 +81,12 @@
 			echo " & ", $value, " & ", $BOR['feefi_value'], " & ", $BOR['rate_value'] + $BOR['rate_impost_value']; 
 			echo " & ", $BOR['rate_value'] + $BOR['rate_impost_value'] + $BOR['feefi_value'] - $value, "<br>";
 			$i++;
-		}
-		else
-		{
-			echo "WARNING: ", $BOR['upn'], " & ", $BOR['subupn'], " does NOT exist in property_balance", "<br>";
-			$j++;
-		}
+// 		}
+// 		else
+// 		{
+// 			echo "WARNING: ", $BOR['upn'], " & ", $BOR['subupn'], " does NOT exist in property_balance", "<br>";
+// 			$j++;
+// 		}
 	
 	}	
 

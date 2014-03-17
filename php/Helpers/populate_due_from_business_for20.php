@@ -24,11 +24,12 @@
 	$q1 = mysql_query("
 						SELECT	*
 						
-							FROM	`business` `b`,
+							FROM	`business_details` `b`,
 									`fee_fixing_business` `f`		
 									
-							WHERE	`b`.`districtid` = `f`.`districtid` AND
-									`b`.`business_class` = `f`.`code` AND
+							WHERE	`b`.`districtid` = '".$districtID."' AND
+									`b`.`districtid` = `f`.`districtid` AND
+									`b`.`fee_fixing_business_code` = `f`.`code` AND
 									`f`.`year` = '".$year."' 									
 						");
 	
@@ -46,7 +47,7 @@
 	while($BOR = mysql_fetch_array($q1))
 	{
 		mysql_query("	
-						INSERT INTO `business_due`(`id`, `upn`, `subupn`, `districtid`,  `year`, `feefi_code`, `feefi_value`, `comments`, `lastentry_person`, `lastentry_date`) VALUES (NULL, '".$BOR['upn']."', '".$BOR['subupn']."', '".$BOR['districtid']."', '".$year."', '".$BOR['business_class']."', '".$BOR['rate']."', NULL , 'ekke', '".date("Y-m-d")."')
+						INSERT INTO `due`(`id`, `upn`, `subupn`, `year`, `code`, `value`, `comments`) VALUES (NULL, '".$BOR['upn']."', '".$BOR['subupn']."', '".$year."', '".$BOR['fee_fixing_business_code']."', '".$BOR['value']."', '".$districtID."')
 					");
 									
 		echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $year;

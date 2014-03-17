@@ -4,26 +4,24 @@
 	 *	Class that gets the data from DB tables
 	 *
 	 */
-	class Revenue
+	class BusinessRevenue
 	{
 		/*
 		 *	PROPERTY
 		 */		
-		// 	get the data out of property table
-		function getPropertyInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		// 	get the data out of business table
+		function getBusinessInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			if( $subupn != "" || $subupn != NULL || $subupn != "0" )
 			{
-				$q = mysql_query("SELECT * 	FROM 	`property` 
+				$q = mysql_query("SELECT * 	FROM 	`business` 
 											WHERE 	`upn` = '".$upn."' AND 
-													`subupn` = '".$subupn."' AND 
-													`year` = '".$year."' ");
+													`subupn` = '".$subupn."' ");
 			}
 			else
 			{
-				$q = mysql_query("SELECT * 	FROM 	`property` 
-											WHERE 	`upn` = '".$upn."' AND 													
-													`year` = '".$year."' ");
+				$q = mysql_query("SELECT * 	FROM 	`business` 
+											WHERE 	`upn` = '".$upn."' ");
 			}
 			$r = mysql_fetch_array($q);
 			return $r[$f];
@@ -37,7 +35,7 @@
 		// 	get the data out of property_due table
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
-			$q = mysql_query("SELECT * FROM 	`property_due` 
+			$q = mysql_query("SELECT * FROM 	`business_due` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND 
 												`year` = '".$year."' ");		
@@ -57,7 +55,7 @@
 // 											`year` = '".$year."' ");	
 			$q	= mysql_query("SELECT ( SUM(`feefi_value`) )
 									AS `due` 
-									FROM 	`property_due` 
+									FROM 	`business_due` 
 									WHERE	`upn` = '".$upn."' AND 
 											`subupn` = '".$subupn."' AND 
 											`year` = '".$year."' ");	
@@ -74,7 +72,7 @@
 		function getLastPropertyPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
-			$q = mysql_query("SELECT * FROM `property_payments` 
+			$q = mysql_query("SELECT * FROM `business_payments` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND 
 												YEAR(`payment_date`) = '".$year."' 
@@ -98,13 +96,13 @@
 		{
 		  if (!empty($subupn)) {
 			$q	= mysql_query("SELECT SUM(`payment_value`) AS `val` 
-									FROM 	`property_payments` 
+									FROM 	`business_payments` 
 									WHERE	`upn` = '".$upn."' AND 
 											`subupn` = '".$subupn."' AND 
 											YEAR(`payment_date`) = '".$year."' ");
 			} else {
 			$q	= mysql_query("SELECT SUM(`payment_value`) AS `val` 
-									FROM 	`property_payments` 
+									FROM 	`business_payments` 
 									WHERE	`upn` = '".$upn."' AND 
 											YEAR(`payment_date`) = '".$year."' ");
 			}
@@ -116,7 +114,7 @@
 		function getTicketsPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
-			$q = mysql_query("SELECT * 	FROM `property_payments` 
+			$q = mysql_query("SELECT * 	FROM `business_payments` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND 
 												YEAR(`payment_date`) = '".$year."' AND
@@ -142,7 +140,7 @@
 		//   get the data from the property_balance table
 		function getPropertyBalanceInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{			
-			$q = mysql_query("SELECT * FROM `property_balance` 
+			$q = mysql_query("SELECT * FROM `business_balance` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND
 												`year` = '".$year."' ");
@@ -153,57 +151,25 @@
 		//   get balance for one year
 		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
 		{
-			$q	= mysql_query("SELECT `balance` FROM `property_balance` 
+			$q	= mysql_query("SELECT `balance` FROM `business_balance` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND
 												`year` = '".$year."' ");											
 			$r = mysql_fetch_array($q);
 			return $r['balance'];
 		}
-		
-		
-		// 	get the data out of business table
-		function getBusinessInfo( $upn = "", $subupn = "", /*$year = 2013,*/ $f = "" )
-		{
-			//$q = mysql_query("SELECT * FROM `property` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' AND `year` = '".$year."' ");
-			$q = mysql_query("SELECT * FROM `business` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' ");
-			$r = mysql_fetch_array($q);
-			return $r[$f];
-		}
-		
+	
 		/*
-		 *	OWN_OWNER
-		 */		
-		// 	get the owner
-		function getOwnerInfo( $id = "", $f = "" )
-		{
-			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`id` = '".$id."' ");
-			$r = mysql_fetch_array($q);
-			return $r[$f];
-		}
-
-		
-		/*
-		 *	District Area
-		 */		
-		// 	get the district info
-		function getDistrictInfo( $id = "", $f = "" )
-		{
-			$q = mysql_query("SELECT * 	FROM `area_district` WHERE 	`districtid` = '".$id."' ");
-			$r = mysql_fetch_array($q);
-			return $r[$f];
-		}
-
-		/*
-		 *	Property Use
+		 *	Business Use
 		 */		
 		// 	get the district info
 		function getFeeFixingClassInfo( $id = "", $code = "", $f = "" )
 		{
-			$q = mysql_query("SELECT * 	FROM `fee_fixing_property` WHERE `districtid` = '".$id."' AND `code` = '".$code."' ");
+			$q = mysql_query("SELECT * 	FROM `fee_fixing_business` WHERE `districtid` = '".$id."' AND `code` = '".$code."' ");
 			$r = mysql_fetch_array($q);
 			return $r['class'];
 		}
+		
 
 	}
 

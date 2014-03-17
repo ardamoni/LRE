@@ -5,6 +5,8 @@
 	// DB connection
 	require_once( "../lib/configuration.php"	);
 	require_once( "../lib/System.php" );
+	require_once( "../lib/Revenue.php"			);
+	require_once( "../lib/BusinessRevenueClass.php"			);
 
 	$System = new System;
 	
@@ -36,6 +38,8 @@
 
   if ($dbaction=='getdistrictmap'){getdistrictmap();}
 
+  if ($dbaction=='getregionmap'){getregionmap();}
+
   if ($dbaction=='insertCZ'){insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour);}
 
   if ($dbaction=='getCZ'){getCZ($districtid);}
@@ -55,6 +59,8 @@
 //-----------------------------------------------------------------------------
 function feedUPNinfo($dbaction,$clickfeature,$sub)
 {
+	$Data = new Revenue;
+
   	// upn
 	$dataFromJS = $clickfeature;
 	//echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
@@ -69,11 +75,38 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$upn = $dataFromJS;
 	}
 	
+	//we need the Current Year hence we query for ReveneuCollectionYear in sys_config
+	$rsys_config = mysql_query("SELECT * 	FROM	`system_config`");	
+	$sys_config_content = array();
+	//now we put the result into a multi dimensional array
+	while ($rasys_config = mysql_fetch_assoc($rsys_config)) { //get the content of our query and store it in an array
+		$sys_config_content[] = array ( $rasys_config['variable'] => $rasys_config['value'] );
+	};
+	
+//	now get the corresponding value out of the multidimensional array
+	foreach($sys_config_content as $temp) {
+		foreach($temp as $key => $value) {
+			if ($key == 'RevenueCollectionYear') {
+				$currentYear = (int) $value;
+			}
+		}
+	}
+
+	
 	$data = array();
 	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."'" ); //$upn."' AND `year` = '2013' " );	
-	
+//	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."'" ); //$upn."' AND `year` = '2013' " );	
+	$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
+							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d2.`year`, d1.`pay_status`, d1.`property_use`, 
+							d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name` 
+							from `property` d1, `fee_fixing_property` d2, `area_district` d3 
+							WHERE d1.`upn` = '".$upn."' 
+							AND d1.`districtid`=d2.`districtid` 
+							AND d1.`property_use`=d2.`code` 
+							AND d2.`year`='".$currentYear."' 
+							AND d2.`districtid`=d3.`districtid`;");	
+							
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{		
 		$json 						= array();
@@ -82,10 +115,13 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
 		$json['year']	 			= $row['year'];
-		$json['pay_status'] 		= $row['pay_status'];
-		$json['revenue_due'] 		= $row['revenue_due'];
-		$json['revenue_collected'] 	= $row['revenue_collected'];
-		$json['revenue_balance'] 	= $row['revenue_balance'];
+		$json['property_use']	 	= $row['property_use'];
+		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
+ 		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
+ 		$json['revenue_due'] 		= number_format( $Data->getAnnualDueSum( $row['upn'], $row['subupn'], $currentYear ),2,'.','' ); //$row['revenue_due'];
+ 		$json['revenue_collected'] 	= number_format( $Data->getAnnualPaymentSum( $row['upn'], $row['subupn'], $currentYear ),2,'.','' ); //$row['revenue_collected'];
+// 		$json['revenue_balance'] 	= $json['revenue_due']-$json['revenue_collected'];
+ 		$json['revenue_balance'] 	= number_format( $Data->getAnnualBalance( $row['upn'], $row['subupn'], $currentYear ),2,'.','' ); //$json['revenue_due']-$json['revenue_collected'];
 		$json['streetname'] 		= $row['streetname'];
 		$json['housenumber'] 		= $row['housenumber'];
 		$json['owner'] 				= $row['owner'];
@@ -109,6 +145,9 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 //-----------------------------------------------------------------------------
 function feedBusinessinfo($dbaction,$clickfeature,$sub)
 {
+	$Data = new BusinessRevenue;
+	$System = new System;	
+	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
   	// upn
 	$dataFromJS = $clickfeature;
 //echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
@@ -126,7 +165,16 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 	$data = array();
 	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM business WHERE upn = '".$upn."'" );	
+//	$query = mysql_query( "SELECT * FROM business WHERE upn = '".$upn."'" );	
+	$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
+							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d2.`year`, d1.`pay_status`, d1.`business_class`, 
+							d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name` 
+							from `business` d1, `fee_fixing_business` d2, `area_district` d3 
+							WHERE d1.`upn` = '".$upn."' 
+							AND d1.`districtid`=d2.`districtid` 
+							AND d1.`business_class`=d2.`code` 
+							AND d2.`year`='".$currentYear."' 
+							AND d2.`districtid`=d3.`districtid`;");	
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{
@@ -135,10 +183,17 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
-		$json['pay_status'] 		= $row['pay_status'];
-		$json['revenue_due'] 		= $row['revenue_due'];
-		$json['revenue_collected'] 	= $row['revenue_collected'];
-		$json['revenue_balance'] 	= $row['revenue_balance'];
+		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
+ 		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
+ 		$json['revenue_due'] 		= number_format( $Data->getAnnualDueSum( $row['upn'], $row['subupn'], $currentYear ),2,'.','' ); //$row['revenue_due'];
+ 		$json['revenue_collected'] 	= number_format( $Data->getAnnualPaymentSum( $row['upn'], $row['subupn'], $currentYear ),2,'.','' ); //$row['revenue_collected'];
+// 		$json['revenue_balance'] 	= $json['revenue_due']-$json['revenue_collected'];
+ 		$json['revenue_balance'] 	= number_format( $Data->getAnnualBalance( $row['upn'], $row['subupn'], $currentYear ),2,'.','' ); //$json['revenue_due']-$json['revenue_collected'];
+		
+// 		$json['pay_status'] 		= $row['pay_status'];
+// 		$json['revenue_due'] 		= $row['revenue_due'];
+// 		$json['revenue_collected'] 	= $row['revenue_collected'];
+// 		$json['revenue_balance'] 	= $row['revenue_balance'];
 		$json['streetname'] 		= $row['streetname'];
 		$json['housenumber'] 		= $row['housenumber'];
 		$json['business_name'] 		= $row['business_name'];
@@ -192,18 +247,37 @@ function getlocalplan($districtid)
 //-----------------------------------------------------------------------------
 function getpropertypoly($districtid) 
 {
+	$Data = new Revenue;
+
 	// get the polygons out of the database 
-	$run = "SELECT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, property d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+	$subupn = "";
+	$run = "SELECT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d2.revenue_balance 
+			from `KML_from_LUPMIS` d1, property d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();
 
+	$payStatus = 1;
+	$payStatus9 = false;
+	$payupn="";
+
 	while ($row = mysql_fetch_assoc($query)) {
 	$json 				= array();
+	if (empty($row['subupn'])) {
+		$payStatus = $row['pay_status']; 
+		$payStatus9=false;
+	} else {
+		if ($row['pay_status']==9){
+			 $payStatus9=true;}
+			 
+		if ($payStatus9){
+			 $payStatus = 5;} else {
+			 $payStatus = 1;}
+	}
 	$json['id'] 		= $row['id'];
 	$json['upn'] 		= $row['UPN'];
 	$json['boundary'] 	= $row['boundary'];
-	$json['status'] 	= $row['pay_status'];
+	$json['status'] 	= $payStatus; //$row['pay_status'];
 	$json['revenue_balance'] 	= $row['revenue_balance'];
 	$data[] 			= $json;
 	 }//end while
@@ -253,6 +327,29 @@ function getdistrictmap()
 	$json['id'] 		= $row['id'];
 	$json['boundary'] 	= $row['boundary'];
 	$json['districtname'] 	= $row['districtname'];
+	$data[] 			= $json;
+	 }//end while
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+//-----------------------------------------------------------------------------
+				//function getregionmap() 
+				//collects polygon information 
+				//expects no $_POST parameters
+//-----------------------------------------------------------------------------
+function getregionmap() 
+{
+	// get the polygons out of the database 
+	$run = "SELECT * from `KML_from_regions`;";
+	$query = mysql_query($run);
+
+	$data 				= array();
+
+	while ($row = mysql_fetch_assoc($query)) {
+	$json 				= array();
+	$json['id'] 		= $row['id'];
+	$json['boundary'] 	= $row['boundary'];
+	$json['regionname'] 	= $row['regionname'];
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");

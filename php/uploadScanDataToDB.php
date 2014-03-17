@@ -130,13 +130,23 @@ function storedata($cellTemp)
 global $sdBusiness;
 global $sdProperty;
 
+$funnyChar = array('|'=>'1','I'=>'1','S'=>'5','O'=>'0','s'=>'5','o'=>'0','i'=>'1','D'=>'0');
+
 if ($_POST['ifproperty']=='1'){	    
 	$targetTable = $sdProperty->tell_table_name();
 }elseif ($_POST['ifproperty']=='0'){
 	$targetTable = $sdBusiness->tell_table_name();
 }
+ $upn=$cellTemp['A'];
+//erase known funny characters in upn
+ foreach ($funnyChar as $key => $value) {
+		if (strpos($upn,$key)>=0) {
+			$upn=str_replace($key,$value,$upn);
+		}
+  }
+
 	if ($_POST['ifproperty']=='1'){	    
-		$sdProperty->upn=$cellTemp['A'];
+		$sdProperty->upn=$upn; //without funny characters
 		$sdProperty->subupn=$cellTemp['B'];
 		$sdProperty->districtid=$_POST['districtid'];
 		$sdProperty->streetname=$cellTemp['D'];
@@ -171,7 +181,7 @@ if ($_POST['ifproperty']=='1'){
 			  }
 	   echo "</tr>";
 	}elseif ($_POST['ifproperty']=='0'){
-		$sdBusiness->upn=$cellTemp['A'];
+		$sdBusiness->upn=$upn;
 		$sdBusiness->subupn=$cellTemp['B'];
 		$sdBusiness->streetname=$cellTemp['D'];
 		$sdBusiness->housenumber=$cellTemp['E'];

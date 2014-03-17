@@ -1,0 +1,12 @@
+total 64
+drwxr-xr-x+ 11 ekke  admin   374 Mar  7 12:38 .
+drwxr-xr-x+ 37 ekke  admin  1258 Feb 26 17:14 ..
+-rw-r--r--+  1 ekke  admin  1275 Feb 26 16:55 populate_business_payments.php
+-rw-r--r--@  1 ekke  admin  1557 Feb 27 17:17 populate_business_with_feefixing_code.php
+-rw-r--r--+  1 ekke  admin  1478 Feb 26 16:56 populate_due_from_business.php
+-rw-r--r--+  1 ekke  admin  1484 Feb 26 16:56 populate_due_from_property.php
+-rw-r--r--+  1 ekke  admin   956 Feb 26 16:55 populate_own_owner.php
+-rw-r--r--+  1 ekke  admin  3127 Feb 26 16:55 populate_property_balance.php
+-rw-r--r--+  1 ekke  admin   956 Feb 26 16:55 populate_property_due.php
+-rw-r--r--+  1 ekke  admin  1288 Feb 26 16:55 populate_property_payments.php
+-rw-r--r--+  1 ekke  admin     0 Mar  7 12:38 temp.txt

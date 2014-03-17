@@ -119,9 +119,13 @@ $paymentType = array(
 );
 ?>
 
-	
-	<form id="form1" name="form1" method="post" action="RevenueCollection.php">	
-	
+<?	
+	if ($ifproperty == 'property'){
+		echo '<form id="form1" name="form1" method="post" action="RevenueCollection.php">';
+	} else {
+		echo '<form id="form1" name="form1" method="post" action="BusinessRevenueCollection.php">';
+	}
+?>	
 	<script type="text/javascript" src="../js/jquery_validation.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() 

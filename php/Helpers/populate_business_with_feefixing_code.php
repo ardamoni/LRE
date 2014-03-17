@@ -7,12 +7,12 @@
 	 */
 
 	// DB connection
-	require_once( "../../lib/configuration.php" );
+	require_once( "../../lib/configurationforrevenue20.php" );
 	
 	//
 	// CHANGE THIS VALUE for every district 
 	//
-	$districtID = '131';
+	$districtID = '130';
 	
 	echo "start: ", "<br>";
 	

@@ -8,7 +8,7 @@
 defined('DS') ? null : define('DS', DIRECTORY_SEPARATOR);
 
 defined('SITE_ROOT') ? null : 
-	define('SITE_ROOT', DS.'Applications'.DS.'MAMP'.DS.'htdocs'.DS.'gis'.DS.'OL212'.DS.'LRE-oo');
+	define('SITE_ROOT', DS.'Applications'.DS.'MAMP'.DS.'htdocs'.DS.'gis'.DS.'OL212'.DS.'LRE');
 
 defined('LIB_PATH') ? null : define('LIB_PATH', SITE_ROOT.DS.'lib');
 

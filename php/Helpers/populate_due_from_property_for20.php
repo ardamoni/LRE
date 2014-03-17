@@ -24,11 +24,12 @@
 	$q1 = mysql_query("
 						SELECT	*
 						
-							FROM	`property` `b`,
+							FROM	`property_details` `b`,
 									`fee_fixing_property` `f`		
 									
-							WHERE	`b`.`districtid` = `f`.`districtid` AND
-									`b`.`property_use` = `f`.`code` AND
+							WHERE	`b`.`districtid` = '".$districtID."' AND
+									`b`.`districtid` = `f`.`districtid` AND
+									`b`.`fee_fixing_property_code` = `f`.`code` AND
 									`f`.`year` = '".$year."' 									
 						");
 	
@@ -49,7 +50,7 @@
 	while($BOR = mysql_fetch_array($q1))
 	{
 		mysql_query("	
-						INSERT INTO `property_due`(`id`, `upn`, `subupn`, `districtid`, `year`, `feefi_code`, `feefi_value`, `comments`) VALUES (NULL, '".$BOR['upn']."', '".$BOR['subupn']."', '".$BOR['districtid']."', '".$year."', '".$BOR['code']."', '".$BOR['rate']."', 'ekke - ".date("Y-m-d")."')
+						INSERT INTO `due`(`id`, `upn`, `subupn`, `year`, `code`, `value`, `comments`) VALUES (NULL, '".$BOR['upn']."', '".$BOR['subupn']."', '".$year."', '".$BOR['fee_fixing_property_code']."', '".$BOR['value']."', '".$districtID."')
 					");
 									
 		echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $year;
@@ -58,7 +59,5 @@
 		
 	}
 	
-//finally set pay_status in property
- $qupdate = mysql_select("update `property` a set a.`pay_status`='1';");
-
+		
 ?>

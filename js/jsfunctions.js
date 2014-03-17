@@ -20,6 +20,8 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 	var global_out_business;
 	var globalfeatureid;
 	var globaldistrictid='';
+	var globalpropertychanged = false;
+	var globalbusinesschanged = false;
 
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
@@ -161,6 +163,15 @@ var styleRed = {
             strokeOpacity: 0.8,
             strokewidth: 1,
             fillColor: "#FF0033",
+            fillOpacity: 0.6,
+	};
+	
+var styleNotYetGreen = { 
+		// style_definition
+		 strokeColor: "#FFAC62",
+            strokeOpacity: 0.8,
+            strokewidth: 1,
+            fillColor: "#996633",
             fillOpacity: 0.6,
 	};
 var styleGreen = { 
@@ -708,17 +719,37 @@ function handler(request)
 		// build html for each feed item
 		for( var i = 0; i < feed.length; i++ ) 
 		{		
+		    if ((feed[i]['owner']==null) || (feed[i]['owner']=='')){
+			html += '<h3>Owner: unknown (Check Property Details)</h3>';
+			}
+			else{
 			html += '<h3>Owner: '+ feed[i]['owner'] +'</h3>';
+			}
 			html += '<p>Street: '+ feed[i]['streetname'] +'</p>';
 			html += '<p>House Nr: '+ feed[i]['housenumber'] +'</p>';
 			html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
 			html += '<p>SUBUPN: '+ feed[i]['subupn'] +'</p>';
 			//html += '<p>YEAR: '+ feed[i]['year'] +'</p>';
-			html += '<div><strong>Revenue Balance: '+ feed[i]['revenue_balance'] +'</strong></div>';
-			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +'</p>';
-			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +'</p>';
-			html += '<p>Date payed: '+ feed[i]['date_payment'] +'</p>';
-			html += '<p>Payment Status: '+ feed[i]['pay_status'] +'</p>';			
+			if ((feed[i]['revenue_balance']==0) && (feed[i]['revenue_collected']!=0)){
+			html += '<div><strong>Revenue Balance: <FONT COLOR="32CD32">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
+			}else{
+			html += '<div><strong>Revenue Balance: <FONT COLOR="FF0000">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
+			}
+			html += '<p>Current rate: '+ feed[i]['rate'] +' GHS</p>';
+ 			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +' GHS</p>';
+			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +' GHS</p>';
+//			html += '<p>Date payed: '+ feed[i]['date_payment'] +'</p>';
+			switch(parseInt(feed[i]['pay_status'])) {
+				case 1:
+					html += '<p>Payment Status: <strong><FONT COLOR="FF0000"> DUE</FONT></strong></p>';			
+					break;
+				case 9:
+					html += '<p>Payment Status: <strong><FONT COLOR="32CD32"> PAID</FONT></strong></p>';			
+					break;
+				default: {	html += '<p>Payment Status: <strong><FONT COLOR="800000"> Unknown</FONT><</strong>/p>';	}
+
+			}		
+// 			html += '<p>Payment Status: '+ feed[i]['pay_status'] +'</p>';			
 		//check whether called from property or business
 		    if (feed[i]['business_name']!='property'){
 				html += '<p>Business Name: '+ feed[i]['business_name'] +'</p>';
@@ -783,7 +814,11 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	{
 		popupWindow.focus();
 	}
-
+	if (ifproperty=='property'){
+	    globalpropertychanged=true;
+	}else{
+	    globalbusinesschanged=true;
+	}
 	return false;
 }	
 
@@ -868,6 +903,31 @@ function propertyAnnualBillOnClick()
 	return false;
 }	
 
+//-----------------------------------------------------------------------------
+		//function businessAnnualBillOnClick() 
+		//  on mouse-click activation to create the window for revenue bills printing
+
+//-----------------------------------------------------------------------------
+function businessAnnualBillOnClick() 
+{	
+	var upn = global_upn;
+//	var subupn = global_subupn[supnid];
+	var popupWindow = null;
+	var pageURL = 'php/Reports/BusinessAnnualBill.php?districtid='+globaldistrictid;
+	var title = 'Business Annual Bill Printing';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+}	
 // TODO: refresh parent window
 function parent_refresh() 
 {
@@ -1016,15 +1076,16 @@ function polylocalplanhandler(request) {
 
 //-----------------------------------------------------------------------------
 		//function getPropertyPolygons() 
-		//is the onvisibilitychanged event for the Collector Zone Layer
-		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones 
+		//is the onvisibilitychanged event for the property layer
+		//it calls dbaction.php - getproperty() to retrieve geometry information to draws polygones 
 		//from the boundaries stored in the table KML_From_LUPMIS
 		//it calls a polyhandler() to actually create the polygones based on the returned data
 //-----------------------------------------------------------------------------
 function getPropertyPolygons() {  
 //   alert("inside getpolygones");
    var jsonVisible = fromProperty.getVisibility();
-   if (fromProperty.features.length<1) {
+//   alert(jsonVisible);
+   if ((fromProperty.features.length<1) || (globalpropertychanged)) {
 	  spinner.spin(target);
 	  w.start();
 		var request = OpenLayers.Request.POST({
@@ -1047,6 +1108,8 @@ function getPropertyPolygons() {
      		}
 			spinner.stop()
 	};           
+	
+	globalpropertychanged = false;
 
 } //end of function getPropertyPolygons
 
@@ -1100,6 +1163,9 @@ function polyhandler(request) {
 					global_out_property = revbalance;
 					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';
 				  break;
+				case 5:  
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNotYetGreen);		
+				  break;
 				case 9:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleGreen);		
 				  break;
@@ -1129,7 +1195,7 @@ function polyhandler(request) {
 function getBusinessPolygons() {  
 //   alert("inside getpolygones");
    var jsonBVisible = fromBusiness.getVisibility();
-   if (fromBusiness.features.length<1) {
+   if ((fromBusiness.features.length<1) || (globalpropertychanged)) {
 	  spinner.spin(target);
 	  w.start();
 		var request = OpenLayers.Request.POST({
@@ -1143,14 +1209,16 @@ function getBusinessPolygons() {
 			callback: Businesshandler
 		});
      }else{
-     if (jsonBVisible) {
-     		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';	
-			showLegend();
-     		}else{
-     		document.getElementById("debug2").innerHTML=' - ';
-			showLegend();
-     		}
-			spinner.stop()};           
+		 if (jsonBVisible) {
+				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';	
+				showLegend();
+		  }else{
+				document.getElementById("debug2").innerHTML=' - ';
+				showLegend();
+				}
+		 spinner.stop();
+	 }           
+	 globalbusinesschanged = false;
 
 } //end of function getBusinessPolygons
 
@@ -1800,6 +1868,8 @@ function showLegend() {
 	ctx.font="12px Verdana";
 
 	if ((jsonPVisible) || (jsonBVisible)){
+		document.getElementById("legend").style.visibility="visible";
+		document.getElementById("legend").innerHTML="Legend:<br>";
 		document.getElementById("myCanvas").style.visibility="visible";
 		ctx.fillStyle=styleGreen['fillColor'];
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
@@ -1809,6 +1879,10 @@ function showLegend() {
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
 		ctx.fillText("Outstanding items",20,ystart+(rectHeight)); 
 		ystart=ystart+20;
+		ctx.fillStyle=styleNotYetGreen['fillColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("Some outstanding items",20,ystart+(rectHeight)); 
+		ystart=ystart+20;
 		ctx.fillStyle=styleNeutral['fillColor'];
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
 		ctx.fillStyle="#000000";//styleNeutral['fillColor'];
@@ -1816,6 +1890,8 @@ function showLegend() {
 	}
 	else if (jsonLPVisible)
 	{		
+		document.getElementById("legend").style.visibility="visible";
+		document.getElementById("legend").innerHTML="Legend:<br>";
 		document.getElementById("myCanvas").style.visibility="visible";
 		ctx.fillStyle=LUPMISdefault['strokeColor'];
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
@@ -1827,7 +1903,7 @@ function showLegend() {
 		ystart=ystart+20;
 		ctx.fillStyle=LUPMIScolour02['strokeColor'];
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
-		ctx.fillText("Market",20,ystart+(rectHeight));
+		ctx.fillText("Commercial",20,ystart+(rectHeight));
 		ystart=ystart+20;
 		ctx.fillStyle=LUPMIScolour03['strokeColor'];
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
@@ -1849,5 +1925,6 @@ function showLegend() {
 	else
 	{ 
 	 document.getElementById("myCanvas").style.visibility="hidden";
+ 	 document.getElementById("legend").style.visibility="hidden";
 	}
 }
