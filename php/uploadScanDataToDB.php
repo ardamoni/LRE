@@ -137,6 +137,7 @@ if ($_POST['ifproperty']=='1'){
 }elseif ($_POST['ifproperty']=='0'){
 	$targetTable = $sdBusiness->tell_table_name();
 }
+if (!empty($cellTemp['A'])){
  $upn=$cellTemp['A'];
 //erase known funny characters in upn
  foreach ($funnyChar as $key => $value) {
@@ -210,26 +211,29 @@ if ($_POST['ifproperty']=='1'){
 			  }
 	   echo "</tr>";
 	} //end elseif
-
+	} //end if !empty(upn)
 }	// end function
 
 function setSubupn() {
-	require_once( "../lib/configuration.php"	);
-	require_once( "../lib/System.php" );
+
+require_once( "../lib/configuration.php"	);
+require_once( "../lib/System.php" );
 
 global $sdBusiness;
 global $sdProperty;
 
+//check which table is affected 1=property, 0=business
 if ($_POST['ifproperty']=='1'){	    
 	$targetTable = $sdProperty->tell_table_name();
 }elseif ($_POST['ifproperty']=='0'){
 	$targetTable = $sdBusiness->tell_table_name();
 }//end else if
 	
+//check which table is affected 1=property, 0=business
 if ($_POST['ifproperty']=='1'){	    
 //this is the part were the subupn is generated for the Property data
 	$targetTable = $sdProperty->tell_table_name();	
-	//get all duplicates from the table
+	//get all duplicates from the table; 
 	$resultdb = $sdProperty->find_dups_of_upn($_POST['districtid']);
 // 	var_dump($resultdb);
 	$a_temp= array();
@@ -317,8 +321,8 @@ if ($_POST['ifproperty']=='1'){
 		}
 	}
 } //end else if
-op_flush();
-flush();
+//op_flush();
+//flush();
 } //end function
 
 

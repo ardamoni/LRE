@@ -90,7 +90,11 @@
 				/*
 	 			 *	Log In and Start The System
 		 		 */ 
-				echo '<meta http-equiv="REFRESH" content="0;url=LREinit.php">';
+		 		 if ($role['roleid']==200){
+					echo '<meta http-equiv="REFRESH" content="0;url=LREstats.php">';
+				}else {
+					echo '<meta http-equiv="REFRESH" content="0;url=LREinit.php">';
+				}
 				exit;
 				
 			}			

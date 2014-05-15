@@ -8,10 +8,12 @@
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
-//			  var session_name = "<?php echo json_encode($_SESSION['user']['name']); ?>";
-//			  var session_name = "<?php=$_SESSION['user'];?>";
+			  var session_name = "<?php echo json_encode($_SESSION['user']['name']); ?>";
+			  var session_user = "<?php=$_SESSION['user']['user'];?>";
+			  var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
+			  
 
-//     		   document.getElementById("wcUser").innerHTML=session_name;
+//     		   document.getElementById("debug1").innerHTML=session_roleid+" "+session_user;
 
 // global variables, CLEAN before populating them
 	var global_upn = '';
@@ -87,6 +89,7 @@ var fromBusiness = new OpenLayers.Layer.Vector("Business Status (Real Time)", {
  						 //"featureadded": function(){alert("Feature added")}
  						 }
      });  
+
 
 //specify the colours used for collector zones     
 var icolor=0, colzonecolor=''; //used in onSketchComplete
@@ -194,6 +197,18 @@ var styleNeutral = {
 	
 function init(){
 
+// if (session_roleid<=100){
+// if (session_user='ekke'){
+  startNormalUser();
+// } 
+//  if (session_user='monitor'){
+//   startMonitoringUser();
+//  } 
+  
+} //end init()
+
+function startNormalUser() {
+
 //check if Internet connection exists
 // 		if (doesConnectionExist() == true) {
 // 			alert("connection exists!");
@@ -237,21 +252,22 @@ function init(){
         });
 */
 //kmlLocalPlan      
-    var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            styleMap: sm,
-            visibility: false,
-            projection: map.displayProjection,
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: "kml/bogoso.kml",
-                format: new OpenLayers.Format.KML({
-                    extractStyles: true, 
-                    extractAttributes: true,
-                    kvpAttributes: false,
-                    maxDepth: 2
-                })
-            })
-        });
+//     var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
+//             strategies: [new OpenLayers.Strategy.Fixed()],
+//             styleMap: sm,
+//             visibility: false,
+//             projection: map.displayProjection,
+//             protocol: new OpenLayers.Protocol.HTTP({
+//                 url: "kml/bogoso.kml",
+//                 format: new OpenLayers.Format.KML({
+//                     extractStyles: true, 
+//                     extractAttributes: true,
+//                     kvpAttributes: false,
+//                     maxDepth: 2
+//                 })
+//             })
+//         });
+                
     var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
     renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
@@ -314,10 +330,11 @@ function init(){
         cursor: "inherit",
         graphicName: "cross"
     });
-    zoneStyleMap = new OpenLayers.StyleMap({
+				 
+	zoneStyleMap = new OpenLayers.StyleMap({
 				 'default': zoneStyle,
 				 'select': zoneselectStyle,
-				 'temporary': temporaryStyle});    			
+				 'temporary': temporaryStyle});
 
  //modifies the default "default" style settings of OpenLayers
 
@@ -327,8 +344,10 @@ function init(){
 		 visibility: false,
          hover: true,
          styleMap: zoneStyleMap });
+         
 
-    map.addControl(new OpenLayers.Control.ModifyFeature(colzones, {vertexRenderIntent: "vertex"}));    
+    map.addControl(new OpenLayers.Control.ModifyFeature(colzones, {vertexRenderIntent: "vertex"}));   
+    
 
 // Add Layers
 	map.addLayer(mapnik);
@@ -338,6 +357,7 @@ function init(){
 	map.addLayer(fromProperty);
 	map.addLayer(fromBusiness);
 	map.addLayer(colzones);
+
 				
 // polygon drawing for collector zones  	
 	if (console && console.log) {
@@ -370,7 +390,7 @@ function init(){
 // end polygon drawing for collector zones  	
 
 //   on click events for vector layers
-   select = new OpenLayers.Control.SelectFeature([fromBusiness, fromLocalplan, kmlLocalPlan, fromProperty, colzones],{
+   select = new OpenLayers.Control.SelectFeature([fromBusiness, fromLocalplan, fromProperty, fromBusiness, colzones],{
                 hover: false,
                 highlightOnly: false,
                 renderIntent: "temporary",
@@ -379,10 +399,10 @@ function init(){
 //                "featureselected": onFeatureSelect,
 //                "featureunselected": onFeatureUnselect,
 //            });
-			kmlLocalPlan.events.on({
-                "featureselected": onFeatureSelectSub,
-                "featureunselected": onFeatureUnselect
-            });
+// 			kmlLocalPlan.events.on({
+//                 "featureselected": onFeatureSelectSub,
+//                 "featureunselected": onFeatureUnselect
+//             });
 			fromLocalplan.events.on({
                 "featureselected": onFeatureSelectLocalplan,
                 "featureunselected": onFeatureUnselect,
@@ -406,10 +426,10 @@ function init(){
             select.activate();   
 //kml.feature end
             
-    OpenLayers.Util.getElement("epsg1").innerHTML = map.getProjection();
-    OpenLayers.Util.getElement("epsg2").innerHTML = "EPSG:4326";
-    
-            map.events.register("mousemove", map, mouseMoveListener);
+//     OpenLayers.Util.getElement("epsg1").innerHTML = map.getProjection();
+//     OpenLayers.Util.getElement("epsg2").innerHTML = "EPSG:4326";
+//     
+//             map.events.register("mousemove", map, mouseMoveListener);
 
     var layerSwitch = new OpenLayers.Control.LayerSwitcher();
 
@@ -443,7 +463,8 @@ function init(){
  //   var bogoso = new OpenLayers.LonLat(-2.012644, 5.567).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
 //    map.setCenter(globaldistrictcenter, 10); //globaldistrictcenter
     document.getElementById('noneToggle').checked = true;
-} //end init()
+} //end startNormalUser()
+
 
 //created by Ekke on 1. August 2013 10:44:55 GMT
 
@@ -453,16 +474,16 @@ function init(){
 		//
 //-----------------------------------------------------------------------------
 
-function mouseMoveListener(event) {
-	var lonlat = map.getLonLatFromPixel(event.xy);
-			
-	OpenLayers.Util.getElement("lon1").innerHTML = lonlat.lon;
-	OpenLayers.Util.getElement("lat1").innerHTML = lonlat.lat;
-	
-	lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
-	OpenLayers.Util.getElement("lon2").innerHTML = lonlat.lon;
-	OpenLayers.Util.getElement("lat2").innerHTML = lonlat.lat;
-}
+// function mouseMoveListener(event) {
+// 	var lonlat = map.getLonLatFromPixel(event.xy);
+// 			
+// // 	OpenLayers.Util.getElement("lon1").innerHTML = lonlat.lon;
+// // 	OpenLayers.Util.getElement("lat1").innerHTML = lonlat.lat;
+// // 	
+// // 	lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+// // 	OpenLayers.Util.getElement("lon2").innerHTML = lonlat.lon;
+// // 	OpenLayers.Util.getElement("lat2").innerHTML = lonlat.lat;
+// }
 
   
 //-----------------------------------------------------------------------------
@@ -708,6 +729,18 @@ function handler(request)
 		// cleaning the global valiables before use
 		global_upn = null;
 		global_subupn = [];
+		
+		if (feed.length==0){
+// 		    if (feed[0]['business_name']!='property'){
+// 				html += 'Please check the Business Classification!';
+// 				var title = 'Business';
+// 		    }else {
+// 				html += 'Please check the Property Classification!';
+// 				var title = 'Property';
+// 		    }
+			html += '<p>There seems to be discrepancy with the Fee Fixing Information!</p>';
+//			html += "<input type='button' value='"+title+" Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
+		}
 
 		for( var i = 0; i < feed.length; i++ ) 
 		{			
@@ -928,6 +961,35 @@ function businessAnnualBillOnClick()
 
 	return false;
 }	
+
+//-----------------------------------------------------------------------------
+		//function billsRegister()
+		//  on mouse-click activation to create the window for revenue bills printing
+
+//-----------------------------------------------------------------------------
+function billsRegister() 
+{	
+	var upn = global_upn;
+	var subupn = this.global_subupn;
+	var popupWindow = null;
+	var target = 'business';
+	var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
+	var title = 'Bills Register for Business Licenses';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+}	
+
+
 // TODO: refresh parent window
 function parent_refresh() 
 {
@@ -1110,6 +1172,7 @@ function getPropertyPolygons() {
 	};           
 	
 	globalpropertychanged = false;
+	document.getElementById('testbutton').disabled = '';
 
 } //end of function getPropertyPolygons
 
@@ -1493,10 +1556,26 @@ function getCZhandler(request) {
 			districtid = feed[i]['districtid'];
 			collectorid = feed[i]['collectorid'];
 			zonecolour = feed[i]['zone_colour'];
-			polygon = feed[i]['polygon'];			
+			polygon = feed[i]['polygon'];
 			fstyle = new OpenLayers.Style({fill: true, fillColor: zonecolour, fillOpacity: 0.2});
 			attributesCZ = {zoneid: zoneid, districtid: districtid,	collectorid: collectorid};	
-			var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.fromWKT(polygon), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
+			if (polygon.search('POLYGON')>-1){
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.fromWKT(polygon), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
+			}else{
+				boundary = feed[i]['polygon'].trim();       	
+				var coordinates = boundary.split(" ");
+				var polypoints = [];
+				for (var j=0;j < coordinates.length; j++) {
+					points = coordinates[j].split(",");
+					if (points.length>1){
+						point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+						polypoints.push(point);
+					}
+				}
+				// create a linear ring by combining the just retrieved points
+				var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
+			}	
 		    colzones.addFeatures([polygonFeature]);
 			} //end for 
 	} //end if		
@@ -1613,18 +1692,25 @@ var request = OpenLayers.Request.GET({
 		//
 //-----------------------------------------------------------------------------
 function sessionuserhandler(request) {
+
 	// the browser's parser may have failed
 	if(!request.responseXML) {
 	var html ='';
 	var userdistrict='';
 	var userdistrictname='';
 	var districtboundary='';
+	var numberOfParcels='';
+	var numberOfProperty='';
+	var numberOfBusiness='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
 			html += feed[i]['username'];
 			userdistrict += feed[i]['userdistrict'];
 			userdistrictname += feed[i]['userdistrictname'];
+			numberOfParcels += feed[i]['numberOfParcels'];
+			numberOfProperty += feed[i]['numberOfProperty'];
+			numberOfBusiness += feed[i]['numberOfBusiness'];
 			districtboundary += feed[i]['districtboundary']};
 
 //check if there is a session, if not log out			
@@ -1635,6 +1721,9 @@ function sessionuserhandler(request) {
   document.getElementById("wcUser").innerHTML='Welcome: '+html;
   globaldistrictid=userdistrict;
   document.getElementById("districtname").innerHTML=userdistrictname;
+  document.getElementById("stat1").innerHTML=numberOfParcels;
+  document.getElementById("stat2").innerHTML=numberOfProperty;
+  document.getElementById("stat3").innerHTML=numberOfBusiness;
   getdistrictcenter(districtboundary);
 	} // else{  alert('inside inserthandler');}
 } 
@@ -1927,4 +2016,77 @@ function showLegend() {
 	 document.getElementById("myCanvas").style.visibility="hidden";
  	 document.getElementById("legend").style.visibility="hidden";
 	}
+}
+//-----------------------------------------------------------------------------
+		//function makeLayersVisible() 
+		//is used to make invisible layers visible
+		//
+//-----------------------------------------------------------------------------
+function makeLayersVisible() {
+	var jsonLPVisible = fromLocalplan.getVisibility();
+	var jsonPVisible = fromProperty.getVisibility();
+	var jsonBVisible = fromBusiness.getVisibility();
+	var jsonCZVisible = colzones.getVisibility();
+	var JSONObject= [];
+	
+// 	if (!jsonLPVisible){
+// 		fromLocalplan.setVisibility(true);
+// 	}
+	if (!jsonPVisible){
+		fromProperty.setVisibility(true);
+	}
+ 	if (!jsonBVisible){
+ 		fromBusiness.setVisibility(true);
+ 	}
+	if (!jsonCZVisible){
+		colzones.setVisibility(true);
+	}
+
+	for( var j = 0; j < colzones.features.length; j++ ) {
+		feature = colzones.feature;
+		var searchlayer=fromProperty.id;
+//		var searchlayer=fromBusiness.id;
+		console.log('property layer');
+		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
+		{
+			if (colzones.features[j].geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
+				var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
+				if (colzones.features[j].geometry.containsPoint(checkPoint)){
+					JSONObject.push({upn: map.getLayer(searchlayer).features[i].attributes.upn,colzone: colzones.features[j].attributes.zoneid});
+//					JSONObject.push({upn: "test upn",colzone: "test colzone"});
+	// for debugging
+		if (console && console.log) {
+				console.log(map.getLayer(searchlayer).features[i].attributes.upn);
+			}
+				}
+			}			
+		}
+	}
+//  alert(JSON.stringify(JSONObject));
+	var request = OpenLayers.Request.POST(
+	{
+		url: "php/dbaction.php", 
+		data: OpenLayers.Util.getParameterString(
+		{
+			dbaction: "updateCZinProp",
+			propincz: JSON.stringify(JSONObject),
+			sub: "false"
+		}),
+		headers: 
+		{
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		callback: handlerupdateCZinProp
+	});	
+	
+}
+
+//-----------------------------------------------------------------------------
+		//function handlerupdateCZinProp() 
+		//is used to make invisible layers visible
+		//
+//-----------------------------------------------------------------------------
+function handlerupdateCZinProp(request) {
+feed=JSON.parse(request.responseText);
+alert(feed[0]['upn']+' '+feed[0]['message']);
 }

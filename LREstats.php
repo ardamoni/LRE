@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <title>District Local Revenue</title>	
+    <title>District Local Revenue - Statistics</title>	
 	
 	<script type="text/javascript" language="javascript" src="jquery_accordion.js"></script>
 	<script type="text/javascript">
@@ -128,18 +128,14 @@
 			  background-color: white;
 			  background-image: url("img/tableview.png");
 			}
-		.testbutton { 
-			  width:  24px;  
-			  height: 24px;
-			  background-color: white;
-			  background-image: url("img/marker.png");
-			}
 		.deletezone { 
 			  width:  20px;  
 			  height: 20px;
 			  background-color: white;
 			  background-image: url("img/delete2.png");
 			}
+		p {font-size:0.875em;}
+		p.sansserif{font-family:Arial,Helvetica,sans-serif;}
 
 		</style>
         <style>
@@ -163,16 +159,14 @@
 		<table class="mouse_location_sample">
 		<tr>
 			<td>
-				<strong><span id="epsg1"><center>Stats</center></span></strong>
-				Parcels #: <strong><small><span id="stat1">0</span></small></strong> <br/>
-				Properties #: <strong><small><span id="stat2">0</span></small></strong> <br/>
-				Businesses #: <strong><small><span id="stat3">0</span></small></strong> <br/>
+				<span id="epsg1">0.0</span> <br/>
+				Lon: <strong><small><span id="lon1">0.0</span></small></strong> <br/>
+				Lat: <strong><small><span id="lat1">0.0</span></small></strong> <br/>
 			</td>
 			<td>
-				<strong><span id="epsg2"><center>Fiscal Info</center></span></strong>
-				Lon: <strong><small><span id="fis1">0</span></small></strong> <br/>
-				Lat: <strong><small><span id="fis2">0</span></small></strong> <br/>
-				Lat: <strong><small><span id="fis3">0</span></small></strong> <br/>
+				<span id="epsg2">0.0</span> <br/>
+				Lon: <strong><small><span id="lon2">0.0</span></small></strong> <br/>
+				Lat: <strong><small><span id="lat2">0.0</span></small></strong> <br/>
 			</td>
 			<td>
 				<strong><span><center>Navigation Tools</center></span></strong>
@@ -180,10 +174,8 @@
 			</td>
 			<td>
 				<strong><span><center>Tools</center></span></strong>
-				<center><span id="tableview" class="tableshow"></span> 
-				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span> 
-<!-- 				<span id="testbutton" class="testbutton"></span> -->
-				<span> <button type="submit" id="testbutton" class="testbutton" href="javascript:;" onclick="makeLayersVisible();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
+				<center><span id="tableview" class="tableshow"></span> </center>
+				<center><span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span> </center>
 
 			</td> 
 			<td>
@@ -215,9 +207,6 @@
 						<a href="#">Weekly</a>
 						<a href="#">Monthly</a>	
 						<a href="#">Annualy</a>								
-						<a href=""javascript:;" onclick="propertyAnnualBillOnClick();"">Print Bills for Property Rates</a>
-						<a href=""javascript:;" onclick="businessAnnualBillOnClick();"">Print Bills for Business Licenses</a>
-						<a href=""javascript:;" onclick="billsRegister();"">Print the Bills Register for Business Licenses</a>
 					</div>
 					<p class="menu_head">Search</p>
 					<div class="menu_body">
@@ -229,9 +218,6 @@
 				   <p class="menu_head">Manual</p>
 				   <p class="menu_head">Admin</p>
 					<div class="menu_body">
-						<a href=""javascript:;" onclick="uploadkml();"">KML to DB conversion</a>
-						<a href=""javascript:;" onclick="uploadxls();"">Upload Fee Fixing information</a>
-						<a href=""javascript:;" onclick="uploadScannedData();"">Upload Data from Scanning Process</a>
 				   </div>
 
 					   <p class="menu_head">Log out</p>
@@ -292,39 +278,6 @@
 			<tr><td><center id="debug1"></center></td></tr>
 			<tr>
 			<td>
-			<div id="tags"> vertices, digitizing, draw, drawing </div>
-				<div id="controls">
-					<ul id="controlToggle">
-						<li> <input type="radio" name="type" value="none" id="noneToggle"
-								   onclick="toggleControl(this);" checked="checked" />
-							<label for="noneToggle">navigate</label>
-						</li>
-						<li> <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(this);" />
-							<label for="polygonToggle">draw polygon</label>
-						</li>
-						<li> <input type="radio" name="type" value="modify" id="modifyToggle"
-								   onclick="toggleControl(this);" />
-							<label for="modifyToggle">modify feature</label>
-							<ul>
-								<li> <input id="createVertices" type="checkbox" checked
-										   name="createVertices" onchange="update()" />
-									<label for="createVertices">allow vertices creation</label>
-								</li>
-								<li> <input id="rotate" type="checkbox" name="rotate" onchange="update()" />
-									<label for="rotate">allow rotation</label>
-								</li>
-								<li> <input id="resize" type="checkbox" name="resize" onchange="update()" />
-									<label for="resize">allow resizing</label>
-									(<input id="keepAspectRatio" type="checkbox" name="keepAspectRatio" onchange="update()" checked="checked" />
-									<label for="keepAspectRatio">keep aspect ratio</label>)
-								</li>
-								<li> <input id="drag" type="checkbox" name="drag" onchange="update()" />
-									<label for="drag">allow dragging</label>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
 			</td>
 			</tr>
 			<tr>
@@ -346,7 +299,7 @@
 	<div id="footer">	
 		<div id="docs">
 			<p>
-				Geo Location Information provided by TCPD
+				Information provided by TCPD
 				<?php
 				//echo $_SESSION['user']['user'];
 				?>
@@ -357,7 +310,7 @@
 			<script src="lib/spin/spin.js"></script>
 			<script src="lib/stopwatch.js"></script>
 			<script src="lib/numberformat.js"></script>
-			<script src="js/jsfunctions.js"></script>
+			<script src="js/jsfunctionsForStats.js"></script>
 
 	</div>	<!-- end of footer -->
     

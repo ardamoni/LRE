@@ -7,6 +7,7 @@
 	require_once( "../lib/System.php" );
 	require_once( "../lib/Revenue.php"			);
 	require_once( "../lib/BusinessRevenueClass.php"			);
+	require_once( "../lib/StatisticsClass.php"			);
 
 	$System = new System;
 	
@@ -21,7 +22,8 @@
 	$zoneid = $_POST['zoneid'];
 	$districtid = $_POST['districtid'];
 	$searchupn = $_POST['searchupn'];
-	
+	$propincz = $_POST['propincz'];	
+
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
 //	$sub = $_GET['sub'];
@@ -38,7 +40,7 @@
 
   if ($dbaction=='getdistrictmap'){getdistrictmap();}
 
-  if ($dbaction=='getregionmap'){getregionmap();}
+  if ($dbaction=='getregionmap'){getregionmap($year);}
 
   if ($dbaction=='insertCZ'){insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour);}
 
@@ -47,6 +49,8 @@
   if ($dbaction=='deleteCZ'){deleteCZ($zoneid);}
 
   if ($dbaction=='searchupn'){searchupn($searchupn);}
+  
+  if ($dbaction=='updateCZinProp'){updateCZinProp($propincz);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -337,10 +341,14 @@ function getdistrictmap()
 				//collects polygon information 
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getregionmap() 
+function getregionmap($year) 
 {
+
+	$Stats = new StatsData;
+
 	// get the polygons out of the database 
-	$run = "SELECT * from `KML_from_regions`;";
+//	$run = "SELECT * from `KML_from_regions`;";
+	$run = "SELECT * from `area_region`;";
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -349,7 +357,19 @@ function getregionmap()
 	$json 				= array();
 	$json['id'] 		= $row['id'];
 	$json['boundary'] 	= $row['boundary'];
-	$json['regionname'] 	= $row['regionname'];
+	$json['regionname'] 	= $row['region_name'];
+	$json['regionid'] 	= $row['regionid'];
+	$json['NrOfDistricts'] 	= $Stats->getNrDistricts( $row['regionid']);
+	$json['TotalPropertyDue'] 	= number_format( $Stats->getTotalPropertyDueForRegion( $row['regionid'], $year),2,'.',',' );
+	$json['TotalPropertyExpected'] 	= number_format($Stats->getTotalPropertyExpected(  $row['regionid'], $year),2,'.',',' );
+	$json['TotalPropertyPayments'] 	= number_format($Stats->getTotalPropertyPayments(  $row['regionid'], $year),2,'.',',' );
+	$json['TotalPropertyBalance'] 	= number_format($Stats->getTotalPropertyDueForRegion( $row['regionid'], $year)-$Stats->getTotalPropertyPayments(  $row['regionid'], $year),2,'.',',' );	
+	$json['TotalBusinessDue'] 	= number_format( $Stats->getTotalBusinessDueForRegion( $row['regionid'], $year),2,'.',',' );
+	$json['TotalBusinessExpected'] 	= number_format($Stats->getTotalBusinessExpected(  $row['regionid'], $year),2,'.',',' );
+	$json['TotalBusinessPayments'] 	= number_format($Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );
+// 	$json['TotalBusinessBalance'] 	= number_format($json['TotalBusinessExpected']-$json['TotalBusinessPayments'],2,'.',',' );
+	$json['TotalBusinessBalance'] 	= number_format($Stats->getTotalBusinessDueForRegion( $row['regionid'], $year)-$Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );	
+	
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");
@@ -477,6 +497,52 @@ function searchupn($searchupn)
 			$data[] 					= $json;
 		}
 	
+//	 }//end if
+//	}//end else 
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+
+
+//-----------------------------------------------------------------------------
+				//function searchupn() 
+				//searches for a upn and returns
+//-----------------------------------------------------------------------------
+function updateCZinProp($propincz) 
+{
+
+$json_decoded=json_decode($propincz);
+//var_dump($json_decoded);
+
+$json 				= array();
+
+//the data comes in as a multidimensional array, hence we need to go through the array to identify the values
+foreach ($json_decoded as $key => $value)
+{
+    foreach ($value as $k => $val)    
+    {
+    	if ($k=='upn'){
+		$json['upn'] =  $val;
+		}
+    	if ($k=='colzone'){
+		$json['colzone'] =  $val;
+		}
+//        echo "$k | $val <br />";
+    } 
+
+if (!empty($propincz)){
+    $run = "UPDATE `property` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+//    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+	$query = mysql_query($run);  
+//	$json['message'] = 'Done!';
+	}else{
+		$json['message'] = 'Empty!';
+	}
+	$json['message'] = 'Done!';
+	$data[] = $json;	
+
+}
+
 //	 }//end if
 //	}//end else 
 	header("Content-type: application/json");

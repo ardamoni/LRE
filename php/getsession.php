@@ -16,11 +16,20 @@ else
 	$json['userdistrict'] 		= $_SESSION['user']['districtid'];
 	$json['userdistrictname'] 		= $_SESSION['user']['districtname'];
 	
-		// user district name
+		// collect the information to be displayed in the UI
 	$qdistrictboundary	= 	mysql_query("SELECT `boundary` FROM `area_district` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
 	$districtboundary	= 	mysql_fetch_array($qdistrictboundary);
+	$qnumberOfParcels	= 	mysql_query("SELECT COUNT(distinct `upn`) as `numupn` FROM `KML_from_LUPMIS` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
+	$numberOfParcels	= 	mysql_fetch_array($qnumberOfParcels);
+	$qnumberOfProperty	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
+	$numberOfProperty	= 	mysql_fetch_array($qnumberOfProperty);
+	$qnumberOfBusiness	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `business` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
+	$numberOfBusiness	= 	mysql_fetch_array($qnumberOfBusiness);
 
 	$json['districtboundary'] 		= $districtboundary['boundary'];
+	$json['numberOfParcels'] 		= $numberOfParcels['numupn'];
+	$json['numberOfProperty'] 		= $numberOfProperty['numupn'];
+	$json['numberOfBusiness'] 		= $numberOfBusiness['numupn'];
 	
 	$data[] 			= $json;
 	

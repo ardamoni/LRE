@@ -1,4 +1,10 @@
 <?php
+if( session_status() != 2 )
+	{
+		session_start();
+	}
+
+
 	// All Properties Annual Bill
 	// Printed  and issued to property owners at the beggining of the year
 
@@ -20,6 +26,26 @@
 	
 	// TODO: Session on District
 	$districtId = $_GET['districtid'];
+	//get the districts logo
+	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
+		$file= '../../uploads/logo-'.$districtId.'.gif';
+	} else {
+		$file='../../uploads/logo-0.JPG';}
+	$ext = pathinfo($file, PATHINFO_EXTENSION);
+	//get the districts signature
+	if (file_exists('../../uploads/sig-'.$districtId.'.jpg')) {
+		$filesig= '../../uploads/sig-'.$districtId.'.jpg';
+	} else {
+//  $filesig='../../uploads/sig-125.jpg';}
+		$filesig='';}
+	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
+	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
+	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
+// 	$note = 'This bill must be paid by March 31st, in accordance with the districts regulations. Legal Actions shall be taken against defaulters 52 days after March 31st.';
+// 	$note2 =  "Payments should be made by banker's Draft/Payment Order or by Cash Only.";
+// 	$note3 =  "It is an offence to deface the property number, and change ownership without informing the district Assembly";
+		
+//	var_dump($qdistrictname);
 	
 //	$districtId = 130;
 	
@@ -34,21 +60,36 @@
 	
 	$districtName = $Data->getDistrictInfo( $district, "district_name" );
 	
-	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `id` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
+	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
+	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
+		
+// 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
+$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
 	
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
 	{
 		$PDF->Ln();
 		// District emblem
-		
+//		$PDF->Cell(30,5, $PDF->Image($file, null, null, 15, 15, 'gif', ''),0,0,'C'); 			
+		if (!empty($file)){
+		$PDF->Image($file, $PDF->GetX()+5, $PDF->GetY()-4, 20, 20, $ext, '');
+		}
+		if (!empty($filesig)){
+		$PDF->Image($filesig, $PDF->GetX()+27, $PDF->GetY()+2, 25, 0, $extsig, '');
+		}
 		// District Left and Right side of bill
 		$PDF->SetFont('Arial','B',16);
 		$PDF->Cell(40,5, '',0,0,'C'); 			
 		$PDF->Cell(70,5, 'Municipal Assembly',0,0,'R');
 		$PDF->SetFont('Arial','B',10);
 		$PDF->Cell(30,5, '',0,0,'C');		
-		$PDF->Cell(40,5, 'Municipal Assembly',0,1,'R');	
+		if ($districtType=='1'){
+		$PDF->Cell(40,5, 'District Assembly',0,1,'R');
+		}elseif ($districtType=='2'){
+		$PDF->Cell(40,5, 'Municipal Assembly',0,1,'R');
+		}	
+//		$PDF->Cell(40,5, 'Municipal Assembly',0,1,'R');	
 		$PDF->SetFont('Arial','I',12);
 		$PDF->Cell(40,5, '',0,0,'C');	
 		$PDF->Cell(70,5,'Property Rate Bill',0,0,'R'); 	
@@ -97,7 +138,7 @@
 		$PDF->Cell(30,5, 'Area Zone: ',0,0,'L');
 		$PDF->Cell(90,5, $r['zoneid'],1,0,'C');
 		$PDF->SetFont('Arial','',6);
-		$PDF->Cell(30,5, 'Total Due: ',0,0,'R');
+		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
 		$PDF->Cell(30,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
 										$arreas + 

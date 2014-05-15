@@ -9,9 +9,11 @@
 	require_once(	"../../lib/configuration.php"	);	
 	require_once(	"../../lib/System.PDF.php"		);
 	require_once( 	"../../lib/Revenue.php"			);
+	require_once( 	"../../lib/BusinessRevenueClass.php"			);
 	require_once( 	"../../lib/System.php"			);
 	
 	$Data = new Revenue;
+	$BusinessData = new BusinessRevenue;
 	$System = new System;
 	
 	$PDF = new PDF('P','mm','A4');

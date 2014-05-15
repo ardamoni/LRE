@@ -174,13 +174,13 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
    var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {	
    		renderers: renderer,
 	    visibility: true,
-	    isBaseLayer: true,
+	    isBaseLayer: false,
 	    styleMap: zoneStyleMap});
 
    var regionmap = new OpenLayers.Layer.Vector("Regions from Database", {	
    		renderers: renderer,
 	    visibility: true,
-	    isBaseLayer: true,
+	    isBaseLayer: false,
 	    styleMap: regionStyleMap});
         
 	mapLogin.addLayer(mapnik);     
@@ -245,8 +245,9 @@ var selectControl = new OpenLayers.Control.SelectFeature(
        popup = new OpenLayers.Popup(
           "",
           feature.geometry.getBounds().getCenterLonLat(),
-          new OpenLayers.Size(100,20),
+          new OpenLayers.Size(150,100),
           "<div>"+feature.attributes.regionname+"</div>",
+//          "<br>Area: "+(feature.geometry.getGeodesicArea(proj900913)).toFixed(2)+"sq m</div>",
           null,
           true,
           null);
