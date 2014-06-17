@@ -130,7 +130,7 @@ function storedata($cellTemp)
 global $sdBusiness;
 global $sdProperty;
 
-$funnyChar = array('|'=>'1','I'=>'1','S'=>'5','O'=>'0','s'=>'5','o'=>'0','i'=>'1','D'=>'0');
+$funnyChar = array('|'=>'1','I'=>'1','S'=>'5','O'=>'0','s'=>'5','o'=>'0','i'=>'1','D'=>'0', ' '=>'');
 
 if ($_POST['ifproperty']=='1'){	    
 	$targetTable = $sdProperty->tell_table_name();
@@ -145,7 +145,7 @@ if (!empty($cellTemp['A'])){
 			$upn=str_replace($key,$value,$upn);
 		}
   }
-
+	//upload property data
 	if ($_POST['ifproperty']=='1'){	    
 		$sdProperty->upn=$upn; //without funny characters
 		$sdProperty->subupn=$cellTemp['B'];
@@ -177,11 +177,14 @@ if (!empty($cellTemp['A'])){
 		$sdProperty->save(); 
 		unset($sdProperty->id);
 
+		//show table on screen
 		foreach ($cellTemp as $key => $value){
 			  echo "<td>" . $value . "</td>";
 			  }
 	   echo "</tr>";
-	}elseif ($_POST['ifproperty']=='0'){
+	}
+	//upload business data
+	elseif ($_POST['ifproperty']=='0'){
 		$sdBusiness->upn=$upn;
 		$sdBusiness->subupn=$cellTemp['B'];
 		$sdBusiness->streetname=$cellTemp['D'];
@@ -205,7 +208,7 @@ if (!empty($cellTemp['A'])){
 			$sdBusiness->save();
 
 			unset($sdBusiness->id);
-
+		//show table on screen
 		foreach ($cellTemp as $key => $value){
 			  echo "<td>" . $value . "</td>";
 			  }

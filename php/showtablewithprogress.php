@@ -67,7 +67,7 @@ table.demoTbl td.foot {
 
 // This is for the buffer achieve the minimum size in order to flush data
 echo str_repeat(' ',1024*64);
-print( "The time is " . date("h:i:sa")." - Affected rows: ".$total);    
+echo "The time is " . date("h:i:s")." - Affected rows: ".$total;    
 //flush();
 
 //	$row = $statement->fetch(PDO::FETCH_ASSOC);
@@ -124,7 +124,7 @@ for ($i = 1; $i < $statement->columnCount(); $i++) {
    echo "</table>";
    // Tell user that the process is completed
 echo '<script language="javascript">document.getElementById("information").innerHTML="Process completed"</script>';
-flush();
+
 ?>
 
 

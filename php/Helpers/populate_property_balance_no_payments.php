@@ -2,6 +2,8 @@
 
 	/*	
 	 * 	this file is used to insert the revenue collection into tables
+	 *  IT IS CRITICAL THAT property_due is populated 
+	 *  USE populate_property_due
 	 */
 
 	// DB connection

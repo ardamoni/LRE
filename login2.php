@@ -280,7 +280,7 @@ var selectControl = new OpenLayers.Control.SelectFeature(
 //            selectCtrl.activate();
 
 
-    var ghana = new OpenLayers.LonLat(-1.1759874280090854,8.173345828918867).transform(new OpenLayers.Projection("EPSG:4326"),mapLogin.getProjectionObject());
+    var ghana = new OpenLayers.LonLat(-1.175,7.8).transform(new OpenLayers.Projection("EPSG:4326"),mapLogin.getProjectionObject());
 
     mapLogin.setCenter(ghana, 7);
     

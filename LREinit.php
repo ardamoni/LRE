@@ -128,6 +128,12 @@
 			  background-color: white;
 			  background-image: url("img/tableview.png");
 			}
+		.xlsexport { 
+			  width:  24px;  
+			  height: 24px;
+			  background-color: white;
+			  background-image: url("img/tXLSExport.png");
+			}
 		.testbutton { 
 			  width:  24px;  
 			  height: 24px;
@@ -183,7 +189,8 @@
 				<center><span id="tableview" class="tableshow"></span> 
 				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span> 
 <!-- 				<span id="testbutton" class="testbutton"></span> -->
-				<span> <button type="submit" id="testbutton" class="testbutton" href="javascript:;" onclick="makeLayersVisible();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
+				<span> <button type="submit" class="xlsexport" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> </span> 
+<!-- 				<span> <button type="submit" id="testbutton" class="testbutton" href="javascript:;" onclick="makeLayersVisible();" value="" title="This is a button to test stuf" disabled></button> </span> </center> -->
 
 			</td> 
 			<td>
@@ -234,7 +241,7 @@
 						<a href=""javascript:;" onclick="uploadScannedData();"">Upload Data from Scanning Process</a>
 				   </div>
 
-					   <p class="menu_head">Log out</p>
+					   <p class="menu_head"><a href="logout.php">Log out</a></p>
 				</div>  
 			</div>
 

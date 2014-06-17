@@ -62,14 +62,20 @@ var spinopts = {
   hwaccel: false, // Whether to use hardware acceleration
   className: 'spinner', // The CSS class to assign to the spinner
   zIndex: 2e9, // The z-index (defaults to 2000000000)
-  top: 'auto', // Top position relative to parent in px
-  left: 'auto' // Left position relative to parent in px
+  top: '50%', // Top position relative to parent in px
+  left: '50%' // Left position relative to parent in px
 };
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
 
 
 //define the vector layers
+var fromDistrict = new OpenLayers.Layer.Vector("District Boundary", {		 
+	    visibility: true,
+	    eventListeners: {"visibilitychanged": getPropertyPolygons,
+ 						 //"featureadded": function(){alert("Feature added")}
+ 						 }
+     });
 var fromLocalplan = new OpenLayers.Layer.Vector("Local Plan (Real Time)", {		 
 	    visibility: false,
 	    eventListeners: {"visibilitychanged": getLocalplanPolygons,
@@ -192,6 +198,14 @@ var styleNeutral = {
             strokewidth: 1,
             fillColor: "#FFFF99",
             fillOpacity: 0.6,
+	};
+var styleDistrictBoundary = { 
+		// style_definition
+		 strokeColor: "#0000FF",
+            strokeOpacity: 0.8,
+            strokewidth: 10,
+            fillColor: "#FFFF99",
+            fillOpacity: 0.0,
 	};
 	
 	
@@ -352,6 +366,7 @@ function startNormalUser() {
 // Add Layers
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
+//	map.addLayer(fromDistrict);
 //	map.addLayer(kmlLocalPlan);
 	map.addLayer(fromLocalplan);
 	map.addLayer(fromProperty);
@@ -524,6 +539,7 @@ function onFeatureSelectLocalplan(evt) {
     var curpos = new OpenLayers.Geometry.Point(feature.geometry.getBounds().getCenterLonLat().lon,feature.geometry.getBounds().getCenterLonLat().lat);
 
     content = 'UPN: '+feature.attributes.upn+
+				'<br>Address: '+feature.attributes.address+
 				'<br>Parcel Of: '+feature.attributes.ParcelOf+
 				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)).toFixed(2)+'sq m'+
 				'<br>Land use: '+feature.attributes.landuse;
@@ -1074,6 +1090,7 @@ function polylocalplanhandler(request) {
 				// create some attributes for the feature
 			var attributes = {upn: feed[i]['upn'],
 								landuse: feed[i]['Landuse'],
+								address: feed[i]['Address'],
 								ParcelOf: feed[i]['ParcelOf']};
 				// create a linear ring by combining the just retrieved points
 			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
@@ -1099,28 +1116,6 @@ function polylocalplanhandler(request) {
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
 					break;
 				default: {	var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault); }
-	// 				switch(true){
-// 						case ((feed[i]['unit_planning']<=10) && (feed[i]['unit_planning']!=null)):
-// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour01);		
-// 							break;
-// 						case ((feed[i]['unit_planning']>10) && (feed[i]['unit_planning']<30) ):
-// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour02);		
-// 							break;
-// 						case ((feed[i]['unit_planning']>=30) && (feed[i]['unit_planning']<60) ):
-// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour03);		
-// 							break;
-// 						case ((feed[i]['unit_planning']>=60) && (feed[i]['unit_planning']<70) ):
-// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour04);		
-// 							break;
-// 						case ((feed[i]['unit_planning']>=70) && (feed[i]['unit_planning']<80) ):
-// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour05);		
-// 							break;
-// 						case ((feed[i]['unit_planning']>=80) && (feed[i]['unit_planning']<90) ):
-// 							var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMIScolour06);		
-// 							break;
-// 						default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault);		
-// 						}
-	//				}
 				}	
 			  fromLocalplan.addFeatures([polygonFeature]);
 
@@ -1172,7 +1167,7 @@ function getPropertyPolygons() {
 	};           
 	
 	globalpropertychanged = false;
-	document.getElementById('testbutton').disabled = '';
+//	document.getElementById('testbutton').disabled = '';
 
 } //end of function getPropertyPolygons
 
@@ -1735,22 +1730,24 @@ function sessionuserhandler(request) {
 		//
 //-----------------------------------------------------------------------------
 function getdistrictcenter(districtboundary){
-		// build geometry for each feed item
-			var coordinates = districtboundary.split(" ");
-			var polypoints = [];
-			for (var j=0;j < coordinates.length; j++) {
-				points = coordinates[j].split(",");
-				point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()); //transform(projWGS84,proj900913);
-				polypoints.push(point);
-			}
-				// create a linear ring by combining the just retrieved points
-			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
-			var attributes = {districtid: globaldistrictid};
+// build geometry for each feed item
+	var coordinates = districtboundary.split(" ");
+	var polypoints = [];
+	for (var j=0;j < coordinates.length; j++) {
+		points = coordinates[j].split(",");
+		point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()); //transform(projWGS84,proj900913);
+		polypoints.push(point);
+	}
+		// create a linear ring by combining the just retrieved points
+	var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+	var attributes = {districtid: globaldistrictid};
 
-			//the switch checks on the payment status and 
-			var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);		
-			var districtcenter = new OpenLayers.LonLat(polygonFeature.geometry.getBounds().getCenterLonLat().lon,polygonFeature.geometry.getBounds().getCenterLonLat().lat);
-    map.setCenter(districtcenter, 12); //globaldistrictcenter
+	//the switch checks on the payment status and 
+	var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleDistrictBoundary);		
+	var districtcenter = new OpenLayers.LonLat(polygonFeature.geometry.getBounds().getCenterLonLat().lon,polygonFeature.geometry.getBounds().getCenterLonLat().lat);
+//	fromDistrict.addFeatures([polygonFeature]);
+	map.setCenter(districtcenter, 12); //globaldistrictcenter
+//	fromDistrict.redraw();
 }
 // end of function getdistrictcenter
 
@@ -1808,13 +1805,15 @@ function tableshow() {
   var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
   var popupWindow = null;
+  var pageURL = 'php/showtable.php?districtid='+globaldistrictid;
+
   
    if (jsonPVisible && jsonBVisible){
    		html = 'Table view is only available for data from one map.  \nPlease close either the Properties or the Business Map! ';
    		alert(html);
    }
    else if (jsonBVisible || jsonPVisible)  {
-		popupWindow = window.open("php/showtable.php","Table View", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
+		popupWindow = window.open(pageURL,"Table View", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
 	}
    else
    { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';
@@ -1830,6 +1829,40 @@ function tableshow() {
 
 } 
 // end of function tableshow
+
+//-----------------------------------------------------------------------------
+		//function xlsexport() 
+		//opens a window to export tabular data to Excel
+		//
+//-----------------------------------------------------------------------------
+function xlsexport() {
+  var jsonPVisible = fromProperty.getVisibility();
+  var jsonBVisible = fromBusiness.getVisibility();
+  var popupWindow = null;
+  var pageURL = 'php/openXLSreports.php?districtid='+globaldistrictid;
+
+  
+   if (jsonPVisible && jsonBVisible){
+   		html = 'Table view is only available for data from one map.  \nPlease close either the Properties or the Business Map! ';
+   		alert(html);
+   }
+   else if (jsonBVisible || jsonPVisible)  {
+		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
+	}
+   else
+   { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';
+   		alert(html);
+   	}
+   
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+
+} 
+// end of function xlsexport
 
 
 function uploadkml(){

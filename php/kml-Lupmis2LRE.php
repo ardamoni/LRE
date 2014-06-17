@@ -58,7 +58,7 @@ $upload_district=$a_upload_district[0];
 	$allowedmimes = array ("application/vnd.google-earth.kml+xml","text/kml");
       try {
 		if (!in_array ($_FILES['uploadedfile']['type'],$allowedmimes)){ $goodtogo = false;
-		throw new exception ("Sorry, the file must be of type .xls. Yours is: " . $_FILES['uploadedfile']['type'] . "");
+		throw new exception ("Sorry, the file must be of type .kml. Yours is: " . $_FILES['uploadedfile']['type'] . "");
         }
        } 
        catch (exception $e) {
@@ -75,6 +75,7 @@ $upload_district=$a_upload_district[0];
 			  echo $e->getmessage ();
 			} 
 		}
+
 if ($goodtogo){
 
 
@@ -91,9 +92,9 @@ $completeurl = $target_path; // "../kml/Prestea_status_igf_prop.kml";
  print("Start import into database, please have some patience");
 //  print($upload_district.' - '.$completeurl);
 //  print('<br>File exists? '.file_exists($completeurl));
-// break;
+//  break;
 
-if (file_exists($completeurl)) {// 
+if (file_exists($completeurl)) { 
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
 $districtid=$upload_district; //$_SESSION['user']['districtid'];//130;
 $tmp4='';
@@ -119,7 +120,8 @@ $tmp4='';
     $landuse=strstr($cdata[0],'Use: ');
     $landuse=strip_tags(substr($landuse,9,strpos($landuse,'</b>')-1));
     $upn = strstr($cdata[0],'UPN: ');
-    $upn=substr($upn,9,13);
+   	$upn=substr($upn,9,13);
+    var_dump($upn);
 //End Get Infor out of CDATA
     $styleUrl = $placemarks[$i]->styleUrl;
 
@@ -171,7 +173,7 @@ $tmp4='';
 		 }else
 		{       
 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
-			echo $query;
+//			echo $query;
 			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
 			print_r($run);
 			 mysql_query($run) or die ('Error updating database: ' . mysql_error());
