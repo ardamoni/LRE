@@ -148,7 +148,7 @@ switch(opt) {
 	}
 //alert(document.getElementById('report1').value);
 <?php flush(); ?>;
-var pageURL = 'excelwritetest-3.php'; //?squery=SELECT * from property WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
+var pageURL = 'excelwriter.php'; //?squery=SELECT * from property WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
 
 var handlerParameter = {spin: spin, opt: opt, sfile: sfile};
 
