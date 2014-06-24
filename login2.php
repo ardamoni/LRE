@@ -59,6 +59,7 @@
 <script src="lib/OpenLayers/lib/OpenLayers.js"></script> 
 
 <script type="text/javascript">
+var LREpilot = true;
 var mapLogin;
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
@@ -92,8 +93,16 @@ var styleDistricts = {
 		 strokeColor: "#0000FF",
             strokeOpacity: 0.6,
             strokewidth: 1,
-//            fillColor: "#C0C0C0",
-            fillOpacity: 0.0
+            fillColor: "#F8F8F8",
+            fillOpacity: 0.2
+	};
+var styleSFDR = { 
+		// style_definition
+		 strokeColor: "#FF0033",
+            strokeOpacity: 0.6,
+            strokewidth: 1,
+            fillColor: "#FFFF66",
+            fillOpacity: 0.4
 	};
 
 var zoneStyle = new OpenLayers.Style({
@@ -320,13 +329,22 @@ function polyhandler(request) {
 				polypoints.push(point);
 			}
 			// create some attributes for the feature
-		var attributes = {districtname: feed[i]['districtname']};
-		    // create a linear ring by combining the just retrieved points
-		var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
-		    //the switch checks on the payment status and 
-				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
-		  districtmap.addFeatures([polygonFeature]);
-		  } // end of for 
+			var attributes = {districtname: feed[i]['districtname']};
+				// create a linear ring by combining the just retrieved points
+			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+			//only display during pilot phase LREpilot is set at the beginning of the javascript section
+			if (LREpilot) {
+			//the switch checks on whether the district is part of the GIZ/SfDR Pilot districts MUST BE TAKEN OUT AFTER PILOT PHASE
+			switch(parseInt(feed[i]['activestatus'])) {
+					case 1: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDR);		
+						break;
+					default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
+			}
+			}else{
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);
+			}
+			districtmap.addFeatures([polygonFeature]);
+		} // end of for 
 		  districtmap.redraw();
 	}
 }	

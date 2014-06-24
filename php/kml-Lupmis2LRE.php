@@ -38,7 +38,7 @@ $upload_district=$a_upload_district[0];
       try {
         if ($_FILES['uploadedfile']['size'] == 0){
           $goodtogo = false;
-        throw new exception ("Sorry, you must upload a KML file (.KML)");
+        throw new exception ("Sorry, you must select a KML file (.KML)");
         }
       } catch (exception $e) {
         echo $e->getmessage();

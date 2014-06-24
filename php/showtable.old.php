@@ -52,31 +52,22 @@ table.demoTbl td.foot {
 <div id="information" style="width">Please be patient, process is time consuming!</div>
 
 <?php
-// DB connection
-require_once( "../lib/configuration.php"	);
-	
-$statement = $pdo->query($_GET['squery']);
-$rs1 = $pdo->query('SELECT FOUND_ROWS()');
-$rowCount = (int) $rs1->fetchColumn(); 
-
-// echo $rowCount.'<br>';
-
-// 	if (empty($_GET['districtid'])) {
-// 		$statement = $pdo->query("SELECT * from property");
-// 		$nRows = $pdo->query("select count(*) from property")->fetchColumn(); 
-// 	}else{
-// 		$statement = $pdo->query("SELECT * from property WHERE `districtid`='".$_GET['districtid']."'");
-// 		$nRows = $pdo->query("select count(*) from property WHERE `districtid`='".$_GET['districtid']."'")->fetchColumn(); 
-// 	}
-	$total = $rowCount; //10;
+	// DB connection
+	require_once( "../lib/configuration.php"	);
+	if (empty($_GET['districtid'])) {
+		$statement = $pdo->query("SELECT * from property");
+		$nRows = $pdo->query("select count(*) from property")->fetchColumn(); 
+	}else{
+		$statement = $pdo->query("SELECT * from property WHERE `districtid`='".$_GET['districtid']."'");
+		$nRows = $pdo->query("select count(*) from property WHERE `districtid`='".$_GET['districtid']."'")->fetchColumn(); 
+	}
+	$total = $nRows; //10;
 	$j=1;
 	$r=1;
 
 // This is for the buffer achieve the minimum size in order to flush data
 echo str_repeat(' ',1024*64);
-print( "The time is " . date("h:i:sa")." - Affected rows: ".$total); 
-echo '<p><a href="javascript:;" onclick="window.close();">Close Preview</a></p>';
-
+print( "The time is " . date("h:i:sa")." - Affected rows: ".$total);    
 //flush();
 
 //	$row = $statement->fetch(PDO::FETCH_ASSOC);
@@ -137,7 +128,7 @@ flush();
 ?>
 
 
-<p><a href="javascript:;" onclick="window.close();">Close Preview</a></p>
+<p>Back to <a href="index.html">Index</a></p>
 
 </body>
 </html>

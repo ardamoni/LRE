@@ -176,9 +176,9 @@
 			</td>
 			<td>
 				<strong><span id="epsg2"><center>Fiscal Info</center></span></strong>
-				Lon: <strong><small><span id="fis1">0</span></small></strong> <br/>
-				Lat: <strong><small><span id="fis2">0</span></small></strong> <br/>
-				Lat: <strong><small><span id="fis3">0</span></small></strong> <br/>
+				Exp: <strong><small><span id="fis1">0</span></small></strong> <br/>
+				In: <strong><small><span id="fis2">0</span></small></strong> <br/>
+				Out: <strong><small><span id="fis3">0</span></small></strong> <br/>
 			</td>
 			<td>
 				<strong><span><center>Navigation Tools</center></span></strong>
@@ -187,9 +187,9 @@
 			<td>
 				<strong><span><center>Tools</center></span></strong>
 				<center><span id="tableview" class="tableshow"></span> 
-				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span> 
+<!-- 				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span>  -->
 <!-- 				<span id="testbutton" class="testbutton"></span> -->
-				<span> <button type="submit" class="xlsexport" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> </span> 
+				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> </span> 
 <!-- 				<span> <button type="submit" id="testbutton" class="testbutton" href="javascript:;" onclick="makeLayersVisible();" value="" title="This is a button to test stuf" disabled></button> </span> </center> -->
 
 			</td> 

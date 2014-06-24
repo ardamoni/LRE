@@ -269,7 +269,7 @@ function getpropertypoly($districtid)
 
 	// get the polygons out of the database 
 	$subupn = "";
-	$run = "SELECT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
+	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
 			from `KML_from_LUPMIS` d1, property d2, property_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
@@ -309,6 +309,7 @@ function getpropertypoly($districtid)
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
+
 //-----------------------------------------------------------------------------
 				//function getbusiness() 
 				//collects polygon information 
@@ -316,24 +317,52 @@ function getpropertypoly($districtid)
 //-----------------------------------------------------------------------------
 function getbusiness($districtid) 
 {
+//	$Data = new BusinessRevenue;
+
 	// get the polygons out of the database 
-	$run = "SELECT d1.UPN, d1.boundary, d1.id, d2.pay_status, d2.revenue_balance from `KML_from_LUPMIS` d1, business d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+	$subupn = "";
+	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
+			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();
 
+	$payStatus = 1;
+	$payStatus9 = false;
+	$payupn="";
+
 	while ($row = mysql_fetch_assoc($query)) {
 	$json 				= array();
+	if ($row['balance']>0){
+			$payStatus=1;
+		}else{
+			$payStatus=9;
+		}
+	if (empty($row['subupn'])) {
+//		$payStatus = $row['pay_status']; 
+		$payStatus = $payStatus; 
+		$payStatus9=false;
+	} else {
+//		if ($row['pay_status']==9){
+		if ($payStatus==9){
+			 $payStatus9=true;}
+			 
+		if ($payStatus9){
+			 $payStatus = 5;} else {
+			 $payStatus = 1;}
+	}
 	$json['id'] 		= $row['id'];
 	$json['upn'] 		= $row['UPN'];
 	$json['boundary'] 	= $row['boundary'];
-	$json['status'] 	= $row['pay_status'];
-	$json['revenue_balance'] 	= $row['revenue_balance'];
+	$json['status'] 	= $payStatus; //$row['pay_status'];
+	$json['revenue_balance'] 	= $row['balance'];
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
+
+
 //-----------------------------------------------------------------------------
 				//function getdistrictmap() 
 				//collects polygon information 
@@ -342,7 +371,9 @@ function getbusiness($districtid)
 function getdistrictmap() 
 {
 	// get the polygons out of the database 
-	$run = "SELECT * from `KML_from_districts`;";
+//	$run = "SELECT * from `KML_from_districts`;";
+	
+	$run = "SELECT t1.`id`, t1.`boundary` ,t1.`districtname`, t2.`district_name`, t2.`activestatus` from `KML_from_districts` t1, `area_district` t2 WHERE t1.`districtname`=t2.`district_name`;";
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -352,6 +383,7 @@ function getdistrictmap()
 	$json['id'] 		= $row['id'];
 	$json['boundary'] 	= $row['boundary'];
 	$json['districtname'] 	= $row['districtname'];
+	$json['activestatus'] 	= $row['activestatus'];
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");

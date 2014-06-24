@@ -238,6 +238,8 @@ function startNormalUser() {
 //Mapnik
       var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
 
+//check whether we are online or offline
+if (doesConnectionExist()){
 //Google Streets      
   	  var gmap = new OpenLayers.Layer.Google(
 					"Google Hybrid",
@@ -246,6 +248,7 @@ function startNormalUser() {
 // 					{numZoomLevels: 20,
  					visibility: false
 					});
+} // end check online					
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
 //KML we are not using this anymore     
@@ -365,7 +368,14 @@ function startNormalUser() {
 
 // Add Layers
 	map.addLayer(mapnik);
+//only call Google Maps if Internet exists	
+if (doesConnectionExist()){
 	map.addLayer(gmap);
+}else //Internet not available
+{
+// OpenstreetMap background should not be visible, i.e. white background
+mapnik.visibility = false;
+}
 //	map.addLayer(fromDistrict);
 //	map.addLayer(kmlLocalPlan);
 	map.addLayer(fromLocalplan);
@@ -373,7 +383,7 @@ function startNormalUser() {
 	map.addLayer(fromBusiness);
 	map.addLayer(colzones);
 
-				
+
 // polygon drawing for collector zones  	
 	if (console && console.log) {
 		function report(event) {
@@ -1688,8 +1698,8 @@ var request = OpenLayers.Request.GET({
 //-----------------------------------------------------------------------------
 function sessionuserhandler(request) {
 
-	// the browser's parser may have failed
-	if(!request.responseXML) {
+// the browser's parser may have failed
+if(!request.responseXML) {
 	var html ='';
 	var userdistrict='';
 	var userdistrictname='';
@@ -1708,19 +1718,21 @@ function sessionuserhandler(request) {
 			numberOfBusiness += feed[i]['numberOfBusiness'];
 			districtboundary += feed[i]['districtboundary']};
 
-//check if there is a session, if not log out			
+	//check if there is a session, if not log out			
 	if(userdistrictname=='null') {
 		setTimeout("location.href = 'logout.php';",1000);
 	}			 
 
-  document.getElementById("wcUser").innerHTML='Welcome: '+html;
-  globaldistrictid=userdistrict;
-  document.getElementById("districtname").innerHTML=userdistrictname;
-  document.getElementById("stat1").innerHTML=numberOfParcels;
-  document.getElementById("stat2").innerHTML=numberOfProperty;
-  document.getElementById("stat3").innerHTML=numberOfBusiness;
-  getdistrictcenter(districtboundary);
-	} // else{  alert('inside inserthandler');}
+	document.getElementById("wcUser").innerHTML='Welcome: '+html;
+	globaldistrictid=userdistrict;
+	document.getElementById("districtname").innerHTML=userdistrictname;
+	document.getElementById("stat1").innerHTML=numberOfParcels;
+	document.getElementById("stat2").innerHTML=numberOfProperty;
+	document.getElementById("stat3").innerHTML=numberOfBusiness;
+
+	//Now we center the map according to the boundary 
+	getdistrictcenter(districtboundary);
+} // else{  alert('inside inserthandler');}
 } 
 // end of function sessionuserhandler
 
@@ -1842,17 +1854,17 @@ function xlsexport() {
   var pageURL = 'php/openXLSreports.php?districtid='+globaldistrictid;
 
   
-   if (jsonPVisible && jsonBVisible){
-   		html = 'Table view is only available for data from one map.  \nPlease close either the Properties or the Business Map! ';
-   		alert(html);
-   }
-   else if (jsonBVisible || jsonPVisible)  {
-		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
-	}
-   else
-   { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';
-   		alert(html);
-   	}
+//    if (jsonPVisible && jsonBVisible){
+//    		html = 'Table view is only available for data from one map.  \nPlease close either the Properties or the Business Map! ';
+//    		alert(html);
+//    }
+//    else if (jsonBVisible || jsonPVisible)  {
+ 		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
+// 	}
+//    else
+//    { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';
+//    		alert(html);
+//    	}
    
 	if(popupWindow && !popupWindow.closed)
 	{
@@ -1925,6 +1937,7 @@ function uploadScannedData() {
 
 //-----------------------------------------------------------------------------
 		//function addDetails() 
+		// used in the local plan to add property or business or ... info to a UPN
 		//opens a window for adding details to UPN based on the selection from a dropdown list
 		//
 //-----------------------------------------------------------------------------
@@ -1950,21 +1963,21 @@ function checkConnection(e) {
 //-----------------------------------------------------------------------------
 function doesConnectionExist() {
     var xhr = new XMLHttpRequest();
-    var file = "http://www.co-gmbh.com/Bild9.png";
-//    var file = "http://localgis.local/LRE/img/marker-green.png";
+//    var file = "http://www.co-gmbh.com/Bild9.png";
+    var file = "http://localgis.local/LRE/img/marker-green.png";
     var randomNum = Math.round(Math.random() * 10000);
     
     xhr.open('HEAD', file + "?rand=" + randomNum, false);
     
     try {
     	xhr.send();
-	    	alert(xhr.status);
+// 	    	alert(xhr.status);
     	
 	    if (xhr.status >= 200 && xhr.status < 304) {
-	    	alert(xhr.status);
+// 	    	alert(xhr.status);
 	        return true;
 	    } else {
-	    	alert(xhr.status);
+// 	    	alert(xhr.status);
 	        return false;
 	    }
     } catch (e) {
@@ -2116,7 +2129,7 @@ function makeLayersVisible() {
 
 //-----------------------------------------------------------------------------
 		//function handlerupdateCZinProp() 
-		//is used to make invisible layers visible
+		//is used to show that the records has been updated
 		//
 //-----------------------------------------------------------------------------
 function handlerupdateCZinProp(request) {
