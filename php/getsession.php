@@ -25,11 +25,14 @@ else
 	$numberOfProperty	= 	mysql_fetch_array($qnumberOfProperty);
 	$qnumberOfBusiness	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `business` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
 	$numberOfBusiness	= 	mysql_fetch_array($qnumberOfBusiness);
+	$qsumPropertyBalance = 	mysql_query("SELECT SUM(d3.balance) as sumpropbal FROM property_balance d3 Where d3.`districtid`='130';");
+	$sumPropertyBalance	 = 	mysql_fetch_array($qsumPropertyBalance);
 
 	$json['districtboundary'] 		= $districtboundary['boundary'];
 	$json['numberOfParcels'] 		= $numberOfParcels['numupn'];
 	$json['numberOfProperty'] 		= $numberOfProperty['numupn'];
 	$json['numberOfBusiness'] 		= $numberOfBusiness['numupn'];
+	$json['sumPropertyBalance'] 		= $sumPropertyBalance['sumpropbal'];
 	
 	$data[] 			= $json;
 	

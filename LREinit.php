@@ -190,7 +190,10 @@
 <!-- 				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span>  -->
 <!-- 				<span id="testbutton" class="testbutton"></span> -->
 				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> </span> 
-<!-- 				<span> <button type="submit" id="testbutton" class="testbutton" href="javascript:;" onclick="makeLayersVisible();" value="" title="This is a button to test stuf" disabled></button> </span> </center> -->
+<!-- 
+				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
+ -->
+				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center>
 
 			</td> 
 			<td>

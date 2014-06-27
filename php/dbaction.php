@@ -23,6 +23,7 @@
 	$districtid = $_POST['districtid'];
 	$searchupn = $_POST['searchupn'];
 	$propincz = $_POST['propincz'];	
+	$busincz = $_POST['busincz'];	
 
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
@@ -50,7 +51,7 @@
 
   if ($dbaction=='searchupn'){searchupn($searchupn);}
   
-  if ($dbaction=='updateCZinProp'){updateCZinProp($propincz);}
+  if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -269,8 +270,12 @@ function getpropertypoly($districtid)
 
 	// get the polygons out of the database 
 	$subupn = "";
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
-			from `KML_from_LUPMIS` d1, property d2, property_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d3.`balance`
+	FROM `property_balance` d3
+	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`;";
+
+// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
+// 			from `KML_from_LUPMIS` d1, property d2, property_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -321,8 +326,13 @@ function getbusiness($districtid)
 
 	// get the polygons out of the database 
 	$subupn = "";
-	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
-			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d3.`balance`
+		FROM `business_balance` d3
+		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`;";
+
+// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
+// 			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+
 	$query = mysql_query($run);
 
 	$data 				= array();
@@ -558,16 +568,18 @@ function searchupn($searchupn)
 
 
 //-----------------------------------------------------------------------------
-				//function searchupn() 
-				//searches for a upn and returns
+				//function updateCZinProp() 
+				//updates the colzone_id in property to 
 //-----------------------------------------------------------------------------
 function updateCZinProp($propincz) 
 {
 
 $json_decoded=json_decode($propincz);
+$json_decodedBus=json_decode($busincz);
 //var_dump($json_decoded);
 
 $json 				= array();
+$jsonBus 				= array();
 
 //the data comes in as a multidimensional array, hence we need to go through the array to identify the values
 foreach ($json_decoded as $key => $value)
@@ -582,6 +594,18 @@ foreach ($json_decoded as $key => $value)
 		}
 //        echo "$k | $val <br />";
     } 
+foreach ($json_decodedBus as $key => $value)
+{
+    foreach ($value as $k => $val)    
+    {
+    	if ($k=='upn'){
+		$jsonBus['upn'] =  $val;
+		}
+    	if ($k=='colzone'){
+		$jsonBus['colzone'] =  $val;
+		}
+//        echo "$k | $val <br />";
+    } 
 
 if (!empty($propincz)){
     $run = "UPDATE `property` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
@@ -589,9 +613,21 @@ if (!empty($propincz)){
 	$query = mysql_query($run);  
 //	$json['message'] = 'Done!';
 	}else{
-		$json['message'] = 'Empty!';
+		$json['message'] = 'Property Empty!';
 	}
-	$json['message'] = 'Done!';
+	$json['message'] = 'Property Done!';
+	$data[] = $json;	
+
+}
+if (!empty($busincz)){
+    $run = "UPDATE `business` SET `colzone_id`='".$jsonBus['colzone']."' WHERE upn='".$jsonBus['upn']."';";
+//    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+	$query = mysql_query($run);  
+//	$json['message'] = 'Done!';
+	}else{
+		$json['message'] = 'Business Empty!';
+	}
+	$json['message'] = 'Business Done!';
 	$data[] = $json;	
 
 }

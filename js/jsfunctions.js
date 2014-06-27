@@ -3,6 +3,7 @@
 // 27. September 2013 10:10:43 GMT moved previous code from LREinit and created init() in order to keep file count low
 
 //make drawing tools invisible
+OpenLayers.ProxyHost = "proxy.cgi?url=";
  document.getElementById("controls").style.visibility="hidden";
  
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
@@ -77,7 +78,7 @@ var fromDistrict = new OpenLayers.Layer.Vector("District Boundary", {
  						 }
      });
 var fromLocalplan = new OpenLayers.Layer.Vector("Local Plan (Real Time)", {		 
-	    visibility: false,
+		visibility: false,
 	    eventListeners: {"visibilitychanged": getLocalplanPolygons,
  						 //"featureadded": function(){alert("Feature added")}
  						 }
@@ -163,6 +164,13 @@ var LUPMIScolour06 = {
             strokewidth: 2,
             fillColor: "#F0BFEB",
             fillOpacity: 0.15,
+};
+var LUPMISnoUPN = {
+			strokeColor: "#780000",
+            strokeOpacity: 0.8,
+            strokewidth: 2,
+            fillColor: "#FF00FF",
+            fillOpacity: 0.55,
 };
 
 //define styles for the RedGreen vector layer
@@ -361,6 +369,7 @@ if (doesConnectionExist()){
 		 visibility: false,
          hover: true,
          styleMap: zoneStyleMap });
+//		renderers: ["Canvas", renderer],
          
 
     map.addControl(new OpenLayers.Control.ModifyFeature(colzones, {vertexRenderIntent: "vertex"}));   
@@ -690,14 +699,14 @@ function onFeatureSelectcz(evt) {
 			{
 				if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
 					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
-					if (feature.geometry.containsPoint(checkPoint)){
-						intersectedUPNs++;
-						revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
-// for debugging
-//	if (console && console.log) {
-//			console.log(map.getLayer(searchlayer).features[i].attributes.upn, intersectedUPNs.toString());
-//		}
+				if (feature.geometry.containsPoint(checkPoint)){
+					intersectedUPNs++;
+					revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
+				// for debugging
+					if (console && console.log) {
+						console.log(map.getLayer(searchlayer).features[i].attributes.upn, intersectedUPNs.toString());
 					}
+				}
 				}			
 			}
 		}
@@ -1127,6 +1136,14 @@ function polylocalplanhandler(request) {
 					break;
 				default: {	var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault); }
 				}	
+				//check if UPN is empty or is less than 13 characters, if yes then color the parcel accordingly
+				var s=feed[i]['upn'];
+			   var checkentry =(s.match(/-/g)||[]).length; //this checks if two - signs are in the entry
+			   var checkentry2 =s.length; //this checks if 13 characters are in the entry
+			   if ((checkentry != 2) || (checkentry2 < 13)){
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISnoUPN);		
+				}
+
 			  fromLocalplan.addFeatures([polygonFeature]);
 
 		  } // end of for 
@@ -1291,7 +1308,7 @@ function getBusinessPolygons() {
 } //end of function getBusinessPolygons
 
 //-----------------------------------------------------------------------------
-		//function polyhandler() 
+		//function Businesshandler() 
 		//is the callback handler for getPropertyPolygons()
 		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
 //-----------------------------------------------------------------------------
@@ -1707,6 +1724,7 @@ if(!request.responseXML) {
 	var numberOfParcels='';
 	var numberOfProperty='';
 	var numberOfBusiness='';
+	var sumPropertyBalance='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
@@ -1716,6 +1734,7 @@ if(!request.responseXML) {
 			numberOfParcels += feed[i]['numberOfParcels'];
 			numberOfProperty += feed[i]['numberOfProperty'];
 			numberOfBusiness += feed[i]['numberOfBusiness'];
+			sumPropertyBalance += feed[i]['sumPropertyBalance'];
 			districtboundary += feed[i]['districtboundary']};
 
 	//check if there is a session, if not log out			
@@ -1729,6 +1748,7 @@ if(!request.responseXML) {
 	document.getElementById("stat1").innerHTML=numberOfParcels;
 	document.getElementById("stat2").innerHTML=numberOfProperty;
 	document.getElementById("stat3").innerHTML=numberOfBusiness;
+	document.getElementById("fis3").innerHTML=sumPropertyBalance;
 
 	//Now we center the map according to the boundary 
 	getdistrictcenter(districtboundary);
@@ -2056,6 +2076,10 @@ function showLegend() {
 		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
 		ctx.fillText("Artisan production",20,ystart+(rectHeight));
 		ystart=ystart+20;
+		ctx.fillStyle=LUPMISnoUPN['fillColor'];
+		ctx.fillRect(2,ystart,rectWidth,rectHeight); 
+		ctx.fillText("UPN wrong or inconsistent",20,ystart+(rectHeight));
+		ystart=ystart+20;
 	 }
 	else
 	{ 
@@ -2064,17 +2088,20 @@ function showLegend() {
 	}
 }
 //-----------------------------------------------------------------------------
-		//function makeLayersVisible() 
-		//is used to make invisible layers visible
+		//function updateCZinPropBus() 
+		//is used to update the collector zones in property and business
 		//
 //-----------------------------------------------------------------------------
-function makeLayersVisible() {
+function updateCZinPropBus() {
 	var jsonLPVisible = fromLocalplan.getVisibility();
 	var jsonPVisible = fromProperty.getVisibility();
 	var jsonBVisible = fromBusiness.getVisibility();
 	var jsonCZVisible = colzones.getVisibility();
 	var JSONObject= [];
-	
+	var JSONObjectBus= [];
+//start spinner
+	spinner.spin(target);
+
 // 	if (!jsonLPVisible){
 // 		fromLocalplan.setVisibility(true);
 // 	}
@@ -2091,7 +2118,7 @@ function makeLayersVisible() {
 	for( var j = 0; j < colzones.features.length; j++ ) {
 		feature = colzones.feature;
 		var searchlayer=fromProperty.id;
-//		var searchlayer=fromBusiness.id;
+		var searchlayer2=fromBusiness.id;
 		console.log('property layer');
 		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
 		{
@@ -2099,7 +2126,6 @@ function makeLayersVisible() {
 				var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
 				if (colzones.features[j].geometry.containsPoint(checkPoint)){
 					JSONObject.push({upn: map.getLayer(searchlayer).features[i].attributes.upn,colzone: colzones.features[j].attributes.zoneid});
-//					JSONObject.push({upn: "test upn",colzone: "test colzone"});
 	// for debugging
 		if (console && console.log) {
 				console.log(map.getLayer(searchlayer).features[i].attributes.upn);
@@ -2107,8 +2133,24 @@ function makeLayersVisible() {
 				}
 			}			
 		}
+		for( var i = 0; i < map.getLayer(searchlayer2).features.length; i++ ) 
+		{
+			if (colzones.features[j].geometry.intersects(map.getLayer(searchlayer2).features[i].geometry)) { 
+				var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer2).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer2).features[i].geometry.getBounds().getCenterLonLat().lat);
+				if (colzones.features[j].geometry.containsPoint(checkPoint)){
+					JSONObjectBus.push({upn: map.getLayer(searchlayer2).features[i].attributes.upn,colzone: colzones.features[j].attributes.zoneid});
+	// for debugging
+		if (console && console.log) {
+				console.log(map.getLayer(searchlayer2).features[i].attributes.upn);
+			}
+				}
+			}			
+		}
 	}
 //  alert(JSON.stringify(JSONObject));
+
+var handlerParameter = {spin: spinner};
+
 	var request = OpenLayers.Request.POST(
 	{
 		url: "php/dbaction.php", 
@@ -2116,13 +2158,15 @@ function makeLayersVisible() {
 		{
 			dbaction: "updateCZinProp",
 			propincz: JSON.stringify(JSONObject),
+			busincz: JSON.stringify(JSONObjectBus),
 			sub: "false"
 		}),
 		headers: 
 		{
 			"Content-Type": "application/x-www-form-urlencoded"
 		},
-		callback: handlerupdateCZinProp
+		callback: handlerupdateCZinProp,
+		scope: handlerParameter
 	});	
 	
 }
@@ -2135,4 +2179,40 @@ function makeLayersVisible() {
 function handlerupdateCZinProp(request) {
 feed=JSON.parse(request.responseText);
 alert(feed[0]['upn']+' '+feed[0]['message']);
+this.spin.stop();
+}
+
+//-----------------------------------------------------------------------------
+		//function printFunction() 
+		//is used to print a map area
+		//very experimental!!!
+//-----------------------------------------------------------------------------
+function printFunction() {
+	var title = 'Upload XLS';
+	var w = 1024;
+	var h = 650;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+//    var popupWindow = window.open ('', title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+var context = colzones.renderer.canvas; //layer.renderer.hitContext;
+var size = map.getSize();
+var imageData = context.getImageData(10,10,50,50);
+//alert(imageData);
+var canv  = document.getElementById("myCanvas");
+var ctx=canv.getContext("2d");
+ctx.putImageData(imageData,10,70);
+var dataUrl = canv.toDataURL();
+//alert(dataURL);
+
+window.open(dataUrl, "toDataURL() image", "width=600, height=200");
+// 
+//     html2canvas(document.getElementById("myCanvas"), {
+//         onrendered: function (canvas) {
+//             var img = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+// 			window.open(img, "toDataURL() image", "width=600, height=200");
+// 			//window.location.href=image; // it will save locally
+//            // window.open(img);
+//         }
+//     });
 }
