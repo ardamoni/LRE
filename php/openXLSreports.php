@@ -130,6 +130,16 @@ table.demoTbl td.foot {
 			<td><div id=sfile5></div></td>
 			<td><center id="spin5" type="hidden"><center id="squery5" type="hidden"><div id=prev5></div></center></td>
 		</tr>
+		<tr>
+			<td><center>Quality of Data Reports</center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" value="Show UPNs that are not in the localplan"/></td>
+			<div><input type="hidden" id="report6" value=""></div></td>
+			<td>This will produce an Excel table listing all UPNs from table property_balanace that have no correspondance in the local plan</td>
+			<td><div id=sfile6></div></td>
+			<td><center id="spin6" type="hidden"><center id="squery6" type="hidden"><div id=prev6></div></center></td>
+		</tr>
 	</table>
 		
 <script type="text/javascript">
@@ -201,6 +211,15 @@ switch(opt) {
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List revenue potential";
 		document.getElementById('report'+opt).value="01LREpotentialBusiness";
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 6:  
+		var squery = 'SELECT d1.`upn`, d1.`subupn`, d1.`districtid`, d1.balance FROM property_balance d1 ';
+			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) ';
+			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List all UPNs missing in local plan";
+		document.getElementById('report'+opt).value="01LREwrongupns";
 		var target = document.getElementById('spin'+opt);
 	  break;
 	default:  

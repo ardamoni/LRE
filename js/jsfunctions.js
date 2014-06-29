@@ -1724,7 +1724,6 @@ if(!request.responseXML) {
 	var numberOfParcels='';
 	var numberOfProperty='';
 	var numberOfBusiness='';
-	var sumPropertyBalance='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
@@ -1734,7 +1733,6 @@ if(!request.responseXML) {
 			numberOfParcels += feed[i]['numberOfParcels'];
 			numberOfProperty += feed[i]['numberOfProperty'];
 			numberOfBusiness += feed[i]['numberOfBusiness'];
-			sumPropertyBalance += feed[i]['sumPropertyBalance'];
 			districtboundary += feed[i]['districtboundary']};
 
 	//check if there is a session, if not log out			
@@ -1748,13 +1746,55 @@ if(!request.responseXML) {
 	document.getElementById("stat1").innerHTML=numberOfParcels;
 	document.getElementById("stat2").innerHTML=numberOfProperty;
 	document.getElementById("stat3").innerHTML=numberOfBusiness;
-	document.getElementById("fis3").innerHTML=sumPropertyBalance;
 
 	//Now we center the map according to the boundary 
 	getdistrictcenter(districtboundary);
 } // else{  alert('inside inserthandler');}
 } 
 // end of function sessionuserhandler
+
+//-----------------------------------------------------------------------------
+		//function getFiscalStats() 
+		//get the info for Due, Paid, and Balance
+		//calls fiscalstatshandler
+//-----------------------------------------------------------------------------
+function getFiscalStats(){
+spinner.spin(target);
+var request = OpenLayers.Request.GET({
+    url: "php/getfiscalstats.php", 
+    callback: fiscalstatshandler
+});
+}
+// end of function getSessionUser
+
+//-----------------------------------------------------------------------------
+		//function fiscalstatshandler() 
+		//is the handler for getFiscalStats 
+		//
+//-----------------------------------------------------------------------------
+function fiscalstatshandler(request) {
+
+// the browser's parser may have failed
+if(!request.responseXML) {
+	var sumPropertyBalance='';
+	var sumPropertyPaid='';
+	var sumPropertyDue='';
+		// get the response from php and read the json encoded data
+		feed=JSON.parse(request.responseText);
+		for (var i = 0; i < feed.length; i++) {
+			sumPropertyBalance += feed[i]['sumPropertyBalance'];
+			sumPropertyPaid += feed[i]['sumPropertyPaid'];
+			sumPropertyDue += feed[i]['sumPropertyDue'];
+			};
+
+	document.getElementById("fis1").innerHTML=number_format(sumPropertyDue, 2, '.', ',')+' GHC';
+	document.getElementById("fis2").innerHTML=number_format(sumPropertyPaid, 2, '.', ',')+' GHC';
+	document.getElementById("fis3").innerHTML=number_format(sumPropertyBalance, 2, '.', ',')+' GHC';
+
+} 
+spinner.stop();
+} 
+// end of function fiscalstatshandler
 
 //-----------------------------------------------------------------------------
 		//function getdistrictcenter(districtboundary) 

@@ -22,6 +22,7 @@
 </style>
         <link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
         <link rel="stylesheet" href="style.css" type="text/css">
+		<link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
 
 
 <form name = "login" action = "index.php" method = "POST">
@@ -48,7 +49,7 @@
 				</tr>
 				<tr>
 					<td colspan = "2">		
-						<input type = "submit" value = "<?php echo "SIGN IN"; ?>" id = "btn1">		
+						<input type = "submit" class="orange-flat-button" value = "<?php echo "SIGN IN"; ?>" id = "btn1">		
 					</td>
 				</tr>
 			</table>

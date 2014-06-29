@@ -7,11 +7,12 @@
  * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+session_start();
+
 /** Include path **/
 set_include_path(get_include_path() . PATH_SEPARATOR . '../lib/PHPExcel179/Classes/');
 
 include 'PHPExcel.php';
-
 //require('../lib/PHPExcel179/Classes/PHPExcel.php');
 //set the memory to work with large files
 ini_set('memory_limit', "1024M");
@@ -122,6 +123,14 @@ $rowCount++;
 //$objPHPExcel->getActiveSheet()->getStyle('A2:'.$lastColumn.$cellRow)->applyFromArray($styleArray);
 $objPHPExcel->getActiveSheet()->getStyle('A2:'.$lastColumn.$rowCount)->applyFromArray($styleArray);
 
+//set the create date, the creator, and affected rows
+$rowCount=$rowCount+2;
+$objSheet->getCell('A'.$rowCount)->setValue('Created by: '.$_SESSION['user']['name']);
+$createDate = date("Y-m-d");
+$rowCount++;
+$objSheet->getCell('A'.$rowCount)->setValue('On: '.$createDate);
+$rowCount++;
+$objSheet->getCell('A'.$rowCount)->setValue('Affected rows: '.($rowCount-5));
 // set number and currency format to columns
 // $objSheet->getStyle('B2:B5')->getNumberFormat()->setFormatCode($numberFormat);
 // $objSheet->getStyle('C2:D5')->getNumberFormat()->setFormatCode($currencyFormat);

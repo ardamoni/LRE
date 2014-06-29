@@ -29,6 +29,7 @@
 		
         <link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
         <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
 		
 		<!-- center and far right column-->
         <style type="text/css">
@@ -146,6 +147,32 @@
 			  background-color: white;
 			  background-image: url("img/delete2.png");
 			}
+		/* #Pomegranate Flat Button
+		==================================================*/
+		.pomegranate-flat-button {
+		  position: relative;
+		  vertical-align: top;
+		  width: 100%;
+		  height: 60px;
+		  padding: 0;
+		  font-size: 22px;
+		  color: white;
+		  text-align: center;
+		  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+		  background: #c0392b;
+		  border: 0;
+		  border-bottom: 2px solid #b53224;
+		  cursor: pointer;
+		  -webkit-box-shadow: inset 0 -2px #b53224;
+		  box-shadow: inset 0 -2px #b53224;
+		}
+		.pomegranate-flat-button:active {
+		  top: 1px;
+		  outline: none;
+		  -webkit-box-shadow: none;
+		  box-shadow: none;
+		}
+
 
 		</style>
         <style>
@@ -169,20 +196,23 @@
 		<table class="mouse_location_sample">
 		<tr>
 			<td>
-				<strong><span id="epsg1"><center>Stats</center></span></strong>
+				<input type="submit" value="Stats" class="sun-flower-button">
+<!-- 				<strong><span id="epsg1"><center>Stats</center></span></strong> -->
 				Parcels #: <strong><small><span id="stat1">0</span></small></strong> <br/>
 				Properties #: <strong><small><span id="stat2">0</span></small></strong> <br/>
 				Businesses #: <strong><small><span id="stat3">0</span></small></strong> <br/>
 			</td>
 			<td>
-				<strong><span id="epsg2"><center>Fiscal Info</center></span></strong>
+				<input type="submit" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="sun-flower-button">
+<!-- <strong><span id="epsg2"><center>Fiscal Info</center></span></strong> -->
 				Exp: <strong><small><span id="fis1">0</span></small></strong> <br/>
 				In: <strong><small><span id="fis2">0</span></small></strong> <br/>
 				Out: <strong><small><span id="fis3">0</span></small></strong> <br/>
 			</td>
 			<td>
+<!-- 				<input type="submit" value="Navigation Tools" class="sun-flower-button"> -->
 				<strong><span><center>Navigation Tools</center></span></strong>
-				<center><span id="tools" class="olControlPanel"></span> </center>
+				<center><span id="tools" class="olControlPanel"></span></center>
 			</td>
 			<td>
 				<strong><span><center>Tools</center></span></strong>
@@ -193,7 +223,7 @@
 <!-- 
 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
  -->
-				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center>
+<!-- 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center> -->
 
 			</td> 
 			<td>
@@ -206,7 +236,10 @@
 			</td>
 			<td>
 				<center id="wcUser">Welcome</center>
-				<a href="logout.php"> <strong><center>SIGN OUT</center></strong> </a>				
+				<form action="logout.php" method="post">
+<!-- 				<a href="logout.php"> <strong><center>SIGN OUT</center></strong> </a>				 -->
+				<input type="submit" value="SIGN OUT" class="pomegranate-flat-button">
+				</form>
 			</td>
 		 </tr>
 		</table>
