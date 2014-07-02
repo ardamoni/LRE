@@ -26,6 +26,8 @@ date_default_timezone_set('Europe/London');
 ?>
 <html>
 <link rel="stylesheet" href="../css/ex.css" type="text/css" />
+<link rel="stylesheet" href="../css/flatbuttons.css" type="text/css">
+
 <style type="text/css">
 
 table.demoTbl {
@@ -96,35 +98,35 @@ table.demoTbl td.foot {
 			<td><center><strong>Preview</center></strong></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option1" name="xlsopen" a href="javascript:;" onclick="openXLS(1);" value="List district info"/>
+			<td><center><input type="button" type="submit" id="option1" name="xlsopen" a href="javascript:;" onclick="openXLS(1);" class="orange-flat-button" value="List district info"/></center>
 			<div><input type="hidden" id="report1" value=""></div></td>
 			<td>This will produce an Excel table listing information on the district</td>
 			<td><div id=sfile1></div></td>
 			<td><center id="spin1" type="hidden"><center id="squery1" type="hidden"><div id=prev1></div></center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option2" name="xlsopen" a href="javascript:;" onclick="openXLS(2);" value="List properties by district"/></td>
+			<td><input type="button" type="submit" id="option2" name="xlsopen" a href="javascript:;" onclick="openXLS(2);" class="orange-flat-button" value="List properties by district"/></td>
 			<div><input type="hidden" id="report2" value=""></div></td>
 			<td>This will produce an Excel file with the content of the properties table</td>
 			<td><div id=sfile2></div></td>
 			<td><center id="spin2" type="hidden"><center id="squery2" type="hidden"><div id=prev2></div></center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option3" name="xlsopen" a href="javascript:;" onclick="openXLS(3);" value="List businesses by district"/></td>
+			<td><input type="button" type="submit" id="option3" name="xlsopen" a href="javascript:;" onclick="openXLS(3);" class="orange-flat-button" value="List businesses by district"/></td>
 			<div><input type="hidden" id="report3" value=""></div></td>
 			<td>This will produce an Excel file with the content of the business table</td>
 			<td><div id=sfile3></div></td>
 			<td><center id="spin3" type="hidden"><center id="squery3" type="hidden"><div id=prev3></div></center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option4" name="xlsopen" a href="javascript:;" onclick="openXLS(4);" value="Revenue potential Property Rates by district"/></td>
+			<td><input type="button" type="submit" id="option4" name="xlsopen" a href="javascript:;" onclick="openXLS(4);" class="orange-flat-button" value="Revenue potential Property Rates by district"/></td>
 			<div><input type="hidden" id="report4" value=""></div></td>
 			<td>This will produce an Excel table with the Potential of Property Rates per year</td>
 			<td><div id=sfile4></div></td>
 			<td><center id="spin4" type="hidden"><center id="squery4" type="hidden"><div id=prev4></div></center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option5" name="xlsopen" a href="javascript:;" onclick="openXLS(5);" value="Revenue potential Business Rates by district"/></td>
+			<td><input type="button" type="submit" id="option5" name="xlsopen" a href="javascript:;" onclick="openXLS(5);" class="orange-flat-button" value="Revenue potential Business Rates by district"/></td>
 			<div><input type="hidden" id="report5" value=""></div></td>
 			<td>This will produce an Excel table with the Potential of Business Rates per year</td>
 			<td><div id=sfile5></div></td>
@@ -134,11 +136,18 @@ table.demoTbl td.foot {
 			<td><center>Quality of Data Reports</center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" value="Show UPNs that are not in the localplan"/></td>
+			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" class="orange-flat-button" value="Show Property UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report6" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table property_balanace that have no correspondance in the local plan</td>
 			<td><div id=sfile6></div></td>
 			<td><center id="spin6" type="hidden"><center id="squery6" type="hidden"><div id=prev6></div></center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option7" name="xlsopen" a href="javascript:;" onclick="openXLS(7);" class="orange-flat-button" value="Show Business UPNs that are not in the localplan"/></td>
+			<div><input type="hidden" id="report7" value=""></div></td>
+			<td>This will produce an Excel table listing all UPNs from table business_balanace that have no correspondance in the local plan</td>
+			<td><div id=sfile7></div></td>
+			<td><center id="spin7" type="hidden"><center id="squery7" type="hidden"><div id=prev7></div></center></td>
 		</tr>
 	</table>
 		
@@ -214,12 +223,21 @@ switch(opt) {
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 6:  
-		var squery = 'SELECT d1.`upn`, d1.`subupn`, d1.`districtid`, d1.balance FROM property_balance d1 ';
+		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`districtid`, d1.balance FROM property_balance d1 ';
 			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) ';
 			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 		document.getElementById('squery'+opt).value=squery;
-		document.getElementById('option'+opt).value="List all UPNs missing in local plan";
+		document.getElementById('option'+opt).value="List all Property UPNs missing in local plan";
 		document.getElementById('report'+opt).value="01LREwrongupns";
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 7:  
+		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`districtid`, d1.balance FROM business_balance d1 ';
+			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) ';
+			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List all Business UPNs missing in local plan";
+		document.getElementById('report'+opt).value="01LREwrongupnsBusiness";
 		var target = document.getElementById('spin'+opt);
 	  break;
 	default:  

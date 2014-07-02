@@ -88,7 +88,7 @@ session_start();
 
 	echo "<table class='demoTbl' border='1' cellpadding='10' cellspacing='1' bgcolor='#FFFFFF'>
 			<tr'>";
-for ($i = 1; $i < $statement->columnCount(); $i++) {
+for ($i = 0; $i < $statement->columnCount(); $i++) {
     $col = $statement->getColumnMeta($i);
     echo '<th>'.$col['name'].'</th>';
 }
@@ -100,7 +100,7 @@ for ($i = 1; $i < $statement->columnCount(); $i++) {
 	while( $row = $statement->fetch(PDO::FETCH_BOTH)) 
 	{
 	 echo "<tr>";
-	 for ($x=1; $x<=$statement->columnCount(); $x++)
+	 for ($x=0; $x<$statement->columnCount(); $x++)
   		{
 		  echo "<td>" . $row[$x] . "</td>";
 		  

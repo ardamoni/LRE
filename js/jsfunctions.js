@@ -25,11 +25,19 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 	var globaldistrictid='';
 	var globalpropertychanged = false;
 	var globalbusinesschanged = false;
+	var nogoogle = false;
+
+//we need to get the starting window dimensions for a potential resize of the map
+	var windowWidth = window.innerWidth;
+  	var windowHeight = window.innerHeight;
+  	var mapDefaultSizeWidth = 1024;
+  	var mapDefaultSizeHeight = 650;
 
 var options = {   
 			  scales: [500, 1000, 2500, 5000, 10000],
 			  numZoomLevels: 26,
 			  allOverlays: true,
+			  autoUpdateSize: true,
 			  projection: proj900913, //new OpenLayers.Projection("EPSG:900913"),
 			  displayProjection: projWGS84, //new OpenLayers.Projection("EPSG:4326"),
 			  controls:[
@@ -42,6 +50,25 @@ var options = {
 				new OpenLayers.Control.KeyboardDefaults()],};
 
 var map = new OpenLayers.Map('map', options);
+
+//allow user to resize window including the map area
+window.onresize = function()
+{
+  if (window.innerWidth < windowWidth){
+  	document.getElementById("map").style.width = window.innerWidth*0.75+"px";
+  	} else {
+  	document.getElementById("map").style.width = mapDefaultSizeWidth+"px";
+  	}
+  if (window.innerHeight < windowHeight){
+  	document.getElementById("map").style.height = window.innerHeight*0.75+"px";
+  	} else {
+  	document.getElementById("map").style.height = mapDefaultSizeHeight+"px";
+  	}
+  setTimeout( function() { map.updateSize();})
+//  alert('CurrentSize: '+map.getCurrentSize() + ' window.innerwidth: ' + window.innerWidth + ' windowWidth: ' + windowWidth + ' screen: ' + screen.width + ' map.size: ' + map.size);;
+}
+
+
 var colzones, controls;
 var globalinsertCZ = true;
 
@@ -248,7 +275,7 @@ function startNormalUser() {
 
 //check whether we are online or offline
 if (doesConnectionExist()){
-//Google Streets      
+try {
   	  var gmap = new OpenLayers.Layer.Google(
 					"Google Hybrid",
 					{type: google.maps.MapTypeId.HYBRID,
@@ -256,6 +283,11 @@ if (doesConnectionExist()){
 // 					{numZoomLevels: 20,
  					visibility: false
 					});
+    } catch (e) {
+         alert(e);
+         var nogoogle=true;
+    	return false;
+    }//Google Streets      
 } // end check online					
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
@@ -378,7 +410,8 @@ if (doesConnectionExist()){
 // Add Layers
 	map.addLayer(mapnik);
 //only call Google Maps if Internet exists	
-if (doesConnectionExist()){
+ if (doesConnectionExist()){
+//    if(!nogoogle){
 	map.addLayer(gmap);
 }else //Internet not available
 {
@@ -828,7 +861,7 @@ function handler(request)
 			html += '<p>Owner Address: '+ feed[i]['owneraddress'] +'</p>';
 			html += '<p>Owner Tel: '+ feed[i]['owner_tel'] +'</p>';
 			html += '<p>Owner Email: '+ feed[i]['owner_email'] +'</p>';									
-			html += "<input type='button' value='Revenue Collection' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
+			html += "<input type='button' value='Revenue Collection' class='orange-flat-button' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += "<input type='button' value='"+title+" Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += '<hr />';
 		}
@@ -1233,6 +1266,7 @@ function polyhandler(request) {
 					polypoints.push(point);
 				}
 			}
+			
 				// create some attributes for the feature
 			var attributes = {upn: feed[i]['upn'],
 								revbalance: feed[i]['revenue_balance']};
@@ -1242,11 +1276,6 @@ function polyhandler(request) {
 			switch(parseInt(feed[i]['status'])) {
 				case 1:
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleRed);		
-					var num = Number(feed[i]['revenue_balance']);
-					var n = num.valueOf(); 
-					revbalance = revbalance+num;
-					global_out_property = revbalance;
-					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';
 				  break;
 				case 5:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNotYetGreen);		
@@ -1257,6 +1286,11 @@ function polyhandler(request) {
 				default:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);		
 				}
+				var num = Number(feed[i]['revenue_balance']);
+				var n = num.valueOf(); 
+				revbalance = revbalance+num;
+				global_out_property = revbalance;
+				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';
 			  fromProperty.addFeatures([polygonFeature]);
 
 		  } // end of for 
@@ -1352,12 +1386,9 @@ function Businesshandler(request) {
 			switch(parseInt(feed[i]['status'])) {
 				case 1:
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleRed);		
-					var num = Number(feed[i]['revenue_balance']);
-					var n = num.valueOf(); 
-					revbalance = revbalance+num;
-					global_out_business = revbalance;
-					document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';					
-//					document.getElementById("debug2").innerHTML=typeof(num);
+				  break;
+				case 5:  
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNotYetGreen);		
 				  break;
 				case 9:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleGreen);		
@@ -1365,6 +1396,22 @@ function Businesshandler(request) {
 				default:  
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);		
 				}
+				var num = Number(feed[i]['revenue_balance']);
+				var n = num.valueOf(); 
+				revbalance = revbalance+num;
+				global_out_business = revbalance;
+				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';					
+//					document.getElementById("debug2").innerHTML=typeof(num);
+				
+// for debugging
+// 	if (console && console.log) {
+// //	 		console.log('getbusiness poly');
+// 			if (feed[i]['id']=='4928'){
+// 			console.log(i,';',feed[i]['id'], ';',num);}
+// 			console.log(i,';',feed[i]['id'],';',feed[i]['upn'],';',global_out_business,';', num, ';',revbalance);
+// 		}
+// 			
+				
 			  fromBusiness.addFeatures([polygonFeature]);
 
 		  } // end of for 
@@ -1779,17 +1826,29 @@ if(!request.responseXML) {
 	var sumPropertyBalance='';
 	var sumPropertyPaid='';
 	var sumPropertyDue='';
+	var sumBusinessBalance='';
+	var sumBusinessPaid='';
+	var sumBusinessDue='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
 			sumPropertyBalance += feed[i]['sumPropertyBalance'];
 			sumPropertyPaid += feed[i]['sumPropertyPaid'];
 			sumPropertyDue += feed[i]['sumPropertyDue'];
+			sumBusinessBalance += feed[i]['sumBusinessBalance'];
+			sumBusinessPaid += feed[i]['sumBusinessPaid'];
+			sumBusinessDue += feed[i]['sumBusinessDue'];
 			};
 
 	document.getElementById("fis1").innerHTML=number_format(sumPropertyDue, 2, '.', ',')+' GHC';
 	document.getElementById("fis2").innerHTML=number_format(sumPropertyPaid, 2, '.', ',')+' GHC';
 	document.getElementById("fis3").innerHTML=number_format(sumPropertyBalance, 2, '.', ',')+' GHC';
+	document.getElementById("fis4").innerHTML=number_format(sumBusinessDue, 2, '.', ',')+' GHC';
+	document.getElementById("fis5").innerHTML=number_format(sumBusinessPaid, 2, '.', ',')+' GHC';
+	document.getElementById("fis6").innerHTML=number_format(sumBusinessBalance, 2, '.', ',')+' GHC';
+
+	document.getElementById("fisprop").value='Property Rates';
+	document.getElementById("fisbus").value='Business Permits';
 
 } 
 spinner.stop();
@@ -2024,14 +2083,14 @@ function checkConnection(e) {
 function doesConnectionExist() {
     var xhr = new XMLHttpRequest();
 //    var file = "http://www.co-gmbh.com/Bild9.png";
-    var file = "http://localgis.local/LRE/img/marker-green.png";
+    var file = "img/marker-green.png"; //http://localgis.local/LRE/
     var randomNum = Math.round(Math.random() * 10000);
     
     xhr.open('HEAD', file + "?rand=" + randomNum, false);
     
     try {
     	xhr.send();
-// 	    	alert(xhr.status);
+//	    	alert(xhr.status);
     	
 	    if (xhr.status >= 200 && xhr.status < 304) {
 // 	    	alert(xhr.status);

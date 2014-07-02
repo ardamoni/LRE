@@ -328,7 +328,7 @@ function getbusiness($districtid)
 	$subupn = "";
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d3.`balance`
 		FROM `business_balance` d3
-		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`;";
+		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."';";
 
 // 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
 // 			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";

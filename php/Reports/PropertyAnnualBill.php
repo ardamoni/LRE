@@ -58,13 +58,13 @@ if( session_status() != 2 )
 	
 	$PDF->Ln();
 	
-	$districtName = $Data->getDistrictInfo( $district, "district_name" );
+// 	$districtName = $Data->getDistrictInfo( $district, "district_name" );
 	
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
-// 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
-$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
+ 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
+// $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
 	
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
@@ -139,10 +139,16 @@ $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtI
 		$PDF->Cell(90,5, $r['zoneid'],1,0,'C');
 		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
-		$PDF->Cell(30,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
+		//Calc the total Due
+		$dueAll=$Data->getPropertyDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
+		$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
+										$dueAll["rate_impost_value"] +
 										$arreas + 
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ),1,1,'R');
+										$dueAll["feefi_value" ] ,2,'.','' ),1,1,'R');
+// 		$PDF->Cell(30,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
+// 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
+// 										$arreas + 
+// 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ),1,1,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
 		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C'); //property_use_title
@@ -160,15 +166,18 @@ $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtI
 		
 		$PDF->SetFont('Arial','',7);
 		$PDF->Cell(16,5, $currentYear,1,0,'R');	
-		$PDF->Cell(23,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "prop_value" ),1,0,'R');
-		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
-		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
+		$PDF->Cell(23,5, $dueAll["prop_value"],1,0,'R');
+		$PDF->Cell(17,5, $dueAll["rate_value"],1,0,'R');
+		$PDF->Cell(17,5, $dueAll["rate_impost_value"],1,0,'R');
+// 		$PDF->Cell(23,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "prop_value" ),1,0,'R');
+// 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
+// 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
 		$PDF->Cell(12,5, number_format( $arreas ,2,'.','' ),1,0,'R');
-		$PDF->Cell(16,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ),2,'.','' ) ,1,0,'R');	
-		$PDF->Cell(19,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
+		$PDF->Cell(16,5, number_format( $dueAll["feefi_value"],2,'.','' ) ,1,0,'R');	
+		$PDF->Cell(19,5, number_format( $dueAll["rate_value"] +
+										$dueAll["rate_impost_value"] +
 										$arreas + 
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ) ,1,1,'R');
+										$dueAll["feefi_value"] ,2,'.','' ) ,1,1,'R');
 		
 		$PDF->SetFont('Arial','B',6);
 		$PDF->Cell(16,5, 'Previous Year',1,0,'C');	
@@ -184,9 +193,16 @@ $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtI
 		$PDF->Cell(23,5, number_format( $Data->getAnnualDueSum( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,0,'R');
 		$PDF->Cell(17,5, number_format( $Data->getAnnualBalance( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,0,'R');
 		
+		if ($counter==2) {
+//		$PDF->Ln(10);
+		$PDF->AddPage();
+		$counter=0;
+		} else {
 		$counter++;
-
 		$PDF->Ln(15);
+		}
+// 		$counter++;
+// 		$PDF->Ln(15);
 		
 	}
 	

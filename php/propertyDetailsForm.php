@@ -231,6 +231,11 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		$frm->addLabelFor('housenumber', $newcell.'Housenumber: '.$endcell) . $newcell. 
 		// using html5 required attribute
 		$frm->addInput('text', 'Nr.', $r['housenumber'], array('id'=>'housenumber', 'size'=>10, 'required'=>true) ) . 
+		$frm->startTag('p') . PHP_EOL . $endcell . $endrow .  
+		// label and text input with optional attributes
+		$frm->addLabelFor('streetcode', $newcell.'Streetcode: '.$endcell) . $newcell. 
+		// using html5 required attribute
+		$frm->addInput('text', 'streetcode', $r['comments'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
@@ -239,7 +244,7 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		// label and text input with optional attributes
 	    '<strong>Owner Information</strong>' . $endcell .$newcell . $endcell . $endrow .
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
-		$frm->addLabelFor('owner', 'Owner: '.$endcell) . $newcell. 
+		$frm->addLabelFor('owner', 'Name: '.$endcell) . $newcell. 
 		// using html5 required attribute
 		$frm->addInput('text', 'owner', $r['owner'], array('id'=>'owner', 'size'=>30, 'required'=>true) ) . 
 
@@ -247,7 +252,7 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow .
 
 		$frm->startTag('p') . 
-		$frm->addLabelFor('ownAddress', $newcell.'Owner\'s adress: '.$endcell) .$newcell.
+		$frm->addLabelFor('ownAddress', $newcell.'Address: '.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'ownAddress', $r['owneraddress'], array('id'=>'ownAddress', 'size'=>30, 'required'=>true) ) . 
 
@@ -255,7 +260,7 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell . $newrow .
 		$frm->startTag('p') . 
 
-		$frm->addLabelFor('ownTel', $newcell.'Owner\'s phone: '.$endcell) .$newcell.
+		$frm->addLabelFor('ownTel', $newcell.'Phone: '.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'ownTel', $r['owner_tel'], array('id'=>'ownTel', 'size'=>30, 'required'=>true) ) . 
 	
@@ -263,37 +268,9 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell. $endrow .
 		$frm->startTag('p') . 
 
-		$frm->addLabelFor('ownEmail', $newcell.'Owner\'s email: '.$endcell) .$newcell.
+		$frm->addLabelFor('ownEmail', $newcell.'Email: '.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'ownEmail', $r['owner_email'], array('id'=>'ownEmail', 'size'=>30, 'required'=>true) ) . 
-
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
-
-		$frm->startTag('p') . 
-
-		$frm->addLabelFor('regNo', $newcell.'Registration No.: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'regNo', $r['regnumber'], array('id'=>'regNo', 'size'=>30, 'required'=>true) ) . 
-
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
-
-		$frm->startTag('p') . 
-
-		$frm->addLabelFor('planPerm', $newcell.'Planning permit available: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('radio', 'permit', '1', array('id'=>'permit', 'checked'=>$ppermityes)  ) . ' yes ' . PHP_EOL .
-		$frm->addInput('radio', 'permit', '0', array('checked'=>$ppermitno)) . ' no' . 
-
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
-
-		$frm->startTag('p') . 
-
-		$frm->addLabelFor('planPermNo', $newcell.'Planning permit No.: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'planPermNo', $r['planningpermit_no'], array('id'=>'planPermNo', 'size'=>30, 'required'=>true) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
@@ -338,75 +315,12 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
 
-		$frm->startTag('label') . $newcell .'Property Type: ' .$endcell .$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('propertyUse', $ptypelist, false, $ptypeuse ) .
-		$frm->endTag('label') . $endcell. $endrow . 
-
-		$frm->startTag('label') .$newcell.'Structure: ' .$endcell.$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('structure', $structure, false, 'To do' ) .
-		$frm->endTag('label') . $endcell. $endrow . 
-
-		$frm->startTag('p') . 
-		$frm->addLabelFor('rooms', $newcell.'Rooms: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'rooms', $r['rooms'], array('id'=>'rooms', 'size'=>4, 'required'=>true) ) . 
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
-
-		$frm->startTag('p') . 
-		$frm->addLabelFor('yearConstruct', $newcell.'Year of Construction: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'yearConstruct', $r['year_construction'], array('id'=>'yearConstruct', 'size'=>4, 'required'=>true) ) . 
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
-
 		$frm->startTag('selectlist') . $newcell.'Type of Property Use: ' .$endcell.$newcell. 
 		// arguments: name, array containing option text/values
 		// include values attributes (boolean),
 		// optional arguments: selected value, header, additional attributes in associative array
 		$frm->addSelectList('propertyType', $propertyType, false, $propuse, '' ,array('id'=>'propertyType', 'style'=>'width: 200px') ) .
 		$frm->endTag('selectlist') . $endcell. $endrow . 
-
-		$frm->startTag('p') . 
-		$frm->addLabelFor('personsInBuilding', $newcell.'No. of Persons in Building: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'personsInBuilding', $r['persons'], array('id'=>'personsInBuilding', 'size'=>2, 'required'=>true) ) . 
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
-
-		$frm->startTag('label') . $newcell.'Type of Roofing: ' .$endcell.$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('roofing', $roofinglist, false, $roofinguse ) .
-		$frm->endTag('label') . $endcell. $endrow . 
-
-		$frm->startTag('label') . $newcell.'Type of Ownership: ' .$endcell.$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('ownership', $ownerlist, false, $owneruse ) .
-		$frm->endTag('label') . $endcell. $endrow . 
-
-		$frm->startTag('label') . $newcell.'Type of Construction material: ' .$endcell.$newcell. 
-		// arguments: name, array containing option text/values
-		// include values attributes (boolean),
-		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('constructMaterial', $cmlist, false, $cmuse ) .
-		$frm->endTag('label') . $endcell. $endrow . 
-
-		$frm->startTag('p') . 
-		$frm->addLabelFor('storeys', $newcell.'No. of Storeys: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'storeys', $r['storeys'], array('id'=>'storeys', 'size'=>2, 'required'=>true) ) . 
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
    
 		$frm->startTag('p') .     
 		// contain checkbox with label using start/endTag (so no need to add id)

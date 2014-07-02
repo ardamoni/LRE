@@ -43,6 +43,18 @@
 			return $r[$f];
 		}
 		
+		function getDueInfoAll( $upn = "", $subupn = "", $year = "2013")
+		{
+			$q = mysql_query("SELECT * FROM 	`business_due` 
+										WHERE 	`upn` = '".$upn."' AND 
+												`subupn` = '".$subupn."' AND 
+												`year` = '".$year."' ");		
+			$r = mysql_fetch_array($q);
+			return array("rate_value"=>$r["bo_value"],
+										  "bo_impost_value"=>$r["rate_impost_value"],
+										  "feefi_value"=>$r["feefi_value"]);
+		}		
+
 		// 	get sum of due data from property_due table
 		function getAnnualDueSum( $upn = "", $subupn = "", $year = "2013" )
 		{

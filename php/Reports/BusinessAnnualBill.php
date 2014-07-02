@@ -157,10 +157,12 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 		$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['business_class']),1,0,'C'); //property_use_title
 		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
-		$PDF->Cell(30,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
+		//get all Due Info from BusinessRevenueClass
+		$dueAll=$Data->getDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
+		$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
+										$dueAll["rate_impost_value"] +
 										$arreas + 
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ),1,1,'R');
+										$dueAll["feefi_value"] ,2,'.','' ),1,1,'R');
 		
 		$PDF->Ln(3);
 
@@ -186,12 +188,12 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
 		$PDF->Cell(12,5, number_format( $arreas ,2,'.','' ),1,0,'R');
-		$PDF->Cell(16,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ),2,'.','' ) ,1,0,'R');	
+		$PDF->Cell(16,5, number_format( $dueAll["feefi_value"],2,'.','' ) ,1,0,'R');	
 		$PDF->SetFont('Arial','B',10);
-		$PDF->Cell(46,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
+		$PDF->Cell(46,5, number_format( $dueAll["rate_value"] +
+										$dueAll["rate_impost_value"] +
 										$arreas + 
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ) ,1,1,'C');
+										$dueAll["feefi_value"],2,'.','' ) ,1,1,'C');
 		
 // 		$PDF->SetFont('Arial','B',6);
 // 		$PDF->Cell(16,5, 'Previous Year',1,0,'C');	

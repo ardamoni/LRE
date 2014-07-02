@@ -37,14 +37,26 @@
 		// 	get the data out of property_due table
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
-			$q = mysql_query("SELECT * FROM 	`property_due` 
+//			$q = mysql_query("SELECT * FROM 	`property_due` 
+			$q = mysql_query("SELECT '".$f."' FROM 	`property_due` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' AND 
 												`year` = '".$year."' ");		
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
-		
+		function getPropertyDueInfoAll( $upn = "", $subupn = "", $year = "2013")
+		{
+			$q = mysql_query("SELECT * FROM 	`property_due` 
+										WHERE 	`upn` = '".$upn."' AND 
+												`subupn` = '".$subupn."' AND 
+												`year` = '".$year."' ");		
+			$r = mysql_fetch_array($q);
+			return array("rate_value"=>$r["rate_value"],
+										  "rate_impost_value"=>$r["rate_impost_value"],
+										  "feefi_value"=>$r["feefi_value"],
+										  "prop_value"=>$r["prop_value"]);
+		}		
 		// 	get sum of due data from property_due table
 		function getAnnualDueSum( $upn = "", $subupn = "", $year = "2013" )
 		{
@@ -204,6 +216,20 @@
 			$r = mysql_fetch_array($q);
 			return $r['class'];
 		}
+		
+		//   get balance for one year
+	  function getEndBalance( $upn = "", $subupn = "", $districtid = "", $year = "2013" )
+	  {
+	   $q = mysql_query("  SELECT  `balance` 
+			 FROM  `property_balance` 
+			 WHERE  `upn` = '".$upn."' AND 
+			   `subupn` = '".$subupn."' AND
+			   `districtid` = '".$districtid."' AND
+			   `year` = '".$year."' "); 
+	   
+	   $r = mysql_fetch_array($q);
+	   return $r['balance'];
+	  }
 
 	}
 

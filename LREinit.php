@@ -147,36 +147,9 @@
 			  background-color: white;
 			  background-image: url("img/delete2.png");
 			}
-		/* #Pomegranate Flat Button
-		==================================================*/
-		.pomegranate-flat-button {
-		  position: relative;
-		  vertical-align: top;
-		  width: 100%;
-		  height: 60px;
-		  padding: 0;
-		  font-size: 22px;
-		  color: white;
-		  text-align: center;
-		  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-		  background: #c0392b;
-		  border: 0;
-		  border-bottom: 2px solid #b53224;
-		  cursor: pointer;
-		  -webkit-box-shadow: inset 0 -2px #b53224;
-		  box-shadow: inset 0 -2px #b53224;
-		}
-		.pomegranate-flat-button:active {
-		  top: 1px;
-		  outline: none;
-		  -webkit-box-shadow: none;
-		  box-shadow: none;
-		}
-
-
 		</style>
         <style>
-			table.mouse_location_sample tr td {
+			table.lremain tr td {
 				border: 1px solid #ccc;
 				border-color:#ffcc00;
 				width: 200px;
@@ -193,7 +166,7 @@
 	<!--the following districtid is hidden, but can be used anywhere in the programme. It contains the districtid, which it gets from the function getsesseionuser()-->
 		<h1> <div id="districtname"></div></h1> 
 		<div id="tags">GeoJSON</div>
-		<table class="mouse_location_sample">
+		<table class="lremain">
 		<tr>
 			<td>
 				<input type="submit" value="Stats" class="sun-flower-button">
@@ -203,23 +176,29 @@
 				Businesses #: <strong><small><span id="stat3">0</span></small></strong> <br/>
 			</td>
 			<td>
-				<input type="submit" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="sun-flower-button">
-<!-- <strong><span id="epsg2"><center>Fiscal Info</center></span></strong> -->
+				<input type="submit" id="fisprop" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="sun-flower-button">
 				Exp: <strong><small><span id="fis1">0</span></small></strong> <br/>
 				In: <strong><small><span id="fis2">0</span></small></strong> <br/>
 				Out: <strong><small><span id="fis3">0</span></small></strong> <br/>
 			</td>
 			<td>
-<!-- 				<input type="submit" value="Navigation Tools" class="sun-flower-button"> -->
-				<strong><span><center>Navigation Tools</center></span></strong>
-				<center><span id="tools" class="olControlPanel"></span></center>
+				<input type="submit" id="fisbus" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="sun-flower-button">
+				Exp: <strong><small><span id="fis4">0</span></small></strong> <br/>
+				In: <strong><small><span id="fis5">0</span></small></strong> <br/>
+				Out: <strong><small><span id="fis6">0</span></small></strong> <br/>
 			</td>
 			<td>
+<!-- 				<input type="submit" value="Navigation Tools" class="sun-flower-button"> -->
 				<strong><span><center>Tools</center></span></strong>
-				<center><span id="tableview" class="tableshow"></span> 
+<!-- 				<center><span id="tools" class="olControlPanel"></span></center> -->
+				<center><span id="tools" class="olControlPanel"></span>
+				<button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> 
+				</center>
+<!-- 				<strong><span><center>Tools</center></span></strong> -->
+<!-- 				<center><span id="tableview" class="tableshow"></span>  -->
 <!-- 				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span>  -->
 <!-- 				<span id="testbutton" class="testbutton"></span> -->
-				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> </span> 
+<!-- 				<button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button>  -->
 <!-- 
 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
  -->

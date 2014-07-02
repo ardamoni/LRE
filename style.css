@@ -77,8 +77,12 @@ h6 {
  * Map Examples Specific
  */
 .smallmap {
+    width: 100%;
+    height: 50%;
+/* 
     width: 512px;
     height: 256px;
+ */
     border: 1px solid #ccc;
 }
 #tags {
@@ -141,6 +145,8 @@ body {
 #container1 {
     float:left;
     width:100%;
+    resize: both;
+    overflow: auto;
 }
 #col1 {
     float:left;
@@ -149,6 +155,8 @@ body {
 #col2 {
     float:left;
     width:80%;
+    resize: both;
+    overflow: auto;
 }
 #col3 {
     float:left;

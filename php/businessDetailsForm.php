@@ -144,13 +144,21 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		$frm->addLabelFor('street', $newcell.'Street name: '.$endcell) . $newcell. 
 		// using html5 required attribute
 		$frm->addInput('text', 'street', $r['streetname'], array('id'=>'street', 'size'=>30, 'required'=>true) ) . 
+		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . 
+		$frm->addLabelFor('housenumber', $newcell.'Housenumber: '.$endcell) . $newcell. 
+		// using html5 required attribute
+		$frm->addInput('text', 'Nr.', $r['housenumber'], array('id'=>'housenumber', 'size'=>10, 'required'=>true) ) . 
+		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . 
+		$frm->addLabelFor('streetcode', $newcell.'Streetcode: '.$endcell) . $newcell. 
+		// using html5 required attribute
+		$frm->addInput('text', 'streetcode', $r['comments'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
 	    '<strong>Owner Information</strong>' . $endcell .$newcell . $endcell . $endrow .
 		$frm->startTag('p') .    
 		// label and text input with optional attributes
-		$frm->addLabelFor('owner', $newcell.'Owner: '.$endcell) . $newcell. 
+		$frm->addLabelFor('owner', $newcell.'Name: '.$endcell) . $newcell. 
 		// using html5 required attribute
 		$frm->addInput('text', 'owner', $r['owner'], array('id'=>'owner', 'size'=>30, 'required'=>true) ) . 
 
@@ -158,7 +166,7 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow .
 
 		$frm->startTag('p') . 
-		$frm->addLabelFor('ownAddress', $newcell.'Owner\'s adress: '.$endcell) .$newcell.
+		$frm->addLabelFor('ownAddress', $newcell.'Address: '.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'ownAddress', $r['owneraddress'], array('id'=>'ownAddress', 'size'=>30, 'required'=>true) ) . 
 
@@ -166,7 +174,7 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell . $newrow .
 		$frm->startTag('p') . 
 
-		$frm->addLabelFor('ownTel', $newcell.'Owner\'s phone: '.$endcell) .$newcell.
+		$frm->addLabelFor('ownTel', $newcell.'Phone: '.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'ownTel', $r['owner_tel'], array('id'=>'ownTel', 'size'=>30, 'required'=>true) ) . 
 	
@@ -174,7 +182,7 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell. $endrow .
 		$frm->startTag('p') . 
 
-		$frm->addLabelFor('ownEmail', $newcell.'Owner\'s email: '.$endcell) .$newcell.
+		$frm->addLabelFor('ownEmail', $newcell.'Email: '.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'ownEmail', $r['owner_email'], array('id'=>'ownEmail', 'size'=>30, 'required'=>true) ) . 
 
@@ -218,7 +226,7 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		$frm->endTag('selectlist') . $endcell. $endrow . 
 
 		$frm->startTag('p') . 
-		$frm->addLabelFor('daAssignmentNumber', $newcell.'DA assignment number:'.$endcell) .$newcell.
+		$frm->addLabelFor('daAssignmentNumber', $newcell.'DA assigned number:'.$endcell) .$newcell.
 		// using html5 required attribute
 		$frm->addInput('text', 'daAssignmentNumber', $r['da_no'], array('id'=>'daAssignmentNumber', 'size'=>30, 'required'=>true) ) . 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
@@ -245,17 +253,6 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
 
-		$frm->startTag('p') . 
-		$frm->addLabelFor('landmark1', $newcell.'Nearest Landmark: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'landmark1', $r['landmark1'], array('id'=>'landmark1', 'size'=>30, 'required'=>true) ) . 
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
-		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
-   
-		$frm->startTag('p') . 
-		$frm->addLabelFor('landmark2', $newcell.'More Landmark: '.$endcell) .$newcell.
-		// using html5 required attribute
-		$frm->addInput('text', 'landmark2', $r['landmark2'], array('id'=>'landmark2', 'size'=>30, 'required'=>true) ) . 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
    		"</td></tr>" .
