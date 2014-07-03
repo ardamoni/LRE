@@ -169,20 +169,20 @@
 		<table class="lremain">
 		<tr>
 			<td>
-				<input type="submit" value="Stats" class="sun-flower-button">
+				<input type="submit" value="Stats" class="orange-flat-small">
 <!-- 				<strong><span id="epsg1"><center>Stats</center></span></strong> -->
 				Parcels #: <strong><small><span id="stat1">0</span></small></strong> <br/>
 				Properties #: <strong><small><span id="stat2">0</span></small></strong> <br/>
 				Businesses #: <strong><small><span id="stat3">0</span></small></strong> <br/>
 			</td>
 			<td>
-				<input type="submit" id="fisprop" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="sun-flower-button">
+				<input type="submit" id="fisprop" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="orange-flat-small">
 				Exp: <strong><small><span id="fis1">0</span></small></strong> <br/>
 				In: <strong><small><span id="fis2">0</span></small></strong> <br/>
 				Out: <strong><small><span id="fis3">0</span></small></strong> <br/>
 			</td>
 			<td>
-				<input type="submit" id="fisbus" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="sun-flower-button">
+				<input type="submit" id="fisbus" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="orange-flat-small">
 				Exp: <strong><small><span id="fis4">0</span></small></strong> <br/>
 				In: <strong><small><span id="fis5">0</span></small></strong> <br/>
 				Out: <strong><small><span id="fis6">0</span></small></strong> <br/>
@@ -202,7 +202,7 @@
 <!-- 
 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
  -->
-<!-- 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center> -->
+<!-- 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="printfunction();" value="" title="This is a button to test stuf"></button> </span> </center> -->
 
 			</td> 
 			<td>

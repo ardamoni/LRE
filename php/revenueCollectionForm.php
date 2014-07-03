@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="css/ex.css" type="text/css" />
 <!--<link rel="stylesheet" href="../style.css" type="text/css">-->
 <link rel="stylesheet" href="../style.css" type="text/css">
+<link rel="stylesheet" href="../css/flatbuttons.css" type="text/css">
+
 <style type="text/css">
 form.demoForm fieldset {
     width: 900px;
@@ -242,8 +244,8 @@ $paymentType = array(
 			<tr>
 <!--				<td>&nbsp;</td>
 				<td>&nbsp;</td>
--->				<td colspan="3" style="background-color:#E6E6E6;text-align:center;"><input type="button" id="Submit" name="Submit" value="Submit" /> 
-					<input type="reset" id="Reset" name="Reset" value="Reset" /></td>
+-->				<td colspan="3" style="background-color:#E6E6E6;text-align:center;"><input type="button" id="Submit" name="Submit" value="Submit"  class='orange-flat-small'/> 
+					<input type="reset" id="Reset" name="Reset" value="Reset" class='orange-flat-small' /></td>
 			</tr>
 			<tr>
 				<td> <div id="treceipt_availability_result">Availability Message</div> </td>

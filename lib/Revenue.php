@@ -45,6 +45,7 @@
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
+		
 		function getPropertyDueInfoAll( $upn = "", $subupn = "", $year = "2013")
 		{
 			$q = mysql_query("SELECT * FROM 	`property_due` 
