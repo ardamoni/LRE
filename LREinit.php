@@ -202,7 +202,7 @@
 <!-- 
 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
  -->
-				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center>
+<!-- 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center> -->
 
 			</td> 
 			<td>
