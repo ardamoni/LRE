@@ -1067,12 +1067,12 @@ function businessAnnualBillOnClick()
 		//  on mouse-click activation to create the window for revenue bills printing
 
 //-----------------------------------------------------------------------------
-function billsRegister() 
+function billsRegister(target) 
 {	
 	var upn = global_upn;
 	var subupn = this.global_subupn;
 	var popupWindow = null;
-	var target = 'business';
+	var target = target;
 	var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
 	var title = 'Bills Register for Business Licenses';
 	var w = 1024;
@@ -2028,6 +2028,11 @@ function xlsexport() {
 // end of function xlsexport
 
 
+//-----------------------------------------------------------------------------
+		//function uploadkml() 
+		//opens a window to select a kml file for uploading into the db
+		//
+//-----------------------------------------------------------------------------
 function uploadkml(){
 	var pageURL = 'php/uploadKMLfopen.php';
 	var title = 'Upload KML';
@@ -2245,12 +2250,12 @@ function updateCZinPropBus() {
 	if (!jsonCZVisible){
 		colzones.setVisibility(true);
 	}
-
 	for( var j = 0; j < colzones.features.length; j++ ) {
 		feature = colzones.feature;
 		var searchlayer=fromProperty.id;
 		var searchlayer2=fromBusiness.id;
 		console.log('property layer');
+//alert('starting now with Property');
 		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
 		{
 			if (colzones.features[j].geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
@@ -2264,6 +2269,7 @@ function updateCZinPropBus() {
 				}
 			}			
 		}
+//alert('Property finished - Starting now with Business');
 		for( var i = 0; i < map.getLayer(searchlayer2).features.length; i++ ) 
 		{
 			if (colzones.features[j].geometry.intersects(map.getLayer(searchlayer2).features[i].geometry)) { 

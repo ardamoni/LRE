@@ -69,18 +69,25 @@
 			$PDF->Cell(16,5, "UPN", 1,0,'C',true);
 			$PDF->Cell(18,5, "SUBUPN", 1,0,'C',true);
 // 			$PDF->Cell(18,5, "Print Date", 1,0,'C',true);
+			if ($target=='business'){
 			$PDF->Cell(50,5, "BUSINESSNAME", 1,0,'C',true);
 			$PDF->Cell(40,5, "OWNER", 1,0,'C',true);
 			$PDF->Cell(30,5, "ADDRESS", 1,0,'C',true);
 			$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
 			$PDF->Cell(20,5, "REMARKS", 1,0,'C',true);
+			}elseif ($target=='property'){
+			$PDF->Cell(55,5, "OWNER", 1,0,'C',true);
+			$PDF->Cell(45,5, "ADDRESS", 1,0,'C',true);
+			$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
+			$PDF->Cell(40,5, "REMARKS", 1,0,'C',true);
+			}
 			$PDF->Ln();
 			
 			// Data from Tables
 			$n = 0;
 			$PDF->SetFont('Arial','',6);
 			$PDF->SetFillColor(255,255,255);
-
+			if ($target=='business'){
 			$q = mysql_query("SELECT business.id, 
 								business.`upn`, 
 								business.`subupn`, 
@@ -89,35 +96,80 @@
 								business.`business_name`, 
 								business.`owner_tel`, 
 								business.`owner`, 
+								collectorzones.`colzonenr`,
 								demand_notice_record.`upn`, 
 								demand_notice_record.`subupn`, 
 								demand_notice_record.`value`,
 								demand_notice_record.`billprintdate`
 							FROM business INNER JOIN demand_notice_record 
-								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`
-							WHERE demand_notice_record.`comments`='".$target."'");
+								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`, `collectorzones`
+							WHERE demand_notice_record.`comments`='".$target."' AND business.`colzone_id` = collectorzones.`id`
+							ORDER BY collectorzones.`colzonenr`, business.`upn`;");
+			}elseif ($target=='property'){
+			$q = mysql_query("SELECT property.id, 
+								property.`upn`, 
+								property.`subupn`, 
+								property.`streetname`, 
+								property.`housenumber`, 
+								property.`owner_tel`, 
+								property.`owner`, 
+								collectorzones.`colzonenr`,
+								demand_notice_record.`upn`, 
+								demand_notice_record.`subupn`, 
+								demand_notice_record.`value`,
+								demand_notice_record.`billprintdate`
+							FROM property INNER JOIN demand_notice_record 
+								ON property.`upn` = demand_notice_record.`upn` AND property.`subupn` = demand_notice_record.`subupn`, `collectorzones`
+							WHERE demand_notice_record.`comments`='".$target."' AND property.`colzone_id` = collectorzones.`id`
+							ORDER BY collectorzones.`colzonenr`, property.`upn`;");
+			}
 							
 			$counter = 0;
+			$cznr='';
 			while( $r = mysql_fetch_array($q) )
 			{
 				$address = $r['housenumber'].' '.$r['streetname'];
-
+			if ($target=='business'){
 // could not get the linebreak to work
  				if (strlen(trim($businessname))>=50){
  					$businessname = substr($r['business_name'],0,50).'...';
  				}else{
  					$businessname = $r['business_name'];
  				}
-				$PDF->Cell(16,5, $r['upn'],1,0,'C',true);
-				$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);	
-// 				$PDF->Cell(18,5, $r['billprintdate'],1,0,'C',true);	
-				$PDF->Cell(50,5, $businessname,1,0,'C',true);			
-				$PDF->Cell(40,5, $r['owner'], 1,0,'C',true);
-				$PDF->Cell(30,5, $address, 1,0,'C',true);
-				$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
-				$PDF->Cell(20,5, '', 1,0,'C',true);
+ 				}
+ 				if ($cznr!=$r['colzonenr']){
+					$PDF->SetFont('Arial','B',8);
+					$PDF->SetFillColor(225,225,225);
+					$PDF->Cell(34,5, "Collector Zone",1,0,'C',true);
+// 					$PDF->SetFont('Arial','',8); 
+// 					$PDF->SetFillColor(255,255,255);
+					$PDF->Cell(155,5, $r['colzonenr'], 1,0,'C',true);
+					$PDF->Ln();
+				 }
+				if ($target=='business'){ 
+					$PDF->SetFont('Arial','',6);
+					$PDF->SetFillColor(255,255,255);
+					$PDF->Cell(16,5, $r['upn'],1,0,'C',true);
+					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);	
+	// 				$PDF->Cell(18,5, $r['billprintdate'],1,0,'C',true);	
+					$PDF->Cell(50,5, $businessname,1,0,'C',true);			
+					$PDF->Cell(40,5, $r['owner'], 1,0,'C',true);
+					$PDF->Cell(30,5, $address, 1,0,'C',true);
+					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
+					$PDF->Cell(20,5, '', 1,0,'C',true);
+					}elseif ($target=='property'){
+					$PDF->SetFont('Arial','',6);
+					$PDF->SetFillColor(255,255,255);
+					$PDF->Cell(16,5, $r['upn'],1,0,'C',true);
+					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);	
+					$PDF->Cell(55,5, $r['owner'], 1,0,'C',true);
+					$PDF->Cell(45,5, $address, 1,0,'C',true);
+					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
+					$PDF->Cell(40,5, '', 1,0,'C',true);
+					}
 				$PDF->Ln();
 				$n = $n + 1;
+				$cznr=$r['colzonenr'];
 			}
 						
 			$PDF->Ln(10);			

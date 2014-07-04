@@ -202,7 +202,7 @@
 <!-- 
 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
  -->
-<!-- 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="printfunction();" value="" title="This is a button to test stuf"></button> </span> </center> -->
+				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center>
 
 			</td> 
 			<td>
@@ -239,7 +239,8 @@
 						<a href="#">Annualy</a>								
 						<a href=""javascript:;" onclick="propertyAnnualBillOnClick();"">Print Bills for Property Rates</a>
 						<a href=""javascript:;" onclick="businessAnnualBillOnClick();"">Print Bills for Business Licenses</a>
-						<a href=""javascript:;" onclick="billsRegister();"">Print the Bills Register for Business Licenses</a>
+						<a href=""javascript:;" onclick="billsRegister('property');"">Print the Bills Register for Property Rates</a>
+						<a href=""javascript:;" onclick="billsRegister('business');"">Print the Bills Register for Business Licenses</a>
 					</div>
 					<p class="menu_head">Search</p>
 					<div class="menu_body">
@@ -251,9 +252,9 @@
 				   <p class="menu_head">Manual</p>
 				   <p class="menu_head">Admin</p>
 					<div class="menu_body">
-						<a href=""javascript:;" onclick="uploadkml();"">KML to DB conversion</a>
-						<a href=""javascript:;" onclick="uploadxls();"">Upload Fee Fixing information</a>
-						<a href=""javascript:;" onclick="uploadScannedData();"">Upload Data from Scanning Process</a>
+						<a href=""javascript:;" onclick="uploadkml();"">->KML to DB conversion</a>
+						<a href=""javascript:;" onclick="uploadxls();"">->Upload Fee Fixing information</a>
+						<a href=""javascript:;" onclick="uploadScannedData();"">->Upload Data from Scanning Process</a>
 				   </div>
 
 					   <p class="menu_head"><a href="logout.php">Log out</a></p>

@@ -63,7 +63,7 @@ if( session_status() != 2 )
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
 // 	$q = mysql_query("SELECT * 	FROM  `business` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
-$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY `colzonenr` ");
+$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 WHERE 	t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY `colzone_id` ");
 	
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
@@ -222,7 +222,6 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 		$counter=0;
 		} else {
 		$counter++;
-		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 		$PDF->Ln(12);
 		}
 	$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
@@ -230,7 +229,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 										$arreas + 
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value");
 										
-	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
+	$Data->setDemandNoticeRecord( $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
 	
 	} //end 	while( $r = mysql_fetch_array($q) )
 	

@@ -504,7 +504,7 @@ function getCZ($districtid)
 //   if (!empty($query)){
 	$json 				= array();
 		while ($row = mysql_fetch_assoc($query)) {
-			$json['zoneid'] 				= $row['id'];
+			$json['zoneid'] 				= $row['colzonenr'];
 			$json['districtid'] 		= $row['districtid'];
 			$json['polygon'] 			= $row['polygon'];
 			$json['collectorid'] 		= $row['collectorid'];
@@ -570,8 +570,10 @@ function searchupn($searchupn)
 //-----------------------------------------------------------------------------
 				//function updateCZinProp() 
 				//updates the colzone_id in property to 
+				//propincz=Property in Collector Zone
+				//busincz =Business in Collector Zone
 //-----------------------------------------------------------------------------
-function updateCZinProp($propincz) 
+function updateCZinProp($propincz, $busincz) 
 {
 
 $json_decoded=json_decode($propincz);
@@ -594,6 +596,19 @@ foreach ($json_decoded as $key => $value)
 		}
 //        echo "$k | $val <br />";
     } 
+if (!empty($propincz)){
+    $run = "UPDATE `property` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+//    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+	$query = mysql_query($run);  
+//	$json['message'] = 'Done!';
+	}else{
+		$json['message'] = 'Property Empty!';
+	}
+	$json['message'] = 'Property Done!';
+	$data[] = $json;	
+
+}
+
 foreach ($json_decodedBus as $key => $value)
 {
     foreach ($value as $k => $val)    
@@ -607,28 +622,16 @@ foreach ($json_decodedBus as $key => $value)
 //        echo "$k | $val <br />";
     } 
 
-if (!empty($propincz)){
-    $run = "UPDATE `property` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
-//    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
-	$query = mysql_query($run);  
-//	$json['message'] = 'Done!';
-	}else{
-		$json['message'] = 'Property Empty!';
-	}
-	$json['message'] = 'Property Done!';
-	$data[] = $json;	
-
-}
 if (!empty($busincz)){
     $run = "UPDATE `business` SET `colzone_id`='".$jsonBus['colzone']."' WHERE upn='".$jsonBus['upn']."';";
 //    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
 	$query = mysql_query($run);  
 //	$json['message'] = 'Done!';
 	}else{
-		$json['message'] = 'Business Empty!';
+		$jsonBus['message'] = 'Business Empty!';
 	}
-	$json['message'] = 'Business Done!';
-	$data[] = $json;	
+	$jsonBus['message'] = 'Business Done!';
+	$data[] = $jsonBus;	
 
 }
 

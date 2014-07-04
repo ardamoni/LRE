@@ -231,8 +231,52 @@
 	   $r = mysql_fetch_array($q);
 	   return $r['balance'];
 	  }
+	  		/*
+		 *	Update demand notice record
+		 */		
+		// 	get the district info
+		function setDemandNoticeRecord( $districtid = "",  $upn = "", $subupn = "", $year = "2013", $value = 0, $revitem = "" )
+		{
+			$q = mysql_query("SELECT * 	FROM `demand_notice_record` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' AND `districtid` = '".$districtid."' AND `year` = '".$year."' ");
+			$r = mysql_fetch_array($q);
+			if (!empty($r)) {
+				$qupdate = mysql_query(" UPDATE 	`demand_notice_record` 
+									SET 	`upn` = '".$upn."',
+											`subupn`= '".$subupn."',
+											`districtid`= '".$districtid."',
+											`year`= '".$year."',
+											`value`= '".$value."',
+											`billprintdate`= '".date("Y-m-d")."',
+											`comments`= '".$revitem."'
+									
+									WHERE 	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."' AND
+											`year` = '".$year."' ");	
+			}elseif (empty($r)){
+				$qinfo = mysql_query(" INSERT INTO `demand_notice_record` (	`id`,
+															`upn`, 
+															`subupn`,
+															`districtid`,
+															`year`,	
+															`value`,														
+															`billprintdate`,
+															`comments`
+														) 
+												VALUES 	( 	NULL,
+															'".$upn."',
+															'".$subupn."',
+															'".$districtid."',
+															'".$year."',
+															'".$value."',
+															'".date("Y-m-d")."',
+															'".$revitem."'
+														)");
+
+			return mysql_affected_rows();
+		}
+
 
 	}
 
-
+}//end of class
 ?>

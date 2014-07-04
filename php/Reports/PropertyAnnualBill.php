@@ -63,8 +63,9 @@ if( session_status() != 2 )
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
- 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
+// 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
 // $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
+$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
 	
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
@@ -81,7 +82,18 @@ if( session_status() != 2 )
 		// District Left and Right side of bill
 		$PDF->SetFont('Arial','B',16);
 		$PDF->Cell(40,5, '',0,0,'C'); 			
+		$PDF->Cell(70,5, $districtName,0,0,'R');
+		$PDF->SetFont('Arial','B',10);
+		$PDF->Cell(30,5, '',0,0,'C');		
+		$PDF->Cell(40,5, $districtName,0,1,'R');	
+		$PDF->SetFont('Arial','B',16);
+
+		$PDF->Cell(40,5, '',0,0,'C'); 			
+		if ($districtType=='1'){
+		$PDF->Cell(70,5, 'District Assembly',0,0,'R');
+		}elseif ($districtType=='2'){
 		$PDF->Cell(70,5, 'Municipal Assembly',0,0,'R');
+		}
 		$PDF->SetFont('Arial','B',10);
 		$PDF->Cell(30,5, '',0,0,'C');		
 		if ($districtType=='1'){
@@ -98,7 +110,7 @@ if( session_status() != 2 )
 		$PDF->Cell(40,5,'Property Rate Bill',0,1,'R'); 	
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');	
-		$PDF->Cell(70,5,'Bill Year: '.$currentYear,0,0,'R');
+		$PDF->Cell(70,5,'Bill Year: '.$currentYear.' / Collector Zone:'.$r['colzonenr'],0,0,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');	
 		$PDF->Cell(40,5,'Bill Year: '.$currentYear,0,1,'R');	
@@ -153,7 +165,7 @@ if( session_status() != 2 )
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
 		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C'); //property_use_title
 		
-		$PDF->Ln(10);
+		$PDF->Ln(9);
 		
 		$PDF->SetFont('Arial','B',6);
 		$PDF->Cell(16,5, 'Current Year',1,0,'C');	
@@ -191,7 +203,7 @@ if( session_status() != 2 )
 		$PDF->SetFont('Arial','',7);
 		$PDF->Cell(16,5, $currentYear - 1,1,0,'R');	
 		$PDF->Cell(23,5, number_format( $Data->getAnnualDueSum( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,0,'R');
-		$PDF->Cell(17,5, number_format( $Data->getAnnualBalance( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,0,'R');
+		$PDF->Cell(17,5, number_format( $Data->getAnnualBalance( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,1,'R');
 		
 		if ($counter==2) {
 //		$PDF->Ln(10);
@@ -199,12 +211,15 @@ if( session_status() != 2 )
 		$counter=0;
 		} else {
 		$counter++;
-		$PDF->Ln(15);
+		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
+		$PDF->Ln();
 		}
 // 		$counter++;
 // 		$PDF->Ln(15);
+
+	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'property' );
 		
-	}
+	} //fetch_array
 	
 	$PDF->Ln();
 	$PDF->Output();
