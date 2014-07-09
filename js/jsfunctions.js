@@ -23,8 +23,8 @@ var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
 	var global_out_business;
 	var globalfeatureid;
 	var globaldistrictid='';
-	var globalpropertychanged = false;
-	var globalbusinesschanged = false;
+	var globalpropertychanged = false; //used to display the outstanding revenue
+	var globalbusinesschanged = false; //same, but for business
 	var nogoogle = false;
 
 //we need to get the starting window dimensions for a potential resize of the map
@@ -2084,12 +2084,12 @@ function searchOtherHandler(request) {
 		// get the response from php and read the json encoded data
 	   feed=JSON.parse(request.responseText);
 	   // build html for each feed item
-	   	   var html='';
-		for (var i = 0; i < feed.length; i++) {
-			html += feed[i]['upn'];
-			}
-
- alert('done: '+html);
+// 	   	   var html='';
+// 		for (var i = 0; i < feed.length; i++) {
+// 			html += feed[i]['upn'];
+// 			}
+// 
+//  alert('done: '+html);
 
 		for (var i = 0; i < feed.length; i++) {
 			sUPN = feed[i]['upn'];
