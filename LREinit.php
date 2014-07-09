@@ -538,16 +538,13 @@
 				  if (window.innerWidth <= 1180){
 					document.getElementById("map").style.width = window.innerWidth*0.75+"px";
 					} else {
-					document.getElementById("map").style.width = mapDefaultSizeWidth+"px";
+					document.getElementById("map").style.width = window.innerWidth*0.82+"px";
 					}
 				  if (window.innerHeight < 650){
 					document.getElementById("map").style.height = window.innerHeight*0.75+"px";
 					} else {
-					document.getElementById("map").style.height = mapDefaultSizeHeight+"px";
+					document.getElementById("map").style.height = window.innerHeight*0.80+"px";
 					}
-
-					document.getElementById("map").style.width = window.innerWidth*0.82+"px";
-
 					init();
 				};
 			</script>

@@ -24,9 +24,9 @@
 	$searchupn = $_POST['searchupn'];
 	$propincz = $_POST['propincz'];	
 	$busincz = $_POST['busincz'];
-	$target = $_POST['target'];
+	$starget = $_POST['starget'];
 	$sString = $_POST['sString'];
-	$searchLayer = $_POST['searchLayer'];
+	$searchlayer = $_POST['searchlayer'];
 	
 
 //	$dbaction = $_GET['action'];
@@ -57,7 +57,7 @@
   
   if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz);}
   
-  if ($dbaction=='searchOther'){searchOther($districtid, $target, $sString, $searchLayer);}
+  if ($dbaction=='searchOther'){searchOther($districtid, $starget, $sString, $searchlayer);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -576,22 +576,25 @@ function searchupn($searchupn)
 				//function searchOther() 
 				//searches for a street or a name and returns the found upns
 //-----------------------------------------------------------------------------
-function searchOther($districtid, $target, $sString, $searchLayer) 
+function searchOther($districtid, $starget, $sString, $searchlayer) 
 {
-  if($searchLayser=='property'){
-   if ($target=='owner'){
-	$run = "SELECT upn FROM property WHERE districtid = '".$districtid."' AND `owner` LIKE '%".$sString."%';";
+
+//debug_to_console( "Test:".$starget.' '.$sString.' '.$searchlayer );
+
+  if($searchlayer=='property'){
+   if ($starget=='owner'){
+	$run = "SELECT * FROM property WHERE districtid = '".$districtid."' AND `owner` LIKE '%".$sString."%';";
 	}
-   if ($target=='street'){
-	$run = "SELECT upn FROM property WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
+   if ($starget=='street'){
+	$run = "SELECT * FROM property WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
 	}
   }
-  if($searchLayser=='business'){
-   if ($target=='owner'){
-	$run = "SELECT upn FROM business WHERE districtid = '".$districtid."' AND `owner` LIKE '%".$sString."%';";
+  if($searchlayer=='business'){
+   if ($starget=='owner'){
+	$run = "SELECT * FROM business WHERE districtid = '".$districtid."' AND `owner` LIKE '%".$sString."%';";
 	}
-   if ($target=='street'){
-	$run = "SELECT upn FROM business WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
+   if ($starget=='street'){
+	$run = "SELECT * FROM business WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
 	}
   }
 	$query = mysql_query($run);  
@@ -599,8 +602,7 @@ function searchOther($districtid, $target, $sString, $searchLayer)
 //   if (!empty($query)){
 	$json 				= array();
 		while ($row = mysql_fetch_assoc($query)) {
-			$json['upn'] 				= $row['upn'];
-
+			$json['upn'] 				= $row['upn'];			
 			$data[] 					= $json;
 		}
 	
@@ -685,4 +687,14 @@ if (!empty($busincz)){
 	echo json_encode($data);
 }
 
+//this is a helper function to get some info to be displayed within the console log
+function debug_to_console( $data ) {
+
+    if ( is_array( $data ) )
+        $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+    else
+        $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+
+    echo $output;
+}
 ?>

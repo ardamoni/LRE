@@ -1933,14 +1933,14 @@ function searchupn() {
    else if (jsonLPVisible)
    {	var searchlayer=fromLocalplan.id; }
    else
-   { 	html = 'Please open either the Local Plan, Properties or the Business Map! \n Search for '+s+' is only possible in these Maps';
+   { 	html = 'Please open either the Local Plan, Properties or the Business Map! \n Search for '+sUPN+' is only possible in these Maps';
    		alert(html);
    	}
    if (sUPN){
 	   var checkentry =(sUPN.match(/-/g)||[]).length; //this checks if two - signs are in the entry
 	   var checkentry2 =sUPN.length; //this checks if 13 characters are in the entry
 	   if ((checkentry != 2) || (checkentry2 < 13)){
-		html = 'Please check your entry! \n'+s+'\nappears to be an incorrect UPN';
+		html = 'Please check your entry! \n'+sUPN+'\nappears to be an incorrect UPN';
 		alert(html);}
 	
 		foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN);
@@ -1953,7 +1953,7 @@ function searchupn() {
 				select.select(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id));
 				}
 		}else{
-		html = 'UPN: '+s+' could not be found!\nPlease check your entry';
+		html = 'UPN: '+sUPN+' could not be found!\nPlease check your entry';
 		alert(html);
 		}
 	}
@@ -1965,6 +1965,8 @@ function searchupn() {
 		//
 //-----------------------------------------------------------------------------
 function searchOther() {
+
+  var sUPN = '';
   var sString = document.getElementById('searchOther').value;
    sString = sString.trim();
    var radios = document.getElementsByName('target');
@@ -1978,62 +1980,95 @@ function searchOther() {
             break;
         }
     }   
-   var target = '';
+   var starget = '';
+   var goodtogo = true;
   
  if (sString.length == 0){
 	alert('Please enter either a Street or Owner name into the entry field');
-	break;
+	goodtogo = false;
+	}else{	
+	goodtogo = true;
 	} 
  if (value == -1){
 	alert('Please select either Street or Owner from the radio buttons');
-	break;
+	goodtogo = false;
+	}else{	
+		goodtogo = true;
 	} 
-
+ 
+//read the value from the radio button and assign a target table
  if (value == 0){
-	target='street';
+	starget='street';
 	}else if (value == 1) {
-	target='owner';
+	starget='owner';
 	}
+	
 	
   var jsonLPVisible = fromLocalplan.getVisibility();
   var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
    if (jsonPVisible){
+   		var searchlayerid=fromProperty.id;
    		var searchlayer='property';
    }
    else if (jsonBVisible)
-   {	var searchlayer='business'; }
+   {	var searchlayer='business';
+	    var searchlayerid=fromBusiness.id;}
    else if (jsonLPVisible)
-   {	var searchlayer='localplan'; }
+   {	var searchlayer='localplan';
+		var searchlayerid=fromLocalplan.id;}
    else
    { 	html = 'Please open either the Properties or the Business Map! \n Search for >'+sString+'< is only possible in these Maps';
    		alert(html);
-   		break;
    	}
+   	
+//alert(starget+' '+value+' '+sString+' '+searchlayer);
+
+//goodtogo=false;
+if (goodtogo==true) {
+spinner.spin(target);
+	
+
+   	var handlerParameter = {searchlayerid: searchlayerid, spinner: spinner};
+// 		url: "php/dbaction.php", 
+
 // if we are here, then all is good to start the search   	
    	 var request = OpenLayers.Request.POST({
 		url: "php/dbaction.php", 
 		data: OpenLayers.Util.getParameterString(
 		{dbaction: "searchOther",
 		 districtid: globaldistrictid,
-		 target: target,
+		 starget: starget,
 		 sString: sString,
-		 searchLayer; searchlayer}), 
+		 searchlayer: searchlayer}), 
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded"
 		},
-		callback: searchOtherResult
+		callback: searchOtherHandler,
+		scope: handlerParameter
 	});
-
+} //end goodtogo
 } 
 // end of function searchOther
 
 //-----------------------------------------------------------------------------
-		//function searchOtherResult() 
+		//function searchOtherHandler() 
 		//is the handler for onFeatureAddedCZ and reacts on error or success messages from dbaction.php:insertCZ
 		//this function creates the features, adds the attributes and displays them as a new layer 'colzones' on the map 
 //-----------------------------------------------------------------------------
-function searchOtherResult(request) {
+function searchOtherHandler(request) {
+  var sUPN = '';
+  var jsonLPVisible = fromLocalplan.getVisibility();
+  var jsonPVisible = fromProperty.getVisibility();
+  var jsonBVisible = fromBusiness.getVisibility();
+   if (jsonPVisible){
+   		var searchlayer=fromProperty.id;
+   }
+   else if (jsonBVisible)
+   {	var searchlayer=fromBusiness.id; }
+   else if (jsonLPVisible)
+   {	var searchlayer=fromLocalplan.id; }
+
 	// the server could report an error
 		if(request.status == 500) {
 		// do something to calm the user
@@ -2049,37 +2084,31 @@ function searchOtherResult(request) {
 		// get the response from php and read the json encoded data
 	   feed=JSON.parse(request.responseText);
 	   // build html for each feed item
+	   	   var html='';
 		for (var i = 0; i < feed.length; i++) {
-			zoneid = feed[i]['zoneid'];
-			districtid = feed[i]['districtid'];
-			collectorid = feed[i]['collectorid'];
-			zonecolour = feed[i]['zone_colour'];
-			polygon = feed[i]['polygon'];
-			fstyle = new OpenLayers.Style({fill: true, fillColor: zonecolour, fillOpacity: 0.2});
-			attributesCZ = {zoneid: zoneid, districtid: districtid,	collectorid: collectorid};	
-			if (polygon.search('POLYGON')>-1){
-				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.fromWKT(polygon), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
-			}else{
-				boundary = feed[i]['polygon'].trim();       	
-				var coordinates = boundary.split(" ");
-				var polypoints = [];
-				for (var j=0;j < coordinates.length; j++) {
-					points = coordinates[j].split(",");
-					if (points.length>1){
-						point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
-						polypoints.push(point);
+			html += feed[i]['upn'];
+			}
+
+ alert('done: '+html);
+
+		for (var i = 0; i < feed.length; i++) {
+			sUPN = feed[i]['upn'];
+//			fstyle = new OpenLayers.Style({fill: true, fillColor: zonecolour, fillOpacity: 0.2});
+ 			foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN);
+//			alert(' '+searchlayer+' '+fromBusiness.id+' '+map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN));
+			if (foundUPN.length > 0){
+			for (var j = 0; j < foundUPN.length; j++) {
+ 						map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[j].id), {fillColor: "#99FF33", fillOpacity: 0.8, strokeColor: "#00ffff"});			
 					}
-				}
-				// create a linear ring by combining the just retrieved points
-				var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
-				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
-			}	
-		    colzones.addFeatures([polygonFeature]);
-			} //end for 
+			}else{
+			html = 'UPN: '+sUPN+' could not be found!\nPlease check your entry';
+			alert(html);
+			}
+		} //end for 
 	} //end if		
-
-		  colzones.redraw();	
-
+// 
+// 		  map.getLayer(searchlayer).redraw();	
+  spinner.stop();
 } 
 // end of function searchOtherResult
 
