@@ -72,11 +72,16 @@
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
-	$q = mysql_query("SELECT * 	FROM  	`property` 
-								WHERE 	`upn` = '".$upn."' AND 
-										`subupn` = '".$subupn."' AND 
-										`districtid` = '".$districtId."' ");
+// 	$q = mysql_query("SELECT * 	FROM  	`property` 
+// 								WHERE 	`upn` = '".$upn."' AND 
+// 										`subupn` = '".$subupn."' AND 
+// 										`districtid` = '".$districtId."' ");
 	
+	$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2 
+						WHERE t1.`upn` = '".$upn."' AND 
+							  	t1.`subupn` = '".$subupn."' AND 
+								t1.`districtid` = '".$districtId."' 
+								AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
 	{
@@ -125,10 +130,10 @@
 		$PDF->Cell(40,5,'Property Rate Bill',0,1,'R'); 	
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');	
-		$PDF->Cell(70,5,'Bill Year: '.$currentYear,0,0,'R');
+		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzonenr'].' / Copy',0,0,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');	
-		$PDF->Cell(40,5,'Bill Year: '.$currentYear,0,1,'R');	
+		$PDF->Cell(40,5,'Bill Date: '.date('d-m-Y'),0,1,'R');	
 		
 		$PDF->Ln();
 		

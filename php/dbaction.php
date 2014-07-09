@@ -23,7 +23,11 @@
 	$districtid = $_POST['districtid'];
 	$searchupn = $_POST['searchupn'];
 	$propincz = $_POST['propincz'];	
-	$busincz = $_POST['busincz'];	
+	$busincz = $_POST['busincz'];
+	$target = $_POST['target'];
+	$sString = $_POST['sString'];
+	$searchLayer = $_POST['searchLayer'];
+	
 
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
@@ -52,6 +56,8 @@
   if ($dbaction=='searchupn'){searchupn($searchupn);}
   
   if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz);}
+  
+  if ($dbaction=='searchOther'){searchOther($districtid, $target, $sString, $searchLayer);}
 
 //----------end of loader -------------------------------------------------------------------
 
@@ -556,6 +562,44 @@ function searchupn($searchupn)
 			$json['polygon'] 			= $row['polygon'];
 			$json['collectorid'] 		= $row['collectorid'];
 			$json['zone_colour'] 		= $row['zone_colour'];
+
+			$data[] 					= $json;
+		}
+	
+//	 }//end if
+//	}//end else 
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+
+//-----------------------------------------------------------------------------
+				//function searchOther() 
+				//searches for a street or a name and returns the found upns
+//-----------------------------------------------------------------------------
+function searchOther($districtid, $target, $sString, $searchLayer) 
+{
+  if($searchLayser=='property'){
+   if ($target=='owner'){
+	$run = "SELECT upn FROM property WHERE districtid = '".$districtid."' AND `owner` LIKE '%".$sString."%';";
+	}
+   if ($target=='street'){
+	$run = "SELECT upn FROM property WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
+	}
+  }
+  if($searchLayser=='business'){
+   if ($target=='owner'){
+	$run = "SELECT upn FROM business WHERE districtid = '".$districtid."' AND `owner` LIKE '%".$sString."%';";
+	}
+   if ($target=='street'){
+	$run = "SELECT upn FROM business WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
+	}
+  }
+	$query = mysql_query($run);  
+	$data 				= array();
+//   if (!empty($query)){
+	$json 				= array();
+		while ($row = mysql_fetch_assoc($query)) {
+			$json['upn'] 				= $row['upn'];
 
 			$data[] 					= $json;
 		}

@@ -25,8 +25,11 @@ if( session_status() != 2 )
 	
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 	
-	// TODO: Session on District
+	// Read the GET parameters
+	$upn 			= $_GET["upn"];	
+	$subupn 		= $_GET["subupn"];	
 	$districtId = $_GET['districtid'];
+	
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
 		$file= '../../uploads/logo-'.$districtId.'.gif';
@@ -63,8 +66,15 @@ if( session_status() != 2 )
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
 // 	$q = mysql_query("SELECT * 	FROM  `business` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
-$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 WHERE 	t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY `colzone_id` ");
+// $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY `colzonenr` ");
+
+	$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 
+						WHERE t1.`upn` = '".$upn."' AND 
+							  	t1.`subupn` = '".$subupn."' AND 
+								t1.`districtid` = '".$districtId."' 
+								AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
 	
+
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
 	{
@@ -110,10 +120,10 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 		$PDF->Cell(40,5,'Business License Bill',0,1,'R'); 	
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');	
-		$PDF->Cell(70,5,'Bill Year: '.$currentYear.' / Collector Zone:'.$r['colzonenr'],0,0,'R');
+		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzonenr'].' / Copy',0,0,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');	
-		$PDF->Cell(40,5,'Bill Year: '.$currentYear,0,1,'R');	
+		$PDF->Cell(40,5,'Bill Date: '.date('d-m-Y'),0,1,'R');	
 		
 		$PDF->Ln();
 		
@@ -222,6 +232,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 		$counter=0;
 		} else {
 		$counter++;
+		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 		$PDF->Ln(12);
 		}
 	$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
@@ -229,7 +240,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 										$arreas + 
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value");
 										
-	$Data->setDemandNoticeRecord( $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
+	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
 	
 	} //end 	while( $r = mysql_fetch_array($q) )
 	

@@ -43,7 +43,11 @@
 	$PDF->Ln();
 	
 	$PDF->SetFont('Arial','B',16);
-	$PDF->Cell(0,5,'Bills Register',0,1,'C');		$PDF->Ln();
+	if ($target=='business'){
+		$PDF->Cell(0,5,'Bills Register for Business Opering Permits',0,1,'C');		$PDF->Ln();
+	}elseif ($target=='property'){
+		$PDF->Cell(0,5,'Bills Register for Property Rates',0,1,'C');		$PDF->Ln();
+	}
 	$PDF->SetFont('Arial','',12);
 	$PDF->Ln(10);	
 	

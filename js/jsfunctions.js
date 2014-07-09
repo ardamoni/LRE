@@ -9,10 +9,10 @@ OpenLayers.ProxyHost = "proxy.cgi?url=";
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
-			  var session_name = "<?php echo json_encode($_SESSION['user']['name']); ?>";
-			  var session_user = "<?php=$_SESSION['user']['user'];?>";
-			  var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
-			  
+var session_name = "<?php echo json_encode($_SESSION['user']['name']); ?>";
+var session_user = "<?php=$_SESSION['user']['user'];?>";
+var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
+
 
 //     		   document.getElementById("debug1").innerHTML=session_roleid+" "+session_user;
 
@@ -30,7 +30,7 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 //we need to get the starting window dimensions for a potential resize of the map
 	var windowWidth = window.innerWidth;
   	var windowHeight = window.innerHeight;
-  	var mapDefaultSizeWidth = 1024;
+  	var mapDefaultSizeWidth = 1180;
   	var mapDefaultSizeHeight = 650;
 
 var options = {   
@@ -64,7 +64,7 @@ window.onresize = function()
   	} else {
   	document.getElementById("map").style.height = mapDefaultSizeHeight+"px";
   	}
-  setTimeout( function() { map.updateSize();})
+  setTimeout( function() { map.updateSize();});
 //  alert('CurrentSize: '+map.getCurrentSize() + ' window.innerwidth: ' + window.innerWidth + ' windowWidth: ' + windowWidth + ' screen: ' + screen.width + ' map.size: ' + map.size);;
 }
 
@@ -595,8 +595,8 @@ function onFeatureSelectLocalplan(evt) {
 				'<br>Parcel Of: '+feature.attributes.ParcelOf+
 				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)).toFixed(2)+'sq m'+
 				'<br>Land use: '+feature.attributes.landuse;
-	content += '<br><br><select><option value="property">Property</option><option value="business">Business</option><option value="other">Others</option></select>';
-	content += "<input type='button' class='' value='Add' title='Add details' onclick='addDetails()' >";	
+// 	content += '<br><br><select><option value="property">Property</option><option value="business">Business</option><option value="other">Others</option></select>';
+//	content += "<input type='button' class='' value='Add' title='Add details' onclick='addDetails()' >";	
 	
 
 		var popup = new OpenLayers.Popup.FramedCloud(
@@ -746,7 +746,6 @@ function onFeatureSelectcz(evt) {
   // 	}
 
 		content = 'Collector ID: '+feature.attributes.collectorid+
-					'<br>District ID: '+feature.attributes.districtid+
 					'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+'sq km'+
 					'<br>Parcels: '+intersectedParcels.toString();
 		if (jsonPVisible){			
@@ -755,7 +754,7 @@ function onFeatureSelectcz(evt) {
 		content +=	'<br>Businesses: '+intersectedUPNs.toString();
 		}
 		content +=	'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
-					'<br>Zoneid: '+feature.attributes.zoneid;
+					'<br>Zone ID: '+feature.attributes.zoneid;
 		content += "<br><input type='button' class='deletezone' value='' title='Delete the selected collector zone' onclick='deletezone(paraevt)' >";	
 
 		var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
@@ -1019,7 +1018,7 @@ function printIndividualBillOnClick(global_upn, global_subupn, globaldistrictid,
 		var pageURL = 'php/Reports/PropertyAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 		var title = 'Property Bill';
 	}else{
-		var pageURL = 'php/Reports/PropertyAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+		var pageURL = 'php/Reports/BusinessAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 		var title = 'Business Bill';
 	}
 	var w = 1024;
@@ -1216,7 +1215,7 @@ function polylocalplanhandler(request) {
 	}
 		spinner.stop();
 		w.stop();  
-		document.getElementById("debug1").innerHTML=w.toString();
+// 		document.getElementById("debug1").innerHTML=w.toString();
 		showLegend();
 
 
@@ -1248,13 +1247,12 @@ function getPropertyPolygons() {
 			callback: polyhandler
 		});
      }else{
-     if (jsonVisible) {
-     		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';					
+//      if (jsonVisible) {
+//      		document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';					
+// 		}else{
+//      		document.getElementById("debug2").innerHTML=' - ';	
+//      		}
 			showLegend();
-		}else{
-     		document.getElementById("debug2").innerHTML=' - ';	
-			showLegend();
-     		}
 			spinner.stop()
 	};           
 	
@@ -1322,7 +1320,7 @@ function polyhandler(request) {
 				var n = num.valueOf(); 
 				revbalance = revbalance+num;
 				global_out_property = revbalance;
-				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';
+// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_property, 2, '.', ',')+' GHC';
 			  fromProperty.addFeatures([polygonFeature]);
 
 		  } // end of for 
@@ -1330,7 +1328,7 @@ function polyhandler(request) {
 	}
 		spinner.stop();
 		w.stop();  
-		document.getElementById("debug1").innerHTML=w.toString();
+// 		document.getElementById("debug1").innerHTML=w.toString();
 		showLegend();
 
 //       alert(w.toString());
@@ -1360,14 +1358,14 @@ function getBusinessPolygons() {
 			callback: Businesshandler
 		});
      }else{
-		 if (jsonBVisible) {
-				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';	
-				showLegend();
-		  }else{
-				document.getElementById("debug2").innerHTML=' - ';
-				showLegend();
-				}
-		 spinner.stop();
+// 		 if (jsonBVisible) {
+// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';	
+// 				showLegend();
+// 		  }else{
+// 				document.getElementById("debug2").innerHTML=' - ';
+// 				}
+		showLegend();
+		spinner.stop();
 	 }           
 	 globalbusinesschanged = false;
 
@@ -1432,7 +1430,7 @@ function Businesshandler(request) {
 				var n = num.valueOf(); 
 				revbalance = revbalance+num;
 				global_out_business = revbalance;
-				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';					
+// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';					
 //					document.getElementById("debug2").innerHTML=typeof(num);
 				
 // for debugging
@@ -1451,7 +1449,7 @@ function Businesshandler(request) {
 	}
 		spinner.stop();
 		w.stop();  
-		document.getElementById("debug1").innerHTML=w.toString();
+// 		document.getElementById("debug1").innerHTML=w.toString();
 		showLegend();
 
 
@@ -1920,8 +1918,10 @@ function getdistrictcenter(districtboundary){
 		//
 //-----------------------------------------------------------------------------
 function searchupn() {
-  var s = document.getElementById('searchBox').value;
-   s = s.trim();
+  var sUPN = document.getElementById('searchBox').value;
+//   var sName = document.getElementById('searchName').value;
+//   var sStreet = document.getElementById('searchStreet').value;
+   sUPN = sUPN.trim();
   var jsonLPVisible = fromLocalplan.getVisibility();
   var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
@@ -1936,28 +1936,154 @@ function searchupn() {
    { 	html = 'Please open either the Local Plan, Properties or the Business Map! \n Search for '+s+' is only possible in these Maps';
    		alert(html);
    	}
-   
-   var checkentry =(s.match(/-/g)||[]).length; //this checks if two - signs are in the entry
-   var checkentry2 =s.length; //this checks if 13 characters are in the entry
-   if ((checkentry != 2) || (checkentry2 < 13)){
-    html = 'Please check your entry! \n'+s+'\nappears to be an incorrect UPN';
-	alert(html);}
+   if (sUPN){
+	   var checkentry =(sUPN.match(/-/g)||[]).length; //this checks if two - signs are in the entry
+	   var checkentry2 =sUPN.length; //this checks if 13 characters are in the entry
+	   if ((checkentry != 2) || (checkentry2 < 13)){
+		html = 'Please check your entry! \n'+s+'\nappears to be an incorrect UPN';
+		alert(html);}
 	
-	foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', s);
-	if (foundUPN.length > 0){
-	for (var i = 0; i < foundUPN.length; i++) {
-//			map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id), {fillColor: "#99FF33", fillOpacity: 0.8, strokeColor: "#00ffff"});			
-           var curpos = new OpenLayers.LonLat(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id).geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).getFeatureById(foundUPN[i].id).geometry.getBounds().getCenterLonLat().lat);
-		   map.panTo(curpos);
-           map.setCenter(curpos, 17);
-			select.select(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id));
-			}
-	}else{
-	html = 'UPN: '+s+' could not be found!\nPlease check your entry';
-	alert(html);
-	}		
+		foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN);
+		if (foundUPN.length > 0){
+		for (var i = 0; i < foundUPN.length; i++) {
+	//			map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id), {fillColor: "#99FF33", fillOpacity: 0.8, strokeColor: "#00ffff"});			
+			   var curpos = new OpenLayers.LonLat(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id).geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).getFeatureById(foundUPN[i].id).geometry.getBounds().getCenterLonLat().lat);
+			   map.panTo(curpos);
+			   map.setCenter(curpos, 17);
+				select.select(map.getLayer(searchlayer).getFeatureById(foundUPN[i].id));
+				}
+		}else{
+		html = 'UPN: '+s+' could not be found!\nPlease check your entry';
+		alert(html);
+		}
+	}
 } 
 // end of function searchupn
+//-----------------------------------------------------------------------------
+		//function searchOther() 
+		//is called by the SEARCH button in the main windows 
+		//
+//-----------------------------------------------------------------------------
+function searchOther() {
+  var sString = document.getElementById('searchOther').value;
+   sString = sString.trim();
+   var radios = document.getElementsByName('target');
+    var value = -1;
+    //check which radio button was selected
+    for (var i = 0; i < radios.length; i++) 
+    {
+        if (radios[i].checked) 
+        {
+            value = i;
+            break;
+        }
+    }   
+   var target = '';
+  
+ if (sString.length == 0){
+	alert('Please enter either a Street or Owner name into the entry field');
+	break;
+	} 
+ if (value == -1){
+	alert('Please select either Street or Owner from the radio buttons');
+	break;
+	} 
+
+ if (value == 0){
+	target='street';
+	}else if (value == 1) {
+	target='owner';
+	}
+	
+  var jsonLPVisible = fromLocalplan.getVisibility();
+  var jsonPVisible = fromProperty.getVisibility();
+  var jsonBVisible = fromBusiness.getVisibility();
+   if (jsonPVisible){
+   		var searchlayer='property';
+   }
+   else if (jsonBVisible)
+   {	var searchlayer='business'; }
+   else if (jsonLPVisible)
+   {	var searchlayer='localplan'; }
+   else
+   { 	html = 'Please open either the Properties or the Business Map! \n Search for >'+sString+'< is only possible in these Maps';
+   		alert(html);
+   		break;
+   	}
+// if we are here, then all is good to start the search   	
+   	 var request = OpenLayers.Request.POST({
+		url: "php/dbaction.php", 
+		data: OpenLayers.Util.getParameterString(
+		{dbaction: "searchOther",
+		 districtid: globaldistrictid,
+		 target: target,
+		 sString: sString,
+		 searchLayer; searchlayer}), 
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		callback: searchOtherResult
+	});
+
+} 
+// end of function searchOther
+
+//-----------------------------------------------------------------------------
+		//function searchOtherResult() 
+		//is the handler for onFeatureAddedCZ and reacts on error or success messages from dbaction.php:insertCZ
+		//this function creates the features, adds the attributes and displays them as a new layer 'colzones' on the map 
+//-----------------------------------------------------------------------------
+function searchOtherResult(request) {
+	// the server could report an error
+		if(request.status == 500) {
+		// do something to calm the user
+		alert('The database server is reporting an error.<br>Please inform the system administrator');
+	}
+	// the server could say you sent too much stuff
+	if(request.status == 413) {
+		// tell the user to trim their request a bit
+		alert('The database server is reporting too much information was sent<br>Please inform the system administrator');
+	}
+	// the browser's parser may have failed
+	if(!request.responseXML) {
+		// get the response from php and read the json encoded data
+	   feed=JSON.parse(request.responseText);
+	   // build html for each feed item
+		for (var i = 0; i < feed.length; i++) {
+			zoneid = feed[i]['zoneid'];
+			districtid = feed[i]['districtid'];
+			collectorid = feed[i]['collectorid'];
+			zonecolour = feed[i]['zone_colour'];
+			polygon = feed[i]['polygon'];
+			fstyle = new OpenLayers.Style({fill: true, fillColor: zonecolour, fillOpacity: 0.2});
+			attributesCZ = {zoneid: zoneid, districtid: districtid,	collectorid: collectorid};	
+			if (polygon.search('POLYGON')>-1){
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.fromWKT(polygon), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
+			}else{
+				boundary = feed[i]['polygon'].trim();       	
+				var coordinates = boundary.split(" ");
+				var polypoints = [];
+				for (var j=0;j < coordinates.length; j++) {
+					points = coordinates[j].split(",");
+					if (points.length>1){
+						point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+						polypoints.push(point);
+					}
+				}
+				// create a linear ring by combining the just retrieved points
+				var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributesCZ, {fill: true, fillColor: zonecolour, fillOpacity: 0.2});		
+			}	
+		    colzones.addFeatures([polygonFeature]);
+			} //end for 
+	} //end if		
+
+		  colzones.redraw();	
+
+} 
+// end of function searchOtherResult
+
+ 	
 
 //-----------------------------------------------------------------------------
 		//function tableshow() 
@@ -2001,8 +2127,11 @@ function tableshow() {
 function xlsexport() {
   var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
-  var popupWindow = null;
-  var pageURL = 'php/openXLSreports.php?districtid='+globaldistrictid;
+  	var w = 1000;
+	var h = 550;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+	var pageURL = 'php/openXLSreports.php?districtid='+globaldistrictid;
 
   
 //    if (jsonPVisible && jsonBVisible){
@@ -2010,7 +2139,7 @@ function xlsexport() {
 //    		alert(html);
 //    }
 //    else if (jsonBVisible || jsonPVisible)  {
- 		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, height=500, width=1000, left=500, top=200, resizable=no,location=no,menubar=no,status=no,toolbar=no');	
+ 		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, width='+w+', height='+h+', top='+top+', left='+left+', resizable=no,location=no,menubar=no,status=no,toolbar=no');	
 // 	}
 //    else
 //    { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';

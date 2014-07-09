@@ -14,6 +14,107 @@
     <title>District Local Revenue</title>	
 	
 	<script type="text/javascript" language="javascript" src="jquery_accordion.js"></script>
+ <style>
+ #overlay {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+/*   background-image:url(background.png); */
+  }
+
+#overlay div {
+     width:300px;
+     margin: 100px 100px;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+     text-align:center;
+}
+
+ #overlayadmin {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+/*   background-image:url(background.png); */
+  }
+
+#overlayadmin div {
+     width:300px;
+     margin: 100px 100px;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+     text-align:center;
+}
+ #overlayxls {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+/*   background-image:url(background.png); */
+  }
+
+#overlayxls div {
+     width:300px;
+     margin: 100px 100px;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+     text-align:center;
+}
+ #overlayreports {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+}
+#overlayreports div {
+     width:300px;
+     margin: 100px 100px;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+     text-align:center;
+}
+ #overlaysearch {
+     visibility: hidden;
+     position: absolute;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     text-align:center;
+     z-index: 1000;
+} 
+
+#overlaysearch div {
+     width:300px;
+     margin: 100px 100px;
+     background-color: #fff;
+     border:1px solid #000;
+     padding:15px;
+     text-align:center;
+}
+
+ </style>	
 	<script type="text/javascript">
 	$(document).ready(function()
 	{
@@ -24,12 +125,90 @@
 			$(this).siblings().css({backgroundImage:"url(icons/left.png)"});
 		});	
 	});
+
+	function overlay() {
+	el = document.getElementById("overlay");
+	var offset1 = document.getElementById('stats').getBoundingClientRect();
+	var offset2 = document.getElementById('fisprop').getBoundingClientRect();
+	var offset3 = document.getElementById('fisbus').getBoundingClientRect();
+	var offset4 = document.getElementById('navtools').getBoundingClientRect();
+	var offseticons = document.getElementById('icon-section').getBoundingClientRect();
+	var top = offseticons.top+10;
+	var left = offset4.left+30;
+// 	el.style.margin = "'.top.' '. left'";
+	el.style.top = top+'px';
+	el.style.left = left+'px';
+	el.value = 1;
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+	function overlayadmin() {
+	el = document.getElementById("overlayadmin");
+	var offset1 = document.getElementById('stats').getBoundingClientRect();
+	var offset2 = document.getElementById('fisprop').getBoundingClientRect();
+	var offset3 = document.getElementById('fisbus').getBoundingClientRect();
+	var offset4 = document.getElementById('navtools').getBoundingClientRect();
+	var offseticons = document.getElementById('icon-section').getBoundingClientRect();
+	var top = offseticons.top+10;
+	var left = offset4.left+30;
+// 	el.style.margin = "'.top.' '. left'";
+	el.style.top = top+'px';
+	el.style.left = left+'px';
+	el.value = 1;
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+	function overlayxls() {
+	el = document.getElementById("overlayxls");
+	var offset1 = document.getElementById('stats').getBoundingClientRect();
+	var offset2 = document.getElementById('fisprop').getBoundingClientRect();
+	var offset3 = document.getElementById('fisbus').getBoundingClientRect();
+	var offset4 = document.getElementById('navtools').getBoundingClientRect();
+	var offseticons = document.getElementById('icon-section').getBoundingClientRect();
+	var top = offseticons.top+10;
+	var left = offset4.left+30;
+// 	el.style.margin = "'.top.' '. left'";
+	el.style.top = top+'px';
+	el.style.left = left+'px';
+	el.value = 1;
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+	function overlayreports() {
+	el = document.getElementById("overlayreports");
+	var offset1 = document.getElementById('stats').getBoundingClientRect();
+	var offset2 = document.getElementById('fisprop').getBoundingClientRect();
+	var offset3 = document.getElementById('fisbus').getBoundingClientRect();
+	var offset4 = document.getElementById('navtools').getBoundingClientRect();
+	var offseticons = document.getElementById('icon-section').getBoundingClientRect();
+	var top = offseticons.top+10;
+	var left = offset4.left+30;
+// 	el.style.margin = "'.top.' '. left'";
+	el.style.top = top+'px';
+	el.style.left = left+'px';
+	el.value = 1;
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+	function overlaysearch() {
+	el = document.getElementById("overlaysearch");
+	var offset1 = document.getElementById('stats').getBoundingClientRect();
+	var offset2 = document.getElementById('fisprop').getBoundingClientRect();
+	var offset3 = document.getElementById('fisbus').getBoundingClientRect();
+	var offset4 = document.getElementById('navtools').getBoundingClientRect();
+	var offseticons = document.getElementById('icon-section').getBoundingClientRect();
+	var top = offseticons.top+10;
+	var left = offset4.left+30;
+// 	el.style.margin = "'.top.' '. left'";
+	el.style.top = top+'px';
+	el.style.left = left+'px';
+	el.value = 1;
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+
 	</script>
 
 		
         <link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
         <link rel="stylesheet" href="style.css" type="text/css">
         <link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
+        <link rel="stylesheet" href="css/themify-icons.css" type="text/css">
 		
 		<!-- center and far right column-->
         <style type="text/css">
@@ -43,7 +222,7 @@
 				list-style: none;
 			}
 			#map {
-				width: 1024px;
+				width: 1180px;
 				height: 650px;
 			}
 
@@ -161,6 +340,58 @@
 		</style>
     </head>
 	<body>	
+<!-- 	This is needed for the menu system -->
+<!-- this is the popup below the icon section -->
+	<div id="overlay">
+     <div>
+          <p>Please select one of the Print options.</p>
+			<input type="submit" value="Bills for Property Rates" href="javascript:;" onclick="propertyAnnualBillOnClick();" title="Bills for Property Rates" class="orange-flat-small">
+			<input type="submit" value="Bills for Business Licenses" href="javascript:;" onclick="businessAnnualBillOnClick();" title="Bills for Business Licenses" class="orange-flat-small">
+			<input type="submit" value="Bills Register for Property Rates" href="javascript:;" onclick="billsRegister('property');" title="Bills Register for Property Rates" class="orange-flat-small">
+			<input type="submit" value="Bills Register for Business Licenses" href="javascript:;" onclick="billsRegister('business');" title="Bills Register for Business Licenses" class="orange-flat-small">
+          [<a href='#' onclick='overlay()'>close</a>]
+     </div>     
+	</div>
+	<div id="overlayadmin">
+     <div>
+          <p>Please select one of the Admin options.</p>
+			<input type="submit" value="KML to DB conversion" href="javascript:;" onclick="uploadkml();" title="Upload KML file into the database" class="orange-flat-small">
+			<input type="submit" value="Upload Fee Fixing information" href="javascript:;" onclick="uploadxls();" title="Store Fee Fixing information in database" class="orange-flat-small">
+			<input type="submit" value="Upload Scanned Data" href="javascript:;" onclick="uploadScannedData();" title="Store scanned Data in database" class="orange-flat-small">
+          [<a href='#' onclick='overlayadmin()'>close</a>]
+     </div>     
+	</div>
+	<div id="overlayxls">
+     <div>
+          <p>Please select one of the Export options.</p>
+			<input type="submit" value="Excel Export" href="javascript:;" onclick="xlsexport();" title="Available Excel Exports" class="orange-flat-small">
+          [<a href='#' onclick='overlayxls()'>close</a>]
+     </div>     
+	</div>
+	<div id="overlayreports">
+     <div>
+          <p>Please select one of the Report options.</p>
+			<input type="submit" value="Weekly" href="javascript:;" onclick="" title="Generate the weekly report" class="orange-flat-small">
+			<input type="submit" value="Monthly" href="javascript:;" onclick="" title="Generate the monthly report" class="orange-flat-small">
+			<input type="submit" value="Quarterly" href="javascript:;" onclick="" title="Generate the quarterly report" class="orange-flat-small">
+			<input type="submit" value="Annualy" href="javascript:;" onclick="" title="Generate the anual report" class="orange-flat-small">
+          [<a href='#' onclick='overlayreports()'>close</a>]
+     </div>     
+	</div>
+	<div id="overlaysearch">
+     <div>
+          <p>Please enter either a Name <br/> or a Street into the entry field.</p>
+<!-- <form> -->
+		<input type="text" id="searchOther" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchOther();}"  > 
+		<center><input type="radio" id="target" name="target" value="street">Street
+		<input type="radio" id="target" name="target" value="owner">Owner<br></center>
+		<input type="submit" value="Search" href="javascript:;" onclick="searchOther();" title="Submit the search" class="orange-flat-small">
+          [<a href='#' onclick='overlaysearch()'>close</a>]
+<!-- </form> -->
+     </div>     
+	</div>
+<!-- end of popup below the icon section -->
+
 	
 	<div id="header">  
 	<!--the following districtid is hidden, but can be used anywhere in the programme. It contains the districtid, which it gets from the function getsesseionuser()-->
@@ -169,54 +400,124 @@
 		<table class="lremain">
 		<tr>
 			<td>
-				<input type="submit" value="Stats" class="orange-flat-small">
-<!-- 				<strong><span id="epsg1"><center>Stats</center></span></strong> -->
-				Parcels #: <strong><small><span id="stat1">0</span></small></strong> <br/>
-				Properties #: <strong><small><span id="stat2">0</span></small></strong> <br/>
-				Businesses #: <strong><small><span id="stat3">0</span></small></strong> <br/>
+				<input type="submit" id="stats" value="Stats" class="orange-flat-small">
+				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
+				<tr>
+					<td style="border:0px">Parcels #:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="stat1">0</span></small></strong>
+					</td>
+				</tr> 
+				<tr>
+					<td style="border:0px">Properties #:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="stat2">0</span></small></strong>
+					</td>
+				</tr> 
+				<tr>
+					<td style="border:0px">Businesses #:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="stat3">0</span></small></strong>
+					</td>
+				</tr> 
+				</table>
 			</td>
 			<td>
-				<input type="submit" id="fisprop" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="orange-flat-small">
-				Exp: <strong><small><span id="fis1">0</span></small></strong> <br/>
-				In: <strong><small><span id="fis2">0</span></small></strong> <br/>
-				Out: <strong><small><span id="fis3">0</span></small></strong> <br/>
+				<input type="submit" id="fisprop" value="Property Rates Info" href="javascript:;" onclick="getFiscalStats();" title="Click to calculate fiscal stats" class="orange-flat-small">
+				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
+				<tr>
+					<td width="10px" style="border:0px">Expected:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="fis1">0</span></small></strong>
+					</td>
+				</tr> 
+				<tr>
+					<td width="10px" style="border:0px">Collected:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="fis2">0</span></small></strong>
+					</td>
+				</tr> 
+				<tr>
+					<td width="10px" style="border:0px">Outstanding:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="fis3">0</span></small></strong>
+					</td>
+				</tr> 
+				</table>
 			</td>
 			<td>
-				<input type="submit" id="fisbus" value="Fiscal Info" href="javascript:;" onclick="getFiscalStats();" class="orange-flat-small">
-				Exp: <strong><small><span id="fis4">0</span></small></strong> <br/>
-				In: <strong><small><span id="fis5">0</span></small></strong> <br/>
-				Out: <strong><small><span id="fis6">0</span></small></strong> <br/>
+				<input type="submit" id="fisbus" value="BOP Info" href="javascript:;" onclick="getFiscalStats();" title="Click to calculate fiscal stats" class="orange-flat-small">
+				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
+				<tr>
+					<td width="10px" style="border:0px">Expected:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="fis4">0</span></small></strong>
+					</td>
+				</tr> 
+				<tr>
+					<td width="10px" style="border:0px">Collected:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="fis5">0</span></small></strong>
+					</td>
+				</tr> 
+				<tr>
+					<td width="10px" style="border:0px">Outstanding:</td>
+					<td width="25px" style="border:0px">
+						<strong><small><span id="fis6">0</span></small></strong>
+					</td>
+				</tr> 
+				</table>
 			</td>
 			<td>
-<!-- 				<input type="submit" value="Navigation Tools" class="sun-flower-button"> -->
-				<strong><span><center>Tools</center></span></strong>
-<!-- 				<center><span id="tools" class="olControlPanel"></span></center> -->
-				<center><span id="tools" class="olControlPanel"></span>
-				<button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button> 
-				</center>
-<!-- 				<strong><span><center>Tools</center></span></strong> -->
-<!-- 				<center><span id="tableview" class="tableshow"></span>  -->
-<!-- 				<span> <button type="submit" class="tableshow" href="javascript:;" onclick="tableshow();" value="" title="Open the table view"></button> </span>  -->
-<!-- 				<span id="testbutton" class="testbutton"></span> -->
-<!-- 				<button type="submit" class="tableshow" href="javascript:;" onclick="xlsexport();" value="" title="Available Excel Reports"></button>  -->
-<!-- 
-				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="xlsexport();" value="" title="This is a button to test stuf" disabled></button> </span> </center>
- -->
-<!-- 				<span> <button type="submit" class="testbutton" href="javascript:;" onclick="updateCZinPropBus();" value="" title="This is a button to test stuf"></button> </span> </center> -->
-
+				<strong><span id="navtools"><center>Navigation Tools</center></span></strong>
+				<center><span id="tools" class="olControlPanel"></span></center>
 			</td> 
 			<td>
+			<div class="icon-section" id="icon-section">
+				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
+				<tr>
+					<td style="border:0px"></td>
+					<td width="25px" style="border:0px">
+						<div class="icon-container">
+							<span class="ti-printer" type="submit" href="javascript:;" onclick="overlay();" value="" title="Open Print options"></span><span class="icon-name"></span>
+						</div>
+					</td>
+					<td width="25px" style="border:0px">
+						<div class="icon-container">
+							<span class="ti-settings" type="submit" href="javascript:;" href="javascript:;" onclick="overlayadmin();" value="" title="Open Admin options"></span><span class="icon-name"></span>
+						</div>
+					</td>
+					<td width="25px" style="border:0px">
+						<div class="icon-container">
+							<span class="ti-export" type="submit" href="javascript:;" href="javascript:;" onclick="overlayxls();" value="" title="Open Excel Export"></span><span class="icon-name"></span>
+						</div>
+					</td>
+				</tr> 
+				<tr>
+					<td style="border:0px"></td>
+					<td width="25px" style="border:0px">
+						<div class="icon-container">
+							<span class="ti-write" type="submit" href="javascript:;" href="javascript:;" onclick="overlayreports();" value="" title="Open Reports"></span><span class="icon-name"></span>
+						</div>
+					</td>
+					<td width="25px" style="border:0px">
+						<div class="icon-container">
+							<span class="ti-search" type="submit" href="javascript:;" href="javascript:;" onclick="overlaysearch();" value="" title="Open Street and Name Search"></span><span class="icon-name"></span>
+						</div>
+					</td>
+				</tr>					 
+				</table>
+			</div>
 				<center id="debug2"></center>
 			</td> 
 			<td>
 				 <center>Quick Search</center>
 				 <input type="text" id="searchBox" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchupn();}"  > 
-				 <center><input type="submit" href="javascript:;" onclick="searchupn();" value="SEARCH" ></center>
+				 <center><input type="submit" href="javascript:;" onclick="searchupn();" class="orange-flat-small" value="SEARCH" ></center>
 			</td>
 			<td>
 				<center id="wcUser">Welcome</center>
 				<form action="logout.php" method="post">
-<!-- 				<a href="logout.php"> <strong><center>SIGN OUT</center></strong> </a>				 -->
 				<input type="submit" value="SIGN OUT" class="pomegranate-flat-button">
 				</form>
 			</td>
@@ -226,71 +527,6 @@
 	
 	<div id="container">
 		<!-- left most column, col3 -->
-		<div id="col1">	
-			<!--Code for accordion menu starts here-->
-			<div style="float:left" >		
-				<div id="menuContainer" class="menu_list"> 
-					<p class="menu_head">Home</p>			
-					<p class="menu_head">Reports</p>
-					<div class="menu_body">
-						<a href="#">Daily</a>
-						<a href="#">Weekly</a>
-						<a href="#">Monthly</a>	
-						<a href="#">Annualy</a>								
-						<a href=""javascript:;" onclick="propertyAnnualBillOnClick();"">Print Bills for Property Rates</a>
-						<a href=""javascript:;" onclick="businessAnnualBillOnClick();"">Print Bills for Business Licenses</a>
-						<a href=""javascript:;" onclick="billsRegister('property');"">Print the Bills Register for Property Rates</a>
-						<a href=""javascript:;" onclick="billsRegister('business');"">Print the Bills Register for Business Licenses</a>
-					</div>
-					<p class="menu_head">Search</p>
-					<div class="menu_body">
-						<a href="#">UPN or SUBUPN</a>
-						<a href="#">Owner</a>
-						<a href="#">Address</a>			
-				   </div>
-				   <p class="menu_head">Contacts</p>
-				   <p class="menu_head">Manual</p>
-				   <p class="menu_head">Admin</p>
-					<div class="menu_body">
-						<a href=""javascript:;" onclick="uploadkml();"">->KML to DB conversion</a>
-						<a href=""javascript:;" onclick="uploadxls();"">->Upload Fee Fixing information</a>
-						<a href=""javascript:;" onclick="uploadScannedData();"">->Upload Data from Scanning Process</a>
-				   </div>
-
-					   <p class="menu_head"><a href="logout.php">Log out</a></p>
-				</div>  
-			</div>
-
-			<!--Styling the accordion menu-->
-			<style type="text/css">					
-				.menu_list {	
-					width: 150px;
-				}
-				.menu_head {
-					padding: 5px 10px;
-					cursor: pointer;
-					position: relative;
-					margin:1px;
-					font-weight:bold;
-					background: #eef4d3 url(icons/left.png) center right no-repeat;
-				}
-				.menu_body {
-					display:none;
-				}
-				.menu_body a{
-				  display:block;
-				  color:#006699;
-				  background-color:#EFEFEF;
-				  padding-left:10px;
-				  font-weight:bold;
-				  text-decoration:none;
-				}
-				.menu_body a:hover{
-				  color: purple;
-				  text-decoration:underline;
-				}
-			</style>	
-		</div> <!-- end of left most column, col1 -->
 
 		<!-- map goes here -->
 		<div id="col2">
@@ -298,6 +534,20 @@
 				//init();
 				window.onload = function()
 				{
+				// here we adjust the display to match the screen dimensions
+				  if (window.innerWidth <= 1180){
+					document.getElementById("map").style.width = window.innerWidth*0.75+"px";
+					} else {
+					document.getElementById("map").style.width = mapDefaultSizeWidth+"px";
+					}
+				  if (window.innerHeight < 650){
+					document.getElementById("map").style.height = window.innerHeight*0.75+"px";
+					} else {
+					document.getElementById("map").style.height = mapDefaultSizeHeight+"px";
+					}
+
+					document.getElementById("map").style.width = window.innerWidth*0.82+"px";
+
 					init();
 				};
 			</script>

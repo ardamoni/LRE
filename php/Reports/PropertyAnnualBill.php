@@ -110,10 +110,10 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 		$PDF->Cell(40,5,'Property Rate Bill',0,1,'R'); 	
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');	
-		$PDF->Cell(70,5,'Bill Year: '.$currentYear.' / Collector Zone:'.$r['colzonenr'],0,0,'R');
+		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzonenr'],0,0,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');	
-		$PDF->Cell(40,5,'Bill Year: '.$currentYear,0,1,'R');	
+		$PDF->Cell(40,5,'Bill Date: '.date('d-m-Y'),0,1,'R');	
 		
 		$PDF->Ln();
 		
