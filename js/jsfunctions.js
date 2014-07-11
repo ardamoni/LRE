@@ -1820,9 +1820,9 @@ if(!request.responseXML) {
 	document.getElementById("wcUser").innerHTML='Welcome: '+html;
 	globaldistrictid=userdistrict;
 	document.getElementById("districtname").innerHTML=userdistrictname;
-	document.getElementById("stat1").innerHTML=numberOfParcels;
-	document.getElementById("stat2").innerHTML=numberOfProperty;
-	document.getElementById("stat3").innerHTML=numberOfBusiness;
+	document.getElementById("stat1").innerHTML=number_format(numberOfParcels, 0, '.', ',');
+	document.getElementById("stat2").innerHTML=number_format(numberOfProperty, 0, '.', ',');
+	document.getElementById("stat3").innerHTML=number_format(numberOfBusiness, 0, '.', ',');
 
 	//Now we center the map according to the boundary 
 	getdistrictcenter(districtboundary);
