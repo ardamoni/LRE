@@ -123,7 +123,7 @@ $paymentType = array(
 
 <?	
 	if ($ifproperty == 'property'){
-		echo '<form id="form1" name="form1" method="post" action="RevenueCollection.php">';
+		echo '<form id="form1" name="form1" method="post" action="PropertyRevenueCollection.php">';
 	} else {
 		echo '<form id="form1" name="form1" method="post" action="BusinessRevenueCollection.php">';
 	}
@@ -244,8 +244,10 @@ $paymentType = array(
 			<tr>
 <!--				<td>&nbsp;</td>
 				<td>&nbsp;</td>
--->				<td colspan="3" style="background-color:#E6E6E6;text-align:center;"><input type="button" id="Submit" name="Submit" value="Submit"  class='orange-flat-small'/> 
-					<input type="reset" id="Reset" name="Reset" value="Reset" class='orange-flat-small' /></td>
+-->				<td colspan="3" style="background-color:#E6E6E6;text-align:center;">
+					<input type="button" id="Submit" name="Submit" value="Submit"  class='orange-flat-small'/> 
+					<input type="reset" id="Reset" name="Reset" value="Reset" class='orange-flat-small' />
+				</td>
 			</tr>
 			<tr>
 				<td> <div id="treceipt_availability_result">Availability Message</div> </td>

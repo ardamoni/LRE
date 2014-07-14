@@ -897,11 +897,12 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	var districtid = globaldistrictid;
 	var popupWindow = null;
 	if (ifproperty=='property'){
-	var title = 'Property Revenue Collection';
-	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		var title = 'Property Revenue Collection';
+		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
 	}else{
-	var title = 'Business Revenue Collection';
-	var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		var ifproperty = 'business';
+		var title = 'Business Revenue Collection';
+		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
 	}
 	var w = 450;
 	var h = 550;

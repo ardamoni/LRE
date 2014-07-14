@@ -30,6 +30,53 @@
 		}
 		
 		
+		// Basic info from property or business table
+		function getBasicInfo( $upn = "", $subupn = "", $districtid = "", $type = "", $f = "" )
+		{
+			switch ($type) {
+				case "property":
+					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+					{							
+						$q = mysql_query("SELECT * 	FROM 	`property` 
+													WHERE 	`upn` = '".$upn."' AND 
+															`subupn` = '".$subupn."' AND 
+															`districtid` = '".$districtid."' ");
+					}
+					else
+					{
+						$q = mysql_query("SELECT * 	FROM 	`property` 
+													WHERE 	`upn` = '".$upn."' AND 													
+															`districtid` = '".$districtid."' ");
+					}
+					$r = mysql_fetch_array($q);
+					return $r[$f];
+				break;
+				
+				case "business":
+					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+					{
+						$q = mysql_query("SELECT * 	FROM 	`business` 
+													WHERE 	`upn` = '".$upn."' AND 
+															`subupn` = '".$subupn."' AND 
+															`districtid` = '".$districtid."' ");
+					}
+					else
+					{
+						$q = mysql_query("SELECT * 	FROM 	`business` 
+													WHERE 	`upn` = '".$upn."' AND 													
+															`districtid` = '".$districtid."' ");
+					}
+					$r = mysql_fetch_array($q);
+					return $r[$f];	
+				break;
+			 
+				default:
+					return "Your type of entity is not set!";
+			}			
+		} // end of function getBasicInfo
+		
+		
+		
 		
 		/*
 		 *	PROPERTY_DUE
@@ -105,6 +152,63 @@
 				return $r[$f];
 			}
 		}
+
+				
+		// property and business
+		function getLastPaymentInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
+		{
+			switch( $type ) 
+			{
+				case "property":
+					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+					{							
+						$q = mysql_query(" SELECT * FROM 	`property_payments` 
+													WHERE 	`upn` = '".$upn."' AND 
+															`subupn` = '".$subupn."' AND 
+															`districtid` = '".$districtid."' AND
+															YEAR(`payment_date`) = '".$year."' 
+													ORDER BY `id` DESC LIMIT 1 ");
+					}
+					else
+					{
+						$q = mysql_query(" SELECT * FROM 	`property_payments` 
+													WHERE 	`upn` = '".$upn."' AND 															
+															`districtid` = '".$districtid."' AND
+															YEAR(`payment_date`) = '".$year."' 
+													ORDER BY `id` DESC LIMIT 1 ");
+					}
+					$r = mysql_fetch_array($q);
+					return $r[$f];						
+				break;
+				
+				case "business":
+					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+					{
+						$q = mysql_query("SELECT * FROM 	`business_payments` 
+													WHERE 	`upn` = '".$upn."' AND 
+															`subupn` = '".$subupn."' AND 
+															`districtid` = '".$districtid."' AND
+															YEAR(`payment_date`) = '".$year."' 
+													ORDER BY `id` DESC LIMIT 1 ");
+					}
+					else
+					{
+						$q = mysql_query("SELECT * FROM 	`business_payments` 
+													WHERE 	`upn` = '".$upn."' AND 															
+															`districtid` = '".$districtid."' AND
+															YEAR(`payment_date`) = '".$year."' 
+													ORDER BY `id` DESC LIMIT 1 ");
+					}
+					$r = mysql_fetch_array($q);
+					return $r[$f];	
+				break;
+			 
+				default:
+					return "Your type of entity is not set!";
+			}			
+		} // end of getLastPaymentInfo function		
+		
+
 		
 		//   get sum of payments for one year
 		function getAnnualPaymentSum( $upn = "", $subupn = "", $year = "2013" )
@@ -162,6 +266,56 @@
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
+		
+		
+		// get info from balance tables for property or business
+		function getBalanceInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
+		{	
+			switch( $type ) {
+				case "property":
+					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+					{							
+						$q = mysql_query(" SELECT * FROM 	`property_balance` 
+													WHERE 	`upn` = '".$upn."' AND 
+															`subupn` = '".$subupn."' AND
+															`districtid` = '".$districtid."' AND
+															`year` = '".$year."' ");
+					}
+					else
+					{
+						$q = mysql_query(" SELECT * FROM 	`property_balance` 
+													WHERE 	`upn` = '".$upn."' AND 															
+															`districtid` = '".$districtid."' AND
+															`year` = '".$year."' ");
+					}
+					$r = mysql_fetch_array($q);
+					return $r[$f];						
+				break;
+				
+				case "business":
+					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+					{
+						$q = mysql_query(" SELECT * FROM 	`business_balance` 
+													WHERE 	`upn` = '".$upn."' AND 
+															`subupn` = '".$subupn."' AND
+															`districtid` = '".$districtid."' AND
+															`year` = '".$year."' ");
+					}
+					else
+					{
+						$q = mysql_query(" SELECT * FROM 	`business_balance` 
+													WHERE 	`upn` = '".$upn."' AND 															
+															`districtid` = '".$districtid."' AND
+															`year` = '".$year."' ");
+					}
+					$r = mysql_fetch_array($q);
+					return $r[$f];	
+				break;
+			 
+				default:
+					return "Your type of entity is not set!";
+			}			
+		} // end of function getBalanceInfo
 		
 		//   get balance for one year
 		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )

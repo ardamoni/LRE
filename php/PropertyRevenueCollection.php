@@ -29,7 +29,6 @@
 	$roleid		 	= $_SESSION['user']['roleid'];	
 	$userName		= $_SESSION['user']['name'];	
 	
-	echo $type;
 	// static values 	
 	// TODO change them to dynamic, from the map
 	$station = "Station1";		
@@ -85,8 +84,8 @@
 	echo "revenueDue: ",  $revenueDue, ", revenueCollected: ",  $revenueCollected, ", revenueBalanceOld: ",  $revenueBalanceOld, "<br>";
 	echo "revenuePaid: ",  $revenuePaid, ", revenueBalance: ",  $revenueBalance, "<br>";
 */	
-	// add new rown into business_payments
-	$sql2 = mysql_query( "INSERT INTO `business_payments` ( `id`, 																
+	// add new rown into property_payments
+	$sql2 = mysql_query( "INSERT INTO `property_payments` ( `id`, 																
 															`upn`,
 															`subupn`, 
 															`districtid`, 
@@ -123,9 +122,8 @@
 															) " ); 
 
 
-
-	// update business_balance	
-	$query = mysql_query(" UPDATE 	`business_balance` 
+	// update property_balance	
+	$query = mysql_query(" UPDATE 	`property_balance` 
 	
 							SET 	`payed` = '".$revenuePaid."',
 									`balance`= '".$revenueBalance."',
@@ -136,12 +134,11 @@
 									`districtid` = '".$districtid."' AND
 									`year` = '".$currentYear."' ");								
 
-
 									
-	// update business' status	- needed for showing payments: green (9), debt (1)
+	// update property's status	- needed for showing payments: green (9), debt (1)
 	if ($revenueBalance>0) { $payStatus = 1; } else { $payStatus = 9; }
 	
-	$query12 = mysql_query(" UPDATE 	`business` 
+	$query12 = mysql_query(" UPDATE 	`property` 
 
 							SET 	`pay_status` = '".$payStatus."',
 									`lastentry_person`= '".$userName."',
@@ -234,7 +231,8 @@
 			<!-- receipt in PDF -->
 				<tr>
 					<td id = 'layout' height = '25'> &nbsp; <img src = '../icons/sign.gif' border = '0'> &nbsp; 
-						<a href = 'Reports/ReceiptOfBusinessPayment.php?upn=<?php echo $upn;?>&subupn=<?php echo $subupn;?>&districtid=<?php echo $districtid;?>'><?php echo "Print in PDF"; ?></a></td>
+						<a href = 'Reports/ReceiptOfPropertyPayment.php?upn=<?php echo $upn;?>&subupn=<?php echo $subupn;?>&districtid=<?php echo $districtid;?>'><?php echo "Print in PDF"; ?></a></td>
+						<!--<a href = 'Reports/ReceiptOfPropertyPayment.php?upn=<?php// echo $upn; ?>&subupn=<?php //echo $subupn; ?>'><?php //echo "Receipt of Payment"; ?></a></td>-->
 				</tr>
 			</table>
 
