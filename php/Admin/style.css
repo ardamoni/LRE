@@ -1,0 +1,93 @@
+body {color: #222222; font: 11px Tahoma, Arial; }
+
+.ptitle {font:bold 11px Tahoma, Arial, Helvetica; color: #FFFFFF;
+         border:solid 1px #0575D1; background-color: #0F91F9;}
+
+HR {height: 1px; color:#FFFFFF;}
+
+A:visited       {font: 11px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: underline;}
+A:visited:hover {font: 11px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: none;}
+
+
+.TreeMenuTitle {color: #888888; font: 18px Arial, Helvetica; font-weight: 600}
+
+.XPBlueTopBack  {color: #D6DFF5; font: 13px Tahoma, Arial, Helvetica; background-color: #6375D6;}
+.XPBlueMainBack {background-color: #6375D6; background-repeat: no-repeat}
+.XPBlueMenuBack {background-color: #7AA1E6; color: #FFFFFF; font: 10px Arial, Helvetica; font-weight: bold;}
+.XPBlueHorLine  {background-color: #C5DFFF}
+.XPBlueExTitle  {color: #D6DFF5; font: 13px Tahoma, Arial, Helvetica; font-weight: bold;}
+.XPBlueText     {color: #FFFFFF; font: 11px Tahoma, Arial}
+.XPBlueTitle    {color: #D6DFF5; font: 16px Arial, Helvetica; font-weight: bold;}
+
+.TopBack  {color: #AAAAAA; font: 13px Tahoma, Arial, Helvetica; background-color: #FFFFFF}
+.Text     {color: #222222; font: 11px Tahoma, Arial}
+.MainBack {background-color: #FFFFFF; color: #222222; font: 10px Arial, Helvetica; font-weight: bold}
+.MenuBack {background-color: #CCCCCC; color: #FFFFFF; font: 10px Arial, Helvetica; font-weight: bold}
+.ExTitle  {color: #AAAAAA; font: 13px Tahoma, Arial, Helvetica; font-weight: bold}
+
+.ParamTitle    {color: #222222; font: 16px Arial, Helvetica; font-weight: bold}
+.ParamBack     {background-color: #FFFFFF; font: 11px Tahoma, Arial, Helvetica; font: 11px Tahoma, Arial}
+.ParamTbl      {color: #333333; font: 11px Tahoma, Arial, Helvetica; font: 11px Tahoma, Arial}
+.ParamTblTitle {background-color: #CEE9F2; color: #444444; font: 11px Tahoma, Arial, Helvetica; font-weight: bold;}
+.ParamTblCell  {background-color: #ECF7F9; font: 11px Tahoma, Arial, Helvetica; color: #222222;}
+
+
+.StyleNameW    {color: #FFFFFF; font: 11px MS Sans Serif; font-weight: bold}
+.StyleNameB    {color: #000000; font: 11px MS Sans Serif; font-weight: bold}
+
+
+A.White:link,
+A.White:visited       {font: 11px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: none;}
+
+A.White:hover,
+A.White:visited:hover {font: 11px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: underline;}
+
+
+
+A.Dark:link          {font: 11px Tahoma, Arial, Helvetica; color: #3333DD; text-decoration: none;}
+A.Dark:hover         {font: 11px Tahoma, Arial, Helvetica; color: #5555FF; text-decoration: underline;}
+A.Dark:visited       {font: 11px Tahoma, Arial, Helvetica; color: #5555CC; text-decoration: none;}
+A.Dark:visited:hover {font: 11px Tahoma, Arial, Helvetica; color: #5555FF; text-decoration: underline;}
+
+A.Black:link          {font: 11px Tahoma, Arial, Helvetica; color: #222222; text-decoration: none;}
+A.Black:hover         {font: 11px Tahoma, Arial, Helvetica; color: #000000; text-decoration: underline;}
+A.Black:visited       {font: 11px Tahoma, Arial, Helvetica; color: #222222; text-decoration: none;}
+A.Black:visited:hover {font: 11px Tahoma, Arial, Helvetica; color: #000000; text-decoration: underline;}
+
+
+A.MenuLink:link,
+A.MenuLink:visited       {font: 11px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: none;}
+A.MenuLink:hover,
+A.MenuLink:visited:hover {font: 11px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: none;}
+
+A.Blue:link          {font: 12px Tahoma, Arial, Helvetica; color: #376FDE; text-decoration: none;}
+A.Blue:hover         {font: 12px Tahoma, Arial, Helvetica; color: #4071FF; text-decoration: underline;}
+A.Blue:visited       {font: 12px Tahoma, Arial, Helvetica; color: #376FDE; text-decoration: none;}
+A.Blue:visited:hover {font: 12px Tahoma, Arial, Helvetica; color: #4071FF; text-decoration: underline;}
+
+A.White1:link          {font: 12px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: none;}
+A.White1:hover         {font: 12px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: underline;}
+A.White1:visited       {font: 12px Tahoma, Arial, Helvetica; color: #FFFFFF5; text-decoration: none;}
+A.White1:visited:hover {font: 12px Tahoma, Arial, Helvetica; color: #FFFFFF; text-decoration: underline;}
+
+.MenuTable          {border-width: 0;}
+.MenuItem           {border-width: 1; background-color: #628FE2; border-style: solid; border-color: #A0C0FF; color: #FFFFFF}
+.MenuItemOver       {border-width: 1; background-color: #285BA5; border-style: solid; border-color: #FFFFFF; color: #000000; cursor: hand}
+
+.title       {font-family: Arial, Helvetica; font-size: 16px; font-weight: bold; color: #333333;}
+
+A.link3b         {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #0058C0; font-weight: bold; text-decoration: none;}
+A.link3b:hover   {text-decoration: underline;}
+A.link3b:visited         {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #0058C0; font-weight: bold; text-decoration: none;}
+A.link3b:visited:hover   {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #0058C0; font-weight: bold; text-decoration: underline;}
+
+A.link3          {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #0058C0; font-weight: normal; text-decoration: none;}
+A.link3:hover    {text-decoration: underline;}
+A.link3:visited          {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #0058C0; font-weight: normal; text-decoration: none;}
+A.link3:visited:hover    {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #0058C0; font-weight: normal; text-decoration: underline;}
+
+
+
+A.link2          {font-family: Trebuchet MS, Tahoma, Arial, Helvetica; font-size: 11px; color: #000000; font-weight: normal; text-decoration: none;}
+A.link2:hover    {text-decoration: underline;}
+

@@ -358,6 +358,7 @@
 			<input type="submit" value="KML to DB conversion" href="javascript:;" onclick="uploadkml();" title="Upload KML file into the database" class="orange-flat-small">
 			<input type="submit" value="Upload Fee Fixing information" href="javascript:;" onclick="uploadxls();" title="Store Fee Fixing information in database" class="orange-flat-small">
 			<input type="submit" value="Upload Scanned Data" href="javascript:;" onclick="uploadScannedData();" title="Store scanned Data in database" class="orange-flat-small">
+			<input type="submit" value="Administration Module" href="javascript:;" onclick="index_admin();" title="Administration Module" class="orange-flat-small">
           [<a href='#' onclick='overlayadmin()'>close</a>]
      </div>     
 	</div>

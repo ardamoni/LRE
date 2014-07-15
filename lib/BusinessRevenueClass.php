@@ -9,7 +9,8 @@
 		/*
 		 *	PROPERTY
 		 */		
-		// 	get the data out of business table
+		// 	OBSOLETE 15.07.2014 - Arben
+		//get the data out of business table
 		function getBusinessInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			if( $subupn != "" || $subupn != NULL || $subupn != "0" )
@@ -32,7 +33,9 @@
 		/*
 		 *	PROPERTY_DUE
 		 */
-		// 	get the data out of property_due table
+		// OBSOLETE -15.07.2014 - Arben
+		//  use getDueInfo @ Revenue class
+		//get the data out of property_due table
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			$q = mysql_query("SELECT * FROM 	`business_due` 

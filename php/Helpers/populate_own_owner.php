@@ -1,6 +1,6 @@
 <?php
 
-	/*	
+	/*	DO NOT USE THIS FILE !!!
 	 * 	this file is used to insert the revenue collection into tables
 	 */
 

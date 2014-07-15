@@ -2,11 +2,13 @@
 
 	/*
 	 *	Class that gets the data from DB tables
-	 *	PROPERTY AND BUSINESS
+	 *
 	 */
 	class Revenue
 	{
-		// OBSOLETE: 15.07.2014 - Arben, use getBasicInfo
+		/*
+		 *	PROPERTY
+		 */		
 		// 	get the data out of property table
 		function getPropertyInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
@@ -31,8 +33,7 @@
 		// Basic info from property or business table
 		function getBasicInfo( $upn = "", $subupn = "", $districtid = "", $type = "", $f = "" )
 		{
-			switch ($type) 
-			{
+			switch ($type) {
 				case "property":
 					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
 					{							
@@ -80,9 +81,7 @@
 		/*
 		 *	PROPERTY_DUE
 		 */
-		// 	OBSOLETE -15.07.2014 - Arben
-		//  use getDueInfo
-		//get the data out of property_due table
+		// 	get the data out of property_due table
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 //			$q = mysql_query("SELECT * FROM 	`property_due` 
@@ -93,56 +92,6 @@
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
-		
-		// get DUE info
-		function getDueInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
-		{
-			switch ($type) 
-			{
-				case "property":
-					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
-					{							
-						$q = mysql_query("SELECT * 	FROM 	`property_due` 
-													WHERE 	`upn` = '".$upn."' AND 
-															`subupn` = '".$subupn."' AND 
-															`districtid` = '".$districtid."' AND
-															`year` = '".$year."' ");
-					}
-					else
-					{
-						$q = mysql_query("SELECT * 	FROM 	`property_due` 
-													WHERE 	`upn` = '".$upn."' AND 													
-															`districtid` = '".$districtid."' AND
-															`year` = '".$year."' ");
-					}
-					$r = mysql_fetch_array($q);
-					return $r[$f];
-				break;
-				
-				case "business":
-					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
-					{
-						$q = mysql_query("SELECT * 	FROM 	`business_due` 
-													WHERE 	`upn` = '".$upn."' AND 
-															`subupn` = '".$subupn."' AND 
-															`districtid` = '".$districtid."' AND
-															`year` = '".$year."' ");
-					}
-					else
-					{
-						$q = mysql_query("SELECT * 	FROM 	`business_due` 
-													WHERE 	`upn` = '".$upn."' AND 													
-															`districtid` = '".$districtid."' AND
-															`year` = '".$year."' ");
-					}
-					$r = mysql_fetch_array($q);
-					return $r[$f];	
-				break;
-			 
-				default:
-					return "Your type of entity is not set!";
-			}		
-		} // end of getDueInfo function
 		
 		function getPropertyDueInfoAll( $upn = "", $subupn = "", $year = "2013")
 		{
@@ -380,8 +329,7 @@
 		}
 		
 		
-		// 	OBSOLETE - 15.07.2014
-		// get the data out of business table
+		// 	get the data out of business table
 		function getBusinessInfo( $upn = "", $subupn = "", /*$year = 2013,*/ $f = "" )
 		{
 			//$q = mysql_query("SELECT * FROM `property` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' AND `year` = '".$year."' ");

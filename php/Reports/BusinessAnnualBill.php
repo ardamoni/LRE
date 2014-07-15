@@ -1,5 +1,5 @@
 <?php
-if( session_status() != 2 )
+	if( session_status() != 2 )
 	{
 		session_start();
 	}
@@ -14,16 +14,20 @@ if( session_status() != 2 )
 	 */
 	require_once(	"../../lib/configuration.php"	);	
 	require_once(	"../../lib/System.PDF.AnnualBill.php"		);
-	require_once( 	"../../lib/BusinessRevenueClass.php"			);
+	require_once( 	"../../lib/BusinessRevenueClass.php"			); // obsolete 15.07.2014
+	require_once( 	"../../lib/Revenue.php"			);
 	require_once( 	"../../lib/System.php"			);
 
-	
+	$Data2 = new Revenue;
 	$Data = new BusinessRevenue;
 	$System = new System;
 	
 	$PDF = new PDF('P','mm','A4');
 	
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
+	
+	// TODO get type from the session
+	$type = "business";
 	
 	// TODO: Session on District
 	$districtId = $_GET['districtid'];
@@ -225,11 +229,17 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 		$PDF->Ln(12);
 		}
-	$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
+	// OBSOLETE -15.07.2014 
+/*	$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
 										$arreas + 
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value");
-										
+*/
+	$value = 	$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" ) +
+				$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" ) +
+				$arreas + 
+				$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_values" );
+
 	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
 	
 	} //end 	while( $r = mysql_fetch_array($q) )

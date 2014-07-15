@@ -1,5 +1,5 @@
 <?php
-if( session_status() != 2 )
+	if( session_status() != 2 )
 	{
 		session_start();
 	}
@@ -14,10 +14,11 @@ if( session_status() != 2 )
 	 */
 	require_once(	"../../lib/configuration.php"	);	
 	require_once(	"../../lib/System.PDF.AnnualBill.php"		);
-	require_once( 	"../../lib/BusinessRevenueClass.php"			);
+	require_once( 	"../../lib/BusinessRevenueClass.php"			); // obsolete 15.07.2014
+	require_once( 	"../../lib/Revenue.php"			);
 	require_once( 	"../../lib/System.php"			);
 
-	
+	$Data2 = new Revenue;
 	$Data = new BusinessRevenue;
 	$System = new System;
 	
@@ -28,7 +29,9 @@ if( session_status() != 2 )
 	// Read the GET parameters
 	$upn 			= $_GET["upn"];	
 	$subupn 		= $_GET["subupn"];	
-	$districtId = $_GET['districtid'];
+	$districtId 	= $_GET['districtid'];
+	// TODO get type from the session
+	$type = $_GET['type'];	
 	
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
@@ -45,6 +48,7 @@ if( session_status() != 2 )
 	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
 	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
 	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
+	
 // 	$note = 'This bill must be paid by March 31st, in accordance with the districts regulations. Legal Actions shall be taken against defaulters 52 days after March 31st.';
 // 	$note2 =  "Payments should be made by banker's Draft/Payment Order or by Cash Only.";
 // 	$note3 =  "It is an offence to deface the property number, and change ownership without informing the district Assembly";
@@ -235,11 +239,18 @@ if( session_status() != 2 )
 		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 		$PDF->Ln(12);
 		}
+		// Obsolete - 14.07.2014 Arben
+/*	
 	$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
 										$arreas + 
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value");
-										
+*/	
+	$value = $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" ) +
+				$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" ) +
+				$arreas + 
+				$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_values" );
+				
 	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
 	
 	} //end 	while( $r = mysql_fetch_array($q) )

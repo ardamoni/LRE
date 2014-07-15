@@ -820,10 +820,9 @@ function handler(request)
 		for( var i = 0; i < feed.length; i++ ) 
 		{		
 		    if ((feed[i]['owner']==null) || (feed[i]['owner']=='')){
-			html += '<h3>Owner: unknown (Check Property Details)</h3>';
-			}
-			else{
-			html += '<h3>Owner: '+ feed[i]['owner'] +'</h3>';
+				html += '<h3>Owner: unknown (Check Property Details)</h3>';
+			} else {
+				html += '<h3>Owner: '+ feed[i]['owner'] +'</h3>';
 			}
 			html += '<p>Street: '+ feed[i]['streetname'] +'</p>';
 			html += '<p>House Nr: '+ feed[i]['housenumber'] +'</p>';
@@ -864,9 +863,10 @@ function handler(request)
 			html += "<input type='button' value='"+title+" Details' class='orange-flat-small' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += "<input type='button' value='Print Bill' class='orange-flat-small' onclick='printIndividualBillOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += '<hr />';
+			html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";			
 		}
 
-		html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick()' >";	
+		//html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick()' >";
 		//html += "<button onclick='collectRevenueOnClick(\''+upn+'\', \''+subupn+'\')'>Revenue Collection</button>";	
 		//html += ("<input type='button' value='Revenue Collection' />").find('input[type=button]').click( function(){ collectRevenueOnClick(upn, subupn); } );
 
@@ -898,11 +898,11 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	var popupWindow = null;
 	if (ifproperty=='property'){
 		var title = 'Property Revenue Collection';
-		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&ifproperty='+ifproperty;
 	}else{
 		var ifproperty = 'business';
 		var title = 'Business Revenue Collection';
-		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&ifproperty='+ifproperty;
 	}
 	var w = 450;
 	var h = 550;
@@ -962,14 +962,25 @@ function propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, sup
 		// on mouse-click activation to create the window for UPN History
 
 //-----------------------------------------------------------------------------
-function UPNHistoryOnClick( ) 
+function UPNHistoryOnClick( global_upn, global_subupn, globaldistrictid, supnid, callproperty ) 
 {	
-	var upn = this.global_upn;
-	var subupn = this.global_subupn;
-
+	var upn 		= this.global_upn;
+	var subupn 		= this.global_subupn[supnid];
+	var districtid 	= this.globaldistrictid;
+	var ifproperty 	= callproperty;
 	var popupWindow = null;
-	popupWindow = window.open('php/Reports/SubupnHistory.php?upn='+upn+'&subupn='+subupn, 'SUBUPN History', 'height=500, width=800, left=500, top=200, resizable=yes');	
-	//popupWindow = window.open('php/Reports/UPNHistory.php?upn='+upn+'&subupn='+subupn, 'UPN History', 'height=500, width=800, left=500, top=200, resizable=yes');	
+	if( ifproperty == 'property' ){
+		var pageURL = 'php/Reports/SubupnHistory.php?upn='+upn+'&subupn='+subupn+'&districtid='+districtid+'&type='+ifproperty;
+	} else {
+		ifproperty = 'business';
+		var pageURL = 'php/Reports/SubupnHistory.php?upn='+upn+'&subupn='+subupn+'&districtid='+districtid+'&type='+ifproperty;
+	}
+	var title = 'SUBUPN History';
+	var w = 800;
+	var h = 500;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+	popupWindow = window.open(pageURL, title, 'height=500, width=800, left=500, top=200, resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
 	{
@@ -1019,7 +1030,8 @@ function printIndividualBillOnClick(global_upn, global_subupn, globaldistrictid,
 		var pageURL = 'php/Reports/PropertyAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 		var title = 'Property Bill';
 	}else{
-		var pageURL = 'php/Reports/BusinessAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+		var type = 'business'
+		var pageURL = 'php/Reports/BusinessAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&type='+type;
 		var title = 'Business Bill';
 	}
 	var w = 1024;
@@ -2249,6 +2261,29 @@ function uploadScannedData() {
 
 } 
 // end of function tableshow
+
+//-----------------------------------------------------------------------------
+		//function index_admin() 
+		//opens a window to overall admin functions
+		//
+//-----------------------------------------------------------------------------
+function index_admin() {
+	var pageURL = 'php/Admin/index.php';
+	var title = 'Aministration Module';
+	var w = 900;
+	var h = 600;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+} // end of index_admin function
+
 
 //-----------------------------------------------------------------------------
 		//function addDetails() 

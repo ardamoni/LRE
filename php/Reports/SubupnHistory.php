@@ -2,6 +2,11 @@
 	// UPN or SUBUPN History
 	// if SUBUPN exists it is usually more than one and therefore get's in as Array
 
+	if( session_status() != 2 )
+	{
+		session_start();
+	}
+	
 	/*
 	 *	Include the Library Code
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -20,6 +25,9 @@
 	
 	$upn = $_GET['upn'];
 	$subupn = $_GET['subupn'];	
+	$districtid = $_SESSION['user']['districtid'];
+	$type = $_GET['type'];	
+	
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 	
 	/*
@@ -36,7 +44,10 @@
 	$PDF->SetFont('Arial','',12);
 	$PDF->Cell(0,5,'(Last 5 years)',0,1,'C'); 	$PDF->Ln(10);	
 	
-	if( count($subupn) > 0 ) 	// with SUB-UPN's
+	if( $subupn == "undefined" )
+		$subupn = "";
+	
+	if( count($subupn) > 1 ) 	// with SUB-UPN's
 	{
 		$subupn = explode(',', $subupn);
 		$arrlength = count($subupn);
@@ -73,9 +84,12 @@
 			$PDF->SetFont('Arial','',8);
 			$PDF->SetFillColor(255,255,255);
 			while( $n <= 5 )
-			{
-				$ownerid = $Data->getPropertyInfo( $upn, $subupn[$x], $year - $n, "ownerid" );
-				$owner = $Data->getOwnerInfo( $ownerid, 'name' );
+			{				
+				//$ownerid = $Data->getPropertyInfo( $upn, $subupn[$x], $year - $n, "ownerid" ); //Obsolete - use getBasicInfo
+				$owner = $Data->getBasicInfo( $upn, $subupn[$x], $districtid, $type, "owner" ); 
+				// TODO: fix, owner logic not implemented
+				//$ownerid = $Data->getBasicInfo( $upn, $subupn, $districtid, $type, "ownerid" ); 
+				//$owner = $Data->getOwnerInfo( $ownerid, 'name' );
 				
 				$PDF->Cell(20,5, $year - $n,1,0,'C',true);
 				$PDF->Cell(30,5, number_format( $Data->getAnnualDueSum( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);	
@@ -125,9 +139,13 @@
 		$PDF->SetFont('Arial','',8);
 		$PDF->SetFillColor(255,255,255);
 		while( $n <= 5 )
-		{
-			$ownerid = $Data->getPropertyInfo( $upn, $subupn, $year - $n, "ownerid" );
-			$owner = $Data->getOwnerInfo( $ownerid, 'name' );
+		{			
+			//$ownerid = $Data->getPropertyInfo( $upn, $subupn[$x], $year - $n, "ownerid" ); //Obsolete - use getBasicInfo
+			$owner = $Data->getBasicInfo( $upn, $subupn[$x], $districtid, $type, "owner" ); 
+			// TODO: fix, owner logic not implemented
+			//$ownerid = $Data->getBasicInfo( $upn, $subupn, $districtid, $type, "ownerid" ); 
+			//$owner = $Data->getOwnerInfo( $ownerid, 'name' );
+				
 			
 			$PDF->Cell(20,5, $year - $n,1,0,'C',true);
 			$PDF->Cell(30,5, number_format( $Data->getAnnualDueSum( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);	

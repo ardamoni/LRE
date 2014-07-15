@@ -1,5 +1,6 @@
 <?php
-
+	// OBSOLETE : 14.07.2014 - Arben
+	// substituted by PropertyRevenueCollection and BusinessRevenueCollection
 	/*	
 	 * 	this file is used to insert the revenue collection into tables
 	 */
