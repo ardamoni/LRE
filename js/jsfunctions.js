@@ -829,16 +829,16 @@ function handler(request)
 			html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
 			html += '<p>SUBUPN: '+ feed[i]['subupn'] +'</p>';
 			//html += '<p>YEAR: '+ feed[i]['year'] +'</p>';
-			if ((feed[i]['revenue_balance']==0) && (feed[i]['revenue_collected']!=0)){
-			html += '<div><strong>Revenue Balance: <FONT COLOR="32CD32">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
+			if( feed[i]['revenue_balance']>=0 ){
+				html += '<div><strong>Revenue Balance: <FONT COLOR="FF0000">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
 			}else{
-			html += '<div><strong>Revenue Balance: <FONT COLOR="FF0000">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
+				html += '<div><strong>Revenue Balance: <FONT COLOR="32CD32">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
 			}
 			html += '<p>Current rate: '+ feed[i]['rate'] +' GHS</p>';
  			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +' GHS</p>';
 			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +' GHS</p>';
 //			html += '<p>Date payed: '+ feed[i]['date_payment'] +'</p>';
-			switch(parseInt(feed[i]['pay_status'])) {
+			switch( parseInt(feed[i]['pay_status']) ) {
 				case 1:
 					html += '<p>Payment Status: <strong><FONT COLOR="FF0000"> DUE</FONT></strong></p>';			
 					break;
@@ -1027,10 +1027,11 @@ function printIndividualBillOnClick(global_upn, global_subupn, globaldistrictid,
 	var ifproperty = callproperty;
 	var popupWindow = null;
 	if (ifproperty=='property'){
-		var pageURL = 'php/Reports/PropertyAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+		var type = 'property';
+		var pageURL = 'php/Reports/PropertyAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&type='+type;
 		var title = 'Property Bill';
 	}else{
-		var type = 'business'
+		var type = 'business';
 		var pageURL = 'php/Reports/BusinessAnnualBill_One.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&type='+type;
 		var title = 'Business Bill';
 	}

@@ -30,8 +30,7 @@
 	$upn 			= $_GET["upn"];	
 	$subupn 		= $_GET["subupn"];	
 	$districtId 	= $_GET['districtid'];
-	// TODO get type from the session
-	$type = $_GET['type'];	
+	$type 			= $_GET['type'];	
 	
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
@@ -55,7 +54,6 @@
 		
 //	var_dump($qdistrictname);
 	
-//	$districtId = 130;
 	
 	/*
 	 * PDF Generation
@@ -72,11 +70,13 @@
 // 	$q = mysql_query("SELECT * 	FROM  `business` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
 // $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY `colzonenr` ");
 
-	$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzones` t2 
-						WHERE t1.`upn` = '".$upn."' AND 
-							  	t1.`subupn` = '".$subupn."' AND 
-								t1.`districtid` = '".$districtId."' 
-								AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
+	$q = mysql_query("SELECT t1.*, t2.`colzonenr` 
+							FROM  	`business` t1, `collectorzones` t2 
+							WHERE 	t1.`upn` = '".$upn."' AND 
+									t1.`subupn` = '".$subupn."' AND 
+									t1.`districtid` = '".$districtId."' AND 
+									t2.`id`= t1.`colzone_id` 
+							ORDER BY t2.`colzonenr` ");
 	
 
 	$counter = 0;
@@ -86,10 +86,10 @@
 		// District emblem
 //		$PDF->Cell(30,5, $PDF->Image($file, null, null, 15, 15, 'gif', ''),0,0,'C'); 			
 		if (!empty($file)){
-		$PDF->Image($file, $PDF->GetX()+5, $PDF->GetY()-4, 20, 20, $ext, '');
+			$PDF->Image($file, $PDF->GetX()+5, $PDF->GetY()-4, 20, 20, $ext, '');
 		}
 		if (!empty($filesig)){
-		$PDF->Image($filesig, $PDF->GetX()+27, $PDF->GetY()+2, 25, 0, $extsig, '');
+			$PDF->Image($filesig, $PDF->GetX()+27, $PDF->GetY()+2, 25, 0, $extsig, '');
 		}
 		// District Left and Right side of bill
 		$PDF->SetFont('Arial','B',16);
@@ -101,19 +101,19 @@
 		$PDF->SetFont('Arial','B',16);
 		$PDF->Cell(40,5, '',0,0,'C'); 			
 		if ($districtType=='1'){
-		$PDF->Cell(70,5, 'District Assembly',0,0,'R');
+			$PDF->Cell(70,5, 'District Assembly',0,0,'R');
 		}elseif ($districtType=='2'){
-		$PDF->Cell(70,5, 'Municipal Assembly',0,0,'R');
+			$PDF->Cell(70,5, 'Municipal Assembly',0,0,'R');
 		}else{
-		$PDF->Cell(70,5, $districtName.' '.$districtType.' xx Assembly',0,0,'R');
+			$PDF->Cell(70,5, $districtName.' '.$districtType.' xx Assembly',0,0,'R');
 		}
 
 		$PDF->SetFont('Arial','B',10);
 		$PDF->Cell(30,5, '',0,0,'C');		
 		if ($districtType=='1'){
-		$PDF->Cell(40,5, 'District Assembly',0,1,'R');
+			$PDF->Cell(40,5, 'District Assembly',0,1,'R');
 		}elseif ($districtType=='2'){
-		$PDF->Cell(40,5, 'Municipal Assembly',0,1,'R');
+			$PDF->Cell(40,5, 'Municipal Assembly',0,1,'R');
 		}	
 //		$PDF->Cell(40,5, 'Municipal Assembly',0,1,'R');	
 		$PDF->SetFont('Arial','I',12);
@@ -131,12 +131,8 @@
 		
 		$PDF->Ln();
 		
-		// Calculations
-		$arreas = 	$Data->getAnnualBalance( $r['upn'], $r['subupn'], $currentYear - 1 ) +
-					$Data->getAnnualBalance( $r['upn'], $r['subupn'], $currentYear - 2 ) +
-					$Data->getAnnualBalance( $r['upn'], $r['subupn'], $currentYear - 3 ) +
-					$Data->getAnnualBalance( $r['upn'], $r['subupn'], $currentYear - 4 ) +
-					$Data->getAnnualBalance( $r['upn'], $r['subupn'], $currentYear - 5 );
+		// Arreas - the last years balance holds all the previous years arreas	
+		$arreas = $Data2->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "balance" );
 		
 		// Data
 		$PDF->SetFont('Arial','',8);
@@ -171,12 +167,22 @@
 		$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['business_class']),1,0,'C'); //property_use_title
 		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
+		// // Obsolete - 15.07.2014 - Arben
 		//get all Due Info from BusinessRevenueClass
-		$dueAll=$Data->getDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
-		$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
+		//$dueAll=$Data->getDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
+		$duePropertyValue 	= $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "prop_value" );
+		$dueRateValue 		= $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" );
+		$dueRateImpostValue = $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" );
+		$dueFeeFixValue 	= $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_value" );
+		
+		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
+		// Obsolete - 15.07.2014 - Arben
+		/*$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
 										$dueAll["rate_impost_value"] +
 										$arreas + 
 										$dueAll["feefi_value"] ,2,'.','' ),1,1,'R');
+		*/
+		$PDF->Cell(30,5, number_format( $value ,2,'.','' ),1,1,'R');								
 		
 		$PDF->Ln(3);
 
@@ -202,12 +208,9 @@
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
 		$PDF->Cell(12,5, number_format( $arreas ,2,'.','' ),1,0,'R');
-		$PDF->Cell(16,5, number_format( $dueAll["feefi_value"],2,'.','' ) ,1,0,'R');	
+		$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R');	
 		$PDF->SetFont('Arial','B',10);
-		$PDF->Cell(46,5, number_format( $dueAll["rate_value"] +
-										$dueAll["rate_impost_value"] +
-										$arreas + 
-										$dueAll["feefi_value"],2,'.','' ) ,1,1,'C');
+		$PDF->Cell(46,5, number_format( $value,2,'.','' ) ,1,1,'C');
 		
 // 		$PDF->SetFont('Arial','B',6);
 // 		$PDF->Cell(16,5, 'Previous Year',1,0,'C');	
@@ -232,26 +235,22 @@
 // 		$PDF->Cell(0,5, $note3 ,0,1,'L');	
 		if ($counter==2) {
 //		$PDF->Ln(10);
-		$PDF->AddPage();
-		$counter=0;
+			$PDF->AddPage();
+			$counter=0;
 		} else {
-		$counter++;
-		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
-		$PDF->Ln(12);
+			$counter++;
+			$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
+			$PDF->Ln(12);
 		}
 		// Obsolete - 14.07.2014 Arben
 /*	
-	$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
+		$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
 										$arreas + 
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value");
 */	
-	$value = $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" ) +
-				$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" ) +
-				$arreas + 
-				$Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_values" );
-				
-	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
+		
+		$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
 	
 	} //end 	while( $r = mysql_fetch_array($q) )
 	

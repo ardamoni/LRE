@@ -94,7 +94,7 @@
 			return $r[$f];
 		}
 		
-		// get DUE info
+		// get DUE info from property_due or business_due table
 		function getDueInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
 		{
 			switch ($type) 
@@ -144,6 +144,8 @@
 			}		
 		} // end of getDueInfo function
 		
+		// OBSOLETE - 15.07.014 - Arben - use getDueInfo up to 4 times - rate_value, rate_impost_value, feefi_value, prop_value
+		// it was used in propertyAnnualBill and propertyAnnualBill_One
 		function getPropertyDueInfoAll( $upn = "", $subupn = "", $year = "2013")
 		{
 			$q = mysql_query("SELECT * FROM 	`property_due` 
@@ -155,7 +157,10 @@
 										  "rate_impost_value"=>$r["rate_impost_value"],
 										  "feefi_value"=>$r["feefi_value"],
 										  "prop_value"=>$r["prop_value"]);
-		}		
+		}
+
+
+		
 		// 	get sum of due data from property_due table
 		function getAnnualDueSum( $upn = "", $subupn = "", $year = "2013" )
 		{
@@ -308,6 +313,7 @@
 		 *	PROPERTY_BALANCE
 		 */
 		//   get the data from the property_balance table
+		// Obsolete - use getBalanceInfo
 		function getPropertyBalanceInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{			
 			$q = mysql_query("SELECT * FROM `property_balance` 
@@ -368,6 +374,7 @@
 			}			
 		} // end of function getBalanceInfo
 		
+		// Obsolete - use getBalanceInfo where $f = 'balance'
 		//   get balance for one year
 		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
 		{
@@ -424,20 +431,22 @@
 			return $r['class'];
 		}
 		
+		// Obsolete - use getBalanceInfo
 		//   get balance for one year
-	  function getEndBalance( $upn = "", $subupn = "", $districtid = "", $year = "2013" )
-	  {
-	   $q = mysql_query("  SELECT  `balance` 
-			 FROM  `property_balance` 
-			 WHERE  `upn` = '".$upn."' AND 
-			   `subupn` = '".$subupn."' AND
-			   `districtid` = '".$districtid."' AND
-			   `year` = '".$year."' "); 
-	   
-	   $r = mysql_fetch_array($q);
-	   return $r['balance'];
-	  }
-	  		/*
+		function getEndBalance( $upn = "", $subupn = "", $districtid = "", $year = "2013" )
+		{
+			$q = mysql_query("  SELECT  `balance` 
+									 FROM  `property_balance` 
+									 WHERE  `upn` = '".$upn."' AND 
+									   `subupn` = '".$subupn."' AND
+									   `districtid` = '".$districtid."' AND
+									   `year` = '".$year."' "); 
+		   
+			$r = mysql_fetch_array($q);
+			return $r['balance'];
+		}
+	  
+	  	/*
 		 *	Update demand notice record
 		 */		
 		// 	get the district info

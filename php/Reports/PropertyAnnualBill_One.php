@@ -27,7 +27,7 @@
 	$districtId 	= $_GET['districtid'];
 	$upn 			= $_GET["upn"];	
 	$subupn 		= $_GET["subupn"];	
-	
+	$type			= $_GET["type"];	
 // 												****FOR TESTING****
 //	$districtId 	= '130';
 //	$upn 			= '610-0615-0802';	
@@ -138,7 +138,7 @@
 		$PDF->Ln();
 		
 		// Arreas - the last years balance holds all the previous years arreas
-		$arreas = 	$Data->getEndBalance( $r['upn'], $r['subupn'], $districtid, $currentYear-1 );
+		$arreas = $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "balance" );
 		
 		// Data
 		$PDF->SetFont('Arial','',8);
@@ -167,16 +167,23 @@
 		$PDF->Cell(90,5, $r['zoneid'],1,0,'C');
 		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
-				$dueAll=$Data->getPropertyDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
-		$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
-										$dueAll["rate_impost_value"] +
-										$arreas + 
-										$dueAll["feefi_value" ] ,2,'.','' ),1,1,'R');
+		// Obsolete - 15.07.2014 - Arben
+		//$dueAll=$Data->getPropertyDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
+		$duePropertyValue 	= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "prop_value" );
+		$dueRateValue 		= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" );
+		$dueRateImpostValue = $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" );
+		$dueFeeFixValue 	= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_value" );
+		
+		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
+		
+		// Obsolete - 15.07.2014 - Arben
+		//$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
+		//								$dueAll["rate_impost_value"] +
+		//								$arreas + 
+		//								$dueAll["feefi_value" ] ,2,'.','' ),1,1,'R');
+		$PDF->Cell(30,5, number_format( $value ,2,'.','' ),1,1,'R');
 
-// 		$PDF->Cell(30,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
-// 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
-// 										$arreas + 
-// 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ),1,1,'R');
+		
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
 		// name of the property_use
@@ -195,24 +202,21 @@
 		
 		$PDF->SetFont('Arial','',7);
 		$PDF->Cell(16,5, $currentYear,1,0,'R');	
-		$PDF->Cell(23,5, $dueAll["prop_value"],1,0,'R');
-		$PDF->Cell(17,5, $dueAll["rate_value"],1,0,'R');
-		$PDF->Cell(17,5, $dueAll["rate_impost_value"],1,0,'R');
+		$PDF->Cell(23,5, $duePropertyValue,1,0,'R');
+		$PDF->Cell(17,5, $dueRateValue,1,0,'R');
+		$PDF->Cell(17,5, $dueRateImpostValue,1,0,'R');
 
 // 		$PDF->Cell(23,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "prop_value" ),1,0,'R');
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
-		$PDF->Cell(12,5, number_format( $arreas ,2,'.','' ),1,0,'R');
-		$PDF->Cell(16,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ),2,'.','' ) ,1,0,'R');	
-		$PDF->Cell(19,5, number_format( $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
-										$arreas + 
-										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value" ) ,2,'.','' ) ,1,1,'R');
+		$PDF->Cell(12,5, number_format( $arreas,2,'.','' ),1,0,'R');
+		$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R');
+		$PDF->Cell(19,5, number_format( $value,2,'.','' ) ,1,1,'R');
 		
 		$PDF->SetFont('Arial','B',6);
 		$PDF->Cell(16,5, 'Previous Year',1,0,'C');	
-		$PDF->Cell(23,5, 'Total Owed',1,0,'C');
-		$PDF->Cell(17,5, 'Total Payed',1,0,'C');
+		$PDF->Cell(23,5, 'Total Due',1,0,'C');
+		$PDF->Cell(17,5, 'Total Paid',1,0,'C');
 
 		$PDF->SetFont('Arial','B',7);
 		$PDF->Cell(70,5, '',0,0,'R');
@@ -220,8 +224,8 @@
 		
 		$PDF->SetFont('Arial','',7);
 		$PDF->Cell(16,5, $currentYear - 1,1,0,'R');	
-		$PDF->Cell(23,5, number_format( $Data->getAnnualDueSum( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,0,'R');
-		$PDF->Cell(17,5, number_format( $Data->getAnnualBalance( $upn, $subupn, $currentYear - 1 ) ,2,'.','') ,1,0,'R');
+		$PDF->Cell(23,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "due" ),2,'.','') ,1,0,'R');
+		$PDF->Cell(17,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "payed" ),2,'.','') ,1,0,'R');
 		
 		$counter++;
 

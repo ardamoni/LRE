@@ -9,7 +9,7 @@
 		/*
 		 *	PROPERTY
 		 */		
-		// 	OBSOLETE 15.07.2014 - Arben
+		// 	OBSOLETE 15.07.2014 - Arben - use getBasicInfo in Revenue
 		//get the data out of business table
 		function getBusinessInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
@@ -33,8 +33,7 @@
 		/*
 		 *	PROPERTY_DUE
 		 */
-		// OBSOLETE -15.07.2014 - Arben
-		//  use getDueInfo @ Revenue class
+		// OBSOLETE -15.07.2014 - Arben - use getDueInfo @ Revenue class
 		//get the data out of property_due table
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
@@ -46,6 +45,7 @@
 			return $r[$f];
 		}
 		
+		// OBSOLETE -15.07.2014 - Arben - use getDueInfo @ Revenue class
 		function getDueInfoAll( $upn = "", $subupn = "", $year = "2013")
 		{
 			$q = mysql_query("SELECT * FROM 	`business_due` 
@@ -152,6 +152,7 @@
 		/*
 		 *	PROPERTY_BALANCE
 		 */
+		// Obsolete - use getBalanceInfo @ Revenue class 
 		//   get the data from the property_balance table
 		function getPropertyBalanceInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{			
@@ -163,6 +164,7 @@
 			return $r[$f];
 		}
 		
+		// Obsolete - use getBalanceInfo @ Revenue class
 		//   get balance for one year
 		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
 		{

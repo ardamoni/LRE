@@ -127,7 +127,10 @@
 	while( $results = mysql_fetch_array($qs1) )
 	{	
 		// get previous years balance - this is the entire debt 
-		$prev_balance = $Data->getEndBalance( $results['upn'], $results	['subupn'], $districtID, ($year-1) );
+		$prev_balance = $Data->getBalanceInfo( $results['upn'], $results['subupn'], $districtID, ($year-1), "property", "balance" );
+		// obsolete - 15.07.2014
+		//$prev_balance = $Data->getEndBalance( $results['upn'], $results	['subupn'], $districtID, ($year-1) );
+		
 		// all other values
 		$due = $results['rate_value'] + $results['rate_impost_value'] + $results['feefi_value'];		
 		$balance = $prev_balance + $due;		

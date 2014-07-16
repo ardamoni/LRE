@@ -14,19 +14,17 @@
 	require_once(	"../../lib/configuration.php"	);	
 	require_once(	"../../lib/System.PDF.php"		);
 	require_once( 	"../../lib/Revenue.php"			);
-	require_once( 	"../../lib/BusinessRevenueClass.php"			);
 	require_once( 	"../../lib/System.php"			);
 	
-	$Data = new Revenue;
-	$BusinessData = new BusinessRevenue;
-	$System = new System;
+	$Data 			= new Revenue;
+	$System 		= new System;
 	
 	$PDF = new PDF('P','mm','A4');
 	
-	$upn = $_GET['upn'];
-	$subupn = $_GET['subupn'];	
+	$upn 		= $_GET['upn'];
+	$subupn 	= $_GET['subupn'];	
 	$districtid = $_SESSION['user']['districtid'];
-	$type = $_GET['type'];	
+	$type 		= $_GET['type'];	
 	
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 	
@@ -73,7 +71,7 @@
 			$PDF->SetFont('Arial','B',8);
 			$PDF->SetFillColor(225,225,225);
 			$PDF->Cell(20,5, "YEAR", 1,0,'C',true);
-			$PDF->Cell(30,5, "OWED", 1,0,'C',true);
+			$PDF->Cell(30,5, "DUE", 1,0,'C',true);
 			$PDF->Cell(30,5, "PAID", 1,0,'C',true);
 			$PDF->Cell(30,5, "BALANCE", 1,0,'C',true);
 			$PDF->Cell(65,5, "OWNER", 1,0,'C',true);
@@ -92,9 +90,9 @@
 				//$owner = $Data->getOwnerInfo( $ownerid, 'name' );
 				
 				$PDF->Cell(20,5, $year - $n,1,0,'C',true);
-				$PDF->Cell(30,5, number_format( $Data->getAnnualDueSum( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getAnnualPaymentSum( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getAnnualBalance( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);			
+				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "due" ),2,'.','' ),1,0,'R',true);	
+				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "payed" ),2,'.','' ),1,0,'R',true);	
+				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "balance" ),2,'.','' ),1,0,'R',true);			
 				$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 				$PDF->Ln();
 				$n = $n + 1;
@@ -104,10 +102,8 @@
 			
 		} // end of looping through sub-upn's		
 	}
-	else	// CASE WITH NO SUB-UPN
+	else	
 	{
-		// clear subupn
-		//$subupn = '';
 		// 1st row
 		$PDF->SetFont('Arial','B',8);
 		$PDF->SetFillColor(225,225,225);
@@ -128,7 +124,7 @@
 		$PDF->SetFont('Arial','B',8);
 		$PDF->SetFillColor(225,225,225);
 		$PDF->Cell(20,5, "YEAR", 1,0,'C',true);
-		$PDF->Cell(30,5, "OWED", 1,0,'C',true);
+		$PDF->Cell(30,5, "DUE", 1,0,'C',true);
 		$PDF->Cell(30,5, "PAID", 1,0,'C',true);
 		$PDF->Cell(30,5, "BALANCE", 1,0,'C',true);
 		$PDF->Cell(65,5, "OWNER", 1,0,'C',true);
@@ -141,16 +137,16 @@
 		while( $n <= 5 )
 		{			
 			//$ownerid = $Data->getPropertyInfo( $upn, $subupn[$x], $year - $n, "ownerid" ); //Obsolete - use getBasicInfo
-			$owner = $Data->getBasicInfo( $upn, $subupn[$x], $districtid, $type, "owner" ); 
+			$owner = $Data->getBasicInfo( $upn, $subupn, $districtid, $type, "owner" ); 
 			// TODO: fix, owner logic not implemented
 			//$ownerid = $Data->getBasicInfo( $upn, $subupn, $districtid, $type, "ownerid" ); 
 			//$owner = $Data->getOwnerInfo( $ownerid, 'name' );
 				
 			
 			$PDF->Cell(20,5, $year - $n,1,0,'C',true);
-			$PDF->Cell(30,5, number_format( $Data->getAnnualDueSum( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getAnnualPaymentSum( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getAnnualBalance( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);			
+			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "due" ),2,'.','' ),1,0,'R',true);	
+			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "payed" ),2,'.','' ),1,0,'R',true);	
+			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "balance" ),2,'.','' ),1,0,'R',true);		
 			$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 			$PDF->Ln();
 			$n = $n + 1;
