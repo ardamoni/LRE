@@ -995,18 +995,28 @@ function UPNHistoryOnClick( global_upn, global_subupn, globaldistrictid, supnid,
 		//  on mouse-click activation to create the window for revenue bills printing
 
 //-----------------------------------------------------------------------------
-function propertyAnnualBillOnClick() 
+function printAnnualBill(callproperty) 
 {	
+	var ifproperty = callproperty;
 	var upn = global_upn;
 //	var subupn = global_subupn[supnid];
 	var popupWindow = null;
-	var pageURL = 'php/Reports/PropertyAnnualBill.php?districtid='+globaldistrictid;
-	var title = 'Property Annual Bill Printing';
+	if (ifproperty=='property'){
+		var pageURL = 'php/Reports/PropertyAnnualBill.php?districtid='+globaldistrictid;
+		var title = 'Property Annual Bill Printing';
+	}else if (ifproperty=='business'){
+		var pageURL = 'php/Reports/BusinessAnnualBill.php?districtid='+globaldistrictid;
+		var title = 'Business Annual Bill Printing';
+	}
+
+ 	var pageURL = 'php/openPrintAnnualBill.php?districtid='+globaldistrictid+'&title='+title+'+&ifproperty='+ifproperty;
+	
 	var w = 1024;
 	var h = 650;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
 
 	if(popupWindow && !popupWindow.closed)
 	{

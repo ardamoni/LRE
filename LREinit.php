@@ -202,151 +202,150 @@
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
 
-	</script>
-
-		
-        <link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
-        <link rel="stylesheet" href="style.css" type="text/css">
-        <link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
-        <link rel="stylesheet" href="css/themify-icons.css" type="text/css">
-		
-		<!-- center and far right column-->
-        <style type="text/css">
-			#controls {
-				width: 230px;
-			}
-			#controlToggle {
-				padding-left: 1em;
-			}
-			#controlToggle li {
-				list-style: none;
-			}
-			#map {
-				width: 1180px;
-				height: 650px;
-			}
-
-			.olControlAttribution { 
-				bottom: 0px;
-				left: 2px;
-				right: inherit;
-				width: 400px;
-			}   
-			.olControlPanel div { 
-              position: relative;
-              left: 5px;
-			  display:block;
-			  width:  24px;
-			  height: 24px;
-			  margin: 5px;
-			  float: left;
-    		  background-color:white;
-			}
-			.olControlPanel .olControlZoomToMaxExtentItemInactive { 
-			  width:  18px;  
-			  height: 18px;
-			  background-image: url("img/zoom-world-mini.png");
-			}
-			.olControlPanel .olControlZoomBoxItemInactive { 
-			  width:  22px;  
-			  height: 22px;
-			  background-color: orange;
-			  background-image: url("img/drag-rectangle-off.png");
-			}
-			.olControlPanel .olControlZoomBoxItemActive { 
-			  width:  22px;  
-			  height: 22px;
-			  background-color: blue;
-			  background-image: url("img/drag-rectangle-on.png");
-			}
-			.olControlPanel .olControlZoomInItemInactive { 
-			  width:  22px;  
-			  height: 22px;
-			  background-color: white;
-			  background-image: url("img/zoomin.png");
-			}
-			.olControlPanel .olControlZoomOutItemInactive { 
-			  width:  22px;  
-			  height: 22px;
-			  background-color: white;
-			  background-image: url("img/zoomout.png");
-			}
-			.olControlPanPanel .olControlPanNorthItemInactive {
-				 left:50%;
-				 right:auto;
-				 margin-left: -9px;
-				 top: 0;
-			}
-			.olControlPanPanel .olControlPanSouthItemInactive {
-				 left: 50%;
-				 margin-left: -9px;
-				 top: auto;
-				 bottom: 0;
-			}
-			.olControlPanPanel .olControlPanWestItemInactive {
-				 top: 50%;
-				 margin-top: -9px;
-				 left: 0;
-			}
-			.olControlPanPanel .olControlPanEastItemInactive {
-				 top: 50%;
-				 margin-top: -9px;
-				 left: auto;
-				 right: 0;
-			}
-		   .olControlZoomPanel {
-				 left: 5px;
-				 right: 23px;
-				 top: 150px;
-		   } 
-		.olControlPanZoomBar {
-			left:450px;
+</script>
+	
+	<link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
+	<link rel="stylesheet" href="style.css" type="text/css">
+	<link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
+	<link rel="stylesheet" href="css/themify-icons.css" type="text/css">
+	
+	<!-- center and far right column-->
+	<style type="text/css">
+		#controls {
+			width: 230px;
 		}
-		.tableshow { 
-			  width:  24px;  
-			  height: 24px;
-			  background-color: white;
-			  background-image: url("img/tableview.png");
-			}
-		.xlsexport { 
-			  width:  24px;  
-			  height: 24px;
-			  background-color: white;
-			  background-image: url("img/tXLSExport.png");
-			}
-		.testbutton { 
-			  width:  24px;  
-			  height: 24px;
-			  background-color: white;
-			  background-image: url("img/marker.png");
-			}
-		.deletezone { 
-			  width:  20px;  
-			  height: 20px;
-			  background-color: white;
-			  background-image: url("img/delete2.png");
-			}
-		</style>
-        <style>
-			table.lremain tr td {
-				border: 1px solid #ccc;
-				border-color:#ffcc00;
-				width: 200px;
-			}
-			table.map_area tr td {
-				border: 1px solid #ccc;
-				border-color:#ffcc00;
-			}
-		</style>
-    </head>
-	<body>	
+		#controlToggle {
+			padding-left: 1em;
+		}
+		#controlToggle li {
+			list-style: none;
+		}
+		#map {
+			width: 1180px;
+			height: 650px;
+		}
+
+		.olControlAttribution { 
+			bottom: 0px;
+			left: 2px;
+			right: inherit;
+			width: 400px;
+		}   
+		.olControlPanel div { 
+		  position: relative;
+		  left: 5px;
+		  display:block;
+		  width:  24px;
+		  height: 24px;
+		  margin: 5px;
+		  float: left;
+		  background-color:white;
+		}
+		.olControlPanel .olControlZoomToMaxExtentItemInactive { 
+		  width:  18px;  
+		  height: 18px;
+		  background-image: url("img/zoom-world-mini.png");
+		}
+		.olControlPanel .olControlZoomBoxItemInactive { 
+		  width:  22px;  
+		  height: 22px;
+		  background-color: orange;
+		  background-image: url("img/drag-rectangle-off.png");
+		}
+		.olControlPanel .olControlZoomBoxItemActive { 
+		  width:  22px;  
+		  height: 22px;
+		  background-color: blue;
+		  background-image: url("img/drag-rectangle-on.png");
+		}
+		.olControlPanel .olControlZoomInItemInactive { 
+		  width:  22px;  
+		  height: 22px;
+		  background-color: white;
+		  background-image: url("img/zoomin.png");
+		}
+		.olControlPanel .olControlZoomOutItemInactive { 
+		  width:  22px;  
+		  height: 22px;
+		  background-color: white;
+		  background-image: url("img/zoomout.png");
+		}
+		.olControlPanPanel .olControlPanNorthItemInactive {
+			 left:50%;
+			 right:auto;
+			 margin-left: -9px;
+			 top: 0;
+		}
+		.olControlPanPanel .olControlPanSouthItemInactive {
+			 left: 50%;
+			 margin-left: -9px;
+			 top: auto;
+			 bottom: 0;
+		}
+		.olControlPanPanel .olControlPanWestItemInactive {
+			 top: 50%;
+			 margin-top: -9px;
+			 left: 0;
+		}
+		.olControlPanPanel .olControlPanEastItemInactive {
+			 top: 50%;
+			 margin-top: -9px;
+			 left: auto;
+			 right: 0;
+		}
+	   .olControlZoomPanel {
+			 left: 5px;
+			 right: 23px;
+			 top: 150px;
+	   } 
+	.olControlPanZoomBar {
+		left:450px;
+	}
+	.tableshow { 
+		  width:  24px;  
+		  height: 24px;
+		  background-color: white;
+		  background-image: url("img/tableview.png");
+		}
+	.xlsexport { 
+		  width:  24px;  
+		  height: 24px;
+		  background-color: white;
+		  background-image: url("img/tXLSExport.png");
+		}
+	.testbutton { 
+		  width:  24px;  
+		  height: 24px;
+		  background-color: white;
+		  background-image: url("img/marker.png");
+		}
+	.deletezone { 
+		  width:  20px;  
+		  height: 20px;
+		  background-color: white;
+		  background-image: url("img/delete2.png");
+		}
+	</style>
+	<style>
+		table.lremain tr td {
+			border: 1px solid #ccc;
+			border-color:#ffcc00;
+			width: 200px;
+		}
+		table.map_area tr td {
+			border: 1px solid #ccc;
+			border-color:#ffcc00;
+		}
+	</style>
+</head>
+<body>	
 <!-- 	This is needed for the menu system -->
 <!-- this is the popup below the icon section -->
 	<div id="overlay">
      <div>
           <p>Please select one of the Print options.</p>
-			<input type="submit" value="Bills for Property Rates" href="javascript:;" onclick="propertyAnnualBillOnClick();" title="Bills for Property Rates" class="orange-flat-small">
-			<input type="submit" value="Bills for Business Licenses" href="javascript:;" onclick="businessAnnualBillOnClick();" title="Bills for Business Licenses" class="orange-flat-small">
+			<input type="submit" value="Bills for Property Rates" href="javascript:;" onclick="printAnnualBill('property');" title="Bills for Property Rates" class="orange-flat-small">
+			<input type="submit" value="Bills for Business Licenses" href="javascript:;" onclick="printAnnualBill('business');" title="Bills for Business Licenses" class="orange-flat-small">
 			<input type="submit" value="Bills Register for Property Rates" href="javascript:;" onclick="billsRegister('property');" title="Bills Register for Property Rates" class="orange-flat-small">
 			<input type="submit" value="Bills Register for Business Licenses" href="javascript:;" onclick="billsRegister('business');" title="Bills Register for Business Licenses" class="orange-flat-small">
           [<a href='#' onclick='overlay()'>close</a>]
@@ -395,7 +394,7 @@
 
 	
 	<div id="header">  
-	<!--the following districtid is hidden, but can be used anywhere in the programme. It contains the districtid, which it gets from the function getsesseionuser()-->
+	<!--the following districtname is set in jsfunctions.js in function sessionuserhandler-->
 		<h1> <div id="districtname"></div></h1> 
 		<div id="tags">GeoJSON</div>
 		<table class="lremain">

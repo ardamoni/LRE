@@ -116,8 +116,10 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 							AND d1.`districtid`=d2.`districtid` 
 							AND d1.`property_use`=d2.`code` 
 							AND d2.`year`='".$currentYear."' 
-							AND d2.`districtid`=d3.`districtid`;");	
+							AND d2.`districtid`=d3.`districtid`;");							
 							
+	$count = mysql_num_rows($query);
+	if ($count>0){
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{		
 		$json 						= array();
@@ -143,6 +145,12 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 
 		$data[] 					= $json;
 		//echo $row["upn"];
+	}
+	}else{
+		$json 						= array();
+		$json['upn'] 				= $upn;
+		$data[] 					= $json;
+		$json['business_name'] 				= 'property'; //this is the identifier for the handler to not display the business_name
 	}
 	
 	header("Content-type: application/json");
@@ -200,6 +208,8 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 							AND d2.`year`='".$currentYear."' 
 							AND d2.`districtid`=d3.`districtid`;");	
 
+	$count = mysql_num_rows($query);
+	if ($count>0){
  	while( $row = mysql_fetch_assoc( $query ) ) 	
 // 	while( $row = $statement->fetch(PDO::FETCH_BOTH)) 
 	{
@@ -230,7 +240,11 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 		$data[] 					= $json;
 		//echo $row["upn"];
 	}
-	
+		}else{
+		$json 						= array();
+		$json['upn'] 				= $upn;
+		$data[] 					= $json;
+	}
 	header("Content-type: application/json");
 	echo json_encode($data);
 }

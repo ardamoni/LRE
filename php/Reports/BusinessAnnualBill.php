@@ -50,7 +50,7 @@
 // 	$note2 =  "Payments should be made by banker's Draft/Payment Order or by Cash Only.";
 // 	$note3 =  "It is an offence to deface the property number, and change ownership without informing the district Assembly";
 		
-//	var_dump($qdistrictname);
+// 	var_dump($_GET);
 	
 //	$districtId = 130;
 	
@@ -245,6 +245,6 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `business` t1, `collectorzon
 	} //end 	while( $r = mysql_fetch_array($q) )
 	
 	$PDF->Ln();
-	$PDF->Output();
+	$PDF->Output('BusinessAnnualBill.pdf','I');
 
 ?>

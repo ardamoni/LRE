@@ -73,7 +73,7 @@
 			$PDF->SetFont('Arial','B',8);
 			$PDF->SetFillColor(225,225,225);
 			$PDF->Cell(20,5, "YEAR", 1,0,'C',true);
-			$PDF->Cell(30,5, "OWED", 1,0,'C',true);
+			$PDF->Cell(30,5, "DUE", 1,0,'C',true);
 			$PDF->Cell(30,5, "PAID", 1,0,'C',true);
 			$PDF->Cell(30,5, "BALANCE", 1,0,'C',true);
 			$PDF->Cell(65,5, "OWNER", 1,0,'C',true);
@@ -92,9 +92,9 @@
 				//$owner = $Data->getOwnerInfo( $ownerid, 'name' );
 				
 				$PDF->Cell(20,5, $year - $n,1,0,'C',true);
-				$PDF->Cell(30,5, number_format( $Data->getAnnualDueSum( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getAnnualPaymentSum( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getAnnualBalance( $upn, $subupn[$x], $year - $n ),2,'.','' ),1,0,'R',true);			
+				$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn[$x], $year - $n, "due" ),2,'.','' ),1,0,'R',true);	
+				$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn[$x], $year - $n, "payed"),2,'.','' ),1,0,'R',true);	
+				$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn[$x], $year - $n, "balance"),2,'.','' ),1,0,'R',true);			
 				$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 				$PDF->Ln();
 				$n = $n + 1;
@@ -128,7 +128,7 @@
 		$PDF->SetFont('Arial','B',8);
 		$PDF->SetFillColor(225,225,225);
 		$PDF->Cell(20,5, "YEAR", 1,0,'C',true);
-		$PDF->Cell(30,5, "OWED", 1,0,'C',true);
+		$PDF->Cell(30,5, "DUE", 1,0,'C',true);
 		$PDF->Cell(30,5, "PAID", 1,0,'C',true);
 		$PDF->Cell(30,5, "BALANCE", 1,0,'C',true);
 		$PDF->Cell(65,5, "OWNER", 1,0,'C',true);
@@ -148,9 +148,9 @@
 				
 			
 			$PDF->Cell(20,5, $year - $n,1,0,'C',true);
-			$PDF->Cell(30,5, number_format( $Data->getAnnualDueSum( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getAnnualPaymentSum( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getAnnualBalance( $upn, $subupn, $year - $n ),2,'.','' ),1,0,'R',true);			
+			$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn, $year -$n, "due" ),2,'.','' ),1,0,'R',true);	
+			$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn, $year - $n, "payed" ),2,'.','' ),1,0,'R',true);	
+			$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn, $year - $n, "balance" ),2,'.','' ),1,0,'R',true);			
 			$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 			$PDF->Ln();
 			$n = $n + 1;
