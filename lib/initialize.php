@@ -8,7 +8,7 @@
 defined('DS') ? null : define('DS', DIRECTORY_SEPARATOR);
 
 defined('SITE_ROOT') ? null : 
-	define('SITE_ROOT', DS.'Applications'.DS.'MAMP'.DS.'htdocs'.DS.'gis'.DS.'OL212'.DS.'LRE');
+	define('SITE_ROOT', 'C:'.DS.'Apache24'.DS.'htdocs'.DS.'LRE');
 
 defined('LIB_PATH') ? null : define('LIB_PATH', SITE_ROOT.DS.'lib');
 
