@@ -187,9 +187,7 @@
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
 		// name of the property_use
-		// OBSOLETE - 15.07.2014 - Arben
-		//$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C');  
-		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingInfo( $districtId, $r['property_use'], $currentYear, $type, "class" ),1,0,'C');
+		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C');  
 		
 		$PDF->Ln(10);
 		

@@ -168,9 +168,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 										
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
-		// OBSOLETE - 15.07.2014 - Arben
-		//$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C'); //property_use_title
-		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingInfo( $districtId, $r['property_use'], $currentYear, $type, "class" ),1,0,'C');
+		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C'); //property_use_title
 		
 		$PDF->Ln(9);
 		
@@ -210,20 +208,18 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 		$PDF->Cell(17,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "payed" ),2,'.','') ,1,0,'R');
 		
 		if ($counter==2) {
-	//		$PDF->Ln(10);
-			$PDF->AddPage();
-			$counter=0;
+//		$PDF->Ln(10);
+		$PDF->AddPage();
+		$counter=0;
 		} else {
-			$counter++;
-			$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
-			$PDF->Ln();
+		$counter++;
+		$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
+		$PDF->Ln();
 		}
 // 		$counter++;
 // 		$PDF->Ln(15);
-		
-		// Obsolete - 15.07.2014 Arben
-		//$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'property' );
-		$Data->setDemandNoticeRecord( $r['upn'], $r['subupn'], $r['districtid'], $currentYear, $type, $value );
+
+	$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'property' );
 		
 	} //fetch_array
 	

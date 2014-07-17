@@ -1,4 +1,5 @@
 <?php
+
 	/*
 	 *	Class that gets the data from DB tables
 	 *	PROPERTY AND BUSINESS
@@ -6,6 +7,7 @@
 	class Revenue
 	{
 		// OBSOLETE: 15.07.2014 - Arben, use getBasicInfo
+		// 	get the data out of property table
 		function getPropertyInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			if( $subupn != "" || $subupn != NULL || $subupn != "0" )
@@ -25,10 +27,8 @@
 			return $r[$f];
 		}
 		
-		/*
-		 *  BASIC INFO
-		 *  Tables: property, business
-		 */ 
+		
+		// Basic info from property or business table
 		function getBasicInfo( $upn = "", $subupn = "", $districtid = "", $type = "", $f = "" )
 		{
 			switch ($type) 
@@ -74,7 +74,15 @@
 			}			
 		} // end of function getBasicInfo
 		
-		// 	OBSOLETE -15.07.2014 - Arben - use getDueInfo
+		
+		
+		
+		/*
+		 *	PROPERTY_DUE
+		 */
+		// 	OBSOLETE -15.07.2014 - Arben
+		//  use getDueInfo
+		//get the data out of property_due table
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 //			$q = mysql_query("SELECT * FROM 	`property_due` 
@@ -86,10 +94,7 @@
 			return $r[$f];
 		}
 		
-		/*
-		 *  DUE INFO
-		 *  Tables: property_due, business_due
-		 */ 
+		// get DUE info from property_due or business_due table
 		function getDueInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
 		{
 			switch ($type) 
@@ -154,11 +159,9 @@
 										  "prop_value"=>$r["prop_value"]);
 		}
 
-		// 	NOT USED !!! 
-		// OBSOLETE because of logic change.   
-		// Due tables are filled once in the beggining of the year.   so there is one row for each property / business
-		// therefore no need to use the sum('x')
-		// you can use getDueInfo(...), up to 4 times - rate_value, rate_impost_value, feefi_value, prop_value
+
+		
+		// 	get sum of due data from property_due table
 		function getAnnualDueSum( $upn = "", $subupn = "", $year = "2013" )
 		{
 // ??? !!! ekke ALERT THIS NEEDS ATTENTION WHEN valuation is done
@@ -179,7 +182,11 @@
 			return $r['due'];
 		}
 
-		// OBSOLETE - 15.07.2014 - Arben - use getLastPaymentInfo
+		
+		/*
+		 *	PROPERTY_PAYMENTS
+		 */
+		//   get the last entry from the property_payments table
 		function getLastPropertyPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
@@ -202,10 +209,8 @@
 			}
 		}
 
-		/*
-		 *  LAST PAYMENTS INFO
-		 *  Tables: property_payments, business_payments
-		 */	
+				
+		// property and business
 		function getLastPaymentInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
 		{
 			switch( $type ) 
@@ -259,7 +264,9 @@
 			}			
 		} // end of getLastPaymentInfo function		
 		
-		// OBSOLETE 15.07.014 - Arben - use getSumPaymentInfo
+
+		
+		//   get sum of payments for one year
 		function getAnnualPaymentSum( $upn = "", $subupn = "", $year = "2013" )
 		{
 		  if (!empty($subupn)) {
@@ -278,67 +285,7 @@
 			return $r['val'];
 		}
 
-		/*
-		 *  SUM PAYMENTS INFO
-		 *  Tables: property_payments, business_payments
-		 */	
-		function getSumPaymentInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "" )
-		{
-			switch( $type ) 
-			{
-				case "property":
-					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
-					{							
-						$q = mysql_query(" SELECT SUM(`payment_value`) AS `val`
-													FROM 	`property_payments` 
-													WHERE 	`upn` = '".$upn."' AND 
-															`subupn` = '".$subupn."' AND 
-															`districtid` = '".$districtid."' AND
-															YEAR(`payment_date`) = '".$year."' ");
-					}
-					else
-					{
-						$q = mysql_query(" SELECT SUM(`payment_value`) AS `val`
-													FROM 	`property_payments` 
-													WHERE 	`upn` = '".$upn."' AND 															
-															`districtid` = '".$districtid."' AND
-															YEAR(`payment_date`) = '".$year."' ");
-					}
-					$r = mysql_fetch_array($q);
-					return $r['val'];						
-				break;
-				
-				case "business":
-					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
-					{
-						$q = mysql_query("SELECT SUM(`payment_value`) AS `val`
-													FROM 	`business_payments` 
-													WHERE 	`upn` = '".$upn."' AND 
-															`subupn` = '".$subupn."' AND 
-															`districtid` = '".$districtid."' AND
-															YEAR(`payment_date`) = '".$year."' ");
-					}
-					else
-					{
-						$q = mysql_query("SELECT SUM(`payment_value`) AS `val`
-													FROM 	`business_payments` 
-													WHERE 	`upn` = '".$upn."' AND 															
-															`districtid` = '".$districtid."' AND
-															YEAR(`payment_date`) = '".$year."' ");
-					}
-					$r = mysql_fetch_array($q);
-					return $r['val'];
-				break;
-			 
-				default:
-					return "Your type of entity is not set!";
-			}			
-		} // end of getSumPaymentInfo function		
-		
-		/*
-		 *	GET USED TICKETS
-		 *	Tables: property_payments
-		 */
+		//   get the used tickets
 		function getTicketsPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
@@ -361,7 +308,12 @@
 			}
 		}
 		
-		// OBSOLETE - use getBalanceInfo
+		
+		/*
+		 *	PROPERTY_BALANCE
+		 */
+		//   get the data from the property_balance table
+		// Obsolete - use getBalanceInfo
 		function getPropertyBalanceInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{			
 			$q = mysql_query("SELECT * FROM `property_balance` 
@@ -372,14 +324,11 @@
 			return $r[$f];
 		}
 		
-		/*
-		 *	BALANCE INFO
-		 *	Tables: property_balance, business_balance
-		 */
+		
+		// get info from balance tables for property or business
 		function getBalanceInfo( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
 		{	
-			switch( $type ) 
-			{
+			switch( $type ) {
 				case "property":
 					if( $subupn != "" || $subupn != NULL || $subupn != "0" )
 					{							
@@ -425,7 +374,7 @@
 			}			
 		} // end of function getBalanceInfo
 		
-		// OBSOLETE - use getBalanceInfo where $f = 'balance'
+		// Obsolete - use getBalanceInfo where $f = 'balance'
 		//   get balance for one year
 		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
 		{
@@ -449,12 +398,12 @@
 		}
 		
 		/*
-		 *	OWNER INFO
-		 *	TABLES: own_owner
+		 *	OWN_OWNER
 		 */		
+		// 	get the owner
 		function getOwnerInfo( $id = "", $f = "" )
 		{
-			$q = mysql_query("SELECT * FROM `own_owner` WHERE `id` = '".$id."' ");
+			$q = mysql_query("SELECT * 	FROM 	`own_owner` WHERE 	`id` = '".$id."' ");
 			$r = mysql_fetch_array($q);
 			return $r[$f];
 		}
@@ -462,8 +411,8 @@
 		
 		/*
 		 *	District Area
-		 *  Tables: area_district
 		 */		
+		// 	get the district info
 		function getDistrictInfo( $id = "", $f = "" )
 		{
 			$q = mysql_query("SELECT * 	FROM `area_district` WHERE 	`districtid` = '".$id."' ");
@@ -471,7 +420,9 @@
 			return $r[$f];
 		}
 
-		// OBSOLETE - 15.07.2014 Arben - use getFeeFixingInfo
+		/*
+		 *	Property Use
+		 */		
 		// 	get the district info
 		function getFeeFixingClassInfo( $id = "", $code = "", $f = "" )
 		{
@@ -480,40 +431,7 @@
 			return $r['class'];
 		}
 		
-		/*
-		 *	FEE FIXING INFO
-		 *	Tables: fee_fixing_property, fee_fixing_business 
-		 */
-		function getFeeFixingInfo( $districtid = "", $code = "", $year = "2013", $type = "", $f = "" )
-		{
-			switch( $type ) 
-			{
-				case "property":
-					$q = mysql_query(" SELECT 	* 
-										FROM 	`fee_fixing_property` 
-										WHERE 	`districtid` = '".$districtid."' AND 
-												`code` = '".$code."' AND 
-												`year` = '".$year."' ");
-					$r = mysql_fetch_array($q);
-					return $r[$f];						
-				break;
-				
-				case "business":
-					$q = mysql_query(" SELECT 	* 
-										FROM 	`fee_fixing_business` 
-										WHERE 	`districtid` = '".$districtid."' AND 
-												`code` = '".$code."' AND 
-												`year` = '".$year."' ");
-					$r = mysql_fetch_array($q);					
-					return $r[$f];
-				break;
-			 
-				default:
-					return "Your type of entity is not set!";
-			}			
-		} // end of getFeeFixingInfo
-		
-		// OBSOLETE - use getBalanceInfo
+		// Obsolete - use getBalanceInfo
 		//   get balance for one year
 		function getEndBalance( $upn = "", $subupn = "", $districtid = "", $year = "2013" )
 		{
@@ -529,57 +447,51 @@
 		}
 	  
 	  	/*
-		 *	SET DEMAND NOTICE RECORD
-		 *	Tables: demand_notice_record
+		 *	Update demand notice record
 		 */		
-		function setDemandNoticeRecord( $upn = "", $subupn = "", $districtid = "", $year = "2013", $type = "", $value = 0 )
+		// 	get the district info
+		function setDemandNoticeRecord( $districtid = "",  $upn = "", $subupn = "", $year = "2013", $value = 0, $revitem = "" )
 		{
-			if( $type == "" ) return "Your type of entity is not set!";
-			else 
-			{	
-				$q = mysql_query(" SELECT 	* 	
-									FROM 	`demand_notice_record` 
-									WHERE 	`upn` = '".$upn."' AND 
-											`subupn` = '".$subupn."' AND 
-											`districtid` = '".$districtid."' AND 
-											`year` = '".$year."' AND 
-											`comments` = '".$type."' ");
-				$r = mysql_fetch_array($q);
-				if( !empty($r) ) 
-				{
-					mysql_query(" UPDATE 	`demand_notice_record` 
-									SET 	`value`= '".$value."',
-											`billprintdate`= '".date("Y-m-d")."'										
+			$q = mysql_query("SELECT * 	FROM `demand_notice_record` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' AND `districtid` = '".$districtid."' AND `year` = '".$year."' ");
+			$r = mysql_fetch_array($q);
+			if (!empty($r)) {
+				$qupdate = mysql_query(" UPDATE 	`demand_notice_record` 
+									SET 	`upn` = '".$upn."',
+											`subupn`= '".$subupn."',
+											`districtid`= '".$districtid."',
+											`year`= '".$year."',
+											`value`= '".$value."',
+											`billprintdate`= '".date("Y-m-d")."',
+											`comments`= '".$revitem."'
+									
 									WHERE 	`upn` = '".$upn."' AND
 											`subupn` = '".$subupn."' AND
-											`districtid` = '".$districtid."' AND 
-											`year` = '".$year."' AND 
-											`comments` = '".$type."' ");	
-				} else {
-					mysql_query(" INSERT INTO `demand_notice_record` 
-											(	`id`,
-												`upn`, 
-												`subupn`,
-												`districtid`,
-												`year`,	
-												`value`,														
-												`billprintdate`,
-												`comments`
-											) 
-									VALUES 	( 	NULL,
-												'".$upn."',
-												'".$subupn."',
-												'".$districtid."',
-												'".$year."',
-												'".$value."',
-												'".date("Y-m-d")."',
-												'".$type."' 
-											)");
+											`year` = '".$year."' ");	
+			}elseif (empty($r)){
+				$qinfo = mysql_query(" INSERT INTO `demand_notice_record` (	`id`,
+															`upn`, 
+															`subupn`,
+															`districtid`,
+															`year`,	
+															`value`,														
+															`billprintdate`,
+															`comments`
+														) 
+												VALUES 	( 	NULL,
+															'".$upn."',
+															'".$subupn."',
+															'".$districtid."',
+															'".$year."',
+															'".$value."',
+															'".date("Y-m-d")."',
+															'".$revitem."'
+														)");
 
-					return mysql_affected_rows();
-				}
-			}
-		} // end of setDemandNoticeRecord function
+			return mysql_affected_rows();
+		}
 
-	}	//end of Revenue class
+
+	}
+
+}//end of class
 ?>

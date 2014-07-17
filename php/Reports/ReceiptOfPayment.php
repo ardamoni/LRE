@@ -1,7 +1,7 @@
 <?php
-	// OBSOLETE FILE - 15.07.2014 Arben
-	// use Receipt of Property payment and 
-	// receipt of Business Payment
+
+	
+
 	/*
 	 *	Include the Library Code
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
