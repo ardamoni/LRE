@@ -90,15 +90,9 @@
 				//$owner = $Data->getOwnerInfo( $ownerid, 'name' );
 				
 				$PDF->Cell(20,5, $year - $n,1,0,'C',true);
-<<<<<<< HEAD
 				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "due" ),2,'.','' ),1,0,'R',true);	
 				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "payed" ),2,'.','' ),1,0,'R',true);	
 				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "balance" ),2,'.','' ),1,0,'R',true);			
-=======
-				$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn[$x], $year - $n, "due" ),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn[$x], $year - $n, "payed"),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn[$x], $year - $n, "balance"),2,'.','' ),1,0,'R',true);			
->>>>>>> a64e0e0bd6d4ee4bb954f14f4898ce1995f8327e
 				$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 				$PDF->Ln();
 				$n = $n + 1;
@@ -150,15 +144,9 @@
 				
 			
 			$PDF->Cell(20,5, $year - $n,1,0,'C',true);
-<<<<<<< HEAD
 			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "due" ),2,'.','' ),1,0,'R',true);	
 			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "payed" ),2,'.','' ),1,0,'R',true);	
 			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "balance" ),2,'.','' ),1,0,'R',true);		
-=======
-			$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn, $year -$n, "due" ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn, $year - $n, "payed" ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getPropertyBalanceInfo( $upn, $subupn, $year - $n, "balance" ),2,'.','' ),1,0,'R',true);			
->>>>>>> a64e0e0bd6d4ee4bb954f14f4898ce1995f8327e
 			$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 			$PDF->Ln();
 			$n = $n + 1;
