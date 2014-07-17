@@ -9,14 +9,14 @@
 	require_once(	"../../lib/configuration.php"	);	
 //	require_once(	"../../lib/System.PDF.php"		);
 	require_once(	"../../lib/System.PDF.AnnualBill.php"		);	
-//	require_once( 	"../../lib/Revenue.php"			);
-	require_once( 	"../../lib/BusinessRevenueClass.php"			);
+	require_once( 	"../../lib/Revenue.php"			);
+//	require_once( 	"../../lib/BusinessRevenueClass.php"			);
 	require_once( 	"../../lib/System.php"			);
 	
 	
 	$PDF = new PDF('P','mm','A4');
  	$System = new System;
-	$Data = new BusinessRevenue;
+	$Data = new Revenue;
 	
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 	$target = $_GET['target'];
@@ -24,13 +24,7 @@
 	
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 
-
-// 	if ($target = 'property') {
-// 		$Data = new Revenue;}
-// 	if ($target = 'business') {
-// 		$Data = new BusinessRevenue;}
-
-//var_dump($_GET);		
+	//var_dump($_GET);		
 
 	
 	/*
@@ -92,7 +86,7 @@
 			$PDF->SetFont('Arial','',6);
 			$PDF->SetFillColor(255,255,255);
 			if ($target=='business'){
-			$q = mysql_query("SELECT business.id, 
+				$q = mysql_query("SELECT business.id, 
 								business.`upn`, 
 								business.`subupn`, 
 								business.`streetname`, 
@@ -109,8 +103,8 @@
 								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`, `collectorzones`
 							WHERE demand_notice_record.`comments`='".$target."' AND business.`colzone_id` = collectorzones.`id`
 							ORDER BY collectorzones.`colzonenr`, business.`upn`;");
-			}elseif ($target=='property'){
-			$q = mysql_query("SELECT property.id, 
+			} elseif ($target=='property'){
+				$q = mysql_query("SELECT property.id, 
 								property.`upn`, 
 								property.`subupn`, 
 								property.`streetname`, 
@@ -133,13 +127,13 @@
 			while( $r = mysql_fetch_array($q) )
 			{
 				$address = $r['housenumber'].' '.$r['streetname'];
-			if ($target=='business'){
+				if ($target=='business'){
 // could not get the linebreak to work
- 				if (strlen(trim($businessname))>=50){
- 					$businessname = substr($r['business_name'],0,50).'...';
- 				}else{
- 					$businessname = $r['business_name'];
- 				}
+					if (strlen(trim($businessname))>=50){
+						$businessname = substr($r['business_name'],0,50).'...';
+					} else {
+						$businessname = $r['business_name'];
+					}
  				}
  				if ($cznr!=$r['colzonenr']){
 					$PDF->SetFont('Arial','B',8);
@@ -149,7 +143,7 @@
 // 					$PDF->SetFillColor(255,255,255);
 					$PDF->Cell(155,5, $r['colzonenr'], 1,0,'C',true);
 					$PDF->Ln();
-				 }
+				}
 				if ($target=='business'){ 
 					$PDF->SetFont('Arial','',6);
 					$PDF->SetFillColor(255,255,255);
@@ -170,7 +164,7 @@
 					$PDF->Cell(45,5, $address, 1,0,'C',true);
 					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
 					$PDF->Cell(40,5, '', 1,0,'C',true);
-					}
+				}
 				$PDF->Ln();
 				$n = $n + 1;
 				$cznr=$r['colzonenr'];

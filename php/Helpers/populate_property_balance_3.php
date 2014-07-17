@@ -20,7 +20,7 @@
 	//
 	// CHANGE THIS VALUE for every district 
 	//
-	$districtID = '130';
+	$districtID = 'ABC';
 	
 	// Display
 	echo "START", "</br>";
@@ -30,14 +30,14 @@
 								FROM 	`property_balance` 
 								WHERE 	`districtid` = '".$districtID."' AND `year` = '".$year."' ");
 	
-	if( mysql_num_rows($protection) == 0 )
+	$rp =  mysql_num_rows($protection);
+	if( $rp == 0 )
 	{	
 		echo "Good, no previous data exist in the property_balance table for ";
 		echo "districtID ", $districtID, " and year ", $year, ". Script will proceed.", "<br>";
 	}
 	else 
 	{	
-		$rp =  mysql_num_rows($protection);
 		echo "Stopping and exiting Script because there are previus data @ property_balance for districtID";
 		echo $districtID, " and year ", $year , "</br>";
 		echo "Counter of Existing rows: ", $rp, "</br>";
@@ -59,7 +59,7 @@
 		echo "Report from property: districtID: ", $districtID, ", rows: ", $rows, "<br>";
 	}
 	
-	// insert all property UPN, SUBUPN and DISTRICTID into Property_balance
+	// insert all property UPN, SUBUPN and DISTRICTID into table property_balance
 	while($BOR = mysql_fetch_array($querry))
 	{
 		// property_due
@@ -128,7 +128,7 @@
 	{	
 		// get previous years balance - this is the entire debt 
 		$prev_balance = $Data->getBalanceInfo( $results['upn'], $results['subupn'], $districtID, ($year-1), "property", "balance" );
-		// obsolete - 15.07.2014
+		// OBSOLETE - 15.07.2014 ARBEN
 		//$prev_balance = $Data->getEndBalance( $results['upn'], $results	['subupn'], $districtID, ($year-1) );
 		
 		// all other values
@@ -185,15 +185,18 @@
 	$k = 1;
 	while( $rupdate = mysql_fetch_array($pppb) )
 	{	
+		// OBSOLETE - 15.07.2014 - Arben
 		// get payments for a particular upn / subupn and year
-		$payed = $Data->getAnnualPaymentSum( $rupdate['upn'], $rupdate['subupn'], $year );
+		//$paid = $Data->getAnnualPaymentSum( $rupdate['upn'], $rupdate['subupn'], $year );
+		$paid = $Data->getSumPaymentInfo( $rupdate['upn'], $rupdate['subupn'], $districtID, $year, "property" )
+		
 		// get previous balance			
-		$balance = $rupdate['balance'] - $payed;		
+		$balance = $rupdate['balance'] - $paid;		
 		
 		// Property_balance update with value
 		mysql_query("	UPDATE 		`property_balance` 
 		
-						SET 		`payed` = '".$payed."',									
+						SET 		`payed` = '".$paid."',									
 									`balance` = '".$balance."'
 									
 						WHERE 		`upn` = '".$rupdate['upn']."' AND 
@@ -203,7 +206,7 @@
 		
 		// Display		
 		echo $k, ": ", $rupdate['upn'], " & ", $rupdate['subupn'], " & ", $rupdate['districtid'], " & ", $year;
-		echo ": ", $payed, " & ", $balance, "<br>";
+		echo ": ", $paid, " & ", $balance, "<br>";
 		$k++;
 	}	
 

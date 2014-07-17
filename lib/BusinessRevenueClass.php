@@ -1,16 +1,12 @@
 <?php
-
+	// OBSOLETE CLASS - DELETE when convinient
 	/*
 	 *	Class that gets the data from DB tables
 	 *
 	 */
 	class BusinessRevenue
 	{
-		/*
-		 *	PROPERTY
-		 */		
 		// 	OBSOLETE 15.07.2014 - Arben - use getBasicInfo in Revenue
-		//get the data out of business table
 		function getBusinessInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			if( $subupn != "" || $subupn != NULL || $subupn != "0" )
@@ -28,13 +24,7 @@
 			return $r[$f];
 		}
 		
-		
-		
-		/*
-		 *	PROPERTY_DUE
-		 */
-		// OBSOLETE -15.07.2014 - Arben - use getDueInfo @ Revenue class
-		//get the data out of property_due table
+		// OBSOLETE - 15.07.2014 - Arben - use getDueInfo @ Revenue class
 		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			$q = mysql_query("SELECT * FROM 	`business_due` 
@@ -45,7 +35,7 @@
 			return $r[$f];
 		}
 		
-		// OBSOLETE -15.07.2014 - Arben - use getDueInfo @ Revenue class
+		// OBSOLETE - 15.07.2014 - Arben - use getDueInfo @ Revenue class
 		function getDueInfoAll( $upn = "", $subupn = "", $year = "2013")
 		{
 			$q = mysql_query("SELECT * FROM 	`business_due` 
@@ -58,7 +48,7 @@
 										  "feefi_value"=>$r["feefi_value"]);
 		}		
 
-		// 	get sum of due data from property_due table
+		// OBSOLETE 15.07.014 - Arben - use getDueInfo (up to 4 times - rate_value, rate_impost_value, feefi_value, prop_value) @ Revenue
 		function getAnnualDueSum( $upn = "", $subupn = "", $year = "2013" )
 		{
 // ??? !!! ekke ALERT THIS NEEDS ATTENTION WHEN valuation is done
@@ -79,11 +69,7 @@
 			return $r['due'];
 		}
 
-		
-		/*
-		 *	PROPERTY_PAYMENTS
-		 */
-		//   get the last entry from the property_payments table
+		// OBSOLETE 15.07.014 - Arben - use getLastPaymentInfo @ Revenue
 		function getLastPropertyPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
@@ -106,7 +92,7 @@
 			}
 		}
 		
-		//   get sum of payments for one year
+		// OBSOLETE 15.07.014 - Arben - use getSumPaymentInfo @ Revenue
 		function getAnnualPaymentSum( $upn = "", $subupn = "", $year = "2013" )
 		{
 		  if (!empty($subupn)) {
@@ -125,7 +111,7 @@
 			return $r['val'];
 		}
 
-		//   get the used tickets
+		// OBSOLETE - 15.07.2014 - Arben - there are not tickets for businesses
 		function getTicketsPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{
 			// the newest entry in the table 
@@ -148,12 +134,7 @@
 			}
 		}
 		
-		
-		/*
-		 *	PROPERTY_BALANCE
-		 */
-		// Obsolete - use getBalanceInfo @ Revenue class 
-		//   get the data from the property_balance table
+		// OBSOLETE - 15.07.2014 - Arben - use getBalanceInfo @ Revenue class 
 		function getPropertyBalanceInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
 		{			
 			$q = mysql_query("SELECT * FROM `business_balance` 
@@ -164,8 +145,7 @@
 			return $r[$f];
 		}
 		
-		// Obsolete - use getBalanceInfo @ Revenue class
-		//   get balance for one year
+		// OBSOLETE - 15.07.2014 - Arben - use getBalanceInfo @ Revenue class
 		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
 		{
 			$q	= mysql_query("SELECT `balance` FROM `business_balance` 
@@ -176,10 +156,7 @@
 			return $r['balance'];
 		}
 	
-		/*
-		 *	District Area
-		 */		
-		// 	get the district info
+		// OBSOLETE - 15.07.2014 - Arben - use getDistrictInfo @ Revenue
 		function getDistrictInfo( $id = "", $f = "" )
 		{
 			$q = mysql_query("SELECT * 	FROM `area_district` WHERE 	`districtid` = '".$id."' ");
@@ -187,10 +164,7 @@
 			return $r[$f];
 		}
 
-		/*
-		 *	Business Use
-		 */		
-		// 	get the district info
+		// OBSOLETE - 15.07.2014 - Arben - use getFeeFixingInfo	
 		function getFeeFixingClassInfo( $id = "", $code = "", $f = "" )
 		{
 			$q = mysql_query("SELECT * 	FROM `fee_fixing_business` WHERE `districtid` = '".$id."' AND `code` = '".$code."' ");
@@ -198,10 +172,7 @@
 			return $r['class'];
 		}
 
-		/*
-		 *	Update demand notice record
-		 */		
-		// 	get the district info
+		// OBSOLETE - 15.07.2014 - Arben - use setDemandNoticeRecord @ Revenue
 		function setDemandNoticeRecord( $districtid = "",  $upn = "", $subupn = "", $year = "2013", $value = 0, $revitem = "" )
 		{
 			$q = mysql_query("SELECT * 	FROM `demand_notice_record` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' AND `districtid` = '".$districtid."' AND `year` = '".$year."' ");

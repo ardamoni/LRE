@@ -14,12 +14,10 @@
 	 */
 	require_once(	"../../lib/configuration.php"	);	
 	require_once(	"../../lib/System.PDF.AnnualBill.php"		);
-	require_once( 	"../../lib/BusinessRevenueClass.php"			); // obsolete 15.07.2014
 	require_once( 	"../../lib/Revenue.php"			);
 	require_once( 	"../../lib/System.php"			);
 
-	$Data2 = new Revenue;
-	$Data = new BusinessRevenue;
+	$Data = new Revenue;
 	$System = new System;
 	
 	$PDF = new PDF('P','mm','A4');
@@ -31,7 +29,7 @@
 	$subupn 		= $_GET["subupn"];	
 	$districtId 	= $_GET['districtid'];
 	$type 			= $_GET['type'];	
-	
+/*	
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
 		$file= '../../uploads/logo-'.$districtId.'.gif';
@@ -47,7 +45,7 @@
 	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
 	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
 	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
-	
+*/	
 // 	$note = 'This bill must be paid by March 31st, in accordance with the districts regulations. Legal Actions shall be taken against defaulters 52 days after March 31st.';
 // 	$note2 =  "Payments should be made by banker's Draft/Payment Order or by Cash Only.";
 // 	$note3 =  "It is an offence to deface the property number, and change ownership without informing the district Assembly";
@@ -132,7 +130,7 @@
 		$PDF->Ln();
 		
 		// Arreas - the last years balance holds all the previous years arreas	
-		$arreas = $Data2->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "balance" );
+		$arreas = $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "balance" );
 		
 		// Data
 		$PDF->SetFont('Arial','',8);
@@ -164,16 +162,19 @@
 // 		$PDF->Cell(90,5, $r['zoneid'],1,0,'C');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
-		$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['business_class']),1,0,'C'); //property_use_title
+		// OBSOLETE - 15.07.2014 - Arben
+		//$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['business_class']),1,0,'C'); //property_use_title
+		$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingInfo( $districtId, $r['business_class'], $currentYear, $type, "class" ),1,0,'C');
+		
 		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
-		// // Obsolete - 15.07.2014 - Arben
+		// Obsolete - 15.07.2014 - Arben
 		//get all Due Info from BusinessRevenueClass
 		//$dueAll=$Data->getDueInfoAll( $r['upn'], $r['subupn'], $currentYear);
-		$duePropertyValue 	= $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "prop_value" );
-		$dueRateValue 		= $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" );
-		$dueRateImpostValue = $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" );
-		$dueFeeFixValue 	= $Data2->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_value" );
+		$duePropertyValue 	= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "prop_value" );
+		$dueRateValue 		= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_value" );
+		$dueRateImpostValue = $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" );
+		$dueFeeFixValue 	= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_value" );
 		
 		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
 		// Obsolete - 15.07.2014 - Arben
@@ -242,16 +243,16 @@
 			$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 			$PDF->Ln(12);
 		}
-		// Obsolete - 14.07.2014 Arben
-/*	
-		$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
+		// Obsolete - 15.07.2014 Arben
+/*		$value = $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ) +
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ) +
 										$arreas + 
 										$Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "feefi_value");
 */	
+		// Obsolete - 15.07.2014 Arben
+		//$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
+		$Data->setDemandNoticeRecord( $r['upn'], $r['subupn'], $r['districtid'], $currentYear, $type, $value );
 		
-		$Data->setDemandNoticeRecord( $r['districtid'], $r['upn'], $r['subupn'], $currentYear, $value, 'business' );
-	
 	} //end 	while( $r = mysql_fetch_array($q) )
 	
 	$PDF->Ln();
