@@ -132,7 +132,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
  		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
  		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "due" ),2,'.','' ); //$row['revenue_due'];
- 		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "payed" ),2,'.','' ); //$row['revenue_collected'];
+ 		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "paid" ),2,'.','' ); //$row['revenue_collected'];
  		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "balance" ),2,'.','' ); //$json['revenue_due']-$json['revenue_collected'];
 		$json['streetname'] 		= $row['streetname'];
 		$json['housenumber'] 		= $row['housenumber'];
@@ -220,7 +220,7 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
  		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
  		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "due" ),2,'.','' ); //$row['revenue_due'];
- 		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "payed" ),2,'.','' ); //$row['revenue_collected'];
+ 		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "paid" ),2,'.','' ); //$row['revenue_collected'];
  		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "balance" ),2,'.','' ); 
 
 // 		$json['pay_status'] 		= $row['pay_status'];

@@ -69,7 +69,7 @@
 														`districtid`,
 														`year`,	
 														`due`,														
-														`payed`,
+														`paid`,
 														`feefi_value`,
 														`balance`,
 														`instalment`,
@@ -204,7 +204,7 @@
 		// Property_balance update with value
 		mysql_query("	UPDATE 		`property_balance` 
 		
-						SET 		`payed` = '".$paid."',									
+						SET 		`paid` = '".$paid."',									
 									`balance` = '".$balance."'
 									
 						WHERE 		`upn` = '".$rupdate['upn']."' AND 

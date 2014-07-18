@@ -207,7 +207,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 		$PDF->SetFont('Arial','',7);
 		$PDF->Cell(16,5, $currentYear - 1,1,0,'R');	
 		$PDF->Cell(23,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "due" ),2,'.','') ,1,0,'R');
-		$PDF->Cell(17,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "payed" ),2,'.','') ,1,0,'R');
+		$PDF->Cell(17,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "paid" ),2,'.','') ,1,0,'R');
 		
 		if ($counter==2) {
 	//		$PDF->Ln(10);

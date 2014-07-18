@@ -206,7 +206,7 @@
 // 		$PDF->SetFont('Arial','B',6);
 // 		$PDF->Cell(16,5, 'Previous Year',1,0,'C');	
 // 		$PDF->Cell(12,5, 'Total Owed',1,0,'C');
-// 		$PDF->Cell(16,5, 'Total Payed',1,1,'C');
+// 		$PDF->Cell(16,5, 'Total Paid',1,1,'C');
 // 
 // // 		$PDF->SetFont('Arial','B',7);
 // // 		$PDF->Cell(70,5, '',0,0,'R');

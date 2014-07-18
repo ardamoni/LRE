@@ -1,0 +1,32 @@
+13:31 18-Jul-14
+
+Task:
+change the column 'payed' to 'paid' in all the tables in DB revenue
+
+Solution:
+step1 - find all the columns with name 'payed'.   In MysQL run the following SQL:
+
+SELECT DISTINCT TABLE_NAME 
+    FROM INFORMATION_SCHEMA.COLUMNS
+    WHERE COLUMN_NAME IN ('payed')
+        AND TABLE_SCHEMA='revenue'
+
+
+//result from step 1: 5 tables: property_balance, business_balance, investment_balance, land_balance and rent_balance.
+
+step2 - change the column names by runing the following SQl in MySQL:
+ 
+ALTER TABLE  `property_balance` CHANGE  `payed`  `paid` FLOAT NULL DEFAULT NULL;
+ALTER TABLE  `business_balance` CHANGE  `payed`  `paid` FLOAT NULL DEFAULT NULL;
+ALTER TABLE  `investment_balance` CHANGE  `payed`  `paid` FLOAT NULL DEFAULT NULL;
+ALTER TABLE  `land_balance` CHANGE  `payed`  `paid` FLOAT NULL DEFAULT NULL;
+ALTER TABLE  `rent_balance` CHANGE  `payed`  `paid` FLOAT NULL DEFAULT NULL;
+
+
+***************************************************************************
+If there are more tables from step1, 
+then use the following SQL format for each table in MySQL 
+(substitute abc with the actual table name):
+
+ALTER TABLE  `abc` CHANGE  `payed`  `paid` FLOAT NULL DEFAULT NULL;
+***************************************************************************

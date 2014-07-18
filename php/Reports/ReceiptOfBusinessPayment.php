@@ -44,7 +44,7 @@
 	$PDF->Cell(45,5, "ELECTRONIC RECEIPT",1,0,'C',true);
 	$PDF->Ln();
 	
-	$lastPayedValue 	= $Data->getLastPaymentInfo( $upn, $subupn, $districtid, $currentYear, $type, "payment_value" );
+	$lastPaidValue 		= $Data->getLastPaymentInfo( $upn, $subupn, $districtid, $currentYear, $type, "payment_value" );
 	$lastTicketReceipt 	= $Data->getLastPaymentInfo( $upn, $subupn, $districtid, $currentYear, $type, "receipt_payment" );
 	$lastSystemReceipt 	= $Data->getLastPaymentInfo( $upn, $subupn, $districtid, $currentYear, $type, "id" );
 	

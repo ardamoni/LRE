@@ -221,14 +221,14 @@ $paymentType = array(
 				</td>						
 			</tr>			
 			<tr>
-				<td>Payed by</td>
+				<td>Paid by</td>
 				<td>:</td>
-				<td class='c'><input name="payedby" type="text" id="payedby" size="30"></td>
+				<td class='c'><input name="paidby" type="text" id="paidby" size="30"></td>
 			</tr>
 			<tr>
 				<td>Value</td>
 				<td>:</td>
-				<td class='c'><input name="payedvalue" type="text" id="payedvalue" size="10"></td>
+				<td class='c'><input name="paidvalue" type="text" id="paidvalue" size="10"></td>
 			</tr>
 			<tr>
 				<td>Type of payment</td>

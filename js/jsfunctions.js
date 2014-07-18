@@ -837,7 +837,7 @@ function handler(request)
 			html += '<p>Current rate: '+ feed[i]['rate'] +' GHS</p>';
  			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +' GHS</p>';
 			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +' GHS</p>';
-//			html += '<p>Date payed: '+ feed[i]['date_payment'] +'</p>';
+//			html += '<p>Date paid: '+ feed[i]['date_payment'] +'</p>';
 			switch( parseInt(feed[i]['pay_status']) ) {
 				case 1:
 					html += '<p>Payment Status: <strong><FONT COLOR="FF0000"> DUE</FONT></strong></p>';			

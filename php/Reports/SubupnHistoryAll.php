@@ -67,7 +67,7 @@
 			$PDF->SetFont('Arial','B',8);
 			$PDF->SetFillColor(225,225,225);
 			$PDF->Cell(20,5, "YEAR", 1,0,'C',true);
-			$PDF->Cell(30,5, "OWED", 1,0,'C',true);
+			$PDF->Cell(30,5, "DUE", 1,0,'C',true);
 			$PDF->Cell(30,5, "PAID", 1,0,'C',true);
 			$PDF->Cell(30,5, "BALANCE", 1,0,'C',true);
 			$PDF->Cell(65,5, "OWNER", 1,0,'C',true);
@@ -86,7 +86,7 @@
 				
 				$PDF->Cell(20,5, $year - $n,1,0,'C',true);
 				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "due" ),2,'.','' ),1,0,'R',true);	
-				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "payed" ),2,'.','' ),1,0,'R',true);	
+				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "paid" ),2,'.','' ),1,0,'R',true);	
 				$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn[$x], $districtid, $year - $n, $type, "balance" ),2,'.','' ),1,0,'R',true);			
 				$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 				$PDF->Ln();
@@ -139,7 +139,7 @@
 			
 			$PDF->Cell(20,5, $year - $n,1,0,'C',true);
 			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "due" ),2,'.','' ),1,0,'R',true);	
-			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "payed" ),2,'.','' ),1,0,'R',true);
+			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "paid" ),2,'.','' ),1,0,'R',true);
 			$PDF->Cell(30,5, number_format( $Data->getBalanceInfo( $upn, $subupn, $districtid, $year - $n, $type, "balance" ),2,'.','' ),1,0,'R',true);
 			$PDF->Cell(65,5, "  ".$owner, 1,0,'L',true);
 			$PDF->Ln();

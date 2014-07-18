@@ -147,7 +147,7 @@
 	$PDF->SetFillColor(225,225,225);
 	$PDF->Cell(30,5, "COLLECTED",1,0,'C',true); 
 	$PDF->SetFillColor(255,255,255);
-	$PDF->Cell(140,5, $results['payed'],1,0,'C',true); $PDF->Ln();
+	$PDF->Cell(140,5, $results['paid'],1,0,'C',true); $PDF->Ln();
 	
 	$PDF->SetFillColor(225,225,225);
 	$PDF->Cell(30,5, "BALANCE *",1,0,'C',true); 

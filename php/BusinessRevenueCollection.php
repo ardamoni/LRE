@@ -1,16 +1,18 @@
 <?php
-
 	/*	
 	 * 	this file is used to insert the revenue collection into tables
 	 */
-
+	 
+	if( session_status() != 2 )
+	{
+		session_start();
+	}
+	
 	// libraries
 	require_once( "../lib/configuration.php" );
 	require_once( "../lib/Revenue.php" );
 	require_once( "../lib/System.php" );
 	
-	ob_start(); // prevent adding duplicate data with refresh (F5) - NOT WORKING !!!
-	session_start();
 	
 	$Data = new Revenue;
 	$System = new System;
@@ -19,8 +21,8 @@
 	$upn 			= $_POST["upn"];	
 	$subupn 		= $_POST["subupn"];				
 	$paymentDate 	= $_POST['paymentdate']; 
-	$payedBy 		= $_POST['payedby'];
-	$payedValue		= $_POST['payedvalue']; 
+	$paidBy 		= $_POST['paidby'];
+	$paidValue		= $_POST['paidvalue']; 
 	$paymentType	= $_POST['paymenttype'];
 	$treceipt		= $_POST['treceipt'];	
 	$type		 	= $_POST['ifproperty'];	
@@ -29,7 +31,6 @@
 	$roleid		 	= $_SESSION['user']['roleid'];	
 	$userName		= $_SESSION['user']['name'];	
 	
-	echo $type;
 	// static values 	
 	// TODO change them to dynamic, from the map
 	$station = "Station1";		
@@ -56,7 +57,7 @@
 	 */
 	// DUE, PAYMENT, BALANCE 
 	$revenueDuePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "due" );
-	$revenueCollectedPrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "payed" );
+	$revenueCollectedPrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "paid" );
 	$revenueBalancePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "balance" );
 	
 	/* 
@@ -64,7 +65,7 @@
 	 */
 	// DUE, PAYMENT, BALANCE 
 	$revenueDue = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "due" );
-	$revenueCollected = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "payed" );
+	$revenueCollected = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "paid" );
 	$revenueBalanceOld = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "balance" );
 	
 	// assuring NULL values are converted to 0
@@ -74,13 +75,13 @@
 	}
 	
 	// calculations
-	$revenuePaid = $revenueCollected + $payedValue;  // current year
-	$revenueBalance = $revenueBalanceOld - $payedValue;
+	$revenuePaid = $revenueCollected + $paidValue;  // current year
+	$revenueBalance = $revenueBalanceOld - $paidValue;
 
 /*	
 	// display for testing
-	echo "upn: ", $upn, ", subupn: ", $subupn, ", payment date: ", $paymentDate, ", paid by: ", $payedBy, ", role: ", $roleid, "<br>"; 
-	echo ", paid value: ", $payedValue, ", payment type: ", $paymentType, ", ticket receipt: ", $treceipt, ", districtid: ", $districtid, "<br>";
+	echo "upn: ", $upn, ", subupn: ", $subupn, ", payment date: ", $paymentDate, ", paid by: ", $paidBy, ", role: ", $roleid, "<br>"; 
+	echo ", paid value: ", $paidValue, ", payment type: ", $paymentType, ", ticket receipt: ", $treceipt, ", districtid: ", $districtid, "<br>";
 	echo "revenueDuePrevious: ",  $revenueDuePrevious, ", revenueCollectedPrevious: ",  $revenueCollectedPrevious, ", revenueBalancePrevious: ",  $revenueBalancePrevious, "<br>";
 	echo "revenueDue: ",  $revenueDue, ", revenueCollected: ",  $revenueCollected, ", revenueBalanceOld: ",  $revenueBalanceOld, "<br>";
 	echo "revenuePaid: ",  $revenuePaid, ", revenueBalance: ",  $revenueBalance, "<br>";
@@ -108,14 +109,14 @@
 															'".$subupn."',
 															'".$districtid."',															
 															'".$paymentDate."', 
-															'".$payedValue."',
+															'".$paidValue."',
 															NULL,
 															NULL,
 															'".$roleid."',
 															'".$station."',
 															'".$treceipt."',
 															'".$paymentType."',
-															'".$payedBy."',
+															'".$paidBy."',
 															'',
 															NULL,
 															NULL,
@@ -127,7 +128,7 @@
 	// update business_balance	
 	$query = mysql_query(" UPDATE 	`business_balance` 
 	
-							SET 	`payed` = '".$revenuePaid."',
+							SET 	`paid` = '".$revenuePaid."',
 									`balance`= '".$revenueBalance."',
 									`comments`= '".$revenueBalance."'
 									
@@ -181,8 +182,7 @@
 					<td><?php echo date("d-m-Y @ h:i:sa");?></td>	
 				</tr>
 			</table>
-			<table width = '100%' border = '1'>
-				<!--UPN, SUBUPN, ADDRESS, OWNER, PRE 2013, (2013): FEE, PAID SO FAR, BALANCE-->
+			<table width = '100%' border = '1'>				
 				<tr>
 					<td>UPN:</td>						
 					<td><?php echo $upn;?></td>		
@@ -219,7 +219,7 @@
 				</tr>
 				<tr>
 					<td>Paid value:</td>						
-					<td><?php echo number_format($payedValue, 2,'.','');?></td>		
+					<td><?php echo number_format($paidValue, 2,'.','');?></td>		
 				</tr>
 				<tr>
 					<td>New <?php echo $currentYear; ?> balance: *</td>						
