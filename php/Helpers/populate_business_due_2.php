@@ -2,7 +2,7 @@
 	/*	
 	 * 	this file is used to populate due table
 	 *  from business table that matches values in columns
-	 *  property_use (business) / code (fee_fixing_business) 
+	 *  business_class (business) / code (fee_fixing_business) 
 	 */
 
 	// DB connection
@@ -15,31 +15,31 @@
 	//
 	// CHANGE THIS VALUE for every district 
 	//
-	$districtID = 'ABC';
+	$districtID = '130';
 	
 	// Display
 	echo "START", "</br>";
 	
 	// PROTECTION
 	$protection = mysql_query(" SELECT `upn` 
-								FROM `property_due` 
-								WHERE `districtid` = '".$districtID."' AND `year` = '".$year."' ");
+								FROM   `business_due` 
+								WHERE  `districtid` = '".$districtID."' AND `year` = '".$year."' ");
 	
 	if( mysql_num_rows($protection) == 0 )
 	{	
-		echo "Good, no previous data exist in the property_due table for ";
+		echo "Good, no previous data exist in the business_due table for ";
 		echo "districtID ", $districtID, " and year ", $year, ". Script will proceed.", "<br>";
 	}
 	else 
 	{	
 		$rp =  mysql_num_rows($protection);
-		echo "Stopping and exiting Script because there are previus data @ property_due for districtID", $districtID, " and year ", $year , "</br>";
+		echo "Stopping and exiting Script because there are previus data @ business_due for districtID", $districtID, " and year ", $year , "</br>";
 		echo "Counter of Existing rows: ", $rp, "</br>";
 		exit();
 	}
 	
 	// generate file report  // it is created in the same directory as this file
-	$file = 'report_generation/'.$districtID.'_Report_Import_into_Property_due.txt';
+	$file = 'report_generation/'.$districtID.'_Report_Import_into_Business_due.txt';
 	// clean any previous data in the file
 	file_put_contents($file, "");
 	// Open the file
@@ -48,7 +48,7 @@
 	$current .= date("Y-m-d h:i:sa");	$current .= "\r\n"; $current .= "\r\n";		
 	
 	// get all the data from Property 
-	$querry = mysql_query(" SELECT * FROM `property` WHERE `districtid` = '".$districtID."' ");
+	$querry = mysql_query(" SELECT * FROM `business` WHERE `districtid` = '".$districtID."' ");
 	
 	// Display - Missmatch or number of rows
 	$i=1;
@@ -61,7 +61,7 @@
 		$rows =  mysql_num_rows($querry);
 		echo "districtID: ", $districtID, ", rows: ", $rows, "<br>";
 		// Append a new data to the file
-		$current .= "Report on COPY data from property to property_due: ";
+		$current .= "Report on COPY data from business to business_due: ";
 		$current .= "districtID: "; $current .= $districtID; 
 		$current .= ", rows: "; $current .= $rows; $current .= ". \r\n";
 	
@@ -71,7 +71,7 @@
 	while($BOR = mysql_fetch_array($querry))
 	{
 		// property_due
-		mysql_query(" INSERT INTO `property_due`(	`id`, 
+		mysql_query(" INSERT INTO `business_due`(	`id`, 
 													`upn`, 
 													`subupn`, 
 													`districtid`, 
@@ -84,18 +84,18 @@
 													'".$BOR['subupn']."', 
 													'".$BOR['districtid']."',													
 													'".$year."',
-													'".$BOR['property_use']."',
+													'".$BOR['business_class']."',
 													'ekke - ".date("Y-m-d")."' ) ");
 		
 		// Display
-		//echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $BOR['districtid'], " & ", $year, " & ", $BOR['property_use'], "<br>";
+		//echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $BOR['districtid'], " & ", $year, " & ", $BOR['business_class'], "<br>";
 		//$i++;		
 	}
 		
 	// update	
 	$q1 = mysql_query(" SELECT	*
-						FROM	`property_due` `b`,
-								`fee_fixing_property` `f`		
+						FROM	`business_due` `b`,
+								`fee_fixing_business` `f`		
 						WHERE	`b`.`districtid` = `f`.`districtid` AND
 								`b`.`feefi_code` = `f`.`code` AND
 								`f`.`year` = '".$year."' ");	
@@ -110,7 +110,7 @@
 		$rq1 =  mysql_num_rows($q1);
 		echo "districtID: ", $districtID, ", rows: ", $rq1, "<br>";
 		// Append a new data to the file
-		$current .= "Report on Insert fee fixing values into property_due: ";
+		$current .= "Report on Insert fee fixing values into business_due: ";
 		$current .= "districtID: "; $current .= $districtID; 
 		$current .= ", rows: "; $current .= $rq1; $current .= ". \r\n";
 	}
@@ -118,7 +118,7 @@
 	while($Results = mysql_fetch_array($q1))
 	{		
 		// Property_due update with feefi_value
-		mysql_query("	UPDATE 		`property_due` 
+		mysql_query("	UPDATE 		`business_due` 
 						SET 		`feefi_value` = '".$Results['rate']."' 
 						WHERE 		`upn` = '".$Results['upn']."' AND 
 									`subupn` = '".$Results['subupn']."' AND
@@ -132,7 +132,7 @@
 	//
 	// test property_due for no value on feefi_value
 	$test = mysql_query(" SELECT *
-							FROM `property_due` 
+							FROM `business_due` 
 							WHERE `districtid` = '".$districtID."' AND `year` = '".$year."' ");
 	
 	// Append a new data to the file
@@ -142,7 +142,7 @@
 	echo "number; upn; subupn; districtid; year; fee fixing code; fee fixing value </br>";
 	
 	$j = 1;
-	// Properties that have NO value
+	// Business' that have NO value
 	while($Verification = mysql_fetch_array($test))
 	{		
 		if( $Verification['feefi_value'] == 0 )
