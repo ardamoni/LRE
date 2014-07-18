@@ -1037,14 +1037,17 @@ function printAnnualBill(callproperty)
 //	var subupn = global_subupn[supnid];
 	var popupWindow = null;
 	if (ifproperty=='property'){
-		var pageURL = 'php/Reports/PropertyAnnualBill.php?districtid='+globaldistrictid;
+//specify the pageURL which will be used by openPDFprint.php as the source for the iframe
+		var pageURLget = 'Reports/PropertyAnnualBill.php?districtid='+globaldistrictid;
 		var title = 'Property Annual Bill Printing';
 	}else if (ifproperty=='business'){
-		var pageURL = 'php/Reports/BusinessAnnualBill.php?districtid='+globaldistrictid;
+//specify the pageURL which will be used by openPDFprint.php as the source for the iframe
+		var pageURLget = 'Reports/BusinessAnnualBill.php?districtid='+globaldistrictid;
 		var title = 'Business Annual Bill Printing';
 	}
 
- 	var pageURL = 'php/openPrintAnnualBill.php?districtid='+globaldistrictid+'&title='+title+'+&ifproperty='+ifproperty;
+	//call openPDFprint with title and pageURL as the two arguments	
+ 	var pageURL = 'php/openPDFprint.php?title='+title+'&pageURL='+pageURLget;
 	
 	var w = 1024;
 	var h = 650;
@@ -1131,8 +1134,18 @@ function billsRegister(target)
 	var subupn = this.global_subupn;
 	var popupWindow = null;
 	var target = target;
-	var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
-	var title = 'Bills Register for Business Licenses';
+	
+	if (target=='property'){
+		var title = 'Bills Register for Property Rates';
+	}else if (target=='business'){
+		var title = 'Bills Register for Business Licenses';
+	}
+
+//specify the pageURL which will be used by openPDFprint.php as the source for the iframe
+	var pageURLget = 'Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
+//call openPDFprint with title and pageURL as the two arguments	
+	var pageURL = 'php/openPDFprint.php?title='+title+'&pageURL='+pageURLget+'&districtid='+globaldistrictid;
+// var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
 	var w = 1024;
 	var h = 650;
     var left = (screen.width/2)-(w/2);

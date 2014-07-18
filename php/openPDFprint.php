@@ -1,8 +1,11 @@
 <?php
 /**
- * openPrintAnnualBill
- * this script is required to give a user responds while the bill is being printed
- var myvar = <?php echo json_encode($myVarValue); ?>;
+ * openPDFprint
+ * this script is a gateway script for any PDF output
+ * it requires two parameters
+ *	1. title - to set the window title
+ *	2. pageUrl - which php script to call. MUST have all necessary parameters included, e.g.
+ *		var pageURLget = 'Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
  */
 error_reporting(E_ALL);
 // hide notices
@@ -42,7 +45,7 @@ date_default_timezone_set('Europe/London');
 <br/>
  -->
 <!-- <div><input type="text" id="target" value=""></div> -->
-<iframe src="#" id="callPropertyAnnualBill"></iframe>
+<iframe src="#" id="PDFcontent"></iframe>
 <!-- specify option, report name and sfile name as described at the beginning of the script -->
 <!-- ALSO make the necessary adjustments in the function openXLS -->
 <script type="text/javascript">
@@ -68,59 +71,30 @@ var spoptions = {
 var target = document.getElementById('target');
 var spin = new Spinner(spoptions);
 spin.spin(target);
-districtid = <?php echo json_encode($_GET['districtid']); ?>;
-ifproperty = <?php echo json_encode($_GET['ifproperty']); ?>;
-//title = <?php echo json_encode($_GET['title']); ?>;
+
+//get the necessary parameters from $_GET
+title = <?php echo json_encode($_GET['title']); ?>;
+pageURL = <?php echo json_encode($_GET['pageURL']); ?>;
+
 var w = window.innerWidth-40;
 var h = window.innerHeight-60;
 var sd = new Date();
+
 //var sdate = sd.getFullYear().toString()+(sd.getMonth()+1).toString()+sd.getDate().toString()+sd.getHours().toString()+sd.getMinutes().toString()+sd.getSeconds().toString();
 var sdate = sd.getDate().toString()+'.'+(sd.getMonth()+1).toString()+'.'+sd.getFullYear().toString()+'-'+sd.getHours().toString()+':'+sd.getMinutes().toString()+'h';//+sd.getSeconds().toString();
 document.getElementById("information").innerHTML="Please be patient, process is time consuming! - "+sdate;
+document.title=title;
+//configure the iframe to receive the PDF content
+document.getElementById("PDFcontent").src=pageURL;
+document.getElementById("PDFcontent").width=w;
+document.getElementById("PDFcontent").height=h;
+document.getElementById("PDFcontent").onload=function()	{
+		spin.stop(); 
+		var sd = new Date();
+		var sdate = sd.getDate().toString()+'.'+(sd.getMonth()+1).toString()+'.'+sd.getFullYear().toString()+'-'+sd.getHours().toString()+':'+sd.getMinutes().toString()+'h';//+sd.getSeconds().toString();
+		document.getElementById("information").innerHTML="Process completed! - "+sdate;
+	};
 
-//alert(document.getElementById('report1').value);
-if (ifproperty=='property'){
-	var pageURL = 'Reports/PropertyAnnualBill.php?districtid='+districtid;
-	var title = 'Property Annual Bill Printing';
-	document.getElementById("callPropertyAnnualBill").src=pageURL;
-}else if (ifproperty=='business'){
-	var pageURL = 'Reports/BusinessAnnualBill.php?districtid='+districtid;
-	var title = 'Business Annual Bill Printing';
-	document.getElementById("callPropertyAnnualBill").src=pageURL;
-}
-	document.title=title;
-	document.getElementById("callPropertyAnnualBill").width=w;
-	document.getElementById("callPropertyAnnualBill").height=h;
-	document.getElementById("callPropertyAnnualBill").onload=function(){
-																spin.stop(); 
-																var sd = new Date();
-																var sdate = sd.getDate().toString()+'.'+(sd.getMonth()+1).toString()+'.'+sd.getFullYear().toString()+'-'+sd.getHours().toString()+':'+sd.getMinutes().toString()+'h';//+sd.getSeconds().toString();
-																document.getElementById("information").innerHTML="Process completed! - "+sdate;
-																};
-
-// 
-// var handlerParameter = {spin: spin};
-// 
-// //issue the XMLHTTPRequest to process the export in the background
-// var request = OpenLayers.Request.POST({
-// 	url: pageURL, 
-// 	data: OpenLayers.Util.getParameterString(
-// 	{districtid: districtid}),
-// 	headers: {
-// 		"Content-Type": "application/x-www-form-urlencoded"
-// 	},
-// 	callback: handler,
-// 	scope: handlerParameter
-// });
-
-//    var popupWindow = window.open (pageURL, "_self", title);
-//spinner.stop();    
-
-// function handler(request){
-// // this is the object used in scope 
-// this.spin.stop();
-// }
-//spin.stop();
 </script>
 <body>
 </html>
