@@ -6,7 +6,7 @@
 	require_once( "../lib/configuration.php"	);
 	require_once( "../lib/System.php" );
 	require_once( "../lib/Revenue.php"			);
-	require_once( "../lib/BusinessRevenueClass.php"			);
+//	require_once( "../lib/BusinessRevenueClass.php"			);
 	require_once( "../lib/StatisticsClass.php"			);
 
 	$System = new System;
@@ -165,8 +165,7 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 {
 //	require_once( "../lib/configuration.php"	);
 
-	$Data = new BusinessRevenue;
-	$Data2 = new Revenue;
+	$Data = new Revenue;
 	$System = new System;	
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
   	// upn
@@ -220,9 +219,9 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 		$json['subupn'] 			= $row['subupn'];
 		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
  		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
- 		$json['revenue_due'] 		= number_format( $Data2->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "due" ),2,'.','' ); //$row['revenue_due'];
- 		$json['revenue_collected'] 	= number_format( $Data2->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "payed" ),2,'.','' ); //$row['revenue_collected'];
- 		$json['revenue_balance'] 	= number_format( $Data2->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "balance" ),2,'.','' ); 
+ 		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "due" ),2,'.','' ); //$row['revenue_due'];
+ 		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "payed" ),2,'.','' ); //$row['revenue_collected'];
+ 		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "balance" ),2,'.','' ); 
 
 // 		$json['pay_status'] 		= $row['pay_status'];
 // 		$json['revenue_due'] 		= $row['revenue_due'];
