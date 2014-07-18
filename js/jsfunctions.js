@@ -863,10 +863,11 @@ function handler(request)
 			html += "<input type='button' value='"+title+" Details' class='orange-flat-small' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += "<input type='button' value='Print Bill' class='orange-flat-small' onclick='printIndividualBillOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";	
 			html += '<hr />';
-			html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";			
+			//html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";			
 		}
-
-		//html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick()' >";
+			
+		//html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+		html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClickAll( pushBusiness )' >";
 		//html += "<button onclick='collectRevenueOnClick(\''+upn+'\', \''+subupn+'\')'>Revenue Collection</button>";	
 		//html += ("<input type='button' value='Revenue Collection' />").find('input[type=button]').click( function(){ collectRevenueOnClick(upn, subupn); } );
 
@@ -988,7 +989,41 @@ function UPNHistoryOnClick( global_upn, global_subupn, globaldistrictid, supnid,
 	}
 
 	return false;
-}	
+}
+
+//-----------------------------------------------------------------------------
+		// function UPNHistoryOnClickAll() - original of UPNHistoryOnClick(...)
+		// on mouse-click activation to create the window for UPN History
+
+//-----------------------------------------------------------------------------
+function UPNHistoryOnClickAll( callproperty ) 
+{	
+	var upn = this.global_upn;
+	var subupn = this.global_subupn;
+	var ifproperty 	= callproperty;
+	var popupWindow = null;
+	if( ifproperty == 'property' ){
+		var pageURL = 'php/Reports/SubupnHistoryAll.php?upn='+upn+'&subupn='+subupn+'&type='+ifproperty;
+	} else {
+		ifproperty = 'business';
+		var pageURL = 'php/Reports/SubupnHistoryAll.php?upn='+upn+'&subupn='+subupn+'&type='+ifproperty;
+	}
+	//popupWindow = window.open('php/Reports/SubupnHistoryAll.php?upn='+upn+'&subupn='+subupn, 'SUBUPN History', 'height=500, width=800, left=500, top=200, resizable=yes');	
+
+	var title = 'SUBUPN History';
+	var w = 800;
+	var h = 500;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+	popupWindow = window.open(pageURL, title, 'height=500, width=800, left=500, top=200, resizable=yes');
+	
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+}		
 
 //-----------------------------------------------------------------------------
 		//function propertyAnnualBillOnClick() 
