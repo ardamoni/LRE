@@ -10,7 +10,7 @@
 	$pass		=	"root"; 
 	$db 		=	"revenue"; // revenue 
 //	$pdo = new PDO('mysql:host='.$host.';dbname='.$db.', '.$user.', '.$pass.'');
-	$pdo = new PDO('mysql:host=localhost;dbname=revenue', 'root', 'root');
+	//$pdo = new PDO('mysql:host=localhost;dbname=revenue', 'root', 'root');
 
 	
 	

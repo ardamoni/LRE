@@ -20,7 +20,8 @@
 	//
 	// CHANGE THIS VALUE for every district 
 	//
-	$districtID = 'ABC';
+	$districtID = $_GET['districtid'];
+//	$districtID = 'ABC';
 	
 	// Display
 	echo "START", "</br>";
