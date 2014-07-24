@@ -15,6 +15,8 @@
 	$Data = new Revenue;
 	$System = new System;
 	
+// 	var_dump($_POST);
+	
 	// passed from parent
 	$upn 			= $_POST["upn"];	
 	$subupn 		= $_POST["subupn"];				
@@ -33,7 +35,7 @@
 	// TODO change them to dynamic, from the map
 	$station = "Station1";		
 	
-	if( $subupn == "" || $subupn == NULL || $subupn == 'null' || $subupn == "0" || $subupn = " - " )
+	if( $subupn == "" || $subupn == NULL || $subupn == 'null' || $subupn == "0" || $subupn == " - " )
 	{ 
 		$subupn = "";
 	}

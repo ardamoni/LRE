@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8" />
 <?php echo "<title>".$_GET["title"]."</title>"; ?>
-<link rel="stylesheet" href="css/ex.css" type="text/css" />
+<link rel="stylesheet" href="../css/ex.css" type="text/css" />
 <!--<link rel="stylesheet" href="../style.css" type="text/css">-->
 <link rel="stylesheet" href="../style.css" type="text/css">
 <link rel="stylesheet" href="../css/flatbuttons.css" type="text/css">

@@ -424,6 +424,37 @@
 					return "Your type of entity is not set!";
 			}			
 		} // end of function getBalanceInfo
+
+		/*
+		 *	BALANCE TOTAL 
+		 *	Tables: property_balance, business_balance
+		 */
+		function getBalanceTotal( $upn = "", $districtid = "", $year = "2013", $type = "", $f = "" )
+		{	
+			switch( $type ) 
+			{
+				case "property":
+						$q = mysql_query(" SELECT SUM(`balance`) as sumbalance FROM 	`property_balance` 
+													WHERE 	`upn` = '".$upn."' AND 															
+															`districtid` = '".$districtid."' AND
+															`year` = '".$year."' ");
+					$r = mysql_fetch_array($q);
+ 					return $r[$f];						
+				break;
+				
+				case "business":
+						$q = mysql_query(" SELECT SUM(`balance`) as 'sumbalance' FROM 	`business_balance` 
+													WHERE 	`upn` = '".$upn."' AND 															
+															`districtid` = '".$districtid."' AND
+															`year` = '".$year."' ");
+					$r = mysql_fetch_array($q);
+					return $r[$f];	
+				break;
+			 
+				default:
+					return "Your type of entity is not set!";
+			}			
+		} // end of function getBalanceTotalSubupn
 		
 		// OBSOLETE - use getBalanceInfo where $f = 'balance'
 		//   get balance for one year

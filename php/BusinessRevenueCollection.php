@@ -35,7 +35,7 @@
 	// TODO change them to dynamic, from the map
 	$station = "Station1";		
 	
-	if( $subupn == "" || $subupn == NULL || $subupn == 'null' || $subupn == "0" || $subupn = " - " )
+	if( $subupn == "" || $subupn == NULL || $subupn == 'null' || $subupn == "0" || $subupn == " - " )
 	{ 
 		$subupn = "";
 	}

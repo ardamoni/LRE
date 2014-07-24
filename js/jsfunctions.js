@@ -223,7 +223,7 @@ var styleGreen = {
 		 strokeColor: "#FFAC62",
             strokeOpacity: 0.8,
             strokewidth: 1,
-            fillColor: "#336633",
+            fillColor: "#33CC33",
             fillOpacity: 0.6,
 	};
 var styleNeutral = { 
@@ -274,6 +274,7 @@ function startNormalUser() {
       var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
 
 //check whether we are online or offline
+//if (nogoogle){
 if (doesConnectionExist()){
 try {
   	  var gmap = new OpenLayers.Layer.Google(
@@ -289,6 +290,7 @@ try {
     	return false;
     }//Google Streets      
 } // end check online					
+// } // end if nogoogle
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
 //KML we are not using this anymore     
@@ -608,6 +610,7 @@ function onFeatureSelectLocalplan(evt) {
 
 		feature.popup = popup;
 		popup.feature = feature;
+		popup.panMapIfOutOfView = true;
 		map.addPopup(popup, true);		} 
 
 //-----------------------------------------------------------------------------
@@ -766,6 +769,7 @@ function onFeatureSelectcz(evt) {
 //		spinner.stop();				
 		feature.popup = popup;
 		popup.feature = feature;
+		popup.panMapIfOutOfView = true;
 		map.addPopup(popup, true);
 } 
 
@@ -829,12 +833,23 @@ function handler(request)
 			html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
 			html += '<p>SUBUPN: '+ feed[i]['subupn'] +'</p>';
 			//html += '<p>YEAR: '+ feed[i]['year'] +'</p>';
-			if( feed[i]['revenue_balance']>=0 ){
+			if( feed[i]['revenue_balance']>0 ){
 				html += '<div><strong>Revenue Balance: <FONT COLOR="FF0000">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
-			}else{
+			}else if (feed[i]['revenue_balance']<=0 ){
 				html += '<div><strong>Revenue Balance: <FONT COLOR="32CD32">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
+			} else {
+				html += '<div><strong>Revenue Balance: <FONT COLOR="800000">'+ feed[i]['revenue_balance'] +'</FONT> GHS</strong></div>';
 			}
-			html += '<p>Current rate: '+ feed[i]['rate'] +' GHS</p>';
+			if (feed[i]['rate']=='undefined'){
+				html += '<p>Current rate: '+ feed[i]['rate'] +' GHS (Check Fee Fixing Resolution)</p>';
+			    if (feed[i]['business_name']=='property'){
+					html += '<p>Type of Property Use: '+ feed[i]['property_use'] +' (Check Fee Fixing Resolution)</p>';
+				}else{
+					html += '<p>Type of Business: '+ feed[i]['business_class'] +' (Check Fee Fixing Resolution)</p>';
+				}
+			}else{
+				html += '<p>Current rate: '+ feed[i]['rate'] +' GHS</p>';
+			}
  			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +' GHS</p>';
 			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +' GHS</p>';
 //			html += '<p>Date paid: '+ feed[i]['date_payment'] +'</p>';
@@ -881,6 +896,7 @@ function handler(request)
 
 		feature.popup = popup;
 		popup.feature = feature;
+		popup.panMapIfOutOfView = true;		
 		map.addPopup(popup, true);		
 	}
 }  // end of handler function
@@ -909,7 +925,7 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	var h = 550;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
-    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+    popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 
 //	popupWindow = window.open('php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn, 'Revenue Collection', 'height=500, width=500, left=500, top=200, resizable=yes');	
 
@@ -917,6 +933,15 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	{
 		popupWindow.focus();
 	}
+
+var timer = setInterval(function() {   
+    if(popupWindow.closed) {  
+        clearInterval(timer);  
+//         alert('closed');  
+		getSinglePolygon(upn, ifproperty);
+    }  
+}, 1000); 
+
 	if (ifproperty=='property'){
 	    globalpropertychanged=true;
 	}else{
@@ -924,6 +949,112 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	}
 	return false;
 }	
+
+//-----------------------------------------------------------------------------
+		//function getSinglePolygon() 
+		//is the onvisibilitychanged event for the property layer
+		//it calls dbaction.php - getproperty() to retrieve geometry information to draws polygones 
+		//from the boundaries stored in the table KML_From_LUPMIS
+		//it calls a polyhandler() to actually create the polygones based on the returned data
+//-----------------------------------------------------------------------------
+function getSinglePolygon(upn, ifproperty) {  
+//   alert("inside getpolygones");
+
+// alert('in getSinglePolygon');
+
+	if (ifproperty=='property'){
+	   	var visibleLayer = fromProperty.getVisibility();
+	}else{	   	
+		var visibleLayer = fromBusiness.getVisibility();
+	}
+
+	var handlerParameter = {visibleLayer: visibleLayer};
+	
+	if (ifproperty=='property'){
+	 targetdataset = "getproperty"
+	 }else{
+	 targetdataset = "getbusiness"
+	 }
+
+//   alert(jsonVisible);
+	 spinner.spin(target);
+		var request = OpenLayers.Request.POST({
+			url: "php/dbaction.php", 
+			data: OpenLayers.Util.getParameterString(
+			{
+			 dbaction: targetdataset,
+			 districtid: globaldistrictid,
+			 upn: upn}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: handlerSinglePolygon,
+			scope: handlerParameter
+		}); 
+} //end of function getSinglePolygon
+
+function handlerSinglePolygon(request) {
+  var jsonPVisible = fromProperty.getVisibility();
+  var jsonBVisible = fromBusiness.getVisibility();
+   if (jsonPVisible){
+   		var searchlayer=fromProperty.id;
+   }
+   else if (jsonBVisible)
+   {	var searchlayer=fromBusiness.id; }
+ 	
+	// the server could report an error
+	if(request.status == 500) {
+		// do something to calm the user
+	}
+	// the server could say you sent too much stuff
+	if(request.status == 413) {
+		// tell the user to trim their request a bit
+	}
+	// the browser's parser may have failed
+
+	if(!request.responseXML) {
+		// get the response from php and read the json encoded data
+	   feed=JSON.parse(request.responseText);
+	   for (var i = 0; i < feed.length; i++) {
+	   sUPN = feed[i]['upn'].trim();
+
+// 	   		+' '+map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN).geometry);
+
+		foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN);
+//		foundUPN=fromProperty.getFeaturesByAttribute('upn', sUPN);
+//   		alert(foundUPN[0].style.fillColor+' '+foundUPN[0].id);
+		if (foundUPN.length > 0){
+		for (var j = 0; j < foundUPN.length; j++) {	   
+			switch(parseInt(feed[i]['status'])) {
+				case 1:
+					foundUPN[j].style = styleRed;
+				  break;
+				case 5:  
+					foundUPN[j].style = styleNotYetGreen;
+				  break;
+				case 9:  
+					foundUPN[j].style = styleGreen;
+				  break;
+				default:  
+					foundUPN[j].style = styleNeutral;
+				}//end switch
+		  select.select(map.getLayer(searchlayer).getFeatureById(foundUPN[j].id));
+		}	//end for j
+		} //if foundUPN.length>0
+	}//end for i	
+//		  map.getLayer(searchlayer).redraw();
+		  fromProperty.redraw();
+		  popup = map.popup;
+// 		  map.removePopup(popup, true);
+	}
+		spinner.stop();
+		w.stop();  
+// 		document.getElementById("debug1").innerHTML=w.toString();
+		showLegend();
+
+//       alert(w.toString());
+} // end of function handlerSinglePolygon
+
 
 //-----------------------------------------------------------------------------
 		//function propertyDetailsOnClick() 
@@ -1535,6 +1666,7 @@ function Businesshandler(request) {
 //-----------------------------------------------------------------------------
 function onPopupClose(evt) {
         select.unselectAll();
+        this.destroy;
 }
 
 //-----------------------------------------------------------------------------
