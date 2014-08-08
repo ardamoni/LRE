@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>Table view</title>
 <link rel="stylesheet" href="../css/ex.css" type="text/css" />
+<link rel="stylesheet" href="../css/flatbuttons.css" type="text/css" />
 <style type="text/css">
 
 table.demoTbl {
@@ -75,7 +76,7 @@ $rowCount = (int) $rs1->fetchColumn();
 // This is for the buffer achieve the minimum size in order to flush data
 echo str_repeat(' ',1024*64);
 print( "The time is " . date("h:i:sa")." - Affected rows: ".$total); 
-echo '<p><a href="javascript:;" onclick="window.close();">Close Preview</a></p>';
+// echo '<p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Close Preview"></a></p>';
 
 //flush();
 
@@ -136,8 +137,7 @@ echo '<script language="javascript">document.getElementById("information").inner
 flush();
 ?>
 
-
-<p><a href="javascript:;" onclick="window.close();">Close Preview</a></p>
+// <p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Close Preview"></a></p>
 
 </body>
 </html>

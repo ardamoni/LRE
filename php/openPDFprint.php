@@ -19,7 +19,7 @@ require_once( "../lib/configuration.php"	);
 
 date_default_timezone_set('Europe/London');
 
-//var_dump($_GET);
+// var_dump($_GET);
 
 ?>
 <html>
@@ -29,7 +29,7 @@ date_default_timezone_set('Europe/London');
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<title>PDF Dispatch</title>
+<title>Output Dispatch</title>
 
 </head>
 <body>
@@ -38,6 +38,8 @@ date_default_timezone_set('Europe/London');
 
 <!-- Progress information -->
 <div id="information" style="width">Please be patient, process is time consuming!</div>
+<p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Close Preview"></a></p>
+
 <!-- Target for the spinner -->
 <h1><div><center id="target"></center></div></h1>
 <!-- 

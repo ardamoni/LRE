@@ -4,13 +4,14 @@
 	 *	Library
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */
-	require('System.FPDF.php');
+// 	require('System.FPDF.php');
+	require('fpdf.php');
 
 	/*
 	 *	PDF Class
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */
-	class PDF extends FPDF
+ 	class PDF extends FPDF
 	{	
 		/*
 		 *	PDF Report: Header

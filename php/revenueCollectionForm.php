@@ -121,7 +121,7 @@ $paymentType = array(
 );
 ?>
 
-<?	
+<?php	
 	if ($ifproperty == 'property'){
 		echo '<form id="form1" name="form1" method="post" action="PropertyRevenueCollection.php">';
 	} else {

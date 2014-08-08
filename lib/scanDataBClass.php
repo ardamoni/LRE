@@ -82,6 +82,22 @@ class ScanDataBusiness extends DatabaseObject {
 //		return !empty($result_array) ? array_shift($result_array) : false;
 		return !empty($result_array) ? $result_array : false;
   }
+    public static function find_by_upn_subupn($upn="", $subupn="") {
+	if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+	{							
+		$result_array = static::find_by_sql("SELECT * FROM ".static::$table_name." WHERE upn={$upn} AND subupn={$subupn} LIMIT 1");
+	//		return !empty($result_array) ? array_shift($result_array) : false;
+			return !empty($result_array) ? 'found' : 'not found';
+		}
+		else
+		{
+		$result_array = static::find_by_sql("SELECT * FROM ".static::$table_name." WHERE upn={$upn}  LIMIT 1");
+	//		return !empty($result_array) ? array_shift($result_array) : false;
+			return !empty($result_array) ? 'found' : 'not found';
+		}
+	}
+
+
   public static function find_dups_of_upn($districtid='') {
 //    $result_array = static::find_by_sql("SELECT * FROM ".static::$table_name." WHERE upn={$upn} LIMIT 1");
     $result_array = static::find_by_sql("select `id`,`upn`, `subupn`, `districtid` 

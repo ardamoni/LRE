@@ -1,8 +1,6 @@
 <?php
 	session_start();
 ?>
-
-
 <!DOCTYPE html>
 <!--31. Juli 2013 09:21:24 GMT First time sync with GitHUB-->
 <html>
@@ -357,6 +355,7 @@
 			<input type="submit" value="KML to DB conversion" href="javascript:;" onclick="uploadkml();" title="Upload KML file into the database" class="orange-flat-small">
 			<input type="submit" value="Upload Fee Fixing information" href="javascript:;" onclick="uploadxls();" title="Store Fee Fixing information in database" class="orange-flat-small">
 			<input type="submit" value="Upload Scanned Data" href="javascript:;" onclick="uploadScannedData();" title="Store scanned Data in database" class="orange-flat-small">
+			<input type="submit" value="Collector Zone relation" href="javascript:;" onclick="updateCZinPropBus();" title="Relate each parcel with collector zone" class="orange-flat-small">
 			<input type="submit" value="Administration Module" href="javascript:;" onclick="index_admin();" title="Administration Module" class="orange-flat-small">
           [<a href='#' onclick='overlayadmin()'>close</a>]
      </div>     

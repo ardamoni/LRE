@@ -74,15 +74,15 @@ $styleArray = array(
 'top' => array(
 'style' => PHPExcel_Style_Border::BORDER_THIN,
 ), ),
-'fill' => array(
-'type' => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
-'rotation' => 90,
-'startcolor' => array(
-'argb' => 'FFA0A0A0',
-),
-'endcolor' => array(
-'argb' => 'FFFFFFFF',
-), ),
+// 'fill' => array(
+// 'type' => PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR,
+// 'rotation' => 90,
+// 'startcolor' => array(
+// 'argb' => 'FFA0A0A0',
+// ),
+// 'endcolor' => array(
+// 'argb' => 'FFFFFFFF',
+// ), ),
 );
 
 // writer already created the first sheet for us, let's get it

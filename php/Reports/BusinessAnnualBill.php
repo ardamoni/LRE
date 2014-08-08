@@ -62,11 +62,10 @@
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
 	// 	$q = mysql_query("SELECT * 	FROM  `business` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
-	$q = mysql_query("SELECT 	t1.*, t2.`colzonenr` 
-						FROM  	`business` t1, `collectorzones` t2 
-						WHERE 	t1.`districtid` = '".$districtId."' AND 
-								t2.`id`= t1.`colzone_id` 
-						ORDER BY `colzonenr` ");
+	$q = mysql_query("SELECT 	t1.* 
+						FROM  	`business` t1
+						WHERE 	t1.`districtid` = '".$districtId."'
+						ORDER BY `colzone_id` ");
 	
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
@@ -113,7 +112,7 @@
 		$PDF->Cell(40,5,'Business License Bill',0,1,'R'); 	
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');	
-		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzonenr'],0,0,'R');
+		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzone_id'],0,0,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');	
 		$PDF->Cell(40,5,'Bill Date: '.date('d-m-Y'),0,1,'R');	

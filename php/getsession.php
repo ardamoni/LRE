@@ -15,6 +15,7 @@ else
 	$json['username'] 				= $_SESSION['user']['name'];
 	$json['userdistrict'] 		= $_SESSION['user']['districtid'];
 	$json['userdistrictname'] 		= $_SESSION['user']['districtname'];
+	$json['userrole']			= $_SESSION['user']['roleid'];
 	
 		// collect the information to be displayed in the UI
 	$qdistrictboundary	= 	mysql_query("SELECT `boundary` FROM `area_district` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");

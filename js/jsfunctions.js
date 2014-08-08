@@ -23,9 +23,10 @@ var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
 	var global_out_business;
 	var globalfeatureid;
 	var globaldistrictid='';
+	var globaluserrole='';
 	var globalpropertychanged = false; //used to display the outstanding revenue
 	var globalbusinesschanged = false; //same, but for business
-	var nogoogle = false;
+	var googleonline = true;
 
 //we need to get the starting window dimensions for a potential resize of the map
 	var windowWidth = window.innerWidth;
@@ -274,7 +275,7 @@ function startNormalUser() {
       var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
 
 //check whether we are online or offline
-//if (nogoogle){
+if (googleonline){
 if (doesConnectionExist()){
 try {
   	  var gmap = new OpenLayers.Layer.Google(
@@ -290,7 +291,7 @@ try {
     	return false;
     }//Google Streets      
 } // end check online					
-// } // end if nogoogle
+} // end if googleonline
 //Markers
 //      var markers = new OpenLayers.Layer.Markers( "Markers" );
 //KML we are not using this anymore     
@@ -412,8 +413,8 @@ try {
 // Add Layers
 	map.addLayer(mapnik);
 //only call Google Maps if Internet exists	
- if (doesConnectionExist()){
-//    if(!nogoogle){
+// if (doesConnectionExist()){
+if(googleonline){
 	map.addLayer(gmap);
 }else //Internet not available
 {
@@ -590,15 +591,20 @@ function onFeatureSelect(evt)
 //-----------------------------------------------------------------------------
 function onFeatureSelectLocalplan(evt) {
 	feature = evt.feature;
+	pushProperty='property';
     var curpos = new OpenLayers.Geometry.Point(feature.geometry.getBounds().getCenterLonLat().lon,feature.geometry.getBounds().getCenterLonLat().lat);
-
     content = 'UPN: '+feature.attributes.upn+
 				'<br>Address: '+feature.attributes.address+
 				'<br>Parcel Of: '+feature.attributes.ParcelOf+
 				'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)).toFixed(2)+'sq m'+
 				'<br>Land use: '+feature.attributes.landuse;
-// 	content += '<br><br><select><option value="property">Property</option><option value="business">Business</option><option value="other">Others</option></select>';
-//	content += "<input type='button' class='' value='Add' title='Add details' onclick='addDetails()' >";	
+
+	if (globaluserrole<100){
+		content += '<hr />';
+		content += '<form action="javascript:addDetails(feature.attributes.upn)" method="post">';
+		content += '<br><select id="ddDetails" ><option value="property">Property</option><option value="business">Business</option><option value="other">Others</option></select>';
+		content += "<input type='submit' id='btAdd' class='orange-flat-small' value='Add' title='Add details'></form>";	
+	}
 	
 
 		var popup = new OpenLayers.Popup.FramedCloud(
@@ -611,7 +617,8 @@ function onFeatureSelectLocalplan(evt) {
 		feature.popup = popup;
 		popup.feature = feature;
 		popup.panMapIfOutOfView = true;
-		map.addPopup(popup, true);		} 
+		map.addPopup(popup, true);		
+} 
 
 //-----------------------------------------------------------------------------
 		//function onFeatureSelectSub() 
@@ -692,22 +699,29 @@ function onFeatureSelectcz(evt) {
 	feature = evt.feature;
 	var intersectedUPNs=0;
 	var intersectedParcels=0;
+	var intersectedBusinesses=0;
 	var revbalance=0;
+	var revbalanceBusiness=0;
 	var jsonLPVisible = fromLocalplan.getVisibility();
 	var jsonPVisible = fromProperty.getVisibility();
   	var jsonBVisible = fromBusiness.getVisibility();
+  	var searchlayer2 = '';
 
    	if (!jsonLPVisible)
    	{	html = 'Please open the Local Plan! \nThis will enable the calculation of numbers of Parcels';
    		alert(html); 
    	}//else{	
-//   	  spinner.spin(target);
+   	  spinner.spin(target);
 
-		if (jsonPVisible){
+		if (jsonPVisible && !jsonBVisible){
 			var searchlayer=fromProperty.id;
 		}
-		else if (jsonBVisible)
+		else if (jsonBVisible && !jsonPVisible)
 		{	var searchlayer=fromBusiness.id; }
+		else if (jsonPVisible && jsonBVisible)
+		{	var searchlayer=fromProperty.id;
+			var searchlayer2=fromBusiness.id;
+			}
 		else
 		{ 	html = 'Please open either the Properties or the Business Map!\nThis will enable the calculation of numbers of Properties or Businesses';
 			alert(html);
@@ -728,9 +742,10 @@ function onFeatureSelectcz(evt) {
 					}
 				}			
 			}
-		if (jsonPVisible || jsonBVisible) {
+
+		if ((jsonPVisible || jsonBVisible) && !(jsonPVisible && jsonBVisible)) {
 		// check each feature from layer below if intersecting with the collector zone polygon
-			console.log('property layer');
+//			console.log('property layer');
 			for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
 			{
 				if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
@@ -745,19 +760,55 @@ function onFeatureSelectcz(evt) {
 				}
 				}			
 			}
-		}
-  // 	}
+		} else if (jsonPVisible && jsonBVisible){
+			for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
+			{
+				if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) { 
+					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
+				if (feature.geometry.containsPoint(checkPoint)){
+					intersectedUPNs++;
+					revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
+				// for debugging
+// 					if (console && console.log) {
+// 						console.log(map.getLayer(searchlayer).features[i].attributes.upn, intersectedUPNs.toString());
+					}
+				}
+				}			
+			for( var i = 0; i < map.getLayer(searchlayer2).features.length; i++ ) 
+			{
+				if (feature.geometry.intersects(map.getLayer(searchlayer2).features[i].geometry)) { 
+					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer2).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer2).features[i].geometry.getBounds().getCenterLonLat().lat);
+				if (feature.geometry.containsPoint(checkPoint)){
+					intersectedBusinesses++;
+					revbalanceBusiness=revbalanceBusiness+Number(map.getLayer(searchlayer2).features[i].attributes.revbalance);
+				// for debugging
+// 					if (console && console.log) {
+// 						console.log(map.getLayer(searchlayer2).features[i].attributes.upn, intersectedUPNs.toString());
+					}
+				}
+				}	
+			}
 
 		content = 'Collector ID: '+feature.attributes.collectorid+
 					'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+'sq km'+
 					'<br>Parcels: '+intersectedParcels.toString();
-		if (jsonPVisible){			
+		if (jsonPVisible && !jsonBVisible){			
 		content +=	'<br>Properties: '+intersectedUPNs.toString();
-		}else if (jsonBVisible){
+		}else if (jsonBVisible && !jsonPVisible){
 		content +=	'<br>Businesses: '+intersectedUPNs.toString();
+		} else if (jsonPVisible && jsonBVisible){
+		content +=	'<br>Properties: '+intersectedUPNs.toString();
+		content +=	'<br>Businesses: '+intersectedBusinesses.toString();
 		}
+		if (jsonPVisible && jsonBVisible){
+		content +=	'<br>Outstanding Property: '+number_format(revbalance, 2, '.', ',')+' GHC'+
+					'<br>Outstanding Business: '+number_format(revbalanceBusiness, 2, '.', ',')+' GHC'+
+					'<br>Outstanding Total: '+number_format(revbalance+revbalanceBusiness, 2, '.', ',')+' GHC'+
+					'<br>Zone ID: '+feature.attributes.zoneid;
+			} else {
 		content +=	'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
 					'<br>Zone ID: '+feature.attributes.zoneid;
+			}
 		content += "<br><input type='button' class='deletezone' value='' title='Delete the selected collector zone' onclick='deletezone(paraevt)' >";	
 
 		var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
@@ -766,7 +817,7 @@ function onFeatureSelectcz(evt) {
 						content, 
 						null, true, onPopupClose);
 
-//		spinner.stop();				
+		spinner.stop();				
 		feature.popup = popup;
 		popup.feature = feature;
 		popup.panMapIfOutOfView = true;
@@ -915,11 +966,11 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 	var popupWindow = null;
 	if (ifproperty=='property'){
 		var title = 'Property Revenue Collection';
-		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&ifproperty='+ifproperty;
+		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
 	}else{
 		var ifproperty = 'business';
 		var title = 'Business Revenue Collection';
-		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&ifproperty='+ifproperty;
+		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
 	}
 	var w = 450;
 	var h = 550;
@@ -1112,7 +1163,7 @@ function UPNHistoryOnClick( global_upn, global_subupn, globaldistrictid, supnid,
 	var h = 500;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
-	popupWindow = window.open(pageURL, title, 'height=500, width=800, left=500, top=200, resizable=yes');	
+	popupWindow = window.open(pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, height=500, width=800, left=500, top=200, resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
 	{
@@ -1273,7 +1324,8 @@ function billsRegister(target)
 	}
 
 //specify the pageURL which will be used by openPDFprint.php as the source for the iframe
-	var pageURLget = 'Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
+	var pageURLget = "Reports/BillsRegister.php?target="+target+"%26districtid="+globaldistrictid;
+//	var pageURLget = "Reports/BillsRegister.php?target=property%26districtid=123";
 //call openPDFprint with title and pageURL as the two arguments	
 	var pageURL = 'php/openPDFprint.php?title='+title+'&pageURL='+pageURLget+'&districtid='+globaldistrictid;
 // var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
@@ -1817,6 +1869,9 @@ function onVisibiltyChangedcz(){
   var czVisible = colzones.getVisibility();
  if (czVisible) {
  globalinsertCZ = false;
+
+ spinner.spin(target);
+
  document.getElementById("controls").style.visibility="visible";
  var request = OpenLayers.Request.POST({
 		url: "php/dbaction.php", 
@@ -1830,6 +1885,7 @@ function onVisibiltyChangedcz(){
 	});
  }else{
  document.getElementById("controls").style.visibility="hidden";
+ spinner.stop();
  }
 }
 
@@ -1884,7 +1940,7 @@ function getCZhandler(request) {
 	} //end if		
 
 		  colzones.redraw();	
-
+		spinner.stop();
 } 
 // end of function getCZhandler
 
@@ -2010,6 +2066,7 @@ if(!request.responseXML) {
 		for (var i = 0; i < feed.length; i++) {
 			html += feed[i]['username'];
 			userdistrict += feed[i]['userdistrict'];
+			userrole = feed[i]['userrole'];
 			userdistrictname += feed[i]['userdistrictname'];
 			numberOfParcels += feed[i]['numberOfParcels'];
 			numberOfProperty += feed[i]['numberOfProperty'];
@@ -2023,6 +2080,7 @@ if(!request.responseXML) {
 
 	document.getElementById("wcUser").innerHTML='Welcome: '+html;
 	globaldistrictid=userdistrict;
+	globaluserrole=userrole;
 	document.getElementById("districtname").innerHTML=userdistrictname;
 	document.getElementById("stat1").innerHTML=number_format(numberOfParcels, 0, '.', ',');
 	document.getElementById("stat2").innerHTML=number_format(numberOfProperty, 0, '.', ',');
@@ -2288,21 +2346,15 @@ function searchOtherHandler(request) {
 		// get the response from php and read the json encoded data
 	   feed=JSON.parse(request.responseText);
 	   // build html for each feed item
-// 	   	   var html='';
-// 		for (var i = 0; i < feed.length; i++) {
-// 			html += feed[i]['upn'];
-// 			}
-// 
-//  alert('done: '+html);
 
+		alert(feed.length+' UPNs found');
 		for (var i = 0; i < feed.length; i++) {
 			sUPN = feed[i]['upn'];
-//			fstyle = new OpenLayers.Style({fill: true, fillColor: zonecolour, fillOpacity: 0.2});
  			foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN);
 //			alert(' '+searchlayer+' '+fromBusiness.id+' '+map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN));
 			if (foundUPN.length > 0){
 			for (var j = 0; j < foundUPN.length; j++) {
- 						map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[j].id), {fillColor: "#99FF33", fillOpacity: 0.8, strokeColor: "#00ffff"});			
+ 						map.getLayer(searchlayer).drawFeature(map.getLayer(searchlayer).getFeatureById(foundUPN[j].id), {fillColor: "#0066FF", fillOpacity: 0.8, strokeColor: "#00ffff"});			
 					}
 			}else{
 			html = 'UPN: '+sUPN+' could not be found!\nPlease check your entry';
@@ -2482,12 +2534,34 @@ function index_admin() {
 		//opens a window for adding details to UPN based on the selection from a dropdown list
 		//
 //-----------------------------------------------------------------------------
-function addDetails() {
-
+function addDetails(global_upn, global_subupn, globaldistrictid, supnid, callproperty) {
+alert('in add details '+ global_upn+' - '+document.getElementById("ddDetails").value);
+// 	var upn = global_upn;
+// 	var subupn = global_subupn[supnid];
+// 	var ifproperty = callproperty;
+// 	var popupWindow = null;
+// 	if (ifproperty=='property'){
+// 		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&addDetails=true';
+// 		var title = 'Property Details';
+// 	}else{
+// 		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&addDetails=true';
+// 		var title = 'Business Details';
+// 	}
+// 	var w = 1024;
+// 	var h = 750;
+//     var left = (screen.width/2)-(w/2);
+//     var top = (screen.height/2)-(h/2);
+//     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+// //	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
+// 
+// 	if(popupWindow && !popupWindow.closed)
+// 	{
+// 		popupWindow.focus();
+// 	}
+// 
 	return false;
-
 } 
-// end of function tableshow
+// end of function addDetails
 
 function checkConnection(e) {
 		if (doesConnectionExist() == true) {
@@ -2639,7 +2713,7 @@ function updateCZinPropBus() {
 		feature = colzones.feature;
 		var searchlayer=fromProperty.id;
 		var searchlayer2=fromBusiness.id;
-		console.log('property layer');
+//		console.log('property layer');
 //alert('starting now with Property');
 		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ ) 
 		{

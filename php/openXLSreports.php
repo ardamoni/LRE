@@ -136,18 +136,32 @@ table.demoTbl td.foot {
 			<td><center>Quality of Data Reports</center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" class="orange-flat-button" value="Show Property UPNs that are not in the localplan"/></td>
+			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" class="orange-flat-button" value="List Property UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report6" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table property_balanace that have no correspondance in the local plan</td>
 			<td><div id=sfile6></div></td>
 			<td><center id="spin6" type="hidden"><center id="squery6" type="hidden"><div id=prev6></div></center></td>
 		</tr>
 		<tr>
-			<td><input type="button" type="submit" id="option7" name="xlsopen" a href="javascript:;" onclick="openXLS(7);" class="orange-flat-button" value="Show Business UPNs that are not in the localplan"/></td>
+			<td><input type="button" type="submit" id="option7" name="xlsopen" a href="javascript:;" onclick="openXLS(7);" class="orange-flat-button" value="List Business UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report7" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table business_balanace that have no correspondance in the local plan</td>
 			<td><div id=sfile7></div></td>
 			<td><center id="spin7" type="hidden"><center id="squery7" type="hidden"><div id=prev7></div></center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option8" name="xlsopen" a href="javascript:;" onclick="openXLS(8);" class="orange-flat-button" value="List Property UPNs that without a corresponding code in Fee Fixing"/></td>
+			<div><input type="hidden" id="report8" value=""></div></td>
+			<td>This will produce an Excel table listing all UPNs from table property that have no correspondance in the Fee Fixing table</td>
+			<td><div id=sfile8></div></td>
+			<td><center id="spin8" type="hidden"><center id="squery8" type="hidden"><div id=prev8></div></center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option9" name="xlsopen" a href="javascript:;" onclick="openXLS(9);" class="orange-flat-button" value="List BOP UPNs that without a corresponding code in Fee Fixing"/></td>
+			<div><input type="hidden" id="report9" value=""></div></td>
+			<td>This will produce an Excel table listing all UPNs from table business that have no correspondance in the Fee Fixing table</td>
+			<td><div id=sfile9></div></td>
+			<td><center id="spin9" type="hidden"><center id="squery9" type="hidden"><div id=prev9></div></center></td>
 		</tr>
 	</table>
 		
@@ -240,6 +254,26 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREwrongupnsBusiness";
 		var target = document.getElementById('spin'+opt);
 	  break;
+	case 8:  
+		var squery = 'SELECT d1.`property_use`, d1.`upn`, d1.`subupn`, d1.`owner` FROM `property` d1 ';
+		squery +='WHERE d1.`property_use` NOT IN ';
+		squery +='(SELECT d2.code from `fee_fixing_property` d2 WHERE d2.`districtid`='+<?php echo json_encode($_GET['districtid']) ?>+') ';
+		squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']) ?>+' ORDER BY d1.`property_use`;';
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List all Property UPNs missing in Fee Fixing table";
+		document.getElementById('report'+opt).value="01LREwrongUpnsPropertyUseCode";
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 9:  
+		var squery = 'SELECT d1.`business_class`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`business_name` FROM `business` d1 ';
+		squery +='WHERE d1.`business_class` NOT IN ';
+		squery +='(SELECT d2.code from `fee_fixing_business` d2 WHERE d2.`districtid`='+<?php echo json_encode($_GET['districtid']) ?>+') ';
+		squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']) ?>+' ORDER BY d1.`business_class`;';
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List all BOP UPNs missing in Fee Fixing table";
+		document.getElementById('report'+opt).value="01LREwrongUpnsBusinessClassCode";
+		var target = document.getElementById('spin'+opt);
+	  break;
 	default:  
 	}
 spin.spin(target);
@@ -275,11 +309,8 @@ var sqy = "SELECT * from area_district"; // WHERE districtid='+<?php echo json_e
 
 document.getElementById('spin0').innerHTML="<strong>Export to Excel is completed! Use the link to download the file</strong>";
 var outfile = document.getElementById('report'+this.opt).value+".xlsx";
-document.getElementById('sfile'+this.opt).innerHTML='<a href ="downloadxls2.php?sfile='+this.sfile+'.xlsx&outfile='+outfile+'" id=down1 style="hidden">Download file</a>';
-//document.getElementById('prev'+this.opt).innerHTML='<a href ="javascript:;" onclick="alert('+sqy+');"style="hidden">Preview file</a>';
-//document.getElementById('prev'+this.opt).innerHTML='<span> <button type="submit" class="tableshow" href="javascript:;" onclick="alert(sqy);" value="" title="Open the table view"></button> </span>';
-//var call='<span> <button type="submit" class="tableshow" onclick="alert("test");" value="" title="Open the table view"></button> </span>';
-document.getElementById('prev'+this.opt).innerHTML='<span> <button type="submit" class="tableshow" onclick="tablepreview('+this.opt+');" value="" title="Open the table view"></button> </span>';
+document.getElementById('sfile'+this.opt).innerHTML='<a href="downloadxls2.php?sfile='+this.sfile+'.xlsx&outfile='+outfile+'" id=down1 value="Download file" style="hidden">Download file</a>';
+document.getElementById('prev'+this.opt).innerHTML='<span> <button type="submit" class="tableshow" onclick="tablepreview('+this.opt+');"  value="" title="Open the table view"></button> </span>';
 
 //'<a href ="showtable.php?sfile='+this.sfile+'.xlsx&outfile='+outfile+'" id=down1 style="hidden">Download file</a>';
 
@@ -295,14 +326,27 @@ this.spin.stop();
 //-----------------------------------------------------------------------------
 function tablepreview(opt) {
 
-  var popupWindow = null;
+	var popupWindow = null;
   var title = 'Preview';
   var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value;
-	var w = 1000;
-	var h = 500;
+
+//call openPDFprint with title and pageURL as the two arguments	
+	var pageURL = 'openPDFprint.php?title='+title+'&pageURL='+pageURL;
+// var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
+	var w = 1024;
+	var h = 650;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+
+//   var popupWindow = null;
+//   var title = 'Preview';
+//   var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value;
+// 	var w = 1000;
+// 	var h = 500;
+//     var left = (screen.width/2)-(w/2);
+//     var top = (screen.height/2)-(h/2);
+//     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
   
   //var popupWindow = window.open (pageURL, "_self", title);
 

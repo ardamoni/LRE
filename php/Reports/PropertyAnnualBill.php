@@ -13,18 +13,21 @@
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */
 	require_once(	"../../lib/configuration.php"	);	
-	require_once(	"../../lib/System.PDF.AnnualBill.php"		);
+ 	require_once(	"../../lib/System.PDF.AnnualBill.php"		);
 	require_once( 	"../../lib/Revenue.php"			);
 	require_once( 	"../../lib/System.php"			);
 	
 	$Data = new Revenue;
 	$System = new System;
 	
-	$PDF = new PDF('P','mm','A4');
-	
+ 	$PDF = new PDF('P','mm','A4');
+// $pdf = new FPDF2File('P','mm','A4');
+// $pdf->Open('doc.pdf');	
 	$currentYear 	= $System->GetConfiguration("RevenueCollectionYear");	
 	$districtId 	= $_GET['districtid'];
-	$type 			= "property";	
+	$type 			= "property";
+	
+	set_time_limit(0);
 	
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
@@ -49,14 +52,7 @@
 	
 //	$districtId = 130;
 	
-	/*
-	 * PDF Generation
-	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	 */	
 
-	$PDF->AddPage();
-	
-	$PDF->Ln();
 	
 // 	$districtName = $Data->getDistrictInfo( $district, "district_name" );
 	
@@ -65,19 +61,27 @@
 		
 // 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
 // $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
-$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
+// $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` LIMIT 4997");
+$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`");
+
+	/*
+	 * PDF Generation
+	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	 */	
+	$PDF->AddPage();
 	
+	$PDF->Ln();
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
 	{
 		$PDF->Ln();
 		// District emblem
-//		$PDF->Cell(30,5, $PDF->Image($file, null, null, 15, 15, 'gif', ''),0,0,'C'); 			
+// 		$PDF->Cell(30,5, $PDF->Image($file, null, null, 15, 15, 'gif', ''),0,0,'C'); 			
 		if (!empty($file)){
-		$PDF->Image($file, $PDF->GetX()+5, $PDF->GetY()-4, 20, 20, $ext, '');
+ 		$PDF->Image($file, $PDF->GetX()+5, $PDF->GetY()-4, 20, 20, $ext, '');
 		}
 		if (!empty($filesig)){
-		$PDF->Image($filesig, $PDF->GetX()+27, $PDF->GetY()+2, 25, 0, $extsig, '');
+ 		$PDF->Image($filesig, $PDF->GetX()+27, $PDF->GetY()+2, 25, 0, $extsig, '');
 		}
 		// District Left and Right side of bill
 		$PDF->SetFont('Arial','B',16);
@@ -110,7 +114,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 		$PDF->Cell(40,5,'Property Rate Bill',0,1,'R'); 	
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');	
-		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzonenr'],0,0,'R');
+		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzone_id'],0,0,'R');
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');	
 		$PDF->Cell(40,5,'Bill Date: '.date('d-m-Y'),0,1,'R');	
@@ -215,6 +219,7 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 			$counter=0;
 		} else {
 			$counter++;
+			$PDF->Ln();
 			$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 			$PDF->Ln();
 		}
@@ -228,6 +233,9 @@ $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzon
 	} //fetch_array
 	
 	$PDF->Ln();
-	$PDF->Output();
+// $pdf->Output();
+// 	$savefile = "../tmp/output.pdf";
+// $pdf->Output($savefile,'I');
+	$PDF->Output('PropertyAnnualBill.pdf','I');
 
 ?>

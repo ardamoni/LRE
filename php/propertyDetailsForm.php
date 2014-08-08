@@ -1,9 +1,22 @@
+<?php
+//    require_once("../lib/initialize.php");
+session_start();
+
+error_reporting(E_ALL);
+set_time_limit(0);
+ob_start(); // prevent adding duplicate data with refresh (F5)
+
+date_default_timezone_set('Europe/London');
+
+// var_dump($_SESSION);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <title>Property Details Form</title>
 <link rel="stylesheet" href="../css/ex.css" type="text/css" />
+<link rel="stylesheet" href="../css/flatbuttons.css" type="text/css" />
 <link rel="stylesheet" href="../lib/OpenLayers/theme/default/style.css" type="text/css">
 <link rel="stylesheet" href="../style.css" type="text/css">
 <style type="text/css">
@@ -76,7 +89,11 @@ require_once( "../lib/PropertyDetails.php"	);
 
 $upn = $_GET["upn"];
 $subupn = $_GET["subupn"];	
-$districtid = $_GET["districtid"];	
+$districtid = $_GET["districtid"];
+$addDetails = $_GET["addDetails"];
+
+$username = $_SESSION['user']['name'];
+
 
 $currentdate = getdate();
 $currentyear = $currentdate['year'];
@@ -91,9 +108,22 @@ if (!empty($subupn) && $subupn != "null" ){
 		echo "<h1>Enter property details for UPN: ".$upn."</h1>";
 	}
 
-//get the current database entries from property
+//check whether new details are inserted or existing information is updated
+if (empty($addDetails)){
+	//get the current database entries from property
 	$Data = new propertyDetailsClass;
     $r = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
+    } else {
+		$r = array();
+		$r['streetname'] = '';
+		$r['housenumber'] = '';
+		$r['owner'] = '';
+		$r['owneraddress'] = '';
+		$r['owner_tel'] = '';
+		$r['owner_email'] = '';
+		$r['buildingpermit_no'] = '';
+		$r['locality_code'] = '';    
+    } //end if (empty($addDetails)){
 //var_dump($r);
     
  //check Planning Permit   
@@ -158,46 +188,48 @@ while ($row = mysql_fetch_array($query)) {
 			 $json = $ptypetext[$i]['code'].' : '.$ptypetext[$i]['text'];
 			 $ptypelist[] = $json; 
 			}
-	//get roofing info
-	$helpertable = 'hlp_roofing';
-	$roofingtext 	= $Data->getHelperText($helpertable);
-			for( $i = 0; $i < count($roofingtext); $i++ ) 
-			{		
-				if ($roofingtext[$i]['code']==$r['roofing'])
-				{
-				 $roofinguse = $roofingtext[$i]['code'].' : '.$roofingtext[$i]['text'];
-				}
-			 $json = $roofingtext[$i]['code'].' : '.$roofingtext[$i]['text'];
-			 $roofinglist[] = $json; 
-			}
-	//get ownership info
-	$helpertable = 'hlp_property_ownership';
-	$ownertext 	= $Data->getHelperText($helpertable);
-			for( $i = 0; $i < count($ownertext); $i++ ) 
-			{		
-				if ($ownertext[$i]['code']==$r['ownership_type'])
-				{
-				 $owneruse = $ownertext[$i]['code'].' : '.$ownertext[$i]['text'];
-				}
-			 $json = $ownertext[$i]['code'].' : '.$ownertext[$i]['text'];
-			 $ownerlist[] = $json; 
-			}
-	//$ownership 	= array('To do','No idea','Get info');
-	//get construction material info
-	$helpertable = 'hlp_construction_material';
-	$cmtext 	= $Data->getHelperText($helpertable);
-			for( $i = 0; $i < count($cmtext); $i++ ) 
-			{		
-				if ($cmtext[$i]['code']==$r['constr_material'])
-				{
-				 $cmuse = $cmtext[$i]['code'].' : '.$cmtext[$i]['text'];
-				}
-			 $json = $cmtext[$i]['code'].' : '.$cmtext[$i]['text'];
-			 $cmlist[] = $json; 
-			}
-	//$constructMaterial = array('To do','No idea','Get info');
-	$structure = array('To do','No idea','Get info');
-//end array for select list
+			
+//the coming information was taken out from the survey. However, we keep it here (commented out) if we want to include it later
+// 	//get roofing info
+// 	$helpertable = 'hlp_roofing';
+// 	$roofingtext 	= $Data->getHelperText($helpertable);
+// 			for( $i = 0; $i < count($roofingtext); $i++ ) 
+// 			{		
+// 				if ($roofingtext[$i]['code']==$r['roofing'])
+// 				{
+// 				 $roofinguse = $roofingtext[$i]['code'].' : '.$roofingtext[$i]['text'];
+// 				}
+// 			 $json = $roofingtext[$i]['code'].' : '.$roofingtext[$i]['text'];
+// 			 $roofinglist[] = $json; 
+// 			}
+// 	//get ownership info
+// 	$helpertable = 'hlp_property_ownership';
+// 	$ownertext 	= $Data->getHelperText($helpertable);
+// 			for( $i = 0; $i < count($ownertext); $i++ ) 
+// 			{		
+// 				if ($ownertext[$i]['code']==$r['ownership_type'])
+// 				{
+// 				 $owneruse = $ownertext[$i]['code'].' : '.$ownertext[$i]['text'];
+// 				}
+// 			 $json = $ownertext[$i]['code'].' : '.$ownertext[$i]['text'];
+// 			 $ownerlist[] = $json; 
+// 			}
+// 	//$ownership 	= array('To do','No idea','Get info');
+// 	//get construction material info
+// 	$helpertable = 'hlp_construction_material';
+// 	$cmtext 	= $Data->getHelperText($helpertable);
+// 			for( $i = 0; $i < count($cmtext); $i++ ) 
+// 			{		
+// 				if ($cmtext[$i]['code']==$r['constr_material'])
+// 				{
+// 				 $cmuse = $cmtext[$i]['code'].' : '.$cmtext[$i]['text'];
+// 				}
+// 			 $json = $cmtext[$i]['code'].' : '.$cmtext[$i]['text'];
+// 			 $cmlist[] = $json; 
+// 			}
+// 	//$constructMaterial = array('To do','No idea','Get info');
+// 	$structure = array('To do','No idea','Get info');
+// //end array for select list
 
 $newcell = "<td>";
 $endcell = "</td>";
@@ -209,7 +241,7 @@ $frm = new HTML_Form();
 
 // using $frmStr to concatenate long string of form elements
 // startForm arguments: action, method, id, optional attributes added in associative array
-$frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
+$frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
             array('class'=>'demoForm', 'onsubmit'=>'return checkBeforeSubmit(this)') ) . PHP_EOL .
     
     // fieldset and legend elements
@@ -270,7 +302,7 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 
 		$frm->addLabelFor('ownEmail', $newcell.'Email: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('text', 'ownEmail', $r['owner_email'], array('id'=>'ownEmail', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('text', 'ownEmail', $r['owner_email'], array('id'=>'ownEmail', 'size'=>30, 'required'=>false) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
@@ -326,7 +358,11 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
 		// contain checkbox with label using start/endTag (so no need to add id)
 		$frm->startTag('label') . $newcell.'Excluded from rating: ' .$endcell.$newcell.  
 		$frm->addInput('checkbox', 'excluded', 'true' ) .
-		// wouldn't need to pass label to endTag
+		$frm->addInput('hidden', 'ifproperty', 'property', array('id'=>'property', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'upn', $upn, array('id'=>'upn', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'subupn', $subupn, array('id'=>'subupn', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'username', $username, array('id'=>'username', 'size'=>30, 'required'=>true) ) . 
+// wouldn't need to pass label to endTag
 		$frm->endTag('label') . $endcell. $endrow . "</td></tr>" .
 		"</table>" . 
 		$endcell .
@@ -353,15 +389,23 @@ $frmStr = $frm->startForm('propertyDetails.php', 'post', 'demoForm',
     
     $frm->endTag() . PHP_EOL .$endcell. $endrow . "</td></tr>" . "</table>" . "</table>" .
 */
-    $frm->startTag('submit') .    
-    $frm->addInput('submit', 'submit', 'Submit') .
-    $frm->endTag('submit') . PHP_EOL .
-    $frm->endTag('fieldset') . PHP_EOL .
-    
+
     $frm->endForm();
+
+//     $frm->startTag('submit') .  
+//     $frm->addInput('submit', 'submit', 'Submit') .
+//     $frm->endTag('submit') . PHP_EOL .
+//     $frm->endTag('fieldset') . PHP_EOL .
+    
 
 // finally, output the long string
 echo $frmStr;
+
+if ($_SESSION['user']['roleid'] < 100) {
+echo '<input type="submit" id="Submit" name="Submit" value="Submit"  class="orange-flat-small"/>';
+echo '<br><br>';
+}
+echo '<p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Cancel"></a></p>';
 
 
 ?>

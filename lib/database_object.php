@@ -79,6 +79,8 @@ class DatabaseObject {
 	
 	public function save() {
 	  // A new record won't have an id yet.
+	  echo $this->id;
+	  echo 'ekke';
 	  return isset($this->id) ? $this->update() : $this->create();
 	}
 	

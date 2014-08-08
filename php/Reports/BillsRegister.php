@@ -20,9 +20,9 @@
 	
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 	$target = $_GET['target'];
-	$districtId = $_GET['districtid'];
+	$districtid = $_GET['districtid'];
 	
-	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
+	$districtName = $Data->getDistrictInfo( $districtid, "district_name" );
 
 	//var_dump($_GET);		
 
@@ -94,15 +94,15 @@
 								business.`business_name`, 
 								business.`owner_tel`, 
 								business.`owner`, 
-								collectorzones.`colzonenr`,
+								business.`colzone_id`, 
 								demand_notice_record.`upn`, 
 								demand_notice_record.`subupn`, 
 								demand_notice_record.`value`,
 								demand_notice_record.`billprintdate`
 							FROM business INNER JOIN demand_notice_record 
-								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`, `collectorzones`
-							WHERE demand_notice_record.`comments`='".$target."' AND business.`colzone_id` = collectorzones.`id`
-							ORDER BY collectorzones.`colzonenr`, business.`upn`;");
+								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`
+							WHERE business.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
+							ORDER BY business.`colzone_id`, business.`upn`;");
 			} elseif ($target=='property'){
 				$q = mysql_query("SELECT property.id, 
 								property.`upn`, 
@@ -111,15 +111,15 @@
 								property.`housenumber`, 
 								property.`owner_tel`, 
 								property.`owner`, 
-								collectorzones.`colzonenr`,
+								property.`colzone_id`, 
 								demand_notice_record.`upn`, 
 								demand_notice_record.`subupn`, 
 								demand_notice_record.`value`,
 								demand_notice_record.`billprintdate`
 							FROM property INNER JOIN demand_notice_record 
-								ON property.`upn` = demand_notice_record.`upn` AND property.`subupn` = demand_notice_record.`subupn`, `collectorzones`
-							WHERE demand_notice_record.`comments`='".$target."' AND property.`colzone_id` = collectorzones.`id`
-							ORDER BY collectorzones.`colzonenr`, property.`upn`;");
+								ON property.`upn` = demand_notice_record.`upn` AND property.`subupn` = demand_notice_record.`subupn`
+							WHERE property.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
+							ORDER BY property.`colzone_id`, property.`upn`;");
 			}
 							
 			$counter = 0;
@@ -135,13 +135,13 @@
 						$businessname = $r['business_name'];
 					}
  				}
- 				if ($cznr!=$r['colzonenr']){
+ 				if ($cznr!=$r['colzone_id']){
 					$PDF->SetFont('Arial','B',8);
 					$PDF->SetFillColor(225,225,225);
 					$PDF->Cell(34,5, "Collector Zone",1,0,'C',true);
 // 					$PDF->SetFont('Arial','',8); 
 // 					$PDF->SetFillColor(255,255,255);
-					$PDF->Cell(155,5, $r['colzonenr'], 1,0,'C',true);
+					$PDF->Cell(155,5, $r['colzone_id'], 1,0,'C',true);
 					$PDF->Ln();
 				}
 				if ($target=='business'){ 
@@ -167,7 +167,7 @@
 				}
 				$PDF->Ln();
 				$n = $n + 1;
-				$cznr=$r['colzonenr'];
+				$cznr=$r['colzone_id'];
 			}
 						
 			$PDF->Ln(10);			
