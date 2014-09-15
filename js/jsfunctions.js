@@ -711,7 +711,8 @@ function onFeatureSelectcz(evt) {
    	{	html = 'Please open the Local Plan! \nThis will enable the calculation of numbers of Parcels';
    		alert(html); 
    	}//else{	
-   	  spinner.spin(target);
+
+spinner.spin(target);
 
 		if (jsonPVisible && !jsonBVisible){
 			var searchlayer=fromProperty.id;
@@ -817,7 +818,7 @@ function onFeatureSelectcz(evt) {
 						content, 
 						null, true, onPopupClose);
 
-		spinner.stop();				
+spinner.stop();				
 		feature.popup = popup;
 		popup.feature = feature;
 		popup.panMapIfOutOfView = true;
@@ -1456,9 +1457,9 @@ function polylocalplanhandler(request) {
 				default: {	var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISdefault); }
 				}	
 				//check if UPN is empty or is less than 13 characters, if yes then color the parcel accordingly
-				var s=feed[i]['upn'];
-			   var checkentry =(s.match(/-/g)||[]).length; //this checks if two - signs are in the entry
-			   var checkentry2 =s.length; //this checks if 13 characters are in the entry
+				var sUPN=feed[i]['upn'];
+			   var checkentry =(sUPN.match(/-/g)||[]).length; //this checks if two - signs are in the entry
+			   var checkentry2 =sUPN.length; //this checks if 13 characters are in the entry
 			   if ((checkentry != 2) || (checkentry2 < 13)){
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, LUPMISnoUPN);		
 				}
@@ -2534,31 +2535,34 @@ function index_admin() {
 		//opens a window for adding details to UPN based on the selection from a dropdown list
 		//
 //-----------------------------------------------------------------------------
-function addDetails(global_upn, global_subupn, globaldistrictid, supnid, callproperty) {
-alert('in add details '+ global_upn+' - '+document.getElementById("ddDetails").value);
-// 	var upn = global_upn;
-// 	var subupn = global_subupn[supnid];
-// 	var ifproperty = callproperty;
-// 	var popupWindow = null;
-// 	if (ifproperty=='property'){
-// 		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&addDetails=true';
-// 		var title = 'Property Details';
-// 	}else{
-// 		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&addDetails=true';
-// 		var title = 'Business Details';
-// 	}
-// 	var w = 1024;
-// 	var h = 750;
-//     var left = (screen.width/2)-(w/2);
-//     var top = (screen.height/2)-(h/2);
-//     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-// //	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
-// 
-// 	if(popupWindow && !popupWindow.closed)
-// 	{
-// 		popupWindow.focus();
-// 	}
-// 
+function addDetails(global_upn) {
+// alert('in add details '+ global_upn+' - '+document.getElementById("ddDetails").value);
+	var upn = global_upn;
+	var districtid = globaldistrictid;
+//	var subupn = global_subupn[supnid];
+	var ifproperty = document.getElementById("ddDetails").value;
+	var popupWindow = null;
+	if (ifproperty=='property'){
+//		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+districtid+'&addDetails=true';
+		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&districtid='+globaldistrictid+'&addDetails=true';
+		var title = 'Property Details';
+	}else{
+//		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+districtid+'&addDetails=true';
+		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&districtid='+globaldistrictid+'&addDetails=true';
+		var title = 'Business Details';
+	}
+	var w = 1024;
+	var h = 750;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+//	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
+
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
 	return false;
 } 
 // end of function addDetails

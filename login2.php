@@ -115,6 +115,15 @@ var styleLOGODEP = {
             fillOpacity: 0.4
 	};
 
+var styleSFDRCAN = { 
+		// style_definition
+		 strokeColor: "#FF0033",
+            strokeOpacity: 0.6,
+            strokewidth: 1,
+            fillColor: "#FF9999",
+            fillOpacity: 0.4
+	};
+
 var zoneStyle = new OpenLayers.Style({
   		fillColor: "#66FFFF",
         fillOpacity: 0.4, 
@@ -349,6 +358,8 @@ function polyhandler(request) {
 					case 1: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDR);		
 						break;
 					case 2: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleLOGODEP);		
+						break;
+					case 3: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDRCAN);		
 						break;
 					default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
 			}

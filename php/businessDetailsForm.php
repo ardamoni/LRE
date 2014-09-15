@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <title>Business Details Form</title>
 <link rel="stylesheet" href="../css/ex.css" type="text/css" />
+<link rel="stylesheet" href="../css/flatbuttons.css" type="text/css" />
 <link rel="stylesheet" href="../lib/OpenLayers/theme/default/style.css" type="text/css">
 <link rel="stylesheet" href="../style.css" type="text/css">
 <style type="text/css">
@@ -106,7 +107,7 @@ $query 	= mysql_query($run);
 $businessType	= array();
 
 while ($row = mysql_fetch_array($query)) {
-	//check which property code is stored in property
+	//check which business class is stored in business
     if ($row['code']==$r['business_class'])
     {
      $bususe = $row['code'].' : '.$row['class'];
@@ -127,7 +128,7 @@ $frm = new HTML_Form();
 
 // using $frmStr to concatenate long string of form elements
 // startForm arguments: action, method, id, optional attributes added in associative array
-$frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
+$frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
             array('class'=>'demoForm', 'onsubmit'=>'return checkBeforeSubmit(this)') ) . PHP_EOL .
     
     // fieldset and legend elements
@@ -151,7 +152,7 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . 
 		$frm->addLabelFor('streetcode', $newcell.'Streetcode: '.$endcell) . $newcell. 
 		// using html5 required attribute
-		$frm->addInput('text', 'streetcode', $r['comments'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
+		$frm->addInput('text', 'streetcode', $r['locpl'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
@@ -268,8 +269,13 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
     $frm->addEmptyTag('br') . PHP_EOL .
     // using html5 placeholder attribute
     $frm->addTextArea('comments', 6, 40, $r['comments'],
-            array('id'=>'comments', 'placeholder'=>'Enter any other information.') ) . 
+    array('id'=>'comments', 'placeholder'=>'Enter any other information.') ) . 
     
+    $frm->addInput('hidden', 'ifproperty', 'business', array('id'=>'business', 'size'=>30, 'required'=>true) ) . 
+	$frm->addInput('hidden', 'upn', $upn, array('id'=>'upn', 'size'=>30, 'required'=>true) ) . 
+	$frm->addInput('hidden', 'subupn', $subupn, array('id'=>'subupn', 'size'=>30, 'required'=>true) ) . 
+	$frm->addInput('hidden', 'username', $username, array('id'=>'username', 'size'=>30, 'required'=>true) ) . 
+
 //    $frm->endTag('p') . PHP_EOL . 
 
 /*    $frm->startTag('p') . 
@@ -280,16 +286,22 @@ $frmStr = $frm->startForm('businessDetails.php', 'post', 'demoForm',
             array('id'=>'comments', 'placeholder'=>'We would love to hear your comments.') ) . 
     
     $frm->endTag() . PHP_EOL .$endcell. $endrow . "</td></tr>" . "</table>" . "</table>" .
-*/
     $frm->startTag('submit') .    
     $frm->addInput('submit', 'submit', 'Submit') .
     $frm->endTag('submit') . PHP_EOL .
     $frm->endTag('fieldset') . PHP_EOL .
     
+*/
     $frm->endForm();
 
 // finally, output the long string
 echo $frmStr;
+//and here comes the SUBMIT button
+if ($_SESSION['user']['roleid'] < 100) {
+echo '<input type="submit" id="Submit" name="Submit" value="Submit"  class="orange-flat-small"/>';
+echo '<br><br>';
+}
+echo '<p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Cancel"></a></p>';
 
 
 ?>

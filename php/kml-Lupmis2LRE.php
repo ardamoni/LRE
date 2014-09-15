@@ -29,6 +29,10 @@ date_default_timezone_set('Europe/London');
 // echo '<br>';
 $a_upload_district=explode(" ",$_POST['district']);
 $upload_district=$a_upload_district[0];
+
+//the outputfile is used to capture duplicate UPNs and to write this information into an external file in the server
+$outputFile = '../tmp/'.$upload_district.'dupUPN.csv';
+
 //If you have received a submission.
     if ($_POST['submit'] == "Upload File"){
       $goodtogo = true;
@@ -45,7 +49,7 @@ $upload_district=$a_upload_district[0];
       }
       //Check for the file size.
       try {
-		if ($_FILES['uploadedfile']['size'] > 10000000){
+		if ($_FILES['uploadedfile']['size'] > 100000000){
 		$goodtogo = false;
 		//Echo an error message.
 		throw new exception ("Sorry, the file is too big at approx: " . intval ($_FILES['uploadedfile']['size'] / 1000) . "KB");
@@ -67,7 +71,7 @@ $upload_district=$a_upload_district[0];
       //If you have a valid submission, move it, then show it.
       if ($goodtogo){
 			try {
-			if (!move_uploaded_file ($_FILES['uploadedfile']['tmp_name'],"../kml/".$_FILES['uploadedfile']['name'])){
+			if (!move_uploaded_file ($_FILES['uploadedfile']['tmp_name'],"../kml/".$upload_district.$_FILES['uploadedfile']['name'])){
 				$goodtogo = false;
 				throw new exception ("There was an error moving the file.");
 			  }
@@ -121,7 +125,7 @@ $tmp4='';
     $landuse=strip_tags(substr($landuse,9,strpos($landuse,'</b>')-1));
     $upn = strstr($cdata[0],'UPN: ');
    	$upn=substr($upn,9,13);
-    var_dump($upn);
+//    var_dump($upn);
 //End Get Infor out of CDATA
     $styleUrl = $placemarks[$i]->styleUrl;
 
@@ -162,20 +166,36 @@ $tmp4='';
 		$found='';
 		$found = mysql_query($run, $con) or die ('Error updating database: ' . mysql_error());
 //if the upn already exist, then do an UPDATE, if not do an INSERT
-  print("<br>Found: ".$found);
-
+//  print("<br>Found: ".$found);
+$dupprint=false;
 //		if (!empty($found))
+//Check if UPN is already used in the database. It is assumed if the UPN already exists, it will be overwritten with the new information, hence an update of the data
+//However, it also could happen, that a district uses more than one kml-file for their local plan. If a UPN is used in two different locations will cause a data quality
+//issue, because the subsequent UPN will overwrite the existing one, hence will alter the boundary and thus the location of the UPN
+//We had this case in AgonaWest-Swedru. 
 		if (mysql_affected_rows()>0)
 		{
+		// for data quality purpose I included this to list all dublicated UPNs in the console log of the browser
+		while( $row = mysql_fetch_assoc( $found ) ) 
+		{		
+		debug_to_file( $outputFile, $row['UPN']." , ".$row['Address']." , ".$row['ParcelOf']." , ".$row['id'].', '.$upn." , ".$address." , ".$parcelOf.chr(13).chr(10) );
+		$dupprint=true;
+		}
+
+			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
+//			echo $query;
+// this INSERT was used to identify duplicated UPN in the kml dataset from AgonaWest-Swedru. It is still here for future data quality tests.
+//			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
+
 			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
-			print_r($run);
+//			print_r($run);
 			 mysql_query($run) or die ('UPDATE - Error updating database: ' . mysql_error());
 		 }else
 		{       
 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
 //			echo $query;
 			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
-			print_r($run);
+//			print_r($run);
 			 mysql_query($run) or die ('Error updating database: ' . mysql_error());
 		}
 // 		break;
@@ -186,6 +206,29 @@ $tmp4='';
    exit('Failed to open file '.$completeurl);
   }
   print("<br>Import into database successful - Great!!!");
+  if ($dupprint) {
+  print("<br>Existing UPNs were found and updated with the new information!!!");
+  print("<br>The results are stored in the file:  <a href='".$outputFile."'>".$outputFile."</a>" );
+  }
 	//   mysqli_close($con);    
 } //end if goodtogo
+
+//this is a helper function to get some info to be displayed within the console log as well as into the external file on the server
+//thes specific file will grow over time, because it is set to FILE_APPEND
+function debug_to_file( $outputFile, $data ) {
+
+    if ( is_array( $data ) )
+     {
+		$f = file_put_contents($outputFile,implode( ',', $data),FILE_APPEND);    	
+        $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+    }
+    else
+     {
+		$f = file_put_contents($outputFile,$data,FILE_APPEND);    	
+        $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+    }
+
+    echo $output;
+}
+
 ?>

@@ -109,21 +109,21 @@ if (!empty($subupn) && $subupn != "null" ){
 	}
 
 //check whether new details are inserted or existing information is updated
-if (empty($addDetails)){
+//if (empty($addDetails)){
 	//get the current database entries from property
 	$Data = new propertyDetailsClass;
     $r = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
-    } else {
-		$r = array();
-		$r['streetname'] = '';
-		$r['housenumber'] = '';
-		$r['owner'] = '';
-		$r['owneraddress'] = '';
-		$r['owner_tel'] = '';
-		$r['owner_email'] = '';
-		$r['buildingpermit_no'] = '';
-		$r['locality_code'] = '';    
-    } //end if (empty($addDetails)){
+  //   } else {
+// 		$r = array();
+// 		$r['streetname'] = '';
+// 		$r['housenumber'] = '';
+// 		$r['owner'] = '';
+// 		$r['owneraddress'] = '';
+// 		$r['owner_tel'] = '';
+// 		$r['owner_email'] = '';
+// 		$r['buildingpermit_no'] = '';
+// 		$r['locality_code'] = '';    
+//     } //end if (empty($addDetails)){
 //var_dump($r);
     
  //check Planning Permit   
@@ -144,7 +144,7 @@ if (empty($addDetails)){
  if (empty($r['buildingpermit']))
  	{
  		$bpermityes='';
- 		$bpermitno='';
+ 		$bpermitno='1';
  	} else {
  		if ($r['buildingpermit']==1)
  		{ 	$bpermityes='1';
@@ -235,7 +235,6 @@ $newcell = "<td>";
 $endcell = "</td>";
 $newrow = "<tr>";
 $endrow= "</tr>";
-
 // create instance of HTML_Form
 $frm = new HTML_Form();
 
@@ -267,7 +266,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		// label and text input with optional attributes
 		$frm->addLabelFor('streetcode', $newcell.'Streetcode: '.$endcell) . $newcell. 
 		// using html5 required attribute
-		$frm->addInput('text', 'streetcode', $r['comments'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
+		$frm->addInput('text', 'streetcode', $r['locpl'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
@@ -401,6 +400,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 // finally, output the long string
 echo $frmStr;
 
+//and here comes the SUBMIT button
 if ($_SESSION['user']['roleid'] < 100) {
 echo '<input type="submit" id="Submit" name="Submit" value="Submit"  class="orange-flat-small"/>';
 echo '<br><br>';

@@ -43,7 +43,7 @@
         <h1 id="title">KML file upload</h1>
 
 <?php
-		require_once('../lib/html_form.class.php');
+require_once('../lib/html_form.class.php');
 		require_once( "../lib/configuration.php"	);
 
 //get the districts from feefixing for the drop-down list
@@ -91,7 +91,7 @@ for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
 		$frm->endTag('p') .
 		$frm->addLabelFor('uploadedfile', $newcell.'Choose a file to upload: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('hidden', 'MAX_FILE_SIZE', '10000000', array('id'=>'MAX_FILE_SIZE', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'MAX_FILE_SIZE', '100000000', array('id'=>'MAX_FILE_SIZE', 'size'=>30, 'required'=>true) ) . 
 		$frm->addInput('file', 'uploadedfile', '', array('id'=>'uploadedfile', 'size'=>30, 'required'=>true) ) . 
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
 
