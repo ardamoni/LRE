@@ -688,7 +688,7 @@ function searchOther($districtid, $starget, $sString, $searchlayer)
 
 //-----------------------------------------------------------------------------
 				//function updateCZinProp() 
-				//updates the colzone_id in property to 
+				//updates the colzone_id in property and business to 
 				//propincz=Property in Collector Zone
 				//busincz =Business in Collector Zone
 //-----------------------------------------------------------------------------
