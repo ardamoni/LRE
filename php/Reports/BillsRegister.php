@@ -102,7 +102,7 @@
 							FROM business INNER JOIN demand_notice_record 
 								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`
 							WHERE business.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
-							ORDER BY business.`colzone_id`, business.`upn`;");
+							ORDER BY business.`colzone_id`, business.`streetname`, business.`housenumber`, business.`upn`;");
 			} elseif ($target=='property'){
 				$q = mysql_query("SELECT property.id, 
 								property.`upn`, 
@@ -119,7 +119,7 @@
 							FROM property INNER JOIN demand_notice_record 
 								ON property.`upn` = demand_notice_record.`upn` AND property.`subupn` = demand_notice_record.`subupn`
 							WHERE property.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
-							ORDER BY property.`colzone_id`, property.`upn`;");
+							ORDER BY property.`colzone_id`, property.`streetname`, property.`housenumber`, property.`upn`;");
 			}
 							
 			$counter = 0;

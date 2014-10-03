@@ -99,6 +99,7 @@ $username = $_SESSION['user']['user'];
 						'owner_tel' => $_POST['ownTel'],
 						'owner_email' => $_POST['ownEmail'],
 						'property_use' => substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1),
+						'value_prop' => $_POST['value_prop'],
 						'buildingpermit' => $buildPerm,
 						'buildingpermit_no' => $_POST['buildPermNo'],
 						'excluded' => $excluded,
@@ -179,6 +180,9 @@ $username = $_SESSION['user']['user'];
 				<td>Type of Property Use</td><td><?php echo $_POST['propertyType'] ?> </td> 
 				</tr>
 				<tr>
+				<td>Value</td><td><?php echo $_POST['value_prop'] ?> </td> 
+				</tr>
+				<tr>
 				<td>Excluded from rating</td><td><?php echo $_POST['excluded'] ?> </td> 
 				</tr>
 				<tr>
@@ -202,7 +206,7 @@ $username = $_SESSION['user']['user'];
 					$r = mysql_fetch_array($q);					
 				if( !empty($r) ) 
 				{
-								    //use pdo wrapper
+					//use pdo wrapper
 				    $update = array(
 				    	'streetname' => $_POST['street'],
 						'housenumber' => $_POST['Nr_'],

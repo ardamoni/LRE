@@ -352,7 +352,16 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		// optional arguments: selected value, header, additional attributes in associative array
 		$frm->addSelectList('propertyType', $propertyType, false, $propuse, '' ,array('id'=>'propertyType', 'style'=>'width: 200px') ) .
 		$frm->endTag('selectlist') . $endcell. $endrow . 
-   
+
+   		$frm->startTag('p') . 
+
+		$frm->addLabelFor('value_prop', $newcell.'Value: '.$endcell) .$newcell.
+		// using html5 required attribute
+		$frm->addInput('text', 'value_prop', $r['value_prop'], array('id'=>'value_prop', 'size'=>30, 'required'=>false) ) . 
+
+		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
+		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
+
 		$frm->startTag('p') .     
 		// contain checkbox with label using start/endTag (so no need to add id)
 		$frm->startTag('label') . $newcell.'Excluded from rating: ' .$endcell.$newcell.  

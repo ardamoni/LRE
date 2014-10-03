@@ -62,7 +62,7 @@
 // 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
 // $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
 // $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` LIMIT 4997");
-$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`");
+$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`, t1.`streetname`, t1.`housenumber`, t1.`upn`");
 
 	/*
 	 * PDF Generation

@@ -237,17 +237,17 @@ switch(opt) {
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 6:  
-		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`districtid`, d1.balance FROM property_balance d1 ';
-			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) ';
-			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
+		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d2.`owner`, d2.`streetname`, d2.`housenumber`, d1.`districtid`, d1.balance FROM property_balance d1, property d2 ';
+			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) AND d1.`upn` = d2.`upn`';
+			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+';';
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all Property UPNs missing in local plan";
 		document.getElementById('report'+opt).value="01LREwrongupns";
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 7:  
-		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`districtid`, d1.balance FROM business_balance d1 ';
-			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) ';
+		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d2.`streetname`, d2.`housenumber`, d2.`business_name`, d2.`owner`, d1.`districtid`, d1.balance FROM business_balance d1, business d2 ';
+			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) AND d1.`upn` = d2.`upn` ';
 			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all Business UPNs missing in local plan";
@@ -283,6 +283,7 @@ spin.spin(target);
 var pageURL = 'excelwriter.php'; //?squery=SELECT * from property WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
 
 var handlerParameter = {spin: spin, opt: opt, sfile: sfile};
+
 
 //issue the XMLHTTPRequest to process the export in the background
 var request = OpenLayers.Request.POST({

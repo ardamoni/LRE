@@ -137,7 +137,7 @@ echo '<script language="javascript">document.getElementById("information").inner
 flush();
 ?>
 
-// <p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Close Preview"></a></p>
+<p><input type="button" a href="javascript:;" onclick="parent.window.close();" class="orange-flat-small" value="Close Preview"></a></p>
 
 </body>
 </html>

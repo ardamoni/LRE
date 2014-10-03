@@ -25,7 +25,7 @@
 										`t`.`username` = `r`.`username` AND
 										`t`.`username` = `d`.`username` AND
 										`r`.`roleid` = '".$_SESSION['user']['roleid']."' AND 
-										(`r`.`roleid` = 100 OR `r`.`roleid` = 0) AND
+										(`r`.`roleid` = 100 OR `r`.`roleid` = 0 OR `r`.`roleid` = 50) AND
 										`d`.`districtid` = '".$_SESSION['user']['districtid']."' ");	
 	
 	$anymatches = mysql_num_rows( $q ); 
