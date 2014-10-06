@@ -78,7 +78,10 @@
 													`districtid`, 
 													`year`, 
 													`feefi_code`,													
-													`comments`) 
+													`prop_value`,													
+													`comments`,
+													`lastentry_person`,
+													`lastentry_date`) 
 										VALUES (
 													NULL, 
 													'".$BOR['upn']."', 
@@ -86,7 +89,10 @@
 													'".$BOR['districtid']."',													
 													'".$year."',
 													'".$BOR['property_use']."',
-													'ekke - ".date("Y-m-d")."' ) ");
+													'".$BOR['value_prop']."',
+													'auto by populate_property_due',
+													'script',
+													'".date("Y-m-d")."' ) ");
 		
 		// Display
 		//echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $BOR['districtid'], " & ", $year, " & ", $BOR['property_use'], "<br>";
@@ -120,7 +126,8 @@
 	{		
 		// Property_due update with feefi_value
 		mysql_query("	UPDATE 		`property_due` 
-						SET 		`feefi_value` = '".$Results['rate']."' 
+						SET 		`feefi_value` = '".$Results['rate']."',
+									`rate_impost_value` = '".$Results['rate_impost']."'
 						WHERE 		`upn` = '".$Results['upn']."' AND 
 									`subupn` = '".$Results['subupn']."' AND
 									`districtid` = '".$Results['districtid']."' AND
