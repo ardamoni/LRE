@@ -127,6 +127,7 @@
 		// Property_due update with feefi_value
 		mysql_query("	UPDATE 		`property_due` 
 						SET 		`feefi_value` = '".$Results['rate']."',
+									`rate_value` = '".$Results['prop_value']*$Results['rate_impost']."',
 									`rate_impost_value` = '".$Results['rate_impost']."'
 						WHERE 		`upn` = '".$Results['upn']."' AND 
 									`subupn` = '".$Results['subupn']."' AND
