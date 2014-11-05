@@ -59,8 +59,8 @@ var spinopts = {
   hwaccel: false, // Whether to use hardware acceleration
   className: 'spinner', // The CSS class to assign to the spinner
   zIndex: 2e9, // The z-index (defaults to 2000000000)
-  top: 'auto', // Top position relative to parent in px
-  left: 'auto' // Left position relative to parent in px
+  top: '50%', // Top position relative to parent in px
+  left: '50%' // Left position relative to parent in px
 };
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
@@ -288,74 +288,30 @@ var styleDistricts = {
     districtmap.styleMap = zoneStyleMap;
     regionmap.styleMap = regionStyleMap;
 
+
 // Add Layers
 	map.addLayer(mapnik);
 	map.addLayer(gmap);
 	map.addLayer(regionmap);
 	map.addLayer(districtmap);
+	
+   select = new OpenLayers.Control.SelectFeature([districtmap, regionmap],{
+                hover: false,
+                highlightOnly: false,
+                renderIntent: "temporary",
+            }); 
+			districtmap.events.on({
+                "featureselected": onFeatureSelectDistrict,
+                "featureunselected": onFeatureUnselect,
 
-var html = '';				
- var selectControlHover = new OpenLayers.Control.SelectFeature(districtmap, {
-	hover: true,
-	highlightOnly: true,
-	renderIntent: "temporary",
-	overFeature: function(feature) {
-		console.log('hover: number of selected features: ' + districtmap.selectedFeatures.length);
-		html = feature.attributes.districtname +
-		'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+' sq km';
-		document.getElementById("debug1").innerHTML=html;
-		districtmap.drawFeature(districtmap.getFeatureById(feature.id), {fillColor: "#FFCC00", fillOpacity: 0.1, strokeColor: "#00ffff"});			
-	},
-	outFeature: function(feature) {
-		console.log('hover out: number of selected features: ' + districtmap.selectedFeatures.length);
-		districtmap.drawFeature(districtmap.getFeatureById(feature.id));			
-	},
-        });
-        
-var selectControl = new OpenLayers.Control.SelectFeature(
-  regionmap, {
-    hover: true,
-    onBeforeSelect: function(feature) {
-       // add code to create tooltip/popup
-       popup = new OpenLayers.Popup(
-          "region",
-          feature.geometry.getBounds().getCenterLonLat(),
-          new OpenLayers.Size(300,150),
-          "<div class='p'>"+feature.attributes.regionname+
-			'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+' sq km'+
-			'<br>Nr. of Districts: '+ feature.attributes.nrofdistricts+
-			'<p>Property Rates Potential: '+ feature.attributes.totalexpprop+
-			'<br>Property Rates Balance: '+ feature.attributes.totalbalprop+
-			'<br>Business License Potential: '+ feature.attributes.totalexpbus+
-			'<br> Business License Balance: '+ feature.attributes.totalbalbus+
-		"</p></div>",
-          null,
-          true,
-          null);
-
-       feature.popup = popup;
-		feature.popup.displayClass='p';	
-		feature.popup.contentDisplayClass='p';	
-		feature.popup.opacity=0.8;	
-		feature.popup.backgroundColor='LightYellow';	
-       map.addPopup(popup);
-       // return false to disable selection and redraw
-       // or return true for default behaviour
-       return true;
-    },
-    onUnselect: function(feature) {
-       // remove tooltip
-       map.removePopup(feature.popup);
-       feature.popup.destroy();
-       feature.popup=null;
-    }
-});
-
-            map.addControl(selectControl);
-            selectControl.activate();
-            map.addControl(selectControlHover);
-            selectControlHover.activate();
-
+            });
+			regionmap.events.on({
+			"featureselected": onFeatureSelectRegion,
+			"featureunselected": onFeatureUnselect,
+            });
+            map.addControl(select);
+            select.activate();   
+	
             
     var layerSwitch = new OpenLayers.Control.LayerSwitcher();
 
@@ -385,6 +341,8 @@ var selectControl = new OpenLayers.Control.SelectFeature(
 //    var ghana = new OpenLayers.LonLat(-1.1759874280090854,8.173345828918867).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
     map.setCenter(ghana, 7);
 
+	getSessionUser();
+
 } //end startNormalUser()
 
 
@@ -397,6 +355,119 @@ var selectControl = new OpenLayers.Control.SelectFeature(
 function onPopupClose(evt) {
         select.unselectAll();
 }
+
+
+//-----------------------------------------------------------------------------
+		//function onFeatureSelectDistrict() 
+		//is the onclick function for the district map
+		//it calls districtinfohandler
+//-----------------------------------------------------------------------------
+function onFeatureSelectDistrict(evt) {
+	feature = evt.feature;
+spinner.spin(target);	
+//	alert(feature.attributes.districtid);
+	var request = OpenLayers.Request.POST({
+		url: "php/getdistrictsForStats.php", 
+		data: OpenLayers.Util.getParameterString(
+		{districtid: feature.attributes.districtid}),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		callback: districtinfohandler
+	});
+} 
+// end of function onFeatureSelectDistrict
+
+//-----------------------------------------------------------------------------
+		//function districtinfohandler() 
+		//is the handler for the onclick function onFeatureSelectDistrict 
+		//for the district map
+//-----------------------------------------------------------------------------
+function districtinfohandler(request) {
+// the browser's parser may have failed
+if(!request.responseXML) {
+	var html ='';
+	var userdistrict='';
+	var userdistrictname='';
+	var districtboundary='';
+	var numberOfParcels='';
+	var numberOfProperty='';
+	var numberOfProperty_valued='';
+	
+// 		html = feature.attributes.districtname +
+// 		'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+' sq km';
+// 		document.getElementById("debug1").innerHTML=html;
+	
+	var numberOfBusiness='';
+		// get the response from php and read the json encoded data
+		feed=JSON.parse(request.responseText);
+		for (var i = 0; i < feed.length; i++) {
+			html = '<br>District: '+feature.attributes.districtname;			
+			html += '<br><strong>Property: </strong>';
+			html += '<li> Balance: '+number_format(feed[i]['sumPropertyBalance'], 0, '.', ',')+' GHC</li>';
+			html += '<li> Paid: '+number_format(feed[i]['sumPropertyPaid'], 0, '.', ',')+' GHC</li>';
+			html += '<li> Due: '+number_format(feed[i]['sumPropertyDue'], 0, '.', ',')+' GHC</li>';
+			html += '<br><strong>Business: </strong>';
+			html += '<li> Balance: '+number_format(feed[i]['sumBusinessBalance'], 0, '.', ',')+' GHC</li>';
+			html += '<li> Paid: '+number_format(feed[i]['sumBusinessPaid'], 0, '.', ',')+' GHC</li>';
+			html += '<li> Due: '+number_format(feed[i]['sumBusinessDue'], 0, '.', ',')+' GHC</li>';			
+	 		html += '<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+' sq km';
+
+		var popup = new OpenLayers.Popup.FramedCloud(
+										"featurePopup",
+                                        feature.geometry.getBounds().getCenterLonLat(),
+                                        new OpenLayers.Size(100,100),
+                                        html, 
+                                        null, true, onPopupClose);
+
+		feature.popup = popup;
+		popup.feature = feature;
+		popup.panMapIfOutOfView = true;
+		map.addPopup(popup, true);		
+
+// 		document.getElementById("debug1").innerHTML=html;
+		}
+	}
+spinner.stop();
+}
+// end of function districtinfohandler
+
+//-----------------------------------------------------------------------------
+		//function onFeatureSelectRegion() 
+		//is the onclick function 
+		//for the regions map
+//-----------------------------------------------------------------------------
+function onFeatureSelectRegion(evt) {
+feature = evt.feature;
+
+   // add code to create tooltip/popup
+   popup = new OpenLayers.Popup(
+	  "region",
+	  feature.geometry.getBounds().getCenterLonLat(),
+	  new OpenLayers.Size(300,150),
+	  "<div class='p'>"+feature.attributes.regionname+
+		'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+' sq km'+
+		'<br>Nr. of Districts: '+ feature.attributes.nrofdistricts+
+		'<p>Property Rates Potential: '+ feature.attributes.totalexpprop+
+		'<br>Property Rates Balance: '+ feature.attributes.totalbalprop+
+		'<br>Business License Potential: '+ feature.attributes.totalexpbus+
+		'<br> Business License Balance: '+ feature.attributes.totalbalbus+
+	"</p></div>",
+	  null,
+	  true,
+	  null);
+
+   feature.popup = popup;
+	feature.popup.displayClass='p';	
+	feature.popup.contentDisplayClass='p';	
+	feature.popup.opacity=0.8;	
+	feature.popup.backgroundColor='LightYellow';	
+   map.addPopup(popup);
+   // return false to disable selection and redraw
+   // or return true for default behaviour
+   return true;
+}
+// end of function onFeatureSelectRegion
 
 //-----------------------------------------------------------------------------
 		//function onFeatureUnselect() 
@@ -424,7 +495,7 @@ function updateClock(watch) {
 //-----------------------------------------------------------------------------
 function getSessionUser(){
 var request = OpenLayers.Request.GET({
-    url: "php/getsession.php", 
+    url: "php/getsessionForStats.php", 
     callback: sessionuserhandler
 });
 }
@@ -437,32 +508,119 @@ var request = OpenLayers.Request.GET({
 //-----------------------------------------------------------------------------
 function sessionuserhandler(request) {
 
-	// the browser's parser may have failed
-	if(!request.responseXML) {
+// the browser's parser may have failed
+if(!request.responseXML) {
 	var html ='';
 	var userdistrict='';
 	var userdistrictname='';
 	var districtboundary='';
+	var numberOfParcels='';
+	var numberOfProperty='';
+	var numberOfProperty_valued='';
+	var numberOfBusiness='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
 			html += feed[i]['username'];
 			userdistrict += feed[i]['userdistrict'];
+			userrole = feed[i]['userrole'];
 			userdistrictname += feed[i]['userdistrictname'];
+			numberOfParcels += feed[i]['numberOfParcels'];
+			numberOfProperty += feed[i]['numberOfProperty'];
+			numberOfProperty_valued += feed[i]['numberOfProperty_valued'];
+			numberOfBusiness += feed[i]['numberOfBusiness'];
 			districtboundary += feed[i]['districtboundary']};
 
-//check if there is a session, if not log out			
-	if(userdistrictname=='null') {
-//		setTimeout("location.href = 'logout.php';",1000);
-	}			 
-
-  document.getElementById("wcUser").innerHTML='Welcome: '+html;
-  globaldistrictid=userdistrict;
-  document.getElementById("districtname").innerHTML=userdistrictname;
-  getdistrictcenter(districtboundary);
-	} // else{  alert('inside inserthandler');}
+	document.getElementById("wcUser").innerHTML='Welcome: '+html;
+	globaldistrictid=userdistrict;
+	globaluserrole=userrole;
+	document.getElementById("districtname").innerHTML=userdistrictname;
+	document.getElementById("stat1").innerHTML=number_format(numberOfParcels, 0, '.', ',');
+	document.getElementById("stat2").innerHTML=number_format(numberOfProperty, 0, '.', ',')+'/v:'+number_format(numberOfProperty_valued, 0, '.', ',');
+	document.getElementById("stat3").innerHTML=number_format(numberOfBusiness, 0, '.', ',');
+}
 } 
 // end of function sessionuserhandler
+
+//-----------------------------------------------------------------------------
+		//function getFiscalStats() 
+		//get the info for Due, Paid, and Balance
+		//calls fiscalstatshandler
+//-----------------------------------------------------------------------------
+function getFiscalStats(){
+spinner.spin(target);
+var request = OpenLayers.Request.GET({
+    url: "php/getfiscalstatsForStats.php", 
+    callback: fiscalstatshandler
+});
+}
+// end of function getSessionUser
+
+//-----------------------------------------------------------------------------
+		//function fiscalstatshandler() 
+		//is the handler for getFiscalStats 
+		//
+//-----------------------------------------------------------------------------
+function fiscalstatshandler(request) {
+
+// the browser's parser may have failed
+if(!request.responseXML) {
+	var sumPropertyBalance='';
+	var sumPropertyPaid='';
+	var sumPropertyDue='';
+	var sumBusinessBalance='';
+	var sumBusinessPaid='';
+	var sumBusinessDue='';
+		// get the response from php and read the json encoded data
+		feed=JSON.parse(request.responseText);
+		for (var i = 0; i < feed.length; i++) {
+			sumPropertyBalance += feed[i]['sumPropertyBalance'];
+			sumPropertyPaid += feed[i]['sumPropertyPaid'];
+			sumPropertyDue += feed[i]['sumPropertyDue'];
+			sumBusinessBalance += feed[i]['sumBusinessBalance'];
+			sumBusinessPaid += feed[i]['sumBusinessPaid'];
+			sumBusinessDue += feed[i]['sumBusinessDue'];
+			};
+
+	document.getElementById("fis1").innerHTML=number_format(sumPropertyDue, 2, '.', ',')+' GHC';
+	document.getElementById("fis2").innerHTML=number_format(sumPropertyPaid, 2, '.', ',')+' GHC';
+	document.getElementById("fis3").innerHTML=number_format(sumPropertyBalance, 2, '.', ',')+' GHC';
+	document.getElementById("fis4").innerHTML=number_format(sumBusinessDue, 2, '.', ',')+' GHC';
+	document.getElementById("fis5").innerHTML=number_format(sumBusinessPaid, 2, '.', ',')+' GHC';
+	document.getElementById("fis6").innerHTML=number_format(sumBusinessBalance, 2, '.', ',')+' GHC';
+
+	document.getElementById("fisprop").value='Property Rates';
+	document.getElementById("fisbus").value='Business Permits';
+
+} 
+spinner.stop();
+} 
+// end of function fiscalstatshandler
+
+//-----------------------------------------------------------------------------
+		//function xlsexport() 
+		//opens a window to export tabular data to Excel
+		//
+//-----------------------------------------------------------------------------
+function xlsexport() {
+  	var w = 1000;
+	var h = 550;
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+	var pageURL = 'php/openXLSreportsForStats.php?districtid='+globaldistrictid;
+
+  
+ 		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, width='+w+', height='+h+', top='+top+', left='+left+', resizable=no,location=no,menubar=no,status=no,toolbar=no');	
+   
+	if(popupWindow && !popupWindow.closed)
+	{
+		popupWindow.focus();
+	}
+
+	return false;
+
+} 
+// end of function xlsexport
 
 
 //-----------------------------------------------------------------------------
@@ -588,6 +746,13 @@ function getDistrictPoly() {
 // 
 //     map.setCenter(ghana, 7);
 // 
+
+//alert('inside');
+
+   if (districtmap.features.length<1) {
+	  spinner.spin(target);
+    
+
 	var request = OpenLayers.Request.POST({
 			url: "php/dbaction.php", 
 			data: OpenLayers.Util.getParameterString(
@@ -597,6 +762,10 @@ function getDistrictPoly() {
 			},
 			callback: handlerDistrictMap
 		});
+		 }else{
+		spinner.stop()
+};           
+
 }
 function getRegionPoly() {
 //     var ghana = new OpenLayers.LonLat(-1.1759874280090854,8.173345828918867).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject());
@@ -629,6 +798,7 @@ function getRegionPoly() {
 function handlerDistrictMap(request) {
 	// the server could report an error
 	if(request.status == 500) {
+	   alert('Server reports an error. Please retry in a couple of minutes');
 		// do something to calm the user
 	}
 	// the server could say you sent too much stuff
@@ -654,13 +824,14 @@ function handlerDistrictMap(request) {
 				polypoints.push(point);
 			}
 			// create some attributes for the feature
-		var attributes = {districtname: feed[i]['districtname']};
+		var attributes = {districtname: feed[i]['districtname'],districtid: feed[i]['districtid']};
 		    // create a linear ring by combining the just retrieved points
 		var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
 		    //the switch checks on the payment status and 
 				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
 		  districtmap.addFeatures([polygonFeature]);
 		  } // end of for 
+		spinner.stop();
 		  districtmap.redraw();
 	}
 }	

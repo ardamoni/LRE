@@ -21,8 +21,10 @@ else
 	$sumPropertyBalance	 = 	mysql_fetch_array($qsumPropertyBalance);
 	$qsumPropertyPaid 	= 	mysql_query("SELECT SUM(d3.payment_value) as sumproppaid FROM property_payments d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
 	$sumPropertyPaid	= 	mysql_fetch_array($qsumPropertyPaid);
-	$qsumPropertyDue 	= 	mysql_query("SELECT SUM(d3.feefi_value) as sumpropdue FROM property_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
-	$sumPropertyDue	 	= 	mysql_fetch_array($qsumPropertyDue);
+	$qsumPropertyDue_feefi 	= 	mysql_query("SELECT SUM(d3.feefi_value) as sumpropdue_feefi FROM property_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."' AND d3.rate_value=0;");
+	$sumPropertyDue_feefi	 	= 	mysql_fetch_array($qsumPropertyDue_feefi);
+	$qsumPropertyDue_valued 	= 	mysql_query("SELECT SUM(d3.rate_value) as sumpropdue_valued FROM property_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."' AND d3.rate_value>0;");
+	$sumPropertyDue_valued	 	= 	mysql_fetch_array($qsumPropertyDue_valued);
 
 	$qsumBusinessBalance = 	mysql_query("SELECT SUM(d3.balance) as sumbusbal FROM business_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
 	$sumBusinessBalance	 = 	mysql_fetch_array($qsumBusinessBalance);
@@ -33,7 +35,7 @@ else
 
 	$json['sumPropertyBalance'] 	= $sumPropertyBalance['sumpropbal'];
 	$json['sumPropertyPaid'] 		= $sumPropertyPaid['sumproppaid'];
-	$json['sumPropertyDue'] 		= $sumPropertyDue['sumpropdue'];
+	$json['sumPropertyDue'] 		= $sumPropertyDue_feefi['sumpropdue_feefi']+$sumPropertyDue_valued['sumpropdue_valued'];
 
 	$json['sumBusinessBalance'] 	= $sumBusinessBalance['sumbusbal'];
 	$json['sumBusinessPaid'] 		= $sumBusinessPaid['sumbuspaid'];

@@ -612,5 +612,34 @@
 			}
 		} // end of setDemandNoticeRecord function
 
+	  	/*
+		 *	checkOnDuplicateUPNInKML
+		 *	Tables: property/business, KML_from_LUPMIS
+		 */		
+		function checkOnDuplicateUPNInKML( $districtid = "",  $type = ""  )
+		{
+			switch( $type ) 
+			{
+				case "property":
+						$q = mysql_query("SELECT d1.`UPN` as NewUPN, d2.`UPN` as OldUPN, (Select d3.`upn` FROM property d3 where d3.`upn`=d2.`UPN` group BY d3.`upn` ) as PropertyUPN FROM `KML_from_LUPMIS` d1 inner join `KML_from_LUPMIS_copy_2014Oct28` d2 on d1.`boundary`=d2.`boundary`  where d1.`districtid` = '".$districtid."' AND d1.`UPN`!=d2.`UPN`;");
+				break;
+				
+				case "business":
+						$q = mysql_query("SELECT d1.`UPN` as NewUPN, d2.`UPN` as OldUPN, (Select d3.`upn` FROM `business` d3 where d3.`upn`=d2.`UPN`  group BY d3.`upn` ) as BusinessUPN FROM `KML_from_LUPMIS` d1 inner join `KML_from_LUPMIS_copy_2014Oct28` d2 on d1.`boundary`=d2.`boundary`  where d1.`districtid` = '".$districtid."' AND d1.`UPN`!=d2.`UPN`;");
+				break;
+			 
+				default:
+		}
+			while ($r = mysql_fetch_assoc($q)) 
+			{
+				$rdata = array();
+				$rdata 	= trim($r['NewUPN']);
+				$rd[] 		= $rdata;
+
+			}
+			return $rd; 
+		} // end of checkOnDuplicateUPNInKML function
+
+
 	}	//end of Revenue class
 ?>

@@ -42,7 +42,8 @@
 //  $filesig='../../uploads/sig-125.jpg';}
 		$filesig='';}
 	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
-	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
+	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed ';
+	$note1 = 'by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
 	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
 // 	$note = 'This bill must be paid by March 31st, in accordance with the districts regulations. Legal Actions shall be taken against defaulters 52 days after March 31st.';
 // 	$note2 =  "Payments should be made by banker's Draft/Payment Order or by Cash Only.";
@@ -59,10 +60,8 @@
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
-// 	$q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
-// $q = mysql_query("SELECT * 	FROM  `property` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC ");
-// $q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2 WHERE t1.`districtid` = '".$districtId."' AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` LIMIT 4997");
 $q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`, t1.`streetname`, t1.`housenumber`, t1.`upn`");
+//$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`, t1.`streetname`, t1.`housenumber`, t1.`upn` LIMIT 10");
 
 	/*
 	 * PDF Generation
@@ -207,11 +206,19 @@ $q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`dis
 		$PDF->SetFont('Arial','B',7);
 		$PDF->Cell(70,5, '',0,0,'R');
 		$PDF->Cell(65,5, 'Please present this bill when making a payment',0,1,'L');
+
+// 		$PDF->Ln();
 		
 		$PDF->SetFont('Arial','',7);
 		$PDF->Cell(16,5, $currentYear - 1,1,0,'R');	
 		$PDF->Cell(23,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "due" ),2,'.','') ,1,0,'R');
 		$PDF->Cell(17,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "paid" ),2,'.','') ,1,0,'R');
+// 		$PDF->SetFont('Arial','B',4);
+// 		$PDF->Cell(50,5, $note1,0,1,'L');
+
+		$PDF->SetFont('Arial','',4);
+		$PDF->Write(2,$note.chr(10));
+		$PDF->Write(2,str_repeat(" ", 175).$note1);
 		
 		if ($counter==2) {
 	//		$PDF->Ln(10);
@@ -220,7 +227,7 @@ $q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`dis
 		} else {
 			$counter++;
 			$PDF->Ln();
-			$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
+	$PDF->Cell(0,5, str_repeat("-", 200),0,0,'C');
 			$PDF->Ln();
 		}
 // 		$counter++;

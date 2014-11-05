@@ -59,6 +59,9 @@
 	
 	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
 	
+	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed ';
+	$note1 = 'by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
+	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
 
 
 	/*
@@ -228,6 +231,10 @@
 		$PDF->Cell(16,5, $currentYear - 1,1,0,'R');	
 		$PDF->Cell(23,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "due" ),2,'.','') ,1,0,'R');
 		$PDF->Cell(17,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear-1, $type, "paid" ),2,'.','') ,1,0,'R');
+
+		$PDF->SetFont('Arial','',4);
+		$PDF->Write(2,$note.chr(10));
+		$PDF->Write(2,str_repeat(" ", 175).$note1);
 		
 		$counter++;
 

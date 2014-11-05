@@ -100,7 +100,7 @@ for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
 		$frm->endTag('label') . $endcell. $endrow . 
 		$frm->startTag('p') . 
 		
-		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
+		//endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') .
 	    $frm->startTag('submit') .    
 		$frm->addInput('submit', 'submit', 'Upload File') .
@@ -113,8 +113,11 @@ for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
 	"</table>" .
     $frm->endForm();
 
+
 // finally, output the long string
 echo $frmStr;
 ?>
+<!-- document.getElementById('prev'+this.opt).innerHTML='<span> <button type="submit" class="tableshow" onclick="tablepreview('+this.opt+');"  value="" title="Open the table view"></button> </span>'; -->
+
 </body>
 </html>

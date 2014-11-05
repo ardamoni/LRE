@@ -116,7 +116,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 							WHERE d1.`upn` = '".$upn."' 
 							AND d1.`districtid`=d2.`districtid` 
 							AND d1.`property_use`=d2.`code` 
-							AND d2.`year`='".$currentYear."';");							
+							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, d1.`subupn`;");							
 							
 	$count = mysql_num_rows($query);
 	if ($count>0){
@@ -221,7 +221,7 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 							WHERE d1.`upn` = '".$upn."' 
 							AND d1.`districtid`=d2.`districtid` 
 							AND d1.`business_class`=d2.`code` 
-							AND d2.`year`='".$currentYear."';");	
+							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, d1.`subupn`;");	
 
 	$count = mysql_num_rows($query);
 	if ($count>0){
@@ -331,7 +331,8 @@ function getproperty($districtid, $upn)
 	}else{
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
 	FROM `property_balance` d3
-	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`;";
+	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`
+	ORDER BY d3.`upn`, d3.`subupn`;";
 	}
 // 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
 // 			from `KML_from_LUPMIS` d1, property d2, property_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
@@ -462,8 +463,12 @@ function getdistrictmap()
 	// get the polygons out of the database 
 //	$run = "SELECT * from `KML_from_districts`;";
 	
-	$run = "SELECT t1.`id`, t1.`boundary` ,t1.`districtname`, t2.`district_name`, t2.`activestatus` from `KML_from_districts` t1, `area_district` t2 WHERE t1.`districtname`=t2.`district_name`;";
+	$run = "SELECT t1.`id`, t1.`boundary` ,t1.`districtname`, t2.`district_name`, t2.`districtid`, t2.`activestatus` 
+	from `KML_from_districts` t1, `area_district` t2 WHERE t1.`districtname`=t2.`district_name`;";
+//	$run = "SELECT t2.`id`, t2.`boundary` , t2.`district_name`, t2.`activestatus` from `area_district` t2;";
+//	$run = "SELECT * from `area_district`;";
 	$query = mysql_query($run);
+	$affectedrows = mysql_affected_rows();
 
 	$data 				= array();
 
@@ -471,8 +476,10 @@ function getdistrictmap()
 	$json 				= array();
 	$json['id'] 		= $row['id'];
 	$json['boundary'] 	= $row['boundary'];
-	$json['districtname'] 	= $row['districtname'];
+	$json['districtname'] 	= $row['district_name'];
+	$json['districtid'] 	= $row['districtid'];
 	$json['activestatus'] 	= $row['activestatus'];
+
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");

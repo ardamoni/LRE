@@ -163,6 +163,20 @@ table.demoTbl td.foot {
 			<td><div id=sfile9></div></td>
 			<td><center id="spin9" type="hidden"><center id="squery9" type="hidden"><div id=prev9></div></center></td>
 		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option10" name="xlsopen" a href="javascript:;" onclick="openXLS(10);" class="orange-flat-button" value="List Property UPNs that have different Street Name than the parcel"/></td>
+			<div><input type="hidden" id="report10" value=""></div></td>
+			<td>This will produce an Excel table listing all UPNs from table property where the parcel streetname is not the same as the property streetname</td>
+			<td><div id=sfile10></div></td>
+			<td><center id="spin10" type="hidden"><center id="squery10" type="hidden"><div id=prev10></div></center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option11" name="xlsopen" a href="javascript:;" onclick="openXLS(11);" class="orange-flat-button" value="List BOP UPNs that have different Street Name than the parcel"/></td>
+			<div><input type="hidden" id="report11" value=""></div></td>
+			<td>This will produce an Excel table listing all UPNs from table business where the parcel streetname is not the same as the property streetname</td>
+			<td><div id=sfile11></div></td>
+			<td><center id="spin11" type="hidden"><center id="squery11" type="hidden"><div id=prev11></div></center></td>
+		</tr>
 	</table>
 		
 <script type="text/javascript">
@@ -237,18 +251,18 @@ switch(opt) {
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 6:  
-		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d2.`owner`, d2.`streetname`, d2.`housenumber`, d1.`districtid`, d1.balance FROM property_balance d1, property d2 ';
+		var squery = 'SELECT d1.`id`, d1.`upn` as dubious_UPN_, d1.`subupn` as only_first_subupn, d2.`owner`, d2.`streetname`, d2.`housenumber`, d1.`districtid`, d1.balance FROM property_balance d1, property d2 ';
 			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) AND d1.`upn` = d2.`upn`';
-			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+';';
+			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' GROUP BY d1.`upn`;';
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all Property UPNs missing in local plan";
 		document.getElementById('report'+opt).value="01LREwrongupns";
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 7:  
-		var squery = 'SELECT d1.`id`, d1.`upn`, d1.`subupn`, d2.`streetname`, d2.`housenumber`, d2.`business_name`, d2.`owner`, d1.`districtid`, d1.balance FROM business_balance d1, business d2 ';
+		var squery = 'SELECT d1.`id`, d1.`upn` as dubious_UPN_, d1.`subupn` as only_first_subupn, d2.`streetname`, d2.`housenumber`, d2.`business_name`, d2.`owner`, d1.`districtid`, d1.balance FROM business_balance d1, business d2 ';
 			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) AND d1.`upn` = d2.`upn` ';
-			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
+			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' GROUP BY d1.`upn`;';
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all Business UPNs missing in local plan";
 		document.getElementById('report'+opt).value="01LREwrongupnsBusiness";
@@ -272,6 +286,52 @@ switch(opt) {
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all BOP UPNs missing in Fee Fixing table";
 		document.getElementById('report'+opt).value="01LREwrongUpnsBusinessClassCode";
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 10:  
+		var squery = 'SELECT d1.UPN as UPNinLocalplan, '; 
+			squery +='LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1) as StreetnameInLocalplan, '; 
+			squery +='d1.ParcelOf, '; 
+			squery +='d2.upn as UPNinProperty, '; 
+			squery +='IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
+			squery +='LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), '; 
+			squery +='CONCAT( LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1), " ", d2.housenumber)) ';
+			squery +='as StreetnameInProperty, ';
+			squery +='d2.`owner`, '; 
+			squery +='d2.owneraddress ';
+			squery +='FROM `KML_from_LUPMIS` d1 INNER JOIN property d2 ON d1.UPN = d2.upn ';
+			squery +='WHERE d1.districtid='+<?php echo json_encode($_GET['districtid']) ?>+' AND TRIM(UPPER(LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1)))!= ';
+			squery +='TRIM(IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
+			squery +='UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1))), '; 
+			squery +='CONCAT( UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), " ", d2.housenumber))) ';
+			squery +='GROUP BY `d1`.`UPN`; ';
+	
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List Property UPNs that have different Street Name than the parcel";
+		document.getElementById('report'+opt).value="01LREwrongPropertyStreename";
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 11:  
+		var squery = 'SELECT d1.UPN as UPNinLocalplan, '; 
+			squery +='LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1) as StreetnameInLocalplan, '; 
+			squery +='d1.ParcelOf, '; 
+			squery +='d2.upn as UPNinBusiness, '; 
+			squery +='IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
+			squery +='LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), '; 
+			squery +='CONCAT( LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1), " ", d2.housenumber)) ';
+			squery +='as StreetnameInBusiness, ';
+			squery +='d2.`owner`, '; 
+			squery +='d2.owneraddress ';
+			squery +='FROM `KML_from_LUPMIS` d1 INNER JOIN business d2 ON d1.UPN = d2.upn ';
+			squery +='WHERE d1.districtid='+<?php echo json_encode($_GET['districtid']) ?>+' AND TRIM(UPPER(LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1)))!= ';
+			squery +='TRIM(IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
+			squery +='UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1))), '; 
+			squery +='CONCAT( UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), " ", d2.housenumber))) ';
+			squery +='GROUP BY `d1`.`UPN`; ';
+	
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List BOP UPNs that have different Street Name than the parcel";
+		document.getElementById('report'+opt).value="01LREwrongBOPStreename";
 		var target = document.getElementById('spin'+opt);
 	  break;
 	default:  

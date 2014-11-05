@@ -61,7 +61,10 @@
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
-	// 	$q = mysql_query("SELECT * 	FROM  `business` WHERE 	`districtid` = '".$districtId."' ORDER BY `upn` ASC LIMIT 10 "); //`year` = '".$currentYear."' AND 
+// 	$q = mysql_query("SELECT 	t1.* 
+// 						FROM  	`business` t1
+// 						WHERE 	t1.`districtid` = '".$districtId."'
+// 						ORDER BY `colzone_id` LIMIT 10");
 	$q = mysql_query("SELECT 	t1.* 
 						FROM  	`business` t1
 						WHERE 	t1.`districtid` = '".$districtId."'

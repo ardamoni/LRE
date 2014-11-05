@@ -29,7 +29,7 @@
 	$subupn 		= $_GET["subupn"];	
 	$districtId 	= $_GET['districtid'];
 	$type 			= $_GET['type'];	
-/*	
+	
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
 		$file= '../../uploads/logo-'.$districtId.'.gif';
@@ -45,7 +45,7 @@
 	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
 	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
 	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
-*/	
+	
 // 	$note = 'This bill must be paid by March 31st, in accordance with the districts regulations. Legal Actions shall be taken against defaulters 52 days after March 31st.';
 // 	$note2 =  "Payments should be made by banker's Draft/Payment Order or by Cash Only.";
 // 	$note3 =  "It is an offence to deface the property number, and change ownership without informing the district Assembly";

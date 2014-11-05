@@ -114,7 +114,77 @@
 		/*
 		 *	Individual district
 		 */			
-		 
+		 		// collect the information to be displayed in the UI
+		function getTotalPropertyBalanceDistrict( $districtid = "", $year = "2014", $f = "sumpropbal" )
+		{
+			$q = mysql_query("SELECT SUM(d3.balance) as sumpropbal FROM property_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."';");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+		
+		function getTotalPropertyPaymentDistrict( $districtid = "", $year = "2014", $f = "sumproppaid" )
+		{
+			$q 	= 	mysql_query("SELECT SUM(d3.payment_value) as sumproppaid FROM property_payments d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$districtid."';");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+		function getTotalPropertyDueDistrict( $districtid = "", $year = "2014", $f = "sumpropdue_feefi" )
+		{
+			$q 	= 	mysql_query("SELECT SUM(d3.feefi_value) as sumpropdue_feefi FROM property_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$districtid."' AND d3.rate_value=0;");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+		function getTotalPropertyDueValuedDistrict( $districtid = "", $year = "2014", $f = "sumpropdue_valued" )
+		{
+			$q 	= 	mysql_query("SELECT SUM(d3.rate_value) as sumpropdue_valued FROM property_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$districtid."' AND d3.rate_value>0;");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+		
+		//Business
+		function getTotalBusinessBalanceDistrict( $districtid = "", $year = "2014", $f = "sumbusbal" )
+		{
+
+			$q = 	mysql_query("SELECT SUM(d3.balance) as sumbusbal FROM business_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$districtid."';");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+		
+		function getTotalBusinessPaymentDistrict( $districtid = "", $year = "2014", $f = "sumbuspaid" )
+		{
+			$q 	= 	mysql_query("SELECT SUM(d3.payment_value) as sumbuspaid FROM business_payments d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$districtid."';");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+
+			function getTotalBusinessDueDistrict( $districtid = "", $year = "2014", $f = "sumbusdue" )
+		{
+			$q 	= 	mysql_query("SELECT SUM(d3.feefi_value) as sumbusdue FROM business_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$districtid."';");
+			$r = mysql_fetch_array($q);
+			if (!empty($r[$f])) {
+				return $r[$f];
+			} else {
+				return 0;}
+		}
+		
 	} // end of class
 
 

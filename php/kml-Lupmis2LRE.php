@@ -87,16 +87,45 @@ if ($goodtogo){
 $target_path = "../kml/";
 
 /* Add the original filename to our target path.  
-Result is "uploads/filename.extension" */
-$target_path = $target_path . basename( $_FILES['uploadedfile']['name']); 
+Result is "target_path/filename.extension" */
+$completeurl = $target_path . basename( $upload_district.$_FILES['uploadedfile']['name']); 
 //$target_path = $target_path . "bogoso.kml"; //basename( $_FILES['uploadedfile']['name']); 
 
-$completeurl = $target_path; // "../kml/Prestea_status_igf_prop.kml";
+//$completeurl = $target_path; // "../kml/Prestea_status_igf_prop.kml";
 
- print("Start import into database, please have some patience");
-//  print($upload_district.' - '.$completeurl);
-//  print('<br>File exists? '.file_exists($completeurl));
-//  break;
+/*
+this is to delete ASCII Character 2 or chr(2) from the KML file. We had the case from a file from Kumasi, where the KML file was corrupted and
+would not even load into Google Earth. After deleting the chr(2) the file could be opened and processed.
+We also have a Python script called stripWhiteSpace.py that does the same thing
+*/
+
+// print("Checking .KML file for unreadable characters, please have some patience");
+// 
+// $file = fopen($completeurl, "r+") or exit("Unable to open file!");
+// $filenows = fopen($completeurl."tmp", "w") or exit("Unable to open file!");
+// 
+// while (!feof($file)) {
+//     $line = fgets($file);
+// 	if (strpos($line,chr(2))>=0) {
+// 		$line=str_replace(chr(2),'',$line);
+// 	}
+// 
+//     fwrite($filenows,$line);
+// }
+// 
+// fclose($file);
+// fclose($filenows);
+// if (!unlink($completeurl))
+//   {
+//   echo ("<br>Error deleting $completeurl");
+//   }
+// else
+//   {
+//   echo ("<br>Deleted $completeurl<br>");
+//   }
+// $frename = rename($completeurl."tmp",$completeurl) or exit("Unable to rename file!");
+// 
+print("Start import into database, please have some patience");
 
 if (file_exists($completeurl)) { 
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -129,7 +158,7 @@ $tmp4='';
 //End Get Infor out of CDATA
     $styleUrl = $placemarks[$i]->styleUrl;
 
-//echo " parcelOf: ".$parcelOf."<br> color: ".$styleUrl."<br> address: ".$adddress."<br> use: ".$landuse."<br> status: ".$status."<br> UPN: ".$upn;    break;
+// echo " parcelOf: ".$parcelOf."<br> color: ".$styleUrl."<br> address: ".$adddress."<br> use: ".$landuse."<br> status: ".$status."<br> UPN: ".$upn;    //break;
 
 //Get geo coordinates
      $cor_d  =  explode(' ', $placemarks[$i]->Polygon->outerBoundaryIs->LinearRing->coordinates);
@@ -184,10 +213,10 @@ $dupprint=false;
 
 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
 //			echo $query;
-// this INSERT was used to identify duplicated UPN in the kml dataset from AgonaWest-Swedru. It is still here for future data quality tests.
-//			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
+// this INSERT was used to identify duplicated UPN in the kml dataset from AgonaWest-Swedru and Sefwi Wiawso. It is still here for future data quality tests.
+//		$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
 
-			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
+ 			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
 //			print_r($run);
 			 mysql_query($run) or die ('UPDATE - Error updating database: ' . mysql_error());
 		 }else

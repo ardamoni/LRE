@@ -78,7 +78,9 @@
 													`districtid`, 
 													`year`, 
 													`feefi_code`,													
-													`comments`) 
+													`comments`,
+													`lastentry_person`,
+													`lastentry_date`) 
 										VALUES (
 													NULL, 
 													'".$BOR['upn']."', 
@@ -86,7 +88,9 @@
 													'".$BOR['districtid']."',													
 													'".$year."',
 													'".$BOR['business_class']."',
-													'ekke - ".date("Y-m-d")."' ) ");
+													'auto by populate_business_due',
+													'script',
+													'".date("Y-m-d")."' ) ");
 		
 		// Display
 		//echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $BOR['districtid'], " & ", $year, " & ", $BOR['business_class'], "<br>";
@@ -109,7 +113,7 @@
 	else 
 	{	
 		$rq1 =  mysql_num_rows($q1);
-		echo "districtID: ", $districtID, ", rows: ", $rq1, "<br>";
+//		echo "districtID: ", $districtID, ", rows: ", $rq1, "<br>";
 		// Append a new data to the file
 		$current .= "Report on Insert fee fixing values into business_due: ";
 		$current .= "districtID: "; $current .= $districtID; 

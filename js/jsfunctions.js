@@ -1356,7 +1356,7 @@ function parent_refresh()
 
 //-----------------------------------------------------------------------------
 		//function getLocalplanPolygons() 
-		//is the onvisibilitychanged event for the Collector Zone Layer
+		//is the onvisibilitychanged event for the Local Plan Layer
 		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones 
 		//from the boundaries stored in the table KML_From_LUPMIS
 		//it calls a polyhandler() to actually create the polygones based on the returned data
@@ -1385,7 +1385,7 @@ function getLocalplanPolygons() {
 
 //-----------------------------------------------------------------------------
 		//function polyhandler() 
-		//is the callback handler for getPropertyPolygons()
+		//is the callback handler for getLocalplanPolygons()
 		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
 //-----------------------------------------------------------------------------
 
@@ -2061,6 +2061,7 @@ if(!request.responseXML) {
 	var districtboundary='';
 	var numberOfParcels='';
 	var numberOfProperty='';
+	var numberOfProperty_valued='';
 	var numberOfBusiness='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
@@ -2071,6 +2072,7 @@ if(!request.responseXML) {
 			userdistrictname += feed[i]['userdistrictname'];
 			numberOfParcels += feed[i]['numberOfParcels'];
 			numberOfProperty += feed[i]['numberOfProperty'];
+			numberOfProperty_valued += feed[i]['numberOfProperty_valued'];
 			numberOfBusiness += feed[i]['numberOfBusiness'];
 			districtboundary += feed[i]['districtboundary']};
 
@@ -2084,7 +2086,7 @@ if(!request.responseXML) {
 	globaluserrole=userrole;
 	document.getElementById("districtname").innerHTML=userdistrictname;
 	document.getElementById("stat1").innerHTML=number_format(numberOfParcels, 0, '.', ',');
-	document.getElementById("stat2").innerHTML=number_format(numberOfProperty, 0, '.', ',');
+	document.getElementById("stat2").innerHTML=number_format(numberOfProperty, 0, '.', ',')+'/v:'+number_format(numberOfProperty_valued, 0, '.', ',');
 	document.getElementById("stat3").innerHTML=number_format(numberOfBusiness, 0, '.', ',');
 
 	//Now we center the map according to the boundary 

@@ -14,15 +14,34 @@
 	require_once( 	"../../lib/System.php"			);
 	
 	
-	$PDF = new PDF('P','mm','A4');
  	$System = new System;
 	$Data = new Revenue;
+	$districtid = $_GET['districtid'];
+	$target = $_GET['target'];
+
+	$dupUPNinKML = $Data->checkOnDuplicateUPNInKML($districtid, $target);
+
+// 	$dupUPNchecked = array_search('557-0688-0083',$dupUPNinKML);
+// 	echo array_search('556-0692-0011',$dupUPNinKML, true);
+// 	$dupUPNchecked = array_search('556-0688-0013',$dupUPNinKML);
+// 	echo array_search('556-0688-0013',$dupUPNinKML, true);
+
+//   var_dump($dupUPNchecked);
+//   if ( $dupUPNchecked == FALSE ){
+//   echo $dupUPNchecked.' $dupUPNchecked<br>';
+//   }else
+//   { echo 'not false Ekke'; }
+//    var_dump($dupUPNinKML);
+//    break;
+
+	$PDF = new PDF('P','mm','A4');
 	
 	$year = $System->GetConfiguration("RevenueCollectionYear");
-	$target = $_GET['target'];
 	$districtid = $_GET['districtid'];
 	
 	$districtName = $Data->getDistrictInfo( $districtid, "district_name" );
+	
+
 
 	//var_dump($_GET);		
 
@@ -102,7 +121,7 @@
 							FROM business INNER JOIN demand_notice_record 
 								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`
 							WHERE business.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
-							ORDER BY business.`colzone_id`, business.`streetname`, business.`housenumber`, business.`upn`;");
+							ORDER BY business.`colzone_id`, business.`streetname`, business.`housenumber`, business.`upn`, business.`subupn`;");
 			} elseif ($target=='property'){
 				$q = mysql_query("SELECT property.id, 
 								property.`upn`, 
@@ -119,13 +138,16 @@
 							FROM property INNER JOIN demand_notice_record 
 								ON property.`upn` = demand_notice_record.`upn` AND property.`subupn` = demand_notice_record.`subupn`
 							WHERE property.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
-							ORDER BY property.`colzone_id`, property.`streetname`, property.`housenumber`, property.`upn`;");
+							ORDER BY property.`colzone_id`, property.`streetname`, property.`housenumber`, property.`upn`, property.`subupn`;");
 			}
 							
 			$counter = 0;
 			$cznr='';
 			while( $r = mysql_fetch_array($q) )
 			{
+				$dupUPNchecked = array_search($r['upn'],$dupUPNinKML);
+				//	$dupUPNchecked = array_search('556-0686-0002',$dupUPNinKML);
+
 				$address = $r['housenumber'].' '.$r['streetname'];
 				if ($target=='business'){
 // could not get the linebreak to work
@@ -136,12 +158,22 @@
 					}
  				}
  				if ($cznr!=$r['colzone_id']){
+					$PDF->SetFont('Arial','',4);
+					$PDF->Write(2,'* = Please check this address explicitly.');
+
+					$PDF->AddPage();
 					$PDF->SetFont('Arial','B',8);
 					$PDF->SetFillColor(225,225,225);
 					$PDF->Cell(34,5, "Collector Zone",1,0,'C',true);
 // 					$PDF->SetFont('Arial','',8); 
 // 					$PDF->SetFillColor(255,255,255);
-					$PDF->Cell(155,5, $r['colzone_id'], 1,0,'C',true);
+					if ($target=='business'){
+					$PDF->Cell(50,5, $r['colzone_id'], 1,0,'C',true);
+					$PDF->Cell(105,5, 'Bills Register for Business Operating Permits', 1,0,'C',true);
+					}elseif ($target=='property'){
+					$PDF->Cell(55,5, $r['colzone_id'], 1,0,'C',true);
+					$PDF->Cell(100,5, 'Bills Register for Property Rates', 1,0,'C',true);
+					}
 					$PDF->Ln();
 				}
 				if ($target=='business'){ 
@@ -154,7 +186,12 @@
 					$PDF->Cell(40,5, $r['owner'], 1,0,'C',true);
 					$PDF->Cell(30,5, $address, 1,0,'C',true);
 					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
-					$PDF->Cell(20,5, '', 1,0,'C',true);
+					
+						IF ($dupUPNchecked == FALSE) {
+						$PDF->Cell(20,5, '', 1,0,'C',true);
+						}else{
+						$PDF->Cell(20,5, '*', 1,0,'L',true);
+						}					
 					}elseif ($target=='property'){
 					$PDF->SetFont('Arial','',6);
 					$PDF->SetFillColor(255,255,255);
@@ -163,15 +200,23 @@
 					$PDF->Cell(55,5, $r['owner'], 1,0,'C',true);
 					$PDF->Cell(45,5, $address, 1,0,'C',true);
 					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
-					$PDF->Cell(40,5, '', 1,0,'C',true);
+						IF ($dupUPNchecked == FALSE) {
+						$PDF->Cell(40,5, '', 1,0,'C',true);
+						}else{
+						$PDF->Cell(40,5, '*', 1,0,'L',true);
+						}					
 				}
 				$PDF->Ln();
 				$n = $n + 1;
 				$cznr=$r['colzone_id'];
 			}
 						
+			$PDF->Ln();
+			$PDF->SetFont('Arial','',4);
+			$PDF->Write(2,'* = Please check this address explicitly.');
 			$PDF->Ln(10);			
 				
+
 	$PDF->Ln();
 	$PDF->Output();
 

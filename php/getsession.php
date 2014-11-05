@@ -24,6 +24,8 @@ else
 	$numberOfParcels	= 	mysql_fetch_array($qnumberOfParcels);
 	$qnumberOfProperty	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
 	$numberOfProperty	= 	mysql_fetch_array($qnumberOfProperty);
+	$qnumberOfProperty_valued	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `districtid` = '".$_SESSION['user']['districtid']."' AND `value_prop`>0");
+	$numberOfProperty_valued	= 	mysql_fetch_array($qnumberOfProperty_valued);
 	$qnumberOfBusiness	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `business` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
 	$numberOfBusiness	= 	mysql_fetch_array($qnumberOfBusiness);
 // 	$qsumPropertyBalance = 	mysql_query("SELECT SUM(d3.balance) as sumpropbal FROM property_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
@@ -36,6 +38,7 @@ else
 	$json['districtboundary'] 		= $districtboundary['boundary'];
 	$json['numberOfParcels'] 		= $numberOfParcels['numupn'];
 	$json['numberOfProperty'] 		= $numberOfProperty['numupn'];
+	$json['numberOfProperty_valued'] 		= $numberOfProperty_valued['numupn'];
 	$json['numberOfBusiness'] 		= $numberOfBusiness['numupn'];
 // 	$json['sumPropertyBalance'] 	= $sumPropertyBalance['sumpropbal'];
 // 	$json['sumPropertyPaid'] 		= $sumPropertyPaid['sumproppaid'];
