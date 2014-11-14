@@ -483,7 +483,7 @@ function getdistrictmap()
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");
-	echo json_encode($data);
+ 	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
 				//function getregionmap() 

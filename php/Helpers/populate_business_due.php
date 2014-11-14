@@ -48,6 +48,7 @@
 	// add the date and time to the file
 	$current .= date("Y-m-d h:i:sa");	$current .= "\r\n"; $current .= "\r\n";		
 	
+//STEP 1: copy information from business to business_due
 	// get all the data from Property 
 	$querry = mysql_query(" SELECT * FROM `business` WHERE `districtid` = '".$districtID."' ");
 	
@@ -97,6 +98,7 @@
 		//$i++;		
 	}
 		
+//STEP 2: Update business_due with information from fee_fixing_xx 
 	// update	
 	$q1 = mysql_query(" SELECT	*
 						FROM	`business_due` `b`,
@@ -124,7 +126,8 @@
 	{		
 		// Property_due update with feefi_value
 		mysql_query("	UPDATE 		`business_due` 
-						SET 		`feefi_value` = '".$Results['rate']."' 
+						SET 		`feefi_value` = '".$Results['rate']."',
+									`feefi_unit` = '".$Results['unit']."'
 						WHERE 		`upn` = '".$Results['upn']."' AND 
 									`subupn` = '".$Results['subupn']."' AND
 									`districtid` = '".$Results['districtid']."' AND
@@ -132,6 +135,7 @@
 									`feefi_code` = '".$Results['code']."' ");
 	}
 	
+//STEP 3: Error reporting into external text file
 	//
 	// REPORT for ERRORS !!!
 	//

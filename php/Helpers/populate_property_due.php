@@ -48,6 +48,7 @@
 	// add the date and time to the file
 	$current .= date("Y-m-d h:i:sa");	$current .= "\r\n"; $current .= "\r\n";		
 	
+//STEP 1: copy information from property to property_due
 	// get all the data from Property 
 	$querry = mysql_query(" SELECT * FROM `property` WHERE `districtid` = '".$districtID."' ");
 	
@@ -99,6 +100,7 @@
 		//$i++;		
 	}
 		
+//STEP 2: Update property_due with information from fee_fixing_xx 
 	// update	
 	$q1 = mysql_query(" SELECT	*
 						FROM	`property_due` `b`,
@@ -116,7 +118,7 @@
 	{	
 		$rq1 =  mysql_num_rows($q1);
 //		echo "districtID: ", $districtID, ", rows: ", $rq1, "<br>";
-		// Append a new data to the file
+		// Append a new data to the log file
 		$current .= "Report on Insert fee fixing values into property_due: ";
 		$current .= "districtID: "; $current .= $districtID; 
 		$current .= ", rows: "; $current .= $rq1; $current .= ". \r\n";
@@ -128,7 +130,8 @@
 		mysql_query("	UPDATE 		`property_due` 
 						SET 		`feefi_value` = '".$Results['rate']."',
 									`rate_value` = '".$Results['prop_value']*$Results['rate_impost']."',
-									`rate_impost_value` = '".$Results['rate_impost']."'
+									`rate_impost_value` = '".$Results['rate_impost']."',
+									`feefi_unit` = '".$Results['unit']."'
 						WHERE 		`upn` = '".$Results['upn']."' AND 
 									`subupn` = '".$Results['subupn']."' AND
 									`districtid` = '".$Results['districtid']."' AND
@@ -136,6 +139,7 @@
 									`feefi_code` = '".$Results['code']."' ");
 	}
 	
+//STEP 3: Error reporting into external text file
 	//
 	// REPORT for ERRORS !!!
 	//

@@ -321,6 +321,7 @@ var selectControl = new OpenLayers.Control.SelectFeature(
 //-----------------------------------------------------------------------------
 
 function polyhandler(request) {
+
 	// the server could report an error
 	if(request.status == 500) {
 		// do something to calm the user
@@ -349,6 +350,8 @@ function polyhandler(request) {
 			}
 			// create some attributes for the feature
 			var attributes = {districtname: feed[i]['districtname']};
+
+
 				// create a linear ring by combining the just retrieved points
 			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
 			//only display during pilot phase LREpilot is set at the beginning of the javascript section
@@ -370,6 +373,8 @@ function polyhandler(request) {
 		} // end of for 
 		  districtmap.redraw();
 	}
+
+
 }	
 function polyhandlerregion(regionrequest) {
    request=regionrequest;
