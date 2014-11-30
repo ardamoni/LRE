@@ -73,7 +73,9 @@
 														`feefi_value`,
 														`balance`,
 														`instalment`,
-														`comments` ) 
+														`comments`,
+														`lastentry_person`,
+														`lastentry_date` ) 
 											VALUES 	( 	NULL,
 														'".$BOR['upn']."',
 														'".$BOR['subupn']."',
@@ -84,7 +86,9 @@
 														0,
 														0, 
 														0,
-														'ekke - ".date("Y-m-d")."' ) ");
+														'auto by populate_business_balance',
+														'script',
+														'".date("Y-m-d")."' ) ");
 		
 		// Display
 		//echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $BOR['districtid'], " & ", $year, "<br>";
@@ -98,6 +102,7 @@
 											`d`.`subupn` AS `subupn`,
 											`d`.`districtid` AS `districtid`,											
 											`d`.`year` AS `year`,											
+											`d`.`bo_value` AS `bo_value`,
 											`d`.`bo_impost_value` AS `bo_impost_value`,
 											`d`.`feefi_value` AS `feefi_value`											
 											
@@ -131,7 +136,7 @@
 		$prev_balance = $Data->getBalanceInfo( $results['upn'], $results['subupn'], $districtID, ($year-1), "business", "balance" );
 		
 		// all other values
-		$due = $results['bo_impost_value'] + $results['feefi_value'];		
+		$due = $results['bo_value'] * $results['bo_impost_value'] + $results['feefi_value'];		
 		$balance = $prev_balance + $due;		
 		
 		if( $due == 0 || $balance == 0 ) {

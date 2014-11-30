@@ -23,6 +23,14 @@ date_default_timezone_set('Europe/London');
 <h2>Fee Fixing Upload</h2>
 <?php
 require_once('../lib/feefixingBClass.php');
+require_once("../lib/System.php");
+
+$System = new System;
+
+$aYears = explode(",",$System->GetConfiguration("PeriodForBillsYear"));
+$aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
+$aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
+
 global $feefixb;
 
 /** Include path **/
@@ -110,13 +118,28 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 		//set count for first row, which most probably is the column descriptor and we don't want that in the db
 		$firstrow=1;
 		foreach ($sheetData as $cellData) {
+		$unit='';
+		//check the validity period of the item
+		if (in_array($cellData['E'], $aYears))
+		{
+		  $unit='y';
+		}
+		elseif (in_array($cellData['E'], $aMonths))
+		{
+		  $unit='m';
+		}
+		elseif (in_array($cellData['E'], $aWeeks))
+		{
+		  $unit='w';
+		}
+
 			 echo "<tr>";
 //var_dump($cellData);
 				$feefixb->code=$cellData['A'];
 				$feefixb->class=ltrim($cellData['B'],' ');
 				$feefixb->category=$cellData['C'];
 				$feefixb->rate=$cellData['D'];
-				$feefixb->unit=$cellData['E'];
+				$feefixb->unit=$unit;
 				$feefixb->assessed=$cellData['F'];
 				$feefixb->rate_impost=$cellData['G'];
 				$feefixb->code_of_zone=$cellData['H'];

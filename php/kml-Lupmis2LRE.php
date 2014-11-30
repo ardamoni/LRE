@@ -214,9 +214,9 @@ $dupprint=false;
 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
 //			echo $query;
 // this INSERT was used to identify duplicated UPN in the kml dataset from AgonaWest-Swedru and Sefwi Wiawso. It is still here for future data quality tests.
-//		$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
+		$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
 
- 			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
+//  			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
 //			print_r($run);
 			 mysql_query($run) or die ('UPDATE - Error updating database: ' . mysql_error());
 		 }else

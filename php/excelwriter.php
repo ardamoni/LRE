@@ -1,7 +1,8 @@
 <?php
 /**
  * ExcelWriter
- * this script requires two _POST parameters, and does not return any value. The script creates an XLSX file and store is with the sfile name in ../tmp
+ * this script requires three _POST parameters, and does not return any value. The script creates an XLSX file and store is with the sfile name in ../tmp
+ * 1. $_POST['template'] = a string for a filename without the path (is added in this script)
  * 1. $_POST['squery'] = a string of any SQL statement
  * 2. $_POST['sfile'] = a string for a filename without the path and the extension (both are added in this script)
  * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
@@ -18,8 +19,15 @@ include 'PHPExcel.php';
 ini_set('memory_limit', "1024M");
 ini_set('max_execution_time', 800);
 
-// create new PHPExcel object
-$objPHPExcel = new PHPExcel;
+$templatefile = $_POST['template'];
+
+IF (empty($templatefile)) {
+	// create new PHPExcel object
+	$objPHPExcel = new PHPExcel;
+} else {
+	// set template
+	$objPHPExcel = PHPExcel_IOFactory::load('../xls/'.$templatefile);
+}
 // set default font
 $objPHPExcel->getDefaultStyle()->getFont()->setName('Calibri');
 // set default font size

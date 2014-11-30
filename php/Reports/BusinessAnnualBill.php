@@ -68,7 +68,7 @@
 	$q = mysql_query("SELECT 	t1.* 
 						FROM  	`business` t1
 						WHERE 	t1.`districtid` = '".$districtId."'
-						ORDER BY `colzone_id` ");
+						ORDER BY t1.`colzone_id`, t1.`streetname`, LENGTH(t1.`housenumber`), t1.`housenumber`, t1.`upn` ");
 	
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
@@ -153,11 +153,11 @@
 // 		$PDF->SetFont('Arial','',8);
 // 		$PDF->Cell(30,5, 'Area Zone: ',0,0,'L');
 // 		$PDF->Cell(90,5, $r['zoneid'],1,0,'C');
-		$PDF->SetFont('Arial','',8);
+		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Usage: ',0,0,'L');
 		// OBSOLETE - 15.07.2014 - Arben
 		//$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['business_class']),1,0,'C'); //property_use_title
-		$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingInfo( $districtId, $r['business_class'], $currentYear, $type, "class" ),1,0,'C');
+		$PDF->Cell(90,5,  $r['business_class'].' / '.$Data->getFeeFixingInfo( $districtId, $r['business_class'], $currentYear, $type, "class" ).' / '.$Data->getFeeFixingInfo( $districtId, $r['business_class'], $currentYear, $type, "category" ),1,0,'C');
 		$PDF->SetFont('Arial','',6);
 		$PDF->Cell(30,5, 'Total Amount Due: ',0,0,'R');
 		// Obsolete - 15.07.2014 - Arben

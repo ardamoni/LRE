@@ -101,36 +101,50 @@ table.demoTbl td.foot {
 			<td><center><input type="button" type="submit" id="option1" name="xlsopen" a href="javascript:;" onclick="openXLS(1);" class="orange-flat-button" value="List district info"/></center>
 			<div><input type="hidden" id="report1" value=""></div></td>
 			<td>This will produce an Excel table listing information on the district</td>
-			<td><div id=sfile1></div></td>
+			<td><div id=sfile1><div id=template1></div></td>
 			<td><center id="spin1" type="hidden"><center id="squery1" type="hidden"><div id=prev1></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option2" name="xlsopen" a href="javascript:;" onclick="openXLS(2);" class="orange-flat-button" value="List properties by district"/></td>
 			<div><input type="hidden" id="report2" value=""></div></td>
 			<td>This will produce an Excel file with the content of the properties table</td>
-			<td><div id=sfile2></div></td>
+			<td><div id=sfile2><div id=template2></div></td>
 			<td><center id="spin2" type="hidden"><center id="squery2" type="hidden"><div id=prev2></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option3" name="xlsopen" a href="javascript:;" onclick="openXLS(3);" class="orange-flat-button" value="List businesses by district"/></td>
 			<div><input type="hidden" id="report3" value=""></div></td>
 			<td>This will produce an Excel file with the content of the business table</td>
-			<td><div id=sfile3></div></td>
+			<td><div id=sfile3><div id=template3></div></td>
 			<td><center id="spin3" type="hidden"><center id="squery3" type="hidden"><div id=prev3></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option4" name="xlsopen" a href="javascript:;" onclick="openXLS(4);" class="orange-flat-button" value="Revenue potential Property Rates by district"/></td>
 			<div><input type="hidden" id="report4" value=""></div></td>
 			<td>This will produce an Excel table with the Potential of Property Rates per year</td>
-			<td><div id=sfile4></div></td>
+			<td><div id=sfile4></div><div id=template4></div></td>
 			<td><center id="spin4" type="hidden"><center id="squery4" type="hidden"><div id=prev4></div></center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option4.1" name="xlsopen" a href="javascript:;" onclick="openXLS(4.1);" class="orange-flat-button" value="Potential of Property Rates per year per Property Class"/></td>
+			<div><input type="hidden" id="report4.1" value=""></div></td>
+			<td>This will produce an Excel table with the Potential of Property Rates per year per Property Class</td>
+			<td><div id=sfile4.1><div id=template4.1></div></td>
+			<td><center id="spin4.1" type="hidden"><center id="squery4.1" type="hidden"><div id=prev4.1></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option5" name="xlsopen" a href="javascript:;" onclick="openXLS(5);" class="orange-flat-button" value="Revenue potential Business Rates by district"/></td>
 			<div><input type="hidden" id="report5" value=""></div></td>
 			<td>This will produce an Excel table with the Potential of Business Rates per year</td>
-			<td><div id=sfile5></div></td>
+			<td><div id=sfile5><div id=template5></div></td>
 			<td><center id="spin5" type="hidden"><center id="squery5" type="hidden"><div id=prev5></div></center></td>
+		</tr>
+		<tr>
+			<td><input type="button" type="submit" id="option5.1" name="xlsopen" a href="javascript:;" onclick="openXLS(5.1);" class="orange-flat-button" value="Revenue potential Business Rates per year per Business Class"/></td>
+			<div><input type="hidden" id="report5.1" value=""></div></td>
+			<td>This will produce an Excel table with the Potential of Business Rates per year per Business Class</td>
+			<td><div id=sfile5.1><div id=template5.1></div></td>
+			<td><center id="spin5.1" type="hidden"><center id="squery5.1" type="hidden"><div id=prev5.1></div></center></td>
 		</tr>
 		<tr>
 			<td><center>Quality of Data Reports</center></td>
@@ -139,42 +153,42 @@ table.demoTbl td.foot {
 			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" class="orange-flat-button" value="List Property UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report6" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table property_balanace that have no correspondance in the local plan</td>
-			<td><div id=sfile6></div></td>
+			<td><div id=sfile6><div id=template6></div></td>
 			<td><center id="spin6" type="hidden"><center id="squery6" type="hidden"><div id=prev6></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option7" name="xlsopen" a href="javascript:;" onclick="openXLS(7);" class="orange-flat-button" value="List Business UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report7" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table business_balanace that have no correspondance in the local plan</td>
-			<td><div id=sfile7></div></td>
+			<td><div id=sfile7><div id=template7></div></td>
 			<td><center id="spin7" type="hidden"><center id="squery7" type="hidden"><div id=prev7></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option8" name="xlsopen" a href="javascript:;" onclick="openXLS(8);" class="orange-flat-button" value="List Property UPNs that without a corresponding code in Fee Fixing"/></td>
 			<div><input type="hidden" id="report8" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table property that have no correspondance in the Fee Fixing table</td>
-			<td><div id=sfile8></div></td>
+			<td><div id=sfile8><div id=template8></div></td>
 			<td><center id="spin8" type="hidden"><center id="squery8" type="hidden"><div id=prev8></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option9" name="xlsopen" a href="javascript:;" onclick="openXLS(9);" class="orange-flat-button" value="List BOP UPNs that without a corresponding code in Fee Fixing"/></td>
 			<div><input type="hidden" id="report9" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table business that have no correspondance in the Fee Fixing table</td>
-			<td><div id=sfile9></div></td>
+			<td><div id=sfile9><div id=template9></div></td>
 			<td><center id="spin9" type="hidden"><center id="squery9" type="hidden"><div id=prev9></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option10" name="xlsopen" a href="javascript:;" onclick="openXLS(10);" class="orange-flat-button" value="List Property UPNs that have different Street Name than the parcel"/></td>
 			<div><input type="hidden" id="report10" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table property where the parcel streetname is not the same as the property streetname</td>
-			<td><div id=sfile10></div></td>
+			<td><div id=sfile10><div id=template10></div></td>
 			<td><center id="spin10" type="hidden"><center id="squery10" type="hidden"><div id=prev10></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option11" name="xlsopen" a href="javascript:;" onclick="openXLS(11);" class="orange-flat-button" value="List BOP UPNs that have different Street Name than the parcel"/></td>
 			<div><input type="hidden" id="report11" value=""></div></td>
 			<td>This will produce an Excel table listing all UPNs from table business where the parcel streetname is not the same as the property streetname</td>
-			<td><div id=sfile11></div></td>
+			<td><div id=sfile11><div id=template11></div></td>
 			<td><center id="spin11" type="hidden"><center id="squery11" type="hidden"><div id=prev11></div></center></td>
 		</tr>
 	</table>
@@ -205,6 +219,7 @@ var sd = new Date();
 var sdate = sd.getFullYear().toString()+(sd.getMonth()+1).toString()+sd.getDate().toString()+sd.getHours().toString()+sd.getMinutes().toString()+sd.getSeconds().toString();
 var sfile = <?php echo json_encode($_GET['districtid']); ?>+sdate;
 
+document.getElementById('spin0').innerHTML="Please be patient, this process will take a while";
 
 document.getElementById('spin0').innerHTML="Please be patient, this process will take a while";
 switch(opt) {
@@ -230,23 +245,48 @@ switch(opt) {
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 4:  
-		var squery = 'select d3.`district_name`, d2.year, sum(d2.`rate`) as TotalRevenueExpected ';
+		var squery = 'select d3.`district_name` as District_name, d2.year as Year, sum(d2.`rate`) as TotalRevenueExpected_Property ';
 			squery +='from `property` d1, `fee_fixing_property` d2, `area_district` d3 ';
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`';
 		document.getElementById('squery'+opt).value=squery;
-		document.getElementById('option'+opt).value="List revenue potential";
+		document.getElementById('option'+opt).value="List revenue potential per year";
+//		document.getElementById('option4').value=squery;
+		document.getElementById('report'+opt).value="01LREpotentialProperty";
+		document.getElementById('template'+opt).value="TotalRevExpectedtemplate.xlsx";
+//		document.getElementById('option4').value=document.getElementById('template4').value;
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 4.1:  
+		var squery = 'select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, sum(d2.`rate`) as "Total Revenue Expected" ';
+			squery +='from `property` d1, `fee_fixing_property` d2, `area_district` d3 ';
+			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
+			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`;';
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List revenue Potential of Property Rates per year per Property Class";
 //		document.getElementById('option4').value=squery;
 		document.getElementById('report'+opt).value="01LREpotentialProperty";
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 5:  
-		var squery = 'select d3.`district_name`, d2.year, sum(d2.`rate`) as TotalRevenueExpected ';
+		var squery = 'select d3.`district_name` as District_name, d2.year as Year, sum(d2.`rate`) as TotalRevenueExpected_BOP ';
 			squery +='from `business` d1, `fee_fixing_business` d2, `area_district` d3 ';
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`business_class`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`';
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List revenue potential";
+		document.getElementById('report'+opt).value="01LREpotentialBusiness";
+		document.getElementById('template'+opt).value="TotalRevExpectedtemplate.xlsx";
+		var target = document.getElementById('spin'+opt);
+	  break;
+	case 5.1:  
+		var squery = 'select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, sum(d2.`rate`) as "Total Revenue Expected" ';
+			squery +='from `business` d1, `fee_fixing_business` d2, `area_district` d3 ';
+			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
+			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`business_class`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`;';
+		document.getElementById('squery'+opt).value=squery;
+		document.getElementById('option'+opt).value="List revenue Potential of BOP per year per Business Class";
+//		document.getElementById('option4').value=squery;
 		document.getElementById('report'+opt).value="01LREpotentialBusiness";
 		var target = document.getElementById('spin'+opt);
 	  break;
@@ -338,11 +378,14 @@ switch(opt) {
 	}
 spin.spin(target);
 
-//alert(document.getElementById('report1').value);
+//alert(document.getElementById('template4').value);
 <?php flush(); ?>;
 var pageURL = 'excelwriter.php'; //?squery=SELECT * from property WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
 
-var handlerParameter = {spin: spin, opt: opt, sfile: sfile};
+if (!!document.getElementById('template'+opt) || !document.getElementById('template'+opt).length){
+ template = document.getElementById('template'+opt).value;
+}
+var handlerParameter = {spin: spin, opt: opt, sfile: sfile, template: template};
 
 
 //issue the XMLHTTPRequest to process the export in the background
@@ -350,7 +393,8 @@ var request = OpenLayers.Request.POST({
 	url: pageURL, 
 	data: OpenLayers.Util.getParameterString(
 	{squery: squery,
-	 sfile : sfile}),
+	 sfile : sfile,
+	 template : template}),
 	headers: {
 		"Content-Type": "application/x-www-form-urlencoded"
 	},
@@ -389,7 +433,19 @@ function tablepreview(opt) {
 
 	var popupWindow = null;
   var title = 'Preview';
-  var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value;
+  
+//  if (typeof document.getElementById('template'.opt) != 'undefined') {
+//  		alert(document.getElementById('template'.opt).value);}else{
+//  		alert('undefinded');}
+ 		
+
+//   if (!!document.getElementById('template'+opt) || !document.getElementById('template'+opt).value=== null ){
+// 	 var template = document.getElementById('template'+opt).value;
+// 	 var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value+'&template='+template;
+// 	} else {
+	  var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value;
+// 	}
+
 
 //call openPDFprint with title and pageURL as the two arguments	
 	var pageURL = 'openPDFprint.php?title='+title+'&pageURL='+pageURL;

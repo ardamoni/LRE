@@ -1,0 +1,331 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+,(name),(name),,(name),(1 for yes),,(string. If >1:separate with -),(string. If >1:separate with -),(string),-99
+2011," Advertising Agency/Signwriters, Art Studios ","Category ""A"" ",450,Per Annum,,,,,,-99
+2012," Advertising Agency/Signwriters, Art Studios ","Category ""B"" ",250,Per Annum,,,,,,-99
+2013," Advertising Agency/Signwriters, Art Studios ","Category ""C"" ",100,Per Annum,,,,,,-99
+2021,Agric/Agro Products (Chemicals),"Category ""A"" ",250,Per Annum,,,,,,-99
+2022,Agric/Agro Products (Chemicals),"Category ""B"" ",125,Per Annum,,,,,,-99
+2023,Agric/Agro Products (Chemicals)," Category ""C"" ",40,Per Annum,,,,,,-99
+2031,Art & Handicraft Shops(Atefacts),"Category ""A"" ",30,Per Annum,,,,,,-99
+2032,Art & Handicraft Shops(Atefacts),"Category ""B"" ",40,Per Annum,,,,,,-99
+2041,Aluminium Fabricators ,"Category ""A"" ",150,Per Annum,,,,,,-99
+2042,Aluminium Fabricators ,"Category ""B"" ",100,Per Annum,,,,,,-99
+2043,Aluminium Fabricators ,"Category ""C"" ",60,Per Annum,,,,,,-99
+2051,Boutiques ,"Category ""A"" ",70,Per Annum,,,,,,-99
+2052,Boutiques ,"Category ""B"" ",40,Per Annum,,,,,,-99
+2053,Boutiques ,"Category ""C"" ",25,Per Annum,,,,,,-99
+2061,Bookshops/Stationery Shops  ,"Category ""A"" ",40,Per Annum,,,,,,-99
+2062,Bookshops/Stationery Shops  ,"Category ""B"" ",25,Per Annum,,,,,,-99
+2063,Bookshops/Stationery Shops  ,"Category ""C"" ",20,Per Annum,,,,,,-99
+2071,Bakery ," Category ""A"" - Large Scale",35,Per Annum,,,,,,-99
+2072,Bakery ," Category ""B"" - Medium Scale",25,Per Annum,,,,,,-99
+2081,Bakery ," Category ""C"" - Pastries",20,Per Annum,,,,,,-99
+2082,Breweries/Distilleries,"Category ""A"" -  Brewery/Distillery Factory",600,Per Annum,,,,,,-99
+2083,Breweries/Distilleries,"Category ""B"" - Co-operatives/ Distillers",70,Per Annum,,,,,,-99
+2091,Breweries/Distilleries,"Category ""C"" - Home Based/Farm Site",50,Per Annum,,,,,,-99
+2092,Building Material/ Hardware Stores,"Category ""A""- Large",60,Per Annum,,,,,,-99
+2094,Building Material/ Hardware Stores,"Category ""B""- Medium",40,Per Annum,,,,,,-99
+101,Building Material/ Hardware Stores,"Category ""C""- Kiosk",35,Per Annum,,,,,,-99
+102,Bags and Suitcase ,"Category ""A"" - Large",70,Per Annum,,,,,,-99
+103,Bags and Suitcase ,"Category ""B"" - Medium",50,Per Annum,,,,,,-99
+111,Bags and Suitcase ,"Category ""C""- Small",40,Per Annum,,,,,,-99
+112,Block Making Factory ,"Category  ""A"" (Two and more Machines)",70,Per Annum,,,,,,-99
+113,Block Making Factory ,"Category  ""B"". (One Machine/Manual )",50,Per Annum,,,,,,-99
+121,Block Making Factory ,"Category  ""C"" Baulesters",40,Per Annum,,,,,,-99
+122,Cold Store ,"Category ""A"" - Large",100,Per Annum,,,,,,-99
+123,Cold Store ," Category ""B"" -  Medium",50,Per Annum,,,,,,-99
+131,Cold Store ,"Category ""C"" - Wayside/Kiosk",30,Per Annum,,,,,,-99
+132,Carpenters ,"Category ""A"" - (With Machines /Upholstery)",100,Per Annum,,,,,,-99
+133,Carpenters ," Category ""B"" (WithMachines)",80,Per Annum,,,,,,-99
+134,Carpenters ,"Category ""C"" (Without Machines)",35,Per Annum,,,,,,-99
+141,Carpenters ,"Carpenters Category ""D""",20,Per Annum,,,,,,-99
+142,Carpenters ,"Category ""E"" (Mould fishmongers' net)",10,Per Annum,,,,,,-99
+143,Cannoe Moulders ,"Category ""A"" ",30,Per Annum,,,,,,-99
+151,Cannoe Moulders ,"Category ""B"" ",25,Per Annum,,,,,,-99
+152,Coffin/Casket Manufacturers ,"Category "" A""  Workshop and Showroom",100,Per Annum,,,,,,-99
+153,Coffin/Casket Manufacturers ,"Category ""B"" Showroom/  Workshop Only",50,Per Annum,,,,,,-99
+161,Coffin/Casket Manufacturers ,"Category  ""C"" Wayside",40,Per Annum,,,,,,-99
+171, Commissioner of Oaths/Letter Writer,,15,Per Annum,,,,,,-99
+172,Cassette Shops/Recording Studios ,"Category  ""A"" - (Producer/Music Studios)",100,Per Annum,,,,,,-99
+173,Cassette Shops/Recording Studios ,"Category  ""B"" - Distributors",40,Per Annum,,,,,,-99
+181,Cassette Shops/Recording Studios ,"Category  ""C"" - Retailers",30,Per Annum,,,,,,-99
+182,Chemical Sellers ,"Category  ""A"" -",25,Per Annum,,,,,,-99
+183,Chemical Sellers ,"Category  ""B"" -",20,Per Annum,,,,,,-99
+191,Chemical Sellers ,"Category  ""C"" -",15,Per Annum,,,,,,-99
+192,Concrete Products ,"Category ""A"" ",400,Per Annum,,,,,,-99
+193,Concrete Products ,"Category  ""B""",200,Per Annum,,,,,,-99
+201,Concrete Products ,"Category  ""C"" Terrazo Chippings Dealer",50,Per Annum,,,,,,-99
+202,Car Washing Bay ,"Category  ""A"" - (With 3 or more Ramps)",50,Per Annum,,,,,,-99
+203,Car Washing Bay ,"Category  ""B"" - (With less than 3 Ramps)",40,Per Annum,,,,,,-99
+211,Car Washing Bay ,"Category  ""C"" - Manual Washing",30,Per Annum,,,,,,-99
+212,Chop Bars/Eating Houses,"Category  ""A"" ",60,Per Annum,,,,,,-99
+213,Chop Bars/Eating Houses,"Category  ""B"" ",45,Per Annum,,,,,,-99
+214,Chop Bars/Eating Houses,"Category  ""C""",35,Per Annum,,,,,,-99
+221,Chop Bars/Eating Houses,"Category  ""D"" - (Wayside)",30,Per Annum,,,,,,-99
+222,Contractors ,"Category ""A"" -International (e.g.",1500,Per Annum,,,,,,-99
+223,Contractors ,"Category ""B"" - A1.B1.C1- A2.B2.C2",900,Per Annum,,,,,,-99
+224,Contractors ," Category ""C"" - A3.B3.C3 - A4.B4.C4",700,Per Annum,,,,,,-99
+225,Contractors ,"Category ""D"" - D1.K1.E1",400,Per Annum,,,,,,-99
+226,Contractors ,"Category ""E"" - D2.K2.E2",350,Per Annum,,,,,,-99
+227,Contractors ,"Category ""F"" - D3.K3.E3",300,Per Annum,,,,,,-99
+231,Contractors ,"Category ""G"" -D4.K4.E4/ Suppliers",250,Per Annum,,,,,,-99
+232,CORN MILLS ,"Category ""A""",35,Per Annum,,,,,,-99
+233,CORN MILLS ,"Category.""B""  (ABOVE 3 CORN MILLS)",30,Per Annum,,,,,,-99
+234,CORN MILLS ,"Category.""C"" (2 - 3 Crusher CORN MILLS)",25,Per Annum,,,,,,-99
+241,CORN MILLS ,"Category.""D"" (1 Crusher CORN MILL)",20,Per Annum,,,,,,-99
+242,Food Crop Millers  ,"Category ""A"" - Flour Kneading",25,Per Annum,,,,,,-99
+243,Food Crop Millers  ," Category ""B"" -  Above 2 machines",20,Per Annum,,,,,,-99
+244,Food Crop Millers  ,"Category ""C"" -  Two and below",15,Per Annum,,,,,,-99
+251,Food Crop Millers  ,"Category ""D"" - Vegetable Mill",12,Per Annum,,,,,,-99
+252,Communication/Secretarial Services,"Category  ""A"" -.Comm.Sec. Service & Internet",60,Per Annum,,,,,,-99
+253,Communication/Secretarial Services,"Category  ""B"" - Photocopy Comm. & Sec. Service",40,Per Annum,,,,,,-99
+254,Communication/Secretarial Services,"Category  ""C"". Comm. Service alone (including Space - to -Space)",30,Per Annum,,,,,,-99
+261,Communication/Secretarial Services,"Category  ""D"". Photocopy Service alone",20,Per Annum,,,,,,-99
+262,Computer Schools ,"Category   ""A""",100,Per Annum,,,,,,-99
+271,Computer Schools ,"Category   ""B""",50,Per Annum,,,,,,-99
+272,Computer/Accessories Sale & Repairs,"Category  ""A"" ",50,Per Annum,,,,,,-99
+281,Computer/Accessories Sale & Repairs,"Category "" B"" - Computer Repairs",30,Per Annum,,,,,,-99
+282,Childrens Ware Stores ,"Category   ""A""  ",30,Per Annum,,,,,,-99
+291,Childrens Ware Stores ,"Category   ""B""",20,Per Annum,,,,,,-99
+292,Cosmetics/Hair Products ,"Category   ""A""",30,Per Annum,,,,,,-99
+301,Cosmetics/Hair Products ,"Category   ""B"" - Table Top",20,Per Annum,,,,,,-99
+302,Drinkables Distributors,"Category   ""A"" - (E.g. Asefua)",80,Per Annum,,,,,,-99
+303,Drinkables Distributors,"Category   ""B"" - Soft Drinks only",50,Per Annum,,,,,,-99
+304,Drinkables Distributors,"Category   ""C"" - Akpeteshie",40,Per Annum,,,,,,-99
+311,Drinkables Distributors,"Category ""D"" - (Assorted)",25,Per Annum,,,,,,-99
+312,Drinking Bars,"Catetory ""A"" - Big Time Drinking spot",100,Per Annum,,,,,,-99
+313,Drinking Bars,"Category ""B"" - Multi Assorted",70,Per Annum,,,,,,-99
+314,Drinking Bars,"Category ""C"" - Multi Assorted/Akpetesie Bar",60,Per Annum,,,,,,-99
+315,Drinking Bars,"Category ""D"" - Akpetesie only",40,Per Annum,,,,,,-99
+316,Drinking Bars,"Category ""E"" -",30,Per Annum,,,,,,-99
+321,Drinking Bars,"Category ""F"" -",25,Per Annum,,,,,,-99
+322,Departmental Stores/Supermarket,"Category ""A""",200,Per Annum,,,,,,-99
+323,Departmental Stores/Supermarket,"Category ""B""",150,Per Annum,,,,,,-99
+324,Departmental Stores/Supermarket,"Category ""C""",80,Per Annum,,,,,,-99
+331,Departmental Stores/Supermarket,"Category ""D""",60,Per Annum,,,,,,-99
+332,Debt Collection Agencies,"Category ""A""  ",200,Per Annum,,,,,,-99
+341,Debt Collection Agencies,"Category ""B""  Debt Collection only",100,Per Annum,,,,,,-99
+342,"Category ""A"" -Video/TV Games","Category ""A"" -Video/TV Games",150,Per Annum,,,,,,-99
+343,"Category ""B"" -Cinema House/Video House","Category ""B"" -Cinema House/Video House",50,Per Annum,,,,,,-99
+344,"Category ""C"" - Live Bands/Nite Clubs","Category ""C"" - Live Bands/Nite Clubs",40,Per Annum,,,,,,-99
+345,"Category ""D"" - Spinning/Musical Groups","Category ""D"" - Spinning/Musical Groups",40,Per Annum,,,,,,-99
+351,"Category ""E"" - Video/VCD/DVD Rentals/Libraries","Category ""E"" - Video/VCD/DVD Rentals/Libraries",25,Per Annum,,,,,,-99
+352,Electrical Shops ,"Electrical Shops (General) Category ""A""",40,Per Annum,,,,,,-99
+353,Electrical Shops ,"Electrical Shops (General) Category ""B""",35,Per Annum,,,,,,-99
+361,Electrical Shops ,"Electrical Shops (General) Category ""C"".Wayside",30,Per Annum,,,,,,-99
+362,Electric Appliance ,"Electric Appliance Category ""A"".",40,Per Annum,,,,,,-99
+363,Electric Appliance ,"Electric Appliance Category ""B""",30,Per Annum,,,,,,-99
+371,Electric Appliance ,"Electric Appliance Category ""C""",35,Per Annum,,,,,,-99
+372,"Category ""A"" -  Energy and Power producers (eg.TICO. WAPCO)","Category ""A"" -  Energy and Power producers (eg.TICO. WAPCO)",12000,Per Annum,,,,,,-99
+381,"Category ""B"" - Retailers (GENERAL ELECTRICALS)","Category ""B"" - Retailers (GENERAL ELECTRICALS)",10000,Per Annum,,,,,,-99
+382,"Garages Category ""A"".","Garages Category ""A"".",150,Per Annum,,,,,,-99
+391,"Garages Category ""B""","Garages Category ""B""",35,Per Annum,,,,,,-99
+392,Commercial/Rural Banks,"Category ""A"" -Commercial Bank(Bch)/Rural Bank(HQ)",950,Per Annum,,,,,,-99
+393,Commercial/Rural Banks,"Category ""B"" - Rural Bank (Branches/Agency)",550,Per Annum,,,,,,-99
+401,Commercial/Rural Banks,"Category ""C"" - Rural Bank (Mobilisation Centre)",250,Per Annum,,,,,,-99
+402,Non- Banking Financial Institutions,"Category ""A"" - Brokers/Discount House/Micro Finance/Credit Union",250,Per Annum,,,,,,-99
+403,Non- Banking Financial Institutions,"Category ""B"" - All Other Insurance Co's.",400,Per Annum,,,,,,-99
+404,Non- Banking Financial Institutions,"Category ""C"" - Contact Office/ Agency - Insurance",100,Per Annum,,,,,,-99
+405,Non- Banking Financial Institutions,"Category ""D"" -Susu Operators Main Office",100,Per Annum,,,,,,-99
+411,Non- Banking Financial Institutions,"Category ""E"" -Susu Operators",30,Per Annum,,,,,,-99
+412,Garages ,"Garages Category ""A"" - Heavy Duty / 4X4/Pick-up",150,Per Annum,,,,,,-99
+421,Garages ,"Garages Category ""B"" - Auto Mechanic Workshop",35,Per Annum,,,,,,-99
+431,Garment Producers  -Batik. Tie and Dye,,20,Per Annum,,,,,,-99
+441,Gift Shops,,25,Per Annum,,,,,,-99
+442,Hotel ,"Category ""A"" - (2 Star and above)",550,Per Annum,,,,,,-99
+451,Hotel ,"Category ""B"" (Others)(a)",300,Per Annum,,,,,,-99
+455,Hotel ,"Category ""B"" (Others)(b)",250,Per Annum,,,,,,-99
+456,Hotel ,"Category ""B"" (Others)(c)",200,Per Annum,,,,,,-99
+452,Hair Dressing ,"Category  ""A"" -",30,Per Annum,,,,,,-99
+453,Hair Dressing ,"Category  ""B"" ",20,Per Annum,,,,,,-99
+454,Hair Dressing ,"Category  ""C"" - (One-man Hair Dressing Shop)",10,Per Annum,,,,,,-99
+455,"Barbers Category  ""A"" -","Barbers Category  ""A""",15,Per Annum,,,,,,-99
+461,"Barbers Category  ""B"" -","Barbers Category  ""B"" -",10,Per Annum,,,,,,-99
+462,Herbal Medicine Shops/Clinic,"Category  ""A"" - Herbal Clinic",100,Per Annum,,,,,,-99
+463,Herbal Medicine Shops/Clinic,"Category  ""B"" - Herbal Dealers",60,Per Annum,,,,,,-99
+471,Herbal Medicine Shops/Clinic,"Category  ""C"" - Herbal Retailers (Pedlers)",40,Per Annum,,,,,,-99
+472,Hiring Services,"Hiring Services: Category  ""A"" - Canopy. Chairs. Cutlery. Matress",25,Per Annum,,,,,,-99
+481,Hiring Services,"Hiring Services: Category  ""B"" - Canopy or Chairs or Matress only",20,Per Annum,,,,,,-99
+482,Heel Bar/Shoe Clinic,"Heel Bar/Shoe Clinic: Category ""A"" - Manufacture",20,Per Annum,,,,,,-99
+491,Heel Bar/Shoe Clinic,"Heel Bar/Shoe Clinic: Category ""B"" - Shoe Maker",15,Per Annum,,,,,,-99
+492,"Ice Cream: Category ""A"" - Distributors","Ice Cream: Category ""A"" - Distributors",60,Per Annum,,,,,,-99
+501,"Ice Cream: Category ""B"" - Retailer","Ice Cream: Category ""B"" - Retailer",0.2,Per Day,,,,,,-99
+502,Internet Services,"Category  ""A"" - Café with above 10 Computers",50,Per Annum,,,,,,-99
+511,Internet Services,"Category  ""B"" - Café with below 10 Computers",30,Per Annum,,,,,,-99
+512,Gold Dealers,"Category  ""A""",50,Per Annum,,,,,,-99
+521,Gold Dealers,"Category  ""B""",35,Per Annum,,,,,,-99
+522,Liquified Petroleum Gas Companies/Stations,"Category  ""A"" - Filling Station",300,Per Annum,,,,,,-99
+523,Liquified Petroleum Gas Companies/Stations,"Category  ""B"" - Filling Station ",200,Per Annum,,,,,,-99
+531,Liquified Petroleum Gas Companies/Stations,"Category  ""C"" - Gas Accessories Shop",40,Per Annum,,,,,,-99
+532,Lotto Marketing Agencies/ Retail,"Category  ""A"" -",60,Per Annum,,,,,,-99
+541,Lotto Marketing Agencies/ Retail," Category  ""B"" - Lotto Sellers",1,Per Week,,,,,,-99
+542,Machine Shop ,"(Mechanical) Category ""A"" -",50,Per Annum,,,,,,-99
+551,Machine Shop ,"(Mechanical): Category ""B"" -",30,Per Annum,,,,,,-99
+552,Mattress Depot,"Category ""A"" -",40,Per Annum,,,,,,-99
+561,Mattress Depot,"Category ""B"" -",35,Per Annum,,,,,,-99
+562,Metal Fabrication,"Category  ""A"" - Metal Moulding (eg.",100,Per Annum,,,,,,-99
+571,Metal Fabrication,"Category  ""B"" - Metal Moulding (Small)",70,Per Annum,,,,,,-99
+572,Mineral /Sache Water Product,"Category  ""A"" -",450,Per Annum,,,,,,-99
+573,Mineral /Sache Water Product,"Category  ""B"" -",200,Per Annum,,,,,,-99
+574,Mineral /Sache Water Product,"Category  ""C"" -",120,Per Annum,,,,,,-99
+581,Mineral /Sache Water Product,"Category ""D"" (Small size and one man business)",60,Per Annum,,,,,,-99
+582,Mobile Phone Sales/Repair Shop,"Category ""A"" Small",40,Per Annum,,,,,,-99
+583,Mobile Phone Sales/Repair Shop,"Category ""B"" - Mobile Phone Repairs",35,Per Annum,,,,,,-99
+591,Mobile Phone Sales/Repair Shop,"Category ""C"" - Accessories only",25,Per Annum,,,,,,-99
+592,Medical Laboratory,"Category ""A"" ",70,Per Annum,,,,,,-99
+593,Medical Laboratory,"Category ""B"" ",50,Per Annum,,,,,,-99
+601,Medical Laboratory,"Category ""C""",45,Per Annum,,,,,,-99
+602,Maternity Home,"Category ""A"" ",50,Per Annum,,,,,,-99
+611,Maternity Home,"Category ""B"" ",30,Per Annum,,,,,,-99
+612,Metal Scrap Dealers,"Category ""A"" ",150,Per Annum,,,,,,-99
+621,Metal Scrap Dealers,"Category ""B"" ",100,Per Annum,,,,,,-99
+631,Mobile Sales Van,Mobile Sales Van,25,Per Annum,,,,,,-99
+641,Newspaper /Periodicals Vendor,Newspaper /Periodicals Vendor,10,Per Annum,,,,,,-99
+642,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP): Category ""A"" Station with Gas station. Supermarket. Restaurant",850,Per Annum,,,,,,-99
+643,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP):Category ""B"" -Station with Gas station Supermarket ",750,Per Annum,,,,,,-99
+644,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP): Category ""C"" -Station with Gas station ",550,Per Annum,,,,,,-99
+645,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP):Category ""D"" - Filling/Premix Stations",400,Per Annum,,,,,,-99
+656,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP):Category ""E"" - Service Stations(e.g. Total @ Inchaban)",400,Per Annum,,,,,,-99
+657,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP):Category ""F"" - Filling Stations",300,Per Annum,,,,,,-99
+648,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP):Category ""G"" - Filling Stations",150,Per Annum,,,,,,-99
+651,Petroleum Products Retail Outlets(BOP),"Petroleum Products Retail Outlets(BOP):Category ""H"" - Kerosine Sales Outlets",40,Per Annum,,,,,,-99
+652,LUBRICANTS / OTHER PETROLEUM  PRODUCTS,"LUBRICANTS / OTHER PETROLEUM  PRODUCTS:CAT ""A""",100,Per Annum,,,,,,-99
+661,LUBRICANTS / OTHER PETROLEUM  PRODUCTS,"LUBRICANTS / OTHER PETROLEUM  PRODUCTS:CAT ""B""",70,Per Annum,,,,,,-99
+662,"Category ""A"" - Photo Studio/Phoographic Shops","Category ""A"" - Photo Studio/Phoographic Shops",45,Per Annum,,,,,,-99
+663,"Category ""B"" - Photo Studio/Phoographic Shops","Category ""B"" - Photo Studio/Phoographic Shops",25,Per Annum,,,,,,-99
+671,"Category ""C"" - Freelance","Category ""C"" - Freelance",10,Per Annum,,,,,,-99
+672,"Printing House/Paper Products: Category ""A"" - Printing Press - Large","Printing House/Paper Products: Category ""A"" - Printing Press - Large",150,Per Annum,,,,,,-99
+681,"Printing House/Paper Products: Category ""B"" - Printing Press - Small","Printing House/Paper Products: Category ""B"" - Printing Press - Small",80,Per Annum,,,,,,-99
+682,"Private Schools: Category ""A"" - Private SSS/Voc/Tech/ Remedial","Private Schools: Category ""A"" - Private SSS/Voc/Tech/ Remedial",150,Per Annum,,,,,,-99
+683,"Private Schools: Category ""B"" - Basic Schools","Private Schools: Category ""B"" - Basic Schools",100,Per Annum,,,,,,-99
+684,"Private Schools: Category ""C"" - Basic Schools","Private Schools: Category ""C"" - Basic Schools",40,Per Annum,,,,,,-99
+685,"Private Schools: Category ""D"" - Nursery","Private Schools: Category ""D"" - Nursery",50,Per Annum,,,,,,-99
+691,"Private Schools: Category ""E"" - Nursery","Private Schools: Category ""E"" - Nursery",20,Per Annum,,,,,,-99
+692,"Private Clinic/Hospital: Category ""A"" - Private Clinic (In-Patient - VRA Hosp)","Private Clinic/Hospital: Category ""A"" - Private Clinic (In-Patient - VRA Hosp)",300,Per Annum,,,,,,-99
+693,"Private Clinic/Hospital: Category ""B"" - Private Clinic (In-Patient - )","Private Clinic/Hospital: Category ""B"" - Private Clinic (In-Patient - )",100,Per Annum,,,,,,-99
+694,"Private Clinic/Hospital: Category ""C"" - Private Clinic/Dental (Out-Patient)","Private Clinic/Hospital: Category ""C"" - Private Clinic/Dental (Out-Patient)",80,Per Annum,,,,,,-99
+701,"Private Clinic/Hospital: Category ""D"" - Private Clinic (Out-Patient/Optical/Eye/Scanning Serv","Private Clinic/Hospital: Category ""D"" - Private Clinic (Out-Patient/Optical/Eye/Scanning Serv",50,Per Annum,,,,,,-99
+702,Plastic Ware/Poly Tank Dealers,Category 'A' -  Poly Tank Dealers,80,Per Annum,,,,,,-99
+703,Plastic Ware/Poly Tank Dealers,Category 'B' -  Plastic General,50,Per Annum,,,,,,-99
+704,Plastic Ware/Poly Tank Dealers,"Category ""C"" - Polythene Bag Producers",40,Per Annum,,,,,,-99
+711,Plastic Ware/Poly Tank Dealers,"Category ""D"" - Polythene Bag Sellers",10,Per Annum,,,,,,-99
+712,"Pharmacy Shops: Category ""A"" - Wholesaler/Retailers (e.g. )","Pharmacy Shops: Category ""A"" - Wholesaler/Retailers (e.g. )",70,Per Annum,,,,,,-99
+721,"Pharmacy Shops: Category ""B"" - Retailer (e.g.)","Pharmacy Shops: Category ""B"" - Retailer (e.g.)",50,Per Annum,,,,,,-99
+722,Private Professional Services,"Category ""A"" - Legal Firms",150,Per Annum,,,,,,-99
+723,Private Professional Services,"Category ""B"" - Audit/Accountancy Firms",150,Per Annum,,,,,,-99
+724,Private Professional Services,"Category ""C"" - Engineering/Architectural",150,Per Annum,,,,,,-99
+725,Private Professional Services,"Category ""D"" - Auctioneering Firm/Agencies",150,Per Annum,,,,,,-99
+726,Private Professional Services,"Category ""E"" - Consultancy (Socio-Economic)",150,Per Annum,,,,,,-99
+727,Private Professional Services,"Category ""F"" - Surveyors (General/Land)",70,Per Annum,,,,,,-99
+731,Private Professional Services,"Category ""G"" Draughtman/Technician - One man",40,Per Annum,,,,,,-99
+741,Private Security Firms,Private Security Firms,350,Per Annum,,,,,,-99
+742,Provision & Assorted Item Shops,Provision & Assorted Item Shops: Category 'A' - Large Scale,50,Per Annum,,,,,,-99
+743,Provision & Assorted Item Shops,Provision & Assorted Item Shops: Category 'B' - Small Scale (Kiosk),30,Per Annum,,,,,,-99
+751,Provision & Assorted Item Shops,Provision & Assorted Item Shops: Category 'C' - Table Top,15,Per Annum,,,,,,-99
+761,Rice.Sugar.Flour - Wholesale,,70,Per Annum,,,,,,-99
+771,Poultry Feed Sellers,,20,Per Annum,,,,,,-99
+772,"Category ""A"" -  Radio Only","Category ""A"" -  Radio Only",800,Per Annum,,,,,,-99
+781,"Category  ""B"" -  Publishing House/Print Media","Category  ""B"" -  Publishing House/Print Media",650,Per Annum,,,,,,-99
+782,"Plumbing Shop: Category ""A"" -","Plumbing Shop: Category ""A"" -",35,Per Annum,,,,,,-99
+791,"Plumbing Shop: Category ""B"" -","Plumbing Shop: Category ""B"" -",30,Per Annum,,,,,,-99
+792,Quarry Operators ,Quarry Operators Category 'A' - Mechanised Quarry,4500,Per Annum,,,,,,-99
+793,Quarry Operators ,Quarry Operators Category 'B' - Mechanised Quarry,2000,Per Annum,,,,,,-99
+794,Quarry Operators ,Quarry Operators Category 'C' - Quarry (Small Mechanisedl operation),650,Per Annum,,,,,,-99
+795,Quarry Operators ,Quarry Operators Category 'D' - Quarry (Manual operation),200,Per Annum,,,,,,-99
+796,Quarry Operators ,Quarry Operators Category 'E' - Stone Contractors (eg. Saaboa),200,Per Annum,,,,,,-99
+801,Quarry Operators ,Quarry Operators Category 'F' - Manual Stone Breaker,50,Per Annum,,,,,,-99
+802,Real Estate Developers ,"Real Estate Developers Category  ""A"" -",1000,Per Annum,,,,,,-99
+811,Real Estate Developers ,"Real Estate Developers Category  ""B"" - Agents",70,Per Annum,,,,,,-99
+812,Restaurant ,"Restaurant Category ""A""",120,Per Annum,,,,,,-99
+813,Restaurant ,"Restaurant Category ""B""",100,Per Annum,,,,,,-99
+814,Restaurant ,"Restaurant Category ""C""",50,Per Annum,,,,,,-99
+815,Fast Food Joints (Check-Check),,25,Per Annum,,,,,,-99
+821,Snack Bars,,15,Per Annum,,,,,,-99
+822,Refrigerator/Air Condition Repairs ,"Refrigerator/Air Condition Repairs Category ""A"" -",40,Per Annum,,,,,,-99
+831,Refrigerator/Air Condition Repairs ,"Refrigerator/Air Condition Repairs Category ""B"" -",25,Per Annum,,,,,,-99
+832,"Category  ""A"" -  New Spares","Category  ""A"" -  New Spares",50,Per Annum,,,,,,-99
+833,"Category "" B"" - Second Hand Spares only","Category "" B"" - Second Hand Spares only",40,Per Annum,,,,,,-99
+841,"Category "" C"" - Table Top","Category "" C"" - Table Top",30,Per Annum,,,,,,-99
+842,Second Hand Clothing/Shoe ,"Second Hand Clothing/Shoe Category ""A"" - Whole Shop",450,Per Annum,,,,,,-99
+843,Second Hand Clothing/Shoe ,"Second Hand Clothing/Shoe Category ""B"" - Whole Shop",380,Per Annum,,,,,,-99
+844,Second Hand Clothing/Shoe ,"Second Hand Clothing/Shoe Category ""C"" - Retail Shop",20,Per Annum,,,,,,-99
+851,Second Hand Clothing/Shoe ,"Second Hand Clothing/Shoe Category ""D"" - Hawkers",2,Per Month,,,,,,-99
+852,Second Hand Fridge/TV/Tyre/General ,"Second Hand Fridge/TV/Tyre/General Category ""A"" - Large",50,Per Annum,,,,,,-99
+861,Second Hand Fridge/TV/Tyre/General ,"Second Hand Fridge/TV/Tyre/General Category ""B"" - Small",30,Per Annum,,,,,,-99
+871,Second Hand Car Dealers,Second Hand Car Dealers,500,Per Annum,,,,,,-99
+872,Seamstress/Tailors/Dressmakers,"Category ""A"" - Seamstress/Tailors/nitting. Overlock. Embroidery",15,Per Annum,,,,,,-99
+873,Seamstress/Tailors/Dressmakers,"Category ""B"" - Seamstress/Tailors",12,Per Annum,,,,,,-99
+874,Seamstress/Tailors/Dressmakers,"Category ""C"" - Seamstress/Tailors",10,Per Annum,,,,,,-99
+881,Seamstress/Tailors/Dressmakers,"Category ""D"" - Knitting. Overlock. Embroidery",10,Per Annum,,,,,,-99
+882,SAW-MILLERS ,"SAW-MILLERS Category ""A"" - (e.g. Asefua Comp.)",550,Per Annum,,,,,,-99
+883,SAW-MILLERS ,"SAW-MILLERS Category ""B"" - (e.g. Shama Junction Area. Agapet Area. etc.)",450,Per Annum,,,,,,-99
+884,SAW-MILLERS ,"Category ""C"" - (e.g. Sawn Timber Shops Around Ituma)",350,Per Annum,,,,,,-99
+885,SAW-MILLERS ,"Category ""D""- (Sawn Timber Shops)",150,Per Annum,,,,,,-99
+891,SAW-MILLERS ,"Category ""F"" Regitration of Chainsaw Operators",20,Per Annum,,,,,,-99
+892,SAND WINNERS/QUARRY  REGISTRATION & CONVEYANCE,a. Registration of Site (Sand winners),600,Per acre Per Annum,,,,,,-99
+893,b. Sand,b. Sand,500,Per Annum,,,,,,-99
+894,   i. Trucks (Single Axle / 6 Wheeler),   i. Trucks (Single Axle / 6 Wheeler),1,Per Trip,,,,,,-99
+895,  ii.Trucks  (Double Axle/ 8-12  Wheeler),  ii.Trucks  (Double Axle/ 8-12  Wheeler),1.5,Per Trip,,,,,,-99
+896, iii. Trucks (14-18 Wheeler ), iii. Trucks (14-18 Wheeler ),2,Per Trip,,,,,,-99
+901,iv. Trucks (Double Axle 18 - 22),iv. Trucks (Double Axle 18 - 22),3,Per Trip,,,,,,-99
+902,Self-Employed Persons/Workshops,Auto Electricians,35,Per Annum,,,,,,-99
+903,Self-Employed Persons/Workshops,Mechanics/Fitters,35,Per Annum,,,,,,-99
+904,Self-Employed Persons/Workshops,Welders (Auto),35,Per Annum,,,,,,-99
+905,Self-Employed Persons/Workshops,Auto Sprayers with Dryers/Oven,35,Per Annum,,,,,,-99
+906,Self-Employed Persons/Workshops,Auto Sprayers without Dryers/Oven,35,Per Annum,,,,,,-99
+907,Self-Employed Persons/Workshops,Upholsters (Car),35,Per Annum,,,,,,-99
+908,Self-Employed Persons/Workshops,Blacksmiths,35,Per Annum,,,,,,-99
+909,Self-Employed Persons/Workshops,General Electrician,35,Per Annum,,,,,,-99
+910,Self-Employed Persons/Workshops,Painters,35,Per Annum,,,,,,-99
+911,Self-Employed Persons/Workshops,Plumbers,35,Per Annum,,,,,,-99
+912,Self-Employed Persons/Workshops,Vulcanisers,35,Per Annum,,,,,,-99
+913,Self-Employed Persons/Workshops,Welders (Metal Fabrication),35,Per Annum,,,,,,-99
+914,Self-Employed Persons/Workshops,Key Cutters,35,Per Annum,,,,,,-99
+915,Self-Employed Persons/Workshops,Rubber Stamp Makers,35,Per Annum,,,,,,-99
+916,Self-Employed Persons/Workshops,Warch Repairers,35,Per Annum,,,,,,-99
+917,Self-Employed Persons/Workshops,Masons,35,Per Annum,,,,,,-99
+921,Self-Employed Persons/Workshops,All Artsans in general.,35,Per Annum,,,,,,-99
+922,Telecom/Cellular Phone Companies (BOP),"Category ""A"" - Service Provider.eg. Vodafone. MTN. Millicom. Kasapa)",5500,Per Annum,,,,,,-99
+923,Telecom/Cellular Phone Companies (BOP),"Category ""B"" -  Phone Cards - Retailers/WholeSales/Mobile money transfer",60,Per Annum,,,,,,-99
+924,Telecom/Cellular Phone Companies (BOP),"Category ""C"" -  Phone Cards - Retailer",25,Per Annum,,,,,,-99
+925,Textiles,"Category ""A""  Upholtery/Curtain Materials",50,Per Annum,,,,,,-99
+931,Textiles,"Category ""B""  Suiting/Other Materials",50,Per Annum,,,,,,-99
+932,Textiles,"Category ""C""  Retail Store",40,Per Annum,,,,,,-99
+941,Textiles,"Category ""D"" - Retail Kiosk/Table Top",15,Per Annum,,,,,,-99
+942,Tyre/Battery Dealers,"Category ""A"" - New Tyre/Battery Delears",50,Per Annum,,,,,,-99
+951,Tyre/Battery Dealers,"Category ""B"" - Second Hand Tyre Dealers",40,Per Annum,,,,,,-99
+952,Tyre Repairs,"Category ""A"" - Vulcanizing Shops - Large",40,Per Annum,,,,,,-99
+953,Tyre Repairs,"Category ""B"" - Vulcanizing Shops - Small",25,Per Annum,,,,,,-99
+954,Sawn Timber Products ,"Sawn Timber Products Category ""A"" - (eg.Asefoa Comp.)",450,Per Annum,,,,,,-99
+955,Sawn Timber Products ,"Sawn Timber Products Category ""B"" - (eg. Shama Junnct Area. Agapet Area. etc)",350,Per Annum,,,,,,-99
+9701,"Category ""C"" - (eg. Sawn Timber Shops)","Category ""C"" - (eg. Sawn Timber Shops)",200,Per Annum,,,,,,-99
+9702,"Category ""D"" - (eg. Sawn Timber Shops)","Category ""D"" - (eg. Sawn Timber Shops)",80,Per Annum,,,,,,-99
+9703,"Catrgory ""F"" Registration of Chainsaw Machines","Catrgory ""F"" Registration of Chainsaw Machines",60,Per Annum,,,,,,-99
+971,Upholstery/Furniture,"Upholstery/Furniture Category  ""A"" - Workshop & Showroom  (eg",100,Per Annum,,,,,,-99
+972,Upholstery/Furniture ,"Upholstery/Furniture Category  ""B"" - Workshop or Showroom only",70,Per Annum,,,,,,-99
+973,Upholstery/Furniture ,"Upholstery/Furniture Category  ""C""- Wayside",20,Per Annum,,,,,,-99
+981,Wireless/TV ,"Wireless/TV Category ""A"" -  Repairs & Parts Sales",30,Per Annum,,,,,,-99
+982,Wireless/TV ,"Wireless/TV Category ""B"" - Repairs only",25,Per Annum,,,,,,-99
+991,Wireless/TV ,"Wireless/TV Category ""C"" - Parts only",15,Per Annum,,,,,,-99
+992,Wood Workshops ,"Wood Workshops Category  ""A"" (e.g. Bentir Area)",100,Per Annum,,,,,,-99
+993,Wood Workshops ,"Wood Workshops Category  ""B"" -",80,Per Annum,,,,,,-99
+1001,"Category  ""A"" (Stool Carvers)","Category  ""A"" (Stool Carvers)",50,Per Annum,,,,,,-99
+1002,"Category  ""B"" (Other Carvers)","Category  ""B"" (Other Carvers)",40,Per Annum,,,,,,-99
+1003,"Category  ""C"" (Roadside Carvers)","Category  ""C"" (Roadside Carvers)",30,Per Annum,,,,,,-99
+1011,"Category  ""A"" - (Livestock. poultry birds)","Category  ""A"" - (Livestock. poultry birds)",100,Per Annum,,,,,,-99
+1012,"Category  ""B"" - Sheep and Goat","Category  ""B"" - Sheep and Goat",120,Per Annum,,,,,,-99
+1013,"Category  ""C"" - Cattle","Category  ""C"" - Cattle",200,Per Annum,,,,,,-99
+1021,Mineral Water,"Mineral Water CAT ""A""",350,Per Annum,,,,,,-99
+1022,Mineral Water,"Mineral Water CAT ""B""",250,Per Annum,,,,,,-99
+1023,Mineral Water,"Mineral Water CAT ""C""",150,Per Annum,,,,,,-99
+1024,Category 'A'  - Bicycle Store,Category 'A'  - Bicycle Store,40,Per Annum,,,,,,-99
+1025,Category 'B'  - Bicycle Store,Category 'B'  - Bicycle Store,20,Per Annum,,,,,,-99
+1026,Category 'C'  - Bicycle Hiring Operator,Category 'C'  - Bicycle Hiring Operator,15,Per Annum,,,,,,-99
+1027,Private Bicycle Owners,Private Bicycle Owners,15,Per Annum,,,,,,-99
+1028,Bicycle Parts/Repairer/Hiring,Bicycle Parts/Repairer/Hiring,20,Per Annum,,,,,,-99
+1029,Bicycle Parts/Repairer,Bicycle Parts/Repairer,15,Per Annum,,,,,,-99
+1030,Funeral Home,Funeral Home,100,Per Annum,,,,,,-99
+1031,Ordinary Shoes ,"Category  ""A""",35,Per Annum,,,,,,-99
+1032,Ordinary Shoes ,"Category  ""b""",30,Per Annum,,,,,,-99
+1033,Ordinary Shoes ,"Category  ""C""",20,Per Annum,,,,,,-99
+1034,Ordinary Shoes ,"Category  ""D""",15,Per Annum,,,,,,-99

@@ -912,7 +912,7 @@ function handler(request)
 				case 9:
 					html += '<p>Payment Status: <strong><FONT COLOR="32CD32"> PAID</FONT></strong></p>';			
 					break;
-				default: {	html += '<p>Payment Status: <strong><FONT COLOR="800000"> Unknown</FONT><</strong>/p>';	}
+				default: {	html += '<p>Payment Status: <strong><FONT COLOR="800000"> Unknown</FONT></strong></p>';	}
 
 			}		
 // 			html += '<p>Payment Status: '+ feed[i]['pay_status'] +'</p>';			
@@ -1513,7 +1513,6 @@ function getPropertyPolygons() {
 	};           
 	
 	globalpropertychanged = false;
-//	document.getElementById('testbutton').disabled = '';
 
 } //end of function getPropertyPolygons
 

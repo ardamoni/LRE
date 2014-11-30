@@ -74,13 +74,15 @@ function checkBeforeSubmit(frm) {
 require_once('../lib/html_form.class.php');
 require_once( "../lib/configuration.php"	);
 require_once( "../lib/BusinessDetails.php"	);
+require_once( 	"../lib/System.php"			);
+
+$System = new System;
 
 $upn = $_GET["upn"];
 $subupn = $_GET["subupn"];	
 $districtid = $_GET["districtid"];	
 
-$currentdate = getdate();
-$currentyear = $currentdate['year'];
+$currentyear = $System->GetConfiguration("RevenueCollectionYear"); 
 
 //var_dump($_GET);
 
@@ -99,8 +101,8 @@ if (!empty($subupn) && $subupn != 'null' ){
 //var_dump($r);  
     
 
-//get the properyType from feefixing for the drop-down list
-$run = "SELECT d1.class, d1.code from `fee_fixing_business` d1 WHERE d1.`districtid`='".$districtid."';";
+//get the business_class from feefixing for the drop-down list
+$run = "SELECT d1.class, d1.code from `fee_fixing_business` d1 WHERE d1.`districtid`='".$districtid."' AND d1.`year`='".$currentyear."';";
 
 $query 	= mysql_query($run);
 

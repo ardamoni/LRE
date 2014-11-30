@@ -1,0 +1,307 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+101,   Advertising Agency -Category 'A' (eg. Afromedia)  ,,250,,,,,,,-99
+102,   Category 'B'    ,,50,,,,,,,-99
+200,Art Studios/Signwriters,,,,,,,,,-99
+201,   Art Studios/Signwriters - Category 'A'     ,,100,,,,,,,-99
+202,   Art Studios/Signwriters - Category 'B' ,,35,,,,,,,-99
+301,AMBULANCE SERVICE,,50,,,,,,,-99
+400, Block making Factories,,,,,,,,,-99
+401,   Category 'A' (machines)     ,,150,,,,,,,-99
+402,   Category 'B'(manual machines) ,,50,,,,,,,-99
+500, Bill-Boards (Adverts),,,,,,,,,-99
+501,    Prismatic,,800,,,,,,,-99
+502,    Bulletin,,500,,,,,,,-99
+503,    Flexi (Extra Large),,425,,,,,,,-99
+504,    Large (96 sheets),,200,,,,,,,-99
+505,    Medium  (16 - 48 sheets),,150,,,,,,,-99
+506,   Signboard   Small     ,,25,,,,,,,-99
+507,    Banners,,100,,,,,,,-99
+508,Bus Shelter,,200,   ,,,,,,-99
+600,  Boutiques,,,,,,,,,-99
+601,   Category 'A'   ,,120,,,,,,,-99
+602,   Category 'B'    ,,35,,,,,,,-99
+700, Bookshops/Stationery Shops    ,,,,,,,,,-99
+701,category 'A' (Aktion Store),,100,,,,,,,-99
+702,category 'B' Nako Ventures),,40,,,,,,,-99
+800,  Bakeries,,,,,,,,,-99
+801,    Category A (Bakery with kneading machine)       ,,60,,,,,,,-99
+802, Category  (Bakery) ,,30,,,,,,,-99
+900, Building Materials/Hardware shops,,,,,,,,,-99
+901,    Category 'A' (eg. God is able)    ,,250,,,,,,,-99
+902,    Category 'B' (eg. John Mensah)  ,,100,,,,,,,-99
+903,    Category 'C'      ,,50,,,,,,,-99
+1001,Blacksmiths,,20,,,,,,,-99
+1100, Car Washing Bay,,,,,,,,,-99
+1101,     Category 'A' (Pressure machine)     ,,100,,,,,,,-99
+1102,     Category 'B' (Manual)       ,,30,,,,,,,-99
+1201,Chain-saw/Water pump/Generator      ,,30,,,,,,,-99
+1300,Charcoal/Firewood     ,,,,,,,,,-99
+1301,      Charcoal Burners / Dealers      ,,20,,,,,,,-99
+1302,      Cane Cutters              ,,20,,,,,,,-99
+1303,      Firewood Cutters    ,,20,,,,,,,-99
+1304,      Firewood Dealers     ,,20,,,,,,,-99
+1400,Chemical/Pharmacy,,,,,,,,,-99
+1401,      Pharmacy,,200,,,,,,,-99
+1402,      Category A (Chemical/Stores),,100,,,,,,,-99
+1403,      Category B (Rural),,30,,,,,,,-99
+1404,      Agro-Chemical Store,,100,,,,,,,-99
+1500, Commercial House/Dept. Stores ,,,,,,,,,-99
+1501, Category A (Melcom),,700,,,,,,,-99
+1502, Category B (All Needs& Forwin& Atwi& Topline& Flosia&Ransbet),,500,,,,,,,-99
+1503,Category C (Supermarkets/Semi Dept.stores e.g.),,200,,,,,,,-99
+1504,Category 'D',,50,,,,,,,-99
+1505,Category 'E',,25,,,,,,,-99
+1506,Category 'F'  ,,20,,,,,,,-99
+1601, Cigarette Wholesale Outlets      ,,50,,,,,,,-99
+1700,Milling Houses,,,,,,,,,-99
+1701, Corn/Palm-Kernel/Rice Mills etc.  ,,20,,,,,,,-99
+1702, Vegetable Mill  ,,20,,,,,,,-99
+1801, Club House             ,,30,,,,,,,-99
+1900,Car /Motor Bike Dealers,,,,,,,,,-99
+1901,Category A,,200,,,,,,,-99
+1902,Category B,,100,,,,,,,-99
+1903,Car Rentals,,300,,,,,,,-99
+1904,Hearse,,100,,,,,,,-99
+1905,Motor Bike/Bicycle,,50,,,,,,,-99
+2001,Computer School,,70,,,,,,,-99
+2100, Commissioner of Oaths   ,,50,,,,,,,-99
+2101,Letter Writer                       ,,20,,,,,,,-99
+2200,Catering  Services (Mining),,,,,,,,,-99
+2201,Category'A' ( ATS),,1000,,,,,,,-99
+2202,Category'B' (Nana Aba),,350,,,,,,,-99
+2300,Chopbars/Eating Houses,,,,,,,,,-99
+2301,Category 'A'  eg. Gladys UMaT Mad Obeng etc,,100,,,,,,,-99
+2302,Category 'B' (Urban) eg.Aponkyi Nkrakra),,50,,,,,,,-99
+2303,Category 'C' (Rural) ,,30,,,,,,,-99
+2400,Cold Store,,,,,,,,,-99
+2401,Category 'A' (Cheaper lines/ Twere Nyame/Agape),,200,,,,,,,-99
+2402,Category 'B' ,,70,,,,,,,-99
+2403,Category 'C'   ,,35,,,,,,,-99
+2501,Cocoa Buying Agencies,,1000,,,,,,,-99
+2502,Sub Agents,,300,,,,,,,-99
+2600,COURIER SERVICES,,,,,,,,,-99
+2601,DHL& FEDEX&EMS,,500,,,,,,,-99
+2701, Discotheque    ,,40,,,,,,,-99
+2800, Distribution of Drinks/Wholesale,,,,,,,,,-99
+2801,       Category 'A' (Coca Cola)& Obiba J.K.      ,,500,,,,,,,-99
+2802,       Category 'B' (& GBL& JEOMAN)  ,,400,,,,,,,-99
+2803,       Category 'C' (Kojo Otoo Ent.)      ,,150,,,,,,,-99
+2804,       Category   D,,40,,,,,,,-99
+2900,Drinking Bars  ,,,,,,,,,-99
+2901,Drinking Bars (General) 'A',,60,,,,,,,-99
+2902,Drinking Bars (General) 'B',,30,,,,,,,-99
+2903,Drinking Bars (Akpeteshie),,20,,,,,,,-99
+3000,Distillers/Breweries,,,,,,,,,-99
+3001,       Akpeteshie,,25,,,,,,,-99
+3002,       Pito/Palm-wine,,20,,,,,,,-99
+3003,       Akpeteshie Exportation,,1.5,,,,,,,-99
+3100,Distribution of Manufactured Water/ Wholesale,,,,,,,,,-99
+3101, Category 'A',,400,,,,,,,-99
+3102,Category 'B' ,,200,,,,,,,-99
+3201,Water Tanker Services,,300,,,,,,,-99
+3301,Driving School,,130,,,,,,,-99
+3401,Florist(Flower shop),,30,,,,,,,-99
+3500,Furniture/Carpentry Shop,,,,,,,,,-99
+3501,       Category 'A' (Showroom),,400,,,,,,,-99
+3502,       Category 'B' (Nico Furniture),,250,,,,,,,-99
+3503,       Category 'C' (Others),,100,,,,,,,-99
+3504,Coffin Producers/Sellers,,150,,,,,,,-99
+3600,Financial Institutions,,,,,,,,,-99
+3601,       Category 'A' (Branch Office),,4500,,,,,,,-99
+3602,       Category 'B' (Rural/Community Banks),,2500,,,,,,,-99
+3603,Category C (Agency),,500,,,,,,,-99
+3700,Non-Banking Institutions,,,,,,,,,-99
+3701,       Category 'A' (eg. SSNIT&SIC etc),,4500,,,,,,,-99
+3702,       Category 'B' (eg. Vanguard etc.),,2500,,,,,,,-99
+3703,Forex Bureaux,,1000,,,,,,,-99
+3801,Susu Operators,,50,,,,,,,-99
+3900,Money lender,,150,,,,,,,-99
+3901,Micro Finance Company,,1500,,,,,,,-99
+4000,Restaurants,,,,,,,,,-99
+4001,Category'A' ( eg.Sag Foods/Trinity& Cabanna),,200,,,,,,,-99
+4002,Category'B' ),,100,,,,,,,-99
+4003,Category'C' (Wayside),,50,,,,,,,-99
+4100,Gold Dealers,,,,,,,,,-99
+4101,Agent,,700,,,,,,,-99
+4102,Buyers,,400,,,,,,,-99
+4201,Goldsmiths,,50,,,,,,,-99
+4202,Gold Millers,,1500,,,,,,,-99
+4300,General Electric/Electronic Shop,,,,,,,,,-99
+4301,Category 'A' (SS Elect),,150,,,,,,,-99
+4302,Category 'B',,70,,,,,,,-99
+4303,Category 'C' (Rewinding),,50,,,,,,,-99
+4304,         Category 'A'  - (eg.& Owusu Home Stores),,200,,,,,,,-99
+4305,         Category 'B' ( Second Hand Shop),,150,,,,,,,-99
+,         Category 'B' ( Second Hand ),,20,,,,,,,-99
+4306,Radio/Electonic repairers ,,20,,,,,,,-99
+4400,Hair Dressing/Babering Salons,,,,,,,,,-99
+4401,Category 'A' ,,100,,,,,,,-99
+4402,Category 'B' ,,50,,,,,,,-99
+4403,Category 'C' ,,20,,,,,,,-99
+4500,Hotels,,,,,,,,,-99
+4501,Category 'A' (3 Star Hilda),,1600,,,,,,,-99
+4502,Category 'B' (2 Star eg.  Lynka& Tamso Lodge),,1100,,,,,,,-99
+4503,Category 'C' ( eg Peace& Adom& etc.),,350,,,,,,,-99
+4504,Category 'D' (Guest Houses),,200,,,,,,,-99
+4505,Hostel Operators  Cat A,,200,,,,,,,-99
+4506,Hostel Operators  Cat B,,150,,,,,,,-99
+4507,Hostel Operators  Cat C,,100,,,,,,,-99
+4601,Ice Cream/Lolly Distributor (eg. Fan Ice),,100,,,,,,,-99
+4701,Importers (General Merchant),,30,,,,,,,-99
+4800,Industrial/Service Companies,,,,,,,,,-99
+4801,"Category ""a"" (eg. AMS& Moolmans etc.)",,10000,,,,,,,-99
+4802,Category 'B' (Drilling Explosive Cos:St Lambert T & E),,6500,,,,,,,-99
+4803,Category 'C' (Atlas Corpco&Liebher&G5&Barbex&Banlaw),,5000,,,,,,,-99
+4804,Category 'D' (eg.Antrak&Liner& Crown Resources&etc),,4000,,,,,,,-99
+4805,Category 'E' (Indegenous Mining Service),,1300,,,,,,,-99
+4806,Category F (Steel Dealers),,1300,,,,,,,-99
+4900,Industrial Laboratory,,,,,,,,,-99
+4901,Category 'A' (Large Scale eg. SGS),,2000,,,,,,,-99
+4902,Category 'B' (Medium Scale eg. Baysfield& Transworld),,1500,,,,,,,-99
+5000,Internet Services,,,,,,,,,-99
+5001,Category 'A'  5 or Less Machines,,30,,,,,,,-99
+5002,Category 'B'  6 - 10 Machines,,40,,,,,,,-99
+5003,Category 'C'  Above 10 Machines,,50,,,,,,,-99
+5101,Key Cutters,,50,,,,,,,-99
+5201,Lundries/Dry Cleaners,,80,,,,,,,-99
+5300,Liquified Petroleum Gas Station,,,,,,,,,-99
+5301,       Category 'A' Filling Station,,350,,,,,,,-99
+5302,       Category 'B' Door-to-Door,,50,,,,,,,-99
+5401,Lotto Sellers (National Lottery),,400,,,,,,,-99
+5501,Lotto Agents (National Lottery),,300,,,,,,,-99
+5600,Mobile Van Sales,,30,,,,,,,-99
+5601,Mobile Promotion/Sales,,30,,,,,,,-99
+5701,Medical Laboratory,,120,,,,,,,-99
+5801,Maternity Home,,30,,,,,,,-99
+5901,Machine Shop,,100,,,,,,,-99
+6000,Mineral Mining/Marketing Firms,,,,,,,,,-99
+6001,Category 'A' (Goldfields Gh.Ltd. Tarkwa),,60000,,,,,,,-99
+6002, Category 'B' (Anglogold  Ashanti&  GMC Nsuta),,40000,,,,,,,-99
+6003,Category 'C'Golden Star Benso,,25000,,,,,,,-99
+6004,Category 'D' (Small Scale Mining  -  Manual  ,,300,,,,,,,-99
+6101,Metal Scrap Dealers,,50,,,,,,,-99
+6201,Mineral Water Manufacturing,,400,,,,,,,-99
+6301,Metal Aluminium Fabricatiors (Door/Windows),,60,,,,,,,-99
+6400,MOBILE PHONE DEALERS,,,,,,,,,-99
+6401,Category 'A'  Mobile phone sales and repairs,,200,,,,,,,-99
+6402,Category 'B'  Mobile phone sales only,,100,,,,,,,-99
+6403,Category 'C'  Mobile phone repairs only,,50,,,,,,,-99
+6404,Category 'D'  Phone card sellers,,15,,,,,,,-99
+6500,Night Club,,15,,,,,,,-99
+6501,Category 'A' (eg. Nawas& 1106),,40,,,,,,,-99
+6502,Category 'B' (Others),,20,,,,,,,-99
+6503,Night Club/Restaurant (eg. Shandys&Papilion&Mamamia),,40,,,,,,,-99
+6600,Private Communication/Secretarial Services,,,,,,,,,-99
+6601,Category 'A' (All Services including Internet-Sametro),,50,,,,,,,-99
+6602,Category 'B' (Telephone & Secretarial Services),,35,,,,,,,-99
+6603,Category 'C' ( Secretarial Services or Comm Centre),,25,,,,,,,-99
+6604,Photocopying,,20,,,,,,,-99
+6700,Private News/Media Firms,,,,,,,,,-99
+6701,Radio,,500,,,,,,,-99
+6702,Print Media,,100,,,,,,,-99
+6703,News paper Vendors ,,20,,,,,,,-99
+6800,Postal Service,,,,,,,,,-99
+6801,Category 'A' (eg. Ghana post Main Branch& Tarkwa),,200,,,,,,,-99
+6802,Category 'B' (eg. Branches outside Tarkwa),,30,,,,,,,-99
+6900,Petroleum Products/Retail Outlets,,,,,,,,,-99
+6901,Category 'A' (oil Companies Bulk Distribution (eg.Shell,,3000,,,,,,,-99
+6902,Category 'B' (Shell /Total Station&Tarkwa),,700,,,,,,,-99
+6903,Category 'C' (Filling Station/Surface Tanks),,200,,,,,,,-99
+6904,Category 'D' (Kerosine),,30,,,,,,,-99
+7000,Printing Press,,,,,,,,,-99
+7001,Category 'A' ,,100,,,,,,,-99
+7002,Category 'B' ,,60,,,,,,,-99
+7100,Photographic Studio,,25,,,,,,,-99
+7101,Freelance Photographer,,20,,,,,,,-99
+7201,Photo Laboratory,,60,,,,,,,-99
+7300,Professional Services,,,,,,,,,-99
+7301,i  Legal Firms,,150,,,,,,,-99
+7302,ii  Accountancy Firms,,150,,,,,,,-99
+7303,iii  Engineering/Architectural,,150,,,,,,,-99
+7304,iv  Auctioneering,,100,,,,,,,-99
+7305,v  Consultancy,,150,,,,,,,-99
+7306,vi  Surveyors (Doe& Okyere& Abu etc),,150,,,,,,,-99
+7307,vii  Recruiting Agencies,,150,,,,,,,-99
+7400,Private Hospital/Clinic,,,,,,,,,-99
+7401,Category 'A' (Hospitals- ABA),,500,,,,,,,-99
+7402,Category 'B' (others),,200,,,,,,,-99
+7500,Processing of Mineral/mining Documents,,,,,,,,,-99
+7501,Precious /other related Minerals,,60,,,,,,,-99
+7502,Non-Precious Minerals/others(sand&stone&etc),,30,,,,,,,-99
+7600,Poultry,,,,,,,,,-99
+7601,Category 'A' ,,30,,,,,,,-99
+7602,Category 'B',,15,,,,,,,-99
+7700,Private Schools,,,,,,,,,-99
+7701,Category 'A'  (Golden Age&  etc),,200,,,,,,,-99
+7702,Category 'B' ,,150,,,,,,,-99
+7703,Category 'C' (Pre-School - ECDC),,40,,,,,,,-99
+7704,Private SSS/Voc/Tech Schools,,60,,,,,,,-99
+7800,Palm Oil/kernel Processing   ,,,,,,,,,-99
+7801,Category 'A' (Large Scale,,150,,,,,,,-99
+7802,Category 'B' (Medium Scale),,10,,,,,,,-99
+7900,Quarry,,,,,,,,,-99
+7901,Category 'A' (Industrial Eg. Boss Kudos),,500,,,,,,,-99
+7902,Category 'B' (Manual),,50,,,,,,,-99
+7903,Sand Winning ,,150,,,,,,,-99
+8001,Real Estate Developers,,300,,,,,,,-99
+8100,Renting of Property as Business,,,,,,,,,-99
+8101,Canopies& Tent& Chairs& Mattress& etc,,50,,,,,,,-99
+8201,Raffia/Cane Weavers,,20,,,,,,,-99
+8300,Record Studio/Sellers,,,,,,,,,-99
+8301,Record Studio(CD& Audio & Video Cassettes),,100,,,,,,,-99
+8302,Category 'B' (Wayside - CD& Audio & Video Cassettes),,20,,,,,,,-99
+8401,Registration of Newspaper Vendor,,20,,,,,,,-99
+8501,Rubber Stamps Making Shops,,20,,,,,,,-99
+8601,Spinning/Musical Band/Brass Band,,50,,,,,,,-99
+8701,Sand/Stone Dealers,,50,,,,,,,-99
+8800,Repair/ Spare parts Sales Outlets,,,,,,,,,-99
+8801,"Category 'A' (Eg. Konadu, Efo Kwabena, Christ the King etc",,150,,,,,,,-99
+8802,Category 'B' (Stores),,80,,,,,,,-99
+8803,Category 'C' (Table Top),,20,,,,,,,-99
+8804,Small fitting shops,,50,,,,,,,-99
+8900,Second Hand Clothing/Shoe Wholesalers,,,,,,,,,-99
+8901,Category 'A' (Kiosk/ Stores),,40,,,,,,,-99
+8902,Category 'B' (Table Top),,15,,,,,,,-99
+8903,wholesale,,50,,,,,,,-99
+9001,Snack Bar,,20,,,,,,,-99
+9101,Small Scale Mining /Stone Crusher,,20,,,,,,,-99
+9201,Timber Concession Operators,,350,,,,,,,-99
+9300,Timber Processing/Sales Outlets Sawnmills,,,,,,,,,-99
+9301,Category 'A' (Large Scale-Abuga),,60,,,,,,,-99
+9302,Category 'B' (Small Scale),,40,,,,,,,-99
+9303,Sawn Timber Sellers,,25,,,,,,,-99
+9400,Telecom Service,,,,,,,,,-99
+9401,Category 'A' Main Service Providers(eg. Vodafone& MTN),,5000,,,,,,,-99
+9402,Category 'B' Telecom service agents,,700,,,,,,,-99
+9403,Category 'C' Phone Operators and card dealers,,10,,,,,,,-99
+9404,Category 'D' Phone  card dealers  only,,10,,,,,,,-99
+9500,Traditional Medical Practitioners,,,,,,,,,-99
+9501,Category 'A' (Large eg. Hans& Advance& etc    ,,30,,,,,,,-99
+9502,Category 'B' (Small)     ,,25,,,,,,,-99
+9503,Category 'C' (Pedlers),,20,,,,,,,-99
+9504,Food supplement/Herbal dealers (Cat A),,150,,,,,,,-99
+9505,Food supplement/Herbal dealers (Cat B),,100,,,,,,,-99
+9600,Tailoring/Dressmaking Shop,,,,,,,,,-99
+9601,Category 'A' (Industrial) Gagarin,,150,,,,,,,-99
+9602,Category 'B' ,,100,,,,,,,-99
+9603,Category 'C' (General),,20,,,,,,,-99
+9700,Tyres Dealers,,,,,,,,,-99
+9701,Category 'A' (eg. Konadu Tyre Centre& ABC),,70,,,,,,,-99
+9702,Category 'A' (Home Use),,50,,,,,,,-99
+9703,Category 'B' (Home Use),,30,,,,,,,-99
+9800,Utility Services,,,,,,,,,-99
+9801,Water / Electricity Company,,1500,,,,,,,-99
+9900,Entertainment License - Registration,,,,,,,,,-99
+9901,Category A (Casino),,1000,,,,,,,-99
+9902,Category B (Video House/TV Games),,100,,,,,,,-99
+9903,Slot Machine,,50,,,,,,,-99
+10001,Video Rentals/Libraries,,20,,,,,,,-99
+10101,Video camera operators,,20,,,,,,,-99
+10201,Others,,20,,,,,,,-99
+10300, INTRA-CITY BUSES,,,,,,,,,-99
+10301,   Category 'A' Bus Rental),(eg. K.T.S. Services),1500,,,,,,,-99
+10302,   Category 'B' (Car Rental),,300,,,,,,,-99
+10303,Haulage Companies,,1000,,,,,,,-99
+10401,Travel and Tour Agent,,400,,,,,,,-99
+10501,Warehouse,,400,,,,,,,-99
+10601,Wax Print Retailers Shop,,30,,,,,,,

@@ -74,7 +74,9 @@
 														`feefi_value`,
 														`balance`,
 														`instalment`,
-														`comments` ) 
+														`comments`,
+														`lastentry_person`,
+														`lastentry_date`) 
 											VALUES 	( 	NULL,
 														'".$BOR['upn']."',
 														'".$BOR['subupn']."',
@@ -85,7 +87,9 @@
 														0,
 														0, 
 														0,
-														'ekke - ".date("Y-m-d")."' ) ");
+														'auto by populate_property_balance',
+														'script',
+														'".date("Y-m-d")."' ) ");
 		
 		// Display
 		//echo $i, ": ", $BOR['upn'], " & ", $BOR['subupn'], " & ", $BOR['districtid'], " & ", $year, "<br>";
@@ -134,7 +138,7 @@
 		//$prev_balance = $Data->getEndBalance( $results['upn'], $results	['subupn'], $districtID, ($year-1) );
 		
 		// all other values
-		$due = $results['rate_value'] + $results['rate_impost_value'] + $results['feefi_value'];		
+		$due = $results['rate_value'] * $results['rate_impost_value'] + $results['feefi_value'];		
 		$balance = $prev_balance + $due;		
 		
 		if( $due == 0 || $balance == 0 ) {

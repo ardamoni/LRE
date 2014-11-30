@@ -60,7 +60,7 @@
 	$districtName = $Data->getDistrictInfo( $districtId, "district_name" );
 	$districtType = $Data->getDistrictInfo( $districtId, "coa-disttypeid" );
 		
-$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`, t1.`streetname`, t1.`housenumber`, t1.`upn`");
+$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`, t1.`streetname`, LENGTH(t1.`housenumber`), t1.`housenumber`, t1.`upn`");
 //$q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`districtid` = '".$districtId."'  ORDER BY t1.`colzone_id`, t1.`streetname`, t1.`housenumber`, t1.`upn` LIMIT 10");
 
 	/*

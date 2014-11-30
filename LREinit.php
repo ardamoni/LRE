@@ -311,12 +311,6 @@
 		  background-color: white;
 		  background-image: url("img/tXLSExport.png");
 		}
-	.testbutton { 
-		  width:  24px;  
-		  height: 24px;
-		  background-color: white;
-		  background-image: url("img/marker.png");
-		}
 	.deletezone { 
 		  width:  20px;  
 		  height: 20px;

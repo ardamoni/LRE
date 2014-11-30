@@ -86,6 +86,9 @@ function checkBeforeSubmit(frm) {
 require_once('../lib/html_form.class.php');
 require_once( "../lib/configuration.php"	);
 require_once( "../lib/PropertyDetails.php"	);
+require_once( 	"../lib/System.php"			);
+
+$System = new System;
 
 $upn = $_GET["upn"];
 $subupn = $_GET["subupn"];	
@@ -94,9 +97,7 @@ $addDetails = $_GET["addDetails"];
 
 $username = $_SESSION['user']['name'];
 
-
-$currentdate = getdate();
-$currentyear = $currentdate['year'];
+$currentyear = $System->GetConfiguration("RevenueCollectionYear"); 
 
 //var_dump($_GET);
 
@@ -158,7 +159,7 @@ if (!empty($subupn) && $subupn != "null" ){
 //end get current db entries
 
 //get the properyType from feefixing for the drop-down list
-$run = "SELECT d1.class, d1.code from `fee_fixing_property` d1 WHERE d1.`districtid`='".$districtid."';";
+$run = "SELECT d1.class, d1.code from `fee_fixing_property` d1 WHERE d1.`districtid`='".$districtid."' AND d1.`year`='".$currentyear."';";
 
 $query 	= mysql_query($run);
 

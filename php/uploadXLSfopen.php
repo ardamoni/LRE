@@ -91,7 +91,7 @@ for ($x=$yearuse-2; $x<=$yearuse+10; $x++)
 		$frm->endTag('p') .
 		$frm->addLabelFor('uploadedfile', $newcell.'Choose a file to upload: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('hidden', 'MAX_FILE_SIZE', '100000', array('id'=>'MAX_FILE_SIZE', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'MAX_FILE_SIZE', '1000000', array('id'=>'MAX_FILE_SIZE', 'size'=>30, 'required'=>true) ) . 
 		$frm->addInput('file', 'uploadedfile', '', array('id'=>'uploadedfile', 'size'=>30, 'required'=>true) ) . 
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
 

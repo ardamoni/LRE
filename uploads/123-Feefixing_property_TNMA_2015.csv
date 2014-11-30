@@ -1,0 +1,25 @@
+Code,Class,Category,Rate,Unit,Assessed,Rate impost,Code of zone,Name of zone,Comments,-99
+100,Residential,,,,,,,,,-99
+111,Residential - Class 2 Cement Blocks/ Burnt Bricks,Class 2A,15,year,,0.007344,,,,-99
+112,Residential - Class 2 Other Construction Material,Class 2B,14,year,,0.00612,,,,-99
+121,Residential - Class 3 Cement Blocks/ Burnt Bricks,Class 3A,10,year,,0.00047,,,,-99
+122,Residential - Class 3 Other Construction Material,Class 3B,9,year,,0.00045616,,,,-99
+131,Residential - Class 1 Cement Blocks/ Burnt Bricks,Class 1A,20,year,,0.00108,,,,-99
+132,Residential - Class 1 Other Construction Material,Class 1B,19,year,,0.0009,,,,-99
+200,Commercial - 1st & 2nd Class,,36,year,,0.0019008,,,,-99
+300,Mixed Development,,24,year,,0.0019008,,,,-99
+400,Industrial - Light & Heavy,,48,year,,0.016156,,,,-99
+500,Corporations etc,,200,year,,0.06,,,,-99
+510,Financial Institutions,,300,year,,0.006753,,,,-99
+540,Civic & Culture,,0,year,,0,,,,-99
+550,Other Properties,,10,year,,0.0055,,,,-99
+600,Sanitary Facility,,0,year,,0,,,,-99
+601,Mining Companies - Residential Class 1,,70,year,,0.00609,,,,-99
+602,Mining Companies - Residential Class 2,,60,year,,0.00283,,,,-99
+603,Mining Companies - Residential Class 3,,50,year,,0.00317,,,,-99
+604,Mining Companies - Commercial Class 1 & 2,,150,year,,0.01219,,,,-99
+605,Mining Companies - Light & Heavy Industrial,,300,year,,0.02072,,,,-99
+606,Mining Companies - Mixed Development,,100,year,,0.00804,,,,-99
+610,Mining Companies - Ghana Managese Ltd - Residential Properties& Offices&Workshops ,,50643.42,year,,,,,,-99
+611,Mining Companies - Goldfields Ghana Ltd - Residential Properties& Offices&Workshops,,565642.89,year,,,,,,-99
+612,Mining Companies - AngloGold Ashanti Ltd - Residential Properties & Offices& Workshops ,,99893.13,year,,,,,,-99
