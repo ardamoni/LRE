@@ -61,7 +61,7 @@ $upload_district=$a_upload_district[0];
       }
       //Ensure that you have a valid mime type.
 
-	$allowedmimes = array ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv");
+	$allowedmimes = array ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","text/csv","application/vnd.ms-excel");
       try {
 		if (!in_array ($_FILES['uploadedfile']['type'],$allowedmimes)){ $goodtogo = false;
 		throw new exception ("Sorry, the file must be of type .xls. Yours is: " . $_FILES['uploadedfile']['type'] . "");

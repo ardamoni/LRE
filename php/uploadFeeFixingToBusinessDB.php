@@ -30,6 +30,7 @@ $System = new System;
 $aYears = explode(",",$System->GetConfiguration("PeriodForBillsYear"));
 $aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
 $aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
+$aDays = explode(",",$System->GetConfiguration("PeriodForBillsDay"));
 
 global $feefixb;
 
@@ -118,7 +119,7 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 		//set count for first row, which most probably is the column descriptor and we don't want that in the db
 		$firstrow=1;
 		foreach ($sheetData as $cellData) {
-		$unit='';
+		$unit='y';
 		//check the validity period of the item
 		if (in_array($cellData['E'], $aYears))
 		{
@@ -131,6 +132,10 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 		elseif (in_array($cellData['E'], $aWeeks))
 		{
 		  $unit='w';
+		}
+		elseif (in_array($cellData['E'], $aDays))
+		{
+		  $unit='d';
 		}
 
 			 echo "<tr>";

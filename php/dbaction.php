@@ -130,10 +130,10 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$json['year']	 			= $row['year'];
 		$json['property_use']	 	= $row['property_use'];
 		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
- 		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
  		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "due" ),2,'.','' ); //$row['revenue_due'];
  		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "paid" ),2,'.','' ); //$row['revenue_collected'];
  		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "balance" ),2,'.','' ); //$json['revenue_due']-$json['revenue_collected'];
+ 		$json['pay_status'] 		= ($json['revenue_balance']<=0 ? 9 : 1);// this is an inline if condition //number_format( $row['pay_status'],0,'.','' );
 		$json['streetname'] 		= $row['streetname'];
 		$json['housenumber'] 		= $row['housenumber'];
 		$json['owner'] 				= $row['owner'];
