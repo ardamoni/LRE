@@ -1,29 +1,27 @@
 <?php
-include("class.db.php");
+require_once("class.db.php");
 $version = "1.0.2";
-$released = "December 9, 2010";
+$released = "December 31, 2014";
 /*
 	This file is used for connecting to DB only !!!
 */
 
 	// details of the connection
 	$host		=	"localhost";
-	$user		=	"root"; 
-	$pass		=	"root"; 
+	const cUser	=	"root"; 
+	const cPass	=	"root"; 
+	const cDsn	=	'mysql:host=localhost;dbname=revenue'; //dsn = Data Source Name
 	$db 		=	"revenue"; // revenue 
-	$dsn		=	'mysql:host=localhost;dbname=revenue'; //dsn = Data Source Name
 	
-//	$pdo = new PDO('mysql:host='.$host.';dbname='.$db.', '.$user.', '.$pass.'');
-//	$pdo = new PDO('mysql:host=localhost;dbname=revenue', 'root', 'root');
 try {
-    $pdo = new db($dsn, $user, $pass); // also allows an extra parameter of configuration
+    $pdo = new db(cDsn, cUser, cPass); // also allows an extra parameter of configuration
 } catch(PDOException $e) {
-    die('Could not connect to the database:<br/>' . $e);
+    die('Could not connect to the database:<br/>' . $e->getMessage());
 }
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	
 	// Connect to the Server
-	$con = mysql_connect($host, $user, $pass);
+	$con = mysql_connect($host, cUser, cPass);
 	// test the connection
 	if (mysqli_connect_errno($con))
 	{

@@ -24,7 +24,7 @@ else
 	$numberOfParcels	= 	mysql_fetch_array($qnumberOfParcels);
 	$qnumberOfProperty	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` ");
 	$numberOfProperty	= 	mysql_fetch_array($qnumberOfProperty);
-	$qnumberOfProperty_valued	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `value_prop`>0");
+	$qnumberOfProperty_valued	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `prop_value`>0");
 	$numberOfProperty_valued	= 	mysql_fetch_array($qnumberOfProperty_valued);
 	$qnumberOfBusiness	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `business` ");
 	$numberOfBusiness	= 	mysql_fetch_array($qnumberOfBusiness);

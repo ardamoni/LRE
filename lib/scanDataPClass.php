@@ -9,7 +9,7 @@ class ScanDataProperty extends DatabaseObject {
 	
 	protected static $table_name="property";
 
-	protected static $db_fields = array('id', 'upn', 'subupn', 'districtid', 'year', 'town', 'locpl', 'pay_status', 'revenue_due', 'revenue_collected', 'revenue_balance', 'collector', 'collector_id', 'date_payment', 'regnumber', 'streetname', 'housenumber', 'floor', 'unit_planning', 'zone_revenue', 'locality_code', 'business', 'structurecode', 'owner', 'ownerid', 'owneraddress', 'owner_tel', 'owner_email', 'rooms', 'year_construction', 'property_type', 'property_use', 'persons', 'roofing', 'ownership_type', 'constr_material', 'storeys', 'value_prop', 'prop_descriptor', 'planningpermit', 'planningpermit_no', 'buildingpermit', 'buildingpermit_no', 'comments', 'utm_x', 'utm_y', 'area_m2', 'district', 'lastentry_person', 'lastentry_date', 'subdistrictid', 'zoneid', 'doornumber', 'prop_descriptor_title', 'rate_code', 'rate_impost_code', 'property_type_title', 'property_use_title', 'ownership_type_title', 'constr_material_title', 'roofing_type_title', 'date_start', 'date_end', 'activestatus', 'assessed');
+	protected static $db_fields = array('id', 'upn', 'subupn', 'districtid', 'year', 'town', 'locpl', 'pay_status', 'revenue_due', 'revenue_collected', 'revenue_balance', 'collector', 'collector_id', 'date_payment', 'regnumber', 'streetname', 'housenumber', 'floor', 'unit_planning', 'zone_revenue', 'locality_code', 'business', 'structurecode', 'owner', 'ownerid', 'owneraddress', 'owner_tel', 'owner_email', 'rooms', 'year_construction', 'property_type', 'property_use', 'persons', 'roofing', 'ownership_type', 'constr_material', 'storeys', 'prop_value', 'prop_descriptor', 'planningpermit', 'planningpermit_no', 'buildingpermit', 'buildingpermit_no', 'comments', 'utm_x', 'utm_y', 'area_m2', 'district', 'lastentry_person', 'lastentry_date', 'subdistrictid', 'zoneid', 'doornumber', 'prop_descriptor_title', 'rate_code', 'rate_impost_code', 'property_type_title', 'property_use_title', 'ownership_type_title', 'constr_material_title', 'roofing_type_title', 'date_start', 'date_end', 'activestatus', 'assessed');
 
 	public $id;
 	public $upn;
@@ -48,7 +48,7 @@ class ScanDataProperty extends DatabaseObject {
 	public $ownership_type;
 	public $constr_material;
 	public $storeys;
-	public $value_prop;
+	public $prop_value;
 	public $prop_descriptor;
 	public $planningpermit;
 	public $planningpermit_no;

@@ -90,7 +90,7 @@
 													'".$BOR['districtid']."',													
 													'".$year."',
 													'".$BOR['property_use']."',
-													'".$BOR['value_prop']."',
+													'".$BOR['prop_value']."',
 													'auto by populate_property_due',
 													'script',
 													'".date("Y-m-d")."' ) ");

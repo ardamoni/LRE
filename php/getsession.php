@@ -24,7 +24,7 @@ else
 	$numberOfParcels	= 	mysql_fetch_array($qnumberOfParcels);
 	$qnumberOfProperty	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
 	$numberOfProperty	= 	mysql_fetch_array($qnumberOfProperty);
-	$qnumberOfProperty_valued	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `districtid` = '".$_SESSION['user']['districtid']."' AND `value_prop`>0");
+	$qnumberOfProperty_valued	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `property` WHERE `districtid` = '".$_SESSION['user']['districtid']."' AND `prop_value`>0");
 	$numberOfProperty_valued	= 	mysql_fetch_array($qnumberOfProperty_valued);
 	$qnumberOfBusiness	= 	mysql_query("SELECT COUNT(`upn`) as `numupn` FROM `business` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
 	$numberOfBusiness	= 	mysql_fetch_array($qnumberOfBusiness);

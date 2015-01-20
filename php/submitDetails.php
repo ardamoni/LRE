@@ -53,13 +53,22 @@ table.demoTbl td{
 <?php
 
 require_once( "../lib/configuration.php"	);
+require_once( "../lib/Revenue.php"			);
+
+$Data = new Revenue;
+
 
 $upn=$_POST['upn'];
 $subupn=$_POST['subupn'];
+$districtid=$_POST['districtid'];
 $type = $_POST['ifproperty'];
+$addDetails = $_POST['addDetails'];
 $today = date("Y/m/d");
+$year = date("Y");
 //  echo "<pre>";
-//  var_dump($_POST);
+if (isset($addDetails)){
+// var_dump($_POST);
+}else{echo 'not set';}
 // var_dump($_SESSION);
 // echo "</pre>";
 
@@ -73,24 +82,142 @@ $username = $_SESSION['user']['user'];
 		switch( $type ) 
 			{
 				case "property":
+					
+				$feefi_code = substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1);
+				$feefi_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "property", "rate" );
+				$rate_impost_value = 0;
+				$rate_value = 0;
+				$due = $feefi_value;
+				$balance = $due;
+ echo '<br> ffc '.$feefi_code.' - ffv'. 
+				$feefi_value.' - riv '. 
+				$rate_impost_value.' - rv '.
+				$rate_value.' - d '. 
+				$due.' - b'. 
+				$balance;
+				
+				if ($_POST['prop_value']!= ''){
+					$rate_impost_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "property", "rate_impost" );
+					$rate_value = ($_POST['prop_value']*$rate_impost_value);
+					if ($rate_impost_value!='' && $rate_value>0){
+						$due = $rate_value;
+						$balance = $due;
+					}
+				}
+ echo '<br> ffc '.$feefi_code.' - ffv'. 
+				$feefi_value.' - riv '. 
+				$rate_impost_value.' - rv '.
+				$rate_value.' - d '. 
+				$due.' - b'. 
+				$balance;
+				
+
+				if ($_POST['buildPerm']=='yes'){
+					$buildPerm=1;}
+				elseif ($_POST['buildPerm']=='no'){
+					$buildPerm=0;
+				}
+				//normal update of existing details
+				if ($addDetails=='')  
+				{ 
 					$q = mysql_query(" SELECT 	* 
 										FROM 	`property` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' ;");
 
+					$count = mysql_num_rows($q);
 					$r = mysql_fetch_array($q);
-					if($r === FALSE) {
-					    die(mysql_error()); // TODO: better error handling
+ 					if($r === FALSE) {
+ 					    die(mysql_error()); // TODO: better error handling
+ 					}
+
+					if( !empty($r) ) 
+					{
+						$paid = $Data->getSumPaymentInfo( $upn, $subupn, $districtid, $year, $type = "property" );
+						if ($paid == NULL || $paid == '') {
+						 $paid = 0;
+						}
+//check with PropertyRevenueCollection it is more complex than thought						
+						if ($paid > 0){
+						  $balance = $balance+$paid;
+						  }
+						//use pdo wrapper
+						$update = array(
+							'streetname' => $_POST['street'],
+							'housenumber' => $_POST['Nr_'],
+							'locality_code' => $_POST['localCode'],
+							'owner' => $_POST['owner'],
+							'owneraddress' => $_POST['ownAddress'],
+							'owner_tel' => $_POST['ownTel'],
+							'owner_email' => $_POST['ownEmail'],
+							'property_use' => substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1),
+							'prop_value' => $_POST['prop_value'],
+							'buildingpermit' => $buildPerm,
+							'buildingpermit_no' => $_POST['buildPermNo'],
+							'feefi_code' => $feefi_code,
+							'feefi_unit' => 'y',
+							'feefi_value' => $feefi_value,
+							'rate_impost_value' => $rate_impost_value,
+							'rate_value' => $rate_value,
+							'due' => $due,
+							'paid' => $paid,
+							'balance' => $balance,
+							'excluded' => $excluded,
+							'lastentry_person' => $_SESSION['user']['user'],
+							'lastentry_date' => $today
+							);
+						$bind = array(
+							":upn" => $upn,
+							":subupn" => $subupn
+						);
+						$result = $pdo->update("property", $update, "upn = :upn AND subupn = :subupn", $bind);
+						$result = $pdo->update("property_due", $update, "upn = :upn AND subupn = :subupn", $bind);
+						$result = $pdo->update("property_balance", $update, "upn = :upn AND subupn = :subupn", $bind);
+
+					} 
+				} elseif ($addDetails=='true') {	//we add a new property and need to update property_due, property_balance		
+				echo '<br>inside == true';
+					$st = $pdo->prepare(" SELECT 	* 
+										FROM 	`property` 
+										WHERE 	`upn` = '".$upn."';");
+				    $st->execute();  
+					$count = $st->rowCount();
+					
+				 if ($count==0)		//this is indeed a new property
+				 	{
+ 	 					$subupn='';
+ 	 				}
+ 	 			elseif ($count==1)  //we have one property already, but no subupn
+ 	 				{
+ 						$subupn=$upn.chr(65);
+						//use pdo wrapper
+						$update = array(
+							'subupn' => $subupn
+							);
+						$bind = array(
+							":upn" => $upn,
+						);
+						$result = $pdo->update("property", $update, "upn = :upn", $bind);
+						$result = $pdo->update("property_due", $update, "upn = :upn", $bind);
+						$result = $pdo->update("property_balance", $update, "upn = :upn", $bind);
+
+ 						$subupn=$upn.chr(65+$count);
+ 	 				
+ 	 				} 	 				
+ 	 			elseif ($count>1)	//more than one property and more than one subupn
+ 	 				{
+ 						$subupn=$upn.chr(65+$count);
 					}
-				if( !empty($r) ) 
-				{
-				    if ($_POST['buildPerm']=='yes'){
-				    $buildPerm=1;}
-				    elseif ($_POST['buildPerm']=='no'){
-				    $buildPerm=0;}
-				    
-				    //use pdo wrapper
-				    $update = array(
+				 
+				//}				 
+				 //use pdo wrapper
+				    $insert = array(
+						'upn' => $upn,
+						'subupn' => $subupn,
+						'districtid' => $districtid,
+						'year' => $year,
+						'pay_status' => 1,
+						'colzone_id' => $r['colzone_id'],
 				    	'streetname' => $_POST['street'],
 						'housenumber' => $_POST['Nr_'],
 						'locality_code' => $_POST['localCode'],
@@ -98,45 +225,33 @@ $username = $_SESSION['user']['user'];
 						'owneraddress' => $_POST['ownAddress'],
 						'owner_tel' => $_POST['ownTel'],
 						'owner_email' => $_POST['ownEmail'],
-						'property_use' => substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1),
-						'value_prop' => $_POST['value_prop'],
+						'property_use' => $feefi_code,
+						'prop_value' => $_POST['prop_value'],
 						'buildingpermit' => $buildPerm,
 						'buildingpermit_no' => $_POST['buildPermNo'],
-						'excluded' => $excluded,
+						'feefi_code' => $feefi_code,
+						'feefi_unit' => 'y',
+						'feefi_value' => $feefi_value,
+						'rate_impost_value' => $rate_impost_value,
+						'rate_value' => $rate_value,
+						'due' => $due,
+						'paid' => 0,
+						'balance' => $balance,
+						'comments' => $_POST['comments'],
 						'lastentry_person' => $_SESSION['user']['user'],
 						'lastentry_date' => $today
 						);
-					$bind = array(
-						":upn" => $upn,
-						":subupn" => $subupn
-					);
-					$result = $pdo->update("property", $update, "upn = :upn AND subupn = :subupn", $bind);
-
-				    
-// 					mysql_query(" UPDATE 	`property` 
-// 									SET 	`streetname` = '".$_POST['street']."', 
-// 											`housenumber` = '".$_POST['Nr_']."',
-//  											`locality_code` = '".$_POST['localCode']."',
-//  											`owner` = '".$_POST['owner']."',
-//  											`owneraddress` = '".$_POST['ownAddress']."',
-//  											`owner_tel` = '".$_POST['ownTel']."',
-//  											`owner_email` = '".$_POST['ownEmail']."',
-//  											`property_use` = '".substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1)."',
-//  											`buildingpermit` = '".$buildPerm."',
-//  											`buildingpermit_no` = '".$_POST['buildPermNo']."',
-//  											`excluded` = '".$excluded."',
-//  											`lastentry_person` = '".$_SESSION['user']['user']."',
-// 											`lastentry_date` = CURDATE()								
-// 									WHERE 	`upn` = '".$upn."' AND
-// 											`subupn` = '".$subupn."' ");	
-				} 
+					$result = $pdo->insert("property", $insert);
+					$result = $pdo->insert("property_due", $insert);
+					$result = $pdo->insert("property_balance", $insert);
+				}
 ?>
 
 			<h1>Form Submission Result</h1>
 
 				 <table class='demoTbl' border='1' cellpadding='10' cellspacing='2'>
 				<tr>
-				<td colspan="2" bgcolor="#E6E6E6"><center><strong>Following Information was stored in the Database</strong></center></td>
+				<td colspan="2" bgcolor="#E6E6E6"><center><strong>Following Information was stored in the Database for UPN: <?php echo $_POST['upn'] ?></strong></center></td>
 				</tr>
 				<tr>
 				<td colspan="2"><strong>Property Location</strong></td>
@@ -180,7 +295,7 @@ $username = $_SESSION['user']['user'];
 				<td>Type of Property Use</td><td><?php echo $_POST['propertyType'] ?> </td> 
 				</tr>
 				<tr>
-				<td>Value</td><td><?php echo $_POST['value_prop'] ?> </td> 
+				<td>Value</td><td><?php echo $_POST['prop_value'] ?> </td> 
 				</tr>
 				<tr>
 				<td>Excluded from rating</td><td><?php echo $_POST['excluded'] ?> </td> 
@@ -199,15 +314,86 @@ $username = $_SESSION['user']['user'];
 				break;
 				
 				case "business":
+				if (!$addDetails=='true') 
+				{ 
+					if( !empty($r) ) 
+					{
 					$q = mysql_query(" SELECT 	* 
 										FROM 	`business` 
 										WHERE 	`upn` = '".$upn."' AND 
 												`subupn` = '".$subupn."' ;");
-					$r = mysql_fetch_array($q);					
-				if( !empty($r) ) 
-				{
-					//use pdo wrapper
-				    $update = array(
+
+					$count = mysql_num_rows($q);
+					$r = mysql_fetch_array($q);
+ 					if($r === FALSE) {
+ 					    die(mysql_error()); // TODO: better error handling
+ 					}
+						//use pdo wrapper
+						$update = array(
+							'streetname' => $_POST['street'],
+							'housenumber' => $_POST['Nr_'],
+							'locality_code' => $_POST['localCode'],
+							'da_no' => $_POST['daAssignmentNumber'],
+							'business_certif' => $_POST['businessCertificate'],
+							'employees' => $_POST['employees'],
+							'business_name' => $_POST['businessname'],
+							'year_establ' => $_POST['yearEstablishment'],
+							'owner' => $_POST['owner'],
+							'owneraddress' => $_POST['ownAddress'],
+							'owner_tel' => $_POST['ownTel'],
+							'owner_email' => $_POST['ownEmail'],
+							'business_class' => substr($_POST['businessclass'],0, strpos($_POST['businessclass'],':')-1),
+							'excluded' => $excluded,
+							'lastentry_person' => $_SESSION['user']['user'],
+							'lastentry_date' => $today
+						);
+						$bind = array(
+							":upn" => $upn,
+							":subupn" => $subupn
+						);
+						$result = $pdo->update("business", $update, "upn = :upn AND subupn = :subupn", $bind);
+
+					} 
+				} elseif ($addDetails=='true') {			
+					$q = mysql_query(" SELECT 	* 
+										FROM 	`business` 
+										WHERE 	`upn` = '".$upn."';");
+
+					$count = mysql_num_rows($q);
+					$r = mysql_fetch_array($q);
+
+				 if ($count==0)
+				 	{
+ 	 					$subupn='';
+ 	 				}
+ 	 			elseif ($count==1)
+ 	 				{
+ 						$subupn=$upn.'/'.$count;
+						//use pdo wrapper
+						$update = array(
+							'subupn' => $subupn
+							);
+						$bind = array(
+							":upn" => $upn,
+						);
+						$result = $pdo->update("business", $update, "upn = :upn", $bind);
+
+ 						$subupn=$upn.'/'.($count+1);
+ 	 				
+ 	 				} 	 				
+ 	 			elseif ($count>1)
+ 	 				{
+ 						$subupn=$upn.'/'.($count+1);
+					}
+				 
+				 //use pdo wrapper
+				    $insert = array(
+						'upn' => $upn,
+						'subupn' => $subupn,
+						'districtid' => $districtid,
+						'year' => $year,
+						'pay_status' => 1,
+						'colzone_id' => $r['colzone_id'],
 				    	'streetname' => $_POST['street'],
 						'housenumber' => $_POST['Nr_'],
 						'locality_code' => $_POST['localCode'],
@@ -225,32 +411,7 @@ $username = $_SESSION['user']['user'];
 						'lastentry_person' => $_SESSION['user']['user'],
 						'lastentry_date' => $today
 						);
-					$bind = array(
-						":upn" => $upn,
-						":subupn" => $subupn
-					);
-					$result = $pdo->update("business", $update, "upn = :upn AND subupn = :subupn", $bind);
-
-				
-// 				mysql_query(" UPDATE 	`business` 
-// 									SET 	`streetname` = '".$_POST['street']."', 
-// 											`housenumber` = '".$_POST['Nr_']."',
-// 											`locality_code` = '".$_POST['localCode']."',
-// 											`da_no` = '".$_POST['daAssignmentNumber']."',
-// 											`business_certif` = '".$_POST['businessCertificate']."',
-// 											`employees` = '".$_POST['employees']."',
-// 											`business_name` = '".$_POST['businessname']."',
-// 											`year_establ` = '".$_POST['yearEstablishment']."',
-// 											`owner` = '".$_POST['owner']."',
-// 											`owneraddress` = '".$_POST['ownAddress']."',
-// 											`owner_tel` = '".$_POST['ownTel']."',
-// 											`owner_email` = '".$_POST['ownEmail']."',
-// 											`business_class` = '".substr($_POST['businessclass'],0, strpos($_POST['businessclass'],':')-1)."',
-//  											`excluded` = '".$excluded."',
-//  											`lastentry_person` = '".$_SESSION['user']['user']."',
-// 											`lastentry_date` = CURDATE()								
-// 									WHERE 	`upn` = '".$upn."' AND
-// 											`subupn` = '".$subupn."' ");	
+					$result = $pdo->insert("business", $insert);
 				}
 
 //					return mysql_affected_rows();
@@ -260,7 +421,7 @@ $username = $_SESSION['user']['user'];
 
 				<table class='demoTbl' border='1' cellpadding='10' cellspacing='2'>
 				<tr>
-				<td colspan="2" bgcolor="#E6E6E6"><center><strong>Following Information was stored in the Database</strong></center></td>
+				<td colspan="2" bgcolor="#E6E6E6"><center><strong>Following Information was stored in the Database for UPN: <?php echo $_POST['upn'] ?></strong></center></td>
 				</tr>
 				<tr>
 				<td colspan="2"><strong>Business Location</strong></td>

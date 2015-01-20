@@ -116,7 +116,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 							WHERE d1.`upn` = '".$upn."' 
 							AND d1.`districtid`=d2.`districtid` 
 							AND d1.`property_use`=d2.`code` 
-							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, d1.`subupn`;");							
+							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, length(d1.`subupn`), d1.`subupn`;");							
 							
 	$count = mysql_num_rows($query);
 	if ($count>0){
@@ -221,7 +221,7 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 							WHERE d1.`upn` = '".$upn."' 
 							AND d1.`districtid`=d2.`districtid` 
 							AND d1.`business_class`=d2.`code` 
-							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, d1.`subupn`;");	
+							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, length(d1.`subupn`), d1.`subupn`;");	
 
 	$count = mysql_num_rows($query);
 	if ($count>0){

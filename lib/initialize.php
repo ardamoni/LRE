@@ -1,4 +1,8 @@
 <?php
+// ini_set('display_errors',1);
+// ini_set('display_startup_errors',1);
+// error_reporting(-1);
+
 
 // Define the core paths
 // Define them as absolute paths to make sure that require_once works as expected
@@ -14,6 +18,8 @@ defined('LIB_PATH') ? null : define('LIB_PATH', SITE_ROOT.DS.'lib');
 
 // load config file first
 require_once(LIB_PATH.DS.'config.php');
+require_once(LIB_PATH.DS.'configuration.php');
+// require_once(LIB_PATH.DS.'System.php');
 
 // load basic functions next so that everything after can use them
 require_once(LIB_PATH.DS.'functions.php');

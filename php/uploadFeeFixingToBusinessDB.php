@@ -27,7 +27,11 @@ require_once("../lib/System.php");
 
 $System = new System;
 
-$aYears = explode(",",$System->GetConfiguration("PeriodForBillsYear"));
+// if ($System->GetConfiguration("PeriodForBillsYear")!='empty')
+// {
+	$aYears = explode(",",$System->GetConfiguration("PeriodForBillsYear"));
+// }
+
 $aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
 $aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
 $aDays = explode(",",$System->GetConfiguration("PeriodForBillsDay"));

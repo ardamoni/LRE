@@ -3,7 +3,7 @@
 // 27. September 2013 10:10:43 GMT moved previous code from LREinit and created init() in order to keep file count low
 
 //make drawing tools invisible
-OpenLayers.ProxyHost = "proxy.cgi?url=";
+OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
  document.getElementById("controls").style.visibility="hidden";
  
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
@@ -2556,7 +2556,7 @@ function addDetails(global_upn) {
 	var h = 750;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
-    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 //	popupWindow = window.open('php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid, 'Property Details', 'height=700, width=1024, left=, top='+top+', left='+left+', resizable=yes');	
 
 	if(popupWindow && !popupWindow.closed)
@@ -2564,7 +2564,7 @@ function addDetails(global_upn) {
 		popupWindow.focus();
 	}
 
-	return false;
+//	return false;
 } 
 // end of function addDetails
 

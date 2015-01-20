@@ -81,10 +81,11 @@ $System = new System;
 $upn = $_GET["upn"];
 $subupn = $_GET["subupn"];	
 $districtid = $_GET["districtid"];	
+$addDetails = $_GET["addDetails"];
 
 $currentyear = $System->GetConfiguration("RevenueCollectionYear"); 
 
-//var_dump($_GET);
+// var_dump($_GET);
 
 if (!empty($subupn) && $subupn != 'null' ){
 //  if (!empty($subupn) || $subupn != "" || $subupn != null || $subupn != NULL || $subupn != "0" || strlen(trim($subupn))==0){
@@ -96,7 +97,28 @@ if (!empty($subupn) && $subupn != 'null' ){
 
 //get the current database entries from property
 	$Data = new businessDetailsClass;
-    $r = $Data->getBInfo( $upn, $subupn, $currentyear, $districtid ) ;
+//check whether new details are inserted or existing information is updated
+if (isset($addDetails)){
+		$r = array();
+		$r['streetname'] = '';
+		$r['housenumber'] = '';
+		$r['da_no'] = ''; 
+		$r['business_certif'] = '';
+		$r['employees'] = '';
+		$r['business_name'] = '';
+		$r['year_establ'] = '';
+		$r['owner'] = '';
+		$r['owneraddress'] = '';
+		$r['owner_tel'] = '';
+		$r['owner_email'] = '';
+		$r['buildingpermit_no'] = '';
+		$r['locality_code'] = '';  
+		$r['business_class'] = '';
+		$r["comments"] = '';
+		$r["excluded"] = '';
+   } else {
+   $r = $Data->getBInfo( $upn, $subupn, $currentyear, $districtid ) ;
+   }
     
 //var_dump($r);  
     
@@ -276,7 +298,9 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
     $frm->addInput('hidden', 'ifproperty', 'business', array('id'=>'business', 'size'=>30, 'required'=>true) ) . 
 	$frm->addInput('hidden', 'upn', $upn, array('id'=>'upn', 'size'=>30, 'required'=>true) ) . 
 	$frm->addInput('hidden', 'subupn', $subupn, array('id'=>'subupn', 'size'=>30, 'required'=>true) ) . 
+	$frm->addInput('hidden', 'districtid', $districtid, array('id'=>'districtid', 'size'=>30, 'required'=>true) ) . 
 	$frm->addInput('hidden', 'username', $username, array('id'=>'username', 'size'=>30, 'required'=>true) ) . 
+	$frm->addInput('hidden', 'addDetails', $addDetails, array('id'=>'addDetails', 'size'=>30, 'required'=>true) ) . 
 
 //    $frm->endTag('p') . PHP_EOL . 
 

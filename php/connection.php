@@ -1,4 +1,7 @@
 <?php
+// ini_set('display_errors',1);
+// ini_set('display_startup_errors',1);
+// error_reporting(E_ALL);
 	
 	// test to see the changes
 	// remove this lines, 
@@ -30,8 +33,11 @@
 	
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 	
+	echo $year.'<br>'.'<br>'.'<br>';
+	
 	// match UPN
-	$query = mysql_query( "SELECT * FROM property WHERE upn = '".$upn."' AND year = '".$year."' ");	
+// 	$query = mysql_query( "SELECT * FROM property WHERE upn = '".$upn."' AND year = '".$year."' ");	
+	$query = mysql_query( "SELECT * FROM property WHERE year = '".$year."' ");	
 	
 	while( $row = mysql_fetch_assoc( $query ) ) 
 	{

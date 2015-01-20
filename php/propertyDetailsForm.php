@@ -95,6 +95,7 @@ $subupn = $_GET["subupn"];
 $districtid = $_GET["districtid"];
 $addDetails = $_GET["addDetails"];
 
+
 $username = $_SESSION['user']['name'];
 
 $currentyear = $System->GetConfiguration("RevenueCollectionYear"); 
@@ -109,22 +110,27 @@ if (!empty($subupn) && $subupn != "null" ){
 		echo "<h1>Enter property details for UPN: ".$upn."</h1>";
 	}
 
+		$Data = new propertyDetailsClass;
+
 //check whether new details are inserted or existing information is updated
-//if (empty($addDetails)){
+if (isset($addDetails)){
+		$r = array();
+		$r['streetname'] = '';
+		$r['housenumber'] = '';
+		$r['owner'] = '';
+		$r['owneraddress'] = '';
+		$r['owner_tel'] = '';
+		$r['owner_email'] = '';
+		$r['buildingpermit_no'] = '';
+		$r['locality_code'] = '';  
+		$r["property_use"] = '';
+		$r["prop_value"] = '';
+		$r["comments"] = '';
+		$r["excluded"] = '';
+   } else {
 	//get the current database entries from property
-	$Data = new propertyDetailsClass;
-    $r = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
-  //   } else {
-// 		$r = array();
-// 		$r['streetname'] = '';
-// 		$r['housenumber'] = '';
-// 		$r['owner'] = '';
-// 		$r['owneraddress'] = '';
-// 		$r['owner_tel'] = '';
-// 		$r['owner_email'] = '';
-// 		$r['buildingpermit_no'] = '';
-// 		$r['locality_code'] = '';    
-//     } //end if (empty($addDetails)){
+   		$r = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
+    } //end if (isset($addDetails)){
 //var_dump($r);
     
  //check Planning Permit   
@@ -175,7 +181,8 @@ while ($row = mysql_fetch_array($query)) {
 	//put the list into the drop down list
 	$propertyType[] 			= $json;
  }//end while
- 
+
+
 // arrays for select list 
 	//get property type info
 	$helpertable = 'hlp_property_type';
@@ -238,7 +245,6 @@ $newrow = "<tr>";
 $endrow= "</tr>";
 // create instance of HTML_Form
 $frm = new HTML_Form();
-
 // using $frmStr to concatenate long string of form elements
 // startForm arguments: action, method, id, optional attributes added in associative array
 $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
@@ -267,7 +273,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		// label and text input with optional attributes
 		$frm->addLabelFor('streetcode', $newcell.'Streetcode: '.$endcell) . $newcell. 
 		// using html5 required attribute
-		$frm->addInput('text', 'streetcode', $r['locpl'], array('id'=>'streetcode', 'size'=>10, 'required'=>true) ) . 
+		$frm->addInput('text', 'streetcode', $r['locpl'], array('id'=>'streetcode', 'size'=>10, 'required'=>false) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell . $endrow . $newrow . $newcell . 
@@ -286,7 +292,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		$frm->startTag('p') . 
 		$frm->addLabelFor('ownAddress', $newcell.'Address: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('text', 'ownAddress', $r['owneraddress'], array('id'=>'ownAddress', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('text', 'ownAddress', $r['owneraddress'], array('id'=>'ownAddress', 'size'=>30, 'required'=>false) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell . $newrow .
@@ -294,7 +300,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 
 		$frm->addLabelFor('ownTel', $newcell.'Phone: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('text', 'ownTel', $r['owner_tel'], array('id'=>'ownTel', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('text', 'ownTel', $r['owner_tel'], array('id'=>'ownTel', 'size'=>30, 'required'=>false) ) . 
 	
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL . $endcell. $endrow .
@@ -321,7 +327,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 
 		$frm->addLabelFor('buildPermNo', $newcell.'Building permit No.: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('text', 'buildPermNo', $r['buildingpermit_no'], array('id'=>'buildPermNo', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('text', 'buildPermNo', $r['buildingpermit_no'], array('id'=>'buildPermNo', 'size'=>30, 'required'=>false) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
@@ -342,7 +348,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		'<strong>Property Information</strong>' . $endcell .$newcell . $endcell . $endrow .
 		$frm->addLabelFor('localCode', $newcell.'Locality code: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('text', 'localCode', $r['locality_code'], array('id'=>'localCode', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('text', 'localCode', $r['locality_code'], array('id'=>'localCode', 'size'=>30, 'required'=>false) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow . 
@@ -351,14 +357,14 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		// arguments: name, array containing option text/values
 		// include values attributes (boolean),
 		// optional arguments: selected value, header, additional attributes in associative array
-		$frm->addSelectList('propertyType', $propertyType, false, $propuse, '' ,array('id'=>'propertyType', 'style'=>'width: 200px') ) .
+		$frm->addSelectList('propertyType', $propertyType, false, $propuse, '' ,array('id'=>'propertyType', 'style'=>'width: 200px', 'required'=>true) ) .
 		$frm->endTag('selectlist') . $endcell. $endrow . 
 
    		$frm->startTag('p') . 
 
-		$frm->addLabelFor('value_prop', $newcell.'Value: '.$endcell) .$newcell.
+		$frm->addLabelFor('prop_value', $newcell.'Value: '.$endcell) .$newcell.
 		// using html5 required attribute
-		$frm->addInput('text', 'value_prop', $r['value_prop'], array('id'=>'value_prop', 'size'=>30, 'required'=>false) ) . 
+		$frm->addInput('text', 'prop_value', $r['prop_value'], array('id'=>'prop_value', 'size'=>30, 'required'=>false) ) . 
 
 		// endTag remembers startTag (but you can pass tag if nesting or for clarity)
 		$frm->endTag('p') . PHP_EOL .  $endcell. $endrow .
@@ -370,7 +376,9 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 		$frm->addInput('hidden', 'ifproperty', 'property', array('id'=>'property', 'size'=>30, 'required'=>true) ) . 
 		$frm->addInput('hidden', 'upn', $upn, array('id'=>'upn', 'size'=>30, 'required'=>true) ) . 
 		$frm->addInput('hidden', 'subupn', $subupn, array('id'=>'subupn', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'districtid', $districtid, array('id'=>'districtid', 'size'=>30, 'required'=>true) ) . 
 		$frm->addInput('hidden', 'username', $username, array('id'=>'username', 'size'=>30, 'required'=>true) ) . 
+		$frm->addInput('hidden', 'addDetails', $addDetails, array('id'=>'addDetails', 'size'=>30, 'required'=>true) ) . 
 // wouldn't need to pass label to endTag
 		$frm->endTag('label') . $endcell. $endrow . "</td></tr>" .
 		"</table>" . 

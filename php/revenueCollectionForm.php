@@ -88,6 +88,8 @@ function checkBeforeSubmit(frm) {
 <?php
 	require_once( "../lib/configuration.php" );
 	require_once("../lib/Revenue.php");
+	require_once("../lib/System.php");
+	
 
 	$Data = new Revenue;
 	
@@ -114,11 +116,18 @@ function checkBeforeSubmit(frm) {
 	$choice = dropdown( $name, $options, $selected );
 	
 //Options for type of payment selection
-$paymentType = array(
-	'cash' => 'cash',
-	'cheque' => 'cheque',
-	'bank transfer' => 'bank transfer'
-);
+$System = new System;
+
+if ($System->GetConfiguration("PaymentType")!='empty')
+{
+$paymentType = explode(",",$System->GetConfiguration("PaymentType"));
+}else{
+	$paymentType = array(
+		'cash' => 'cash',
+		'cheque' => 'cheque',
+		'bank transfer' => 'bank transfer'
+		);
+}
 ?>
 
 <?php	
@@ -261,9 +270,10 @@ $paymentType = array(
 <?php
 
 function generateSelect($name = '', $options = array()) {
+
 	$html = '<select name="'.$name.'">';
 	foreach ($options as $option => $value) {
-		$html .= '<option value='.$value.'>'.$option.'</option>';
+		$html .= '<option value='.$value.'>'.$value.'</option>';
 	}
 	$html .= '</select>';
 	return $html;

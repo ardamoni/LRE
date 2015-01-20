@@ -159,6 +159,7 @@ $q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`dis
 		$dueRateImpostValue = $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "rate_impost_value" );
 		$dueFeeFixValue 	= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_value" );
 		
+//!!! needs work when we work with valued property EKKE
 		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
 		
 		//Obsolete - 15.07.2014 - Arben

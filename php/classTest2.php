@@ -12,4 +12,5 @@ $districtid = '130';
 	$Data = new propertyDetailsClass;
     $r = $Data->getPInfo( $upn, $subupn, $currentyear, $districtid ) ;
 var_dump($r);
+if ({[]})
 ?>

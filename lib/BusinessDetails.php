@@ -10,7 +10,7 @@
 	class businessDetailsClass
 	{		
 		/*
-		 *	PROPERTY Details TEST
+		 *	Business Details
 		 */		
 		// 	get the data out of business table
 		function getBInfo( $upn, $subupn)//, $year, $districtid)

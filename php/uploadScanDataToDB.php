@@ -166,7 +166,7 @@ if (!empty($cellTemp['A'])){
 		$sdProperty->ownership_type=$cellTemp['P'];
 		$sdProperty->constr_material=$cellTemp['Q'];
 		$sdProperty->storeys=$cellTemp['R'];
-		$sdProperty->value_prop=$cellTemp['S'];
+		$sdProperty->prop_value=$cellTemp['S'];
 		$sdProperty->prop_descriptor=$cellTemp['T'];
 		$sdProperty->planningpermit=$cellTemp['U'];
 		$sdProperty->planningpermit_no=$cellTemp['V'];
