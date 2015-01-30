@@ -1,7 +1,7 @@
 <?php
 /**
  * openXLSreports
- * this script requires one _GET parameters, and does not return any value. 
+ * this script requires one _GET parameters, and does not return any value.
  * 1. $_GET['districtid'] = the current districtid of the user
  * The script creates a table with all availabe predefined XLSX reports
  * You must adjust some variable names
@@ -50,18 +50,18 @@ table.demoTbl td, table.demoTbl th {
 
 table.demoTbl th.first {
     text-align:left;
-    background-color:green; 
+    background-color:green;
     }
 table.demoTbl td.num {
     text-align:right;
     }
-    
+
 table.demoTbl td.foot {
     text-align: center;
 }
 
-.tableshow { 
-	  width:  24px;  
+.tableshow {
+	  width:  24px;
 	  height: 24px;
 	  background-color: white;
 	  background-image: url("../img/tableview.png");
@@ -76,7 +76,7 @@ table.demoTbl td.foot {
 
 </head>
 <body>
-<script src="../lib/OpenLayers/lib/OpenLayers.js"></script> 
+<script src="../lib/OpenLayers/lib/OpenLayers.js"></script>
 <script src="../lib/spin/spin.js"></script>
 
 
@@ -152,14 +152,14 @@ table.demoTbl td.foot {
 		<tr>
 			<td><input type="button" type="submit" id="option6" name="xlsopen" a href="javascript:;" onclick="openXLS(6);" class="orange-flat-button" value="List Property UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report6" value=""></div></td>
-			<td>This will produce an Excel table listing all UPNs from table property_balanace that have no correspondance in the local plan</td>
+			<td>This will produce an Excel table listing all UPNs from table property_balance that have no correspondance in the local plan</td>
 			<td><div id=sfile6><div id=template6></div></td>
 			<td><center id="spin6" type="hidden"><center id="squery6" type="hidden"><div id=prev6></div></center></td>
 		</tr>
 		<tr>
 			<td><input type="button" type="submit" id="option7" name="xlsopen" a href="javascript:;" onclick="openXLS(7);" class="orange-flat-button" value="List Business UPNs that are not in the localplan"/></td>
 			<div><input type="hidden" id="report7" value=""></div></td>
-			<td>This will produce an Excel table listing all UPNs from table business_balanace that have no correspondance in the local plan</td>
+			<td>This will produce an Excel table listing all UPNs from table business_balance that have no correspondance in the local plan</td>
 			<td><div id=sfile7><div id=template7></div></td>
 			<td><center id="spin7" type="hidden"><center id="squery7" type="hidden"><div id=prev7></div></center></td>
 		</tr>
@@ -192,7 +192,7 @@ table.demoTbl td.foot {
 			<td><center id="spin11" type="hidden"><center id="squery11" type="hidden"><div id=prev11></div></center></td>
 		</tr>
 	</table>
-		
+
 <script type="text/javascript">
 function openXLS(opt){
 
@@ -230,21 +230,21 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREregions";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 2:  
+	case 2:
 		var squery = 'SELECT * from property WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all properties";
 		document.getElementById('report'+opt).value="01LREproperties";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 3:  
+	case 3:
 		var squery = 'SELECT * from business WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List all businesses";
 		document.getElementById('report'+opt).value="01LREbusiness";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 4:  
+	case 4:
 		var squery = 'select d3.`district_name` as District_name, d2.year as Year, sum(d2.`rate`) as TotalRevenueExpected_Property ';
 			squery +='from `property` d1, `fee_fixing_property` d2, `area_district` d3 ';
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
@@ -257,7 +257,7 @@ switch(opt) {
 //		document.getElementById('option4').value=document.getElementById('template4').value;
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 4.1:  
+	case 4.1:
 		var squery = 'select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, sum(d2.`rate`) as "Total Revenue Expected" ';
 			squery +='from `property` d1, `fee_fixing_property` d2, `area_district` d3 ';
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
@@ -268,7 +268,7 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREpotentialProperty";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 5:  
+	case 5:
 		var squery = 'select d3.`district_name` as District_name, d2.year as Year, sum(d2.`rate`) as TotalRevenueExpected_BOP ';
 			squery +='from `business` d1, `fee_fixing_business` d2, `area_district` d3 ';
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
@@ -279,7 +279,7 @@ switch(opt) {
 		document.getElementById('template'+opt).value="TotalRevExpectedtemplate.xlsx";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 5.1:  
+	case 5.1:
 		var squery = 'select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, sum(d2.`rate`) as "Total Revenue Expected" ';
 			squery +='from `business` d1, `fee_fixing_business` d2, `area_district` d3 ';
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
@@ -290,7 +290,7 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREpotentialBusiness";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 6:  
+	case 6:
 		var squery = 'SELECT d1.`id`, d1.`upn` as dubious_UPN_, d1.`subupn` as only_first_subupn, d2.`owner`, d2.`streetname`, d2.`housenumber`, d1.`districtid`, d1.balance FROM property_balance d1, property d2 ';
 			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) AND d1.`upn` = d2.`upn`';
 			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' GROUP BY d1.`upn`;';
@@ -299,7 +299,7 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREwrongupns";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 7:  
+	case 7:
 		var squery = 'SELECT d1.`id`, d1.`upn` as dubious_UPN_, d1.`subupn` as only_first_subupn, d2.`streetname`, d2.`housenumber`, d2.`business_name`, d2.`owner`, d1.`districtid`, d1.balance FROM business_balance d1, business d2 ';
 			squery +='WHERE d1.`upn` NOT IN (SELECT KML_from_LUPMIS.UPN FROM KML_from_LUPMIS) AND d1.`upn` = d2.`upn` ';
 			squery +='AND d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' GROUP BY d1.`upn`;';
@@ -308,7 +308,7 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREwrongupnsBusiness";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 8:  
+	case 8:
 		var squery = 'SELECT d1.`property_use`, d1.`upn`, d1.`subupn`, d1.`owner` FROM `property` d1 ';
 		squery +='WHERE d1.`property_use` NOT IN ';
 		squery +='(SELECT d2.code from `fee_fixing_property` d2 WHERE d2.`districtid`='+<?php echo json_encode($_GET['districtid']) ?>+') ';
@@ -318,7 +318,7 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREwrongUpnsPropertyUseCode";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 9:  
+	case 9:
 		var squery = 'SELECT d1.`business_class`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`business_name` FROM `business` d1 ';
 		squery +='WHERE d1.`business_class` NOT IN ';
 		squery +='(SELECT d2.code from `fee_fixing_business` d2 WHERE d2.`districtid`='+<?php echo json_encode($_GET['districtid']) ?>+') ';
@@ -328,53 +328,53 @@ switch(opt) {
 		document.getElementById('report'+opt).value="01LREwrongUpnsBusinessClassCode";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 10:  
-		var squery = 'SELECT d1.UPN as UPNinLocalplan, '; 
-			squery +='LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1) as StreetnameInLocalplan, '; 
-			squery +='d1.ParcelOf, '; 
-			squery +='d2.upn as UPNinProperty, '; 
-			squery +='IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
-			squery +='LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), '; 
+	case 10:
+		var squery = 'SELECT d1.UPN as UPNinLocalplan, ';
+			squery +='LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1) as StreetnameInLocalplan, ';
+			squery +='d1.ParcelOf, ';
+			squery +='d2.upn as UPNinProperty, ';
+			squery +='IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", ';
+			squery +='LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), ';
 			squery +='CONCAT( LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1), " ", d2.housenumber)) ';
 			squery +='as StreetnameInProperty, ';
-			squery +='d2.`owner`, '; 
+			squery +='d2.`owner`, ';
 			squery +='d2.owneraddress ';
 			squery +='FROM `KML_from_LUPMIS` d1 INNER JOIN property d2 ON d1.UPN = d2.upn ';
 			squery +='WHERE d1.districtid='+<?php echo json_encode($_GET['districtid']) ?>+' AND TRIM(UPPER(LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1)))!= ';
-			squery +='TRIM(IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
-			squery +='UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1))), '; 
+			squery +='TRIM(IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", ';
+			squery +='UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1))), ';
 			squery +='CONCAT( UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), " ", d2.housenumber))) ';
 			squery +='GROUP BY `d1`.`UPN`; ';
-	
+
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List Property UPNs that have different Street Name than the parcel";
 		document.getElementById('report'+opt).value="01LREwrongPropertyStreename";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	case 11:  
-		var squery = 'SELECT d1.UPN as UPNinLocalplan, '; 
-			squery +='LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1) as StreetnameInLocalplan, '; 
-			squery +='d1.ParcelOf, '; 
-			squery +='d2.upn as UPNinBusiness, '; 
-			squery +='IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
-			squery +='LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), '; 
+	case 11:
+		var squery = 'SELECT d1.UPN as UPNinLocalplan, ';
+			squery +='LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1) as StreetnameInLocalplan, ';
+			squery +='d1.ParcelOf, ';
+			squery +='d2.upn as UPNinBusiness, ';
+			squery +='IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", ';
+			squery +='LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), ';
 			squery +='CONCAT( LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1), " ", d2.housenumber)) ';
 			squery +='as StreetnameInBusiness, ';
-			squery +='d2.`owner`, '; 
+			squery +='d2.`owner`, ';
 			squery +='d2.owneraddress ';
 			squery +='FROM `KML_from_LUPMIS` d1 INNER JOIN business d2 ON d1.UPN = d2.upn ';
 			squery +='WHERE d1.districtid='+<?php echo json_encode($_GET['districtid']) ?>+' AND TRIM(UPPER(LEFT(d1.address, LENGTH(d1.`Address`) - LENGTH(SUBSTRING_INDEX(d1.`Address`," ",-1))-1)))!= ';
-			squery +='TRIM(IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", '; 
-			squery +='UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1))), '; 
+			squery +='TRIM(IF (SUBSTR(d1.Address,1,2) REGEXP "[0-9]", CONCAT(d2.housenumber," ", ';
+			squery +='UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1))), ';
 			squery +='CONCAT( UPPER(LEFT(d2.`streetname`, LENGTH(d2.`streetname`) - LENGTH(SUBSTRING_INDEX(d2.`streetname`," ",-1))-1)), " ", d2.housenumber))) ';
 			squery +='GROUP BY `d1`.`UPN`; ';
-	
+
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="List BOP UPNs that have different Street Name than the parcel";
 		document.getElementById('report'+opt).value="01LREwrongBOPStreename";
 		var target = document.getElementById('spin'+opt);
 	  break;
-	default:  
+	default:
 	}
 spin.spin(target);
 
@@ -390,7 +390,7 @@ var handlerParameter = {spin: spin, opt: opt, sfile: sfile, template: template};
 
 //issue the XMLHTTPRequest to process the export in the background
 var request = OpenLayers.Request.POST({
-	url: pageURL, 
+	url: pageURL,
 	data: OpenLayers.Util.getParameterString(
 	{squery: squery,
 	 sfile : sfile,
@@ -403,11 +403,11 @@ var request = OpenLayers.Request.POST({
 });
 
 //    var popupWindow = window.open (pageURL, "_self", title);
-//spinner.stop();    
+//spinner.stop();
 }
 
 function handler(request){
-// this is the object used in scope 
+// this is the object used in scope
 // console.log(this);
 // alert(this.opt);
 var sqy = "SELECT * from area_district"; // WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
@@ -425,7 +425,7 @@ this.spin.stop();
 }
 
 //-----------------------------------------------------------------------------
-		//function tablepreview() 
+		//function tablepreview()
 		//opens a window to show tabular data about the corresponding map
 		//
 //-----------------------------------------------------------------------------
@@ -433,11 +433,11 @@ function tablepreview(opt) {
 
 	var popupWindow = null;
   var title = 'Preview';
-  
+
 //  if (typeof document.getElementById('template'.opt) != 'undefined') {
 //  		alert(document.getElementById('template'.opt).value);}else{
 //  		alert('undefinded');}
- 		
+
 
 //   if (!!document.getElementById('template'+opt) || !document.getElementById('template'+opt).value=== null ){
 // 	 var template = document.getElementById('template'+opt).value;
@@ -447,7 +447,7 @@ function tablepreview(opt) {
 // 	}
 
 
-//call openPDFprint with title and pageURL as the two arguments	
+//call openPDFprint with title and pageURL as the two arguments
 	var pageURL = 'openPDFprint.php?title='+title+'&pageURL='+pageURL;
 // var pageURL = 'php/Reports/BillsRegister.php?target='+target+'&districtid='+globaldistrictid;
 	var w = 1024;
@@ -464,10 +464,10 @@ function tablepreview(opt) {
 //     var left = (screen.width/2)-(w/2);
 //     var top = (screen.height/2)-(h/2);
 //     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-  
+
   //var popupWindow = window.open (pageURL, "_self", title);
 
-   //alert('in prev');  
+   //alert('in prev');
 	if(popupWindow && !popupWindow.closed)
 	{
 		popupWindow.focus();
@@ -475,7 +475,7 @@ function tablepreview(opt) {
 
 	return false;
 
-} 
+}
 // end of function tablepreview
 
 

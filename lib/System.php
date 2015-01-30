@@ -1,16 +1,16 @@
 <?php
- 	require_once( "../lib/configuration.php"	);
+ 	require_once( "configuration.php"	);
 
 	/*
-	 *	System Class 
+	 *	System Class
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */
 	class System
-	{	
+	{
 		/*
 		 *	Manage: YEAR
 		 ************************************************
-		 */	
+		 */
 		function GetConfiguration($id = "")
 		{
 // 			$q = mysql_query("SELECT * FROM `system_config` WHERE `variable` = '".$id."'");
@@ -20,12 +20,12 @@
  try {
 		$conn = new PDO(cDsn, cUser, cPass);
 		$st = $conn->prepare(" SELECT * FROM `system_config` WHERE `variable` = :id");
-		if (!$st->execute(array('id' => $id))) 
+		if (!$st->execute(array('id' => $id)))
 		  throw new Exception('[' . $stmt->errorCode() . ']: ' . $stmt->errorInfo());
 		$count = $st->rowCount();
 //		echo $count.' count';
-	} 
-	
+	}
+//
 	catch(PDOException $e) {
 			echo 'Error:<br/>' . $e->getMessage();
 	}
@@ -36,11 +36,11 @@
 			elseif ($count==1)  //table system_config contains the needed information
 				{
 					$r = $st->fetchAll(PDO::FETCH_ASSOC);
-					return $r[0]['value'];
+				return $r[0]['value'];
 // 			return $r['value'];
 				}
-			
+
 		}
-		
+
 	}
 ?>

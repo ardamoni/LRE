@@ -10,9 +10,9 @@
 	require_once( "../lib/StatisticsClass.php"			);
 
 	$System = new System;
-	
+
 	$year = $System->GetConfiguration("RevenueCollectionYear");
-	
+
 	$dbaction = $_POST['dbaction'];
 	$clickfeature = $_POST['clickfeature'];
 	$upn = $_POST['upn'];
@@ -23,12 +23,12 @@
 	$zoneid = $_POST['zoneid'];
 	$districtid = $_POST['districtid'];
 	$searchupn = $_POST['searchupn'];
-	$propincz = $_POST['propincz'];	
+	$propincz = $_POST['propincz'];
 	$busincz = $_POST['busincz'];
 	$starget = $_POST['starget'];
 	$sString = $_POST['sString'];
 	$searchlayer = $_POST['searchlayer'];
-	
+
 
 //	$dbaction = $_GET['action'];
 //	$clickfeature = $_GET['clickfeature'];
@@ -55,9 +55,9 @@
   if ($dbaction=='deleteCZ'){deleteCZ($zoneid);}
 
   if ($dbaction=='searchupn'){searchupn($searchupn);}
-  
+
   if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz);}
-  
+
   if ($dbaction=='searchOther'){searchOther($districtid, $starget, $sString, $searchlayer);}
 
 //----------end of loader -------------------------------------------------------------------
@@ -65,7 +65,7 @@
 
 
 //-----------------------------------------------------------------------------
-		//function feedUPNinfo() 
+		//function feedUPNinfo()
 		//retrieves information according to the passed UPN
 		//expects clickfeature and sub as $_POST parameters
 //-----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 	$dataFromJS = $clickfeature;
 	//echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
 	// sub==true indicates that the hand-over was done with CDATA content
-	if( $sub == "true" ) 
+	if( $sub == "true" )
 	{
 		$upn = strstr( $dataFromJS, 'UPN: ' );
 		$upn = substr( $upn, 9, 13 );
@@ -86,15 +86,15 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 	{
 		$upn = $dataFromJS;
 	}
-	
+
 	//we need the Current Year hence we query for ReveneuCollectionYear in sys_config
-	$rsys_config = mysql_query("SELECT * 	FROM	`system_config`");	
+	$rsys_config = mysql_query("SELECT * 	FROM	`system_config`");
 	$sys_config_content = array();
 	//now we put the result into a multi dimensional array
 	while ($rasys_config = mysql_fetch_assoc($rsys_config)) { //get the content of our query and store it in an array
 		$sys_config_content[] = array ( $rasys_config['variable'] => $rasys_config['value'] );
 	};
-	
+
 //	now get the corresponding value out of the multidimensional array
 	foreach($sys_config_content as $temp) {
 		foreach($temp as $key => $value) {
@@ -104,26 +104,26 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		}
 	}
 
-	
+
 	$data = array();
-	
+
 	// match UPN
-//	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."'" ); //$upn."' AND `year` = '2013' " );	
-	$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
-							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d2.`year`, d1.`pay_status`, d1.`property_use`, 
+//	$query = mysql_query( "SELECT * FROM `property` WHERE `upn` = '".$upn."'" ); //$upn."' AND `year` = '2013' " );
+	$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`,
+							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d2.`year`, d1.`pay_status`, d1.`property_use`,
 							d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`
-							from `property` d1, `fee_fixing_property` d2 
-							WHERE d1.`upn` = '".$upn."' 
-							AND d1.`districtid`=d2.`districtid` 
-							AND d1.`property_use`=d2.`code` 
-							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, length(d1.`subupn`), d1.`subupn`;");							
-							
+							from `property` d1, `fee_fixing_property` d2
+							WHERE d1.`upn` = '".$upn."'
+							AND d1.`districtid`=d2.`districtid`
+							AND d1.`property_use`=d2.`code`
+							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, length(d1.`subupn`), d1.`subupn`;");
+
 	$count = mysql_num_rows($query);
 	if ($count>0){
-	while( $row = mysql_fetch_assoc( $query ) ) 
-	{		
+	while( $row = mysql_fetch_assoc( $query ) )
+	{
 		$json 						= array();
-		
+
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
@@ -146,13 +146,13 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		//echo $row["upn"];
 	}
 	}else{
-		$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
-							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`,d1.`pay_status`, d1.`property_use`, d1.`districtid`							
+		$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`,
+							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`,d1.`pay_status`, d1.`property_use`, d1.`districtid`
 							from `property` d1
-							WHERE d1.`upn` = '".$upn."';");		
-							
-		while( $row = mysql_fetch_assoc( $query ) ) 
-		{		
+							WHERE d1.`upn` = '".$upn."';");
+
+		while( $row = mysql_fetch_assoc( $query ) )
+		{
 		$json 						= array();
 		$json['upn'] 				= $upn;
 		$json['subupn'] 			= $row['subupn'];
@@ -168,13 +168,13 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$data[] 					= $json;
 		}
 	}
-	
+
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 
 //-----------------------------------------------------------------------------
-		//function feedBusinessinfo() 
+		//function feedBusinessinfo()
 		//retrieves information according to the passed UPN
 		//expects clickfeature and sub as $_POST parameters
 //-----------------------------------------------------------------------------
@@ -183,13 +183,13 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 //	require_once( "../lib/configuration.php"	);
 
 	$Data = new Revenue;
-	$System = new System;	
+	$System = new System;
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
   	// upn
 	$dataFromJS = $clickfeature;
 //echo 'inside feedUPNinfo '.$dbaction.' '.$clickfeature.' '.$sub;
 	// sub==true indicates that the hand-over was done with CDATA content
-	if( $sub == "true" ) 
+	if( $sub == "true" )
 	{
 		$upn = strstr( $dataFromJS, 'UPN: ' );
 		$upn = substr( $upn, 9, 13 );
@@ -198,38 +198,38 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 	{
 		$upn = $dataFromJS;
 	}
-	
-	$data = array();
-	
-	// match UPN
-//	$query = mysql_query( "SELECT * FROM business WHERE upn = '".$upn."'" );	
 
-// 	$statment = $pdo->query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
-// 							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d2.`year`, d1.`pay_status`, d1.`business_class`, 
-// 							d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name` 
-// 							from `business` d1, `fee_fixing_business` d2, `area_district` d3 
-// 							WHERE d1.`upn` = '".$upn."' 
-// 							AND d1.`districtid`=d2.`districtid` 
-// 							AND d1.`business_class`=d2.`code` 
-// 							AND d2.`year`='".$currentYear."' 
+	$data = array();
+
+	// match UPN
+//	$query = mysql_query( "SELECT * FROM business WHERE upn = '".$upn."'" );
+
+// 	$statment = $pdo->query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`,
+// 							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d2.`year`, d1.`pay_status`, d1.`business_class`,
+// 							d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`, d3.`district_name`
+// 							from `business` d1, `fee_fixing_business` d2, `area_district` d3
+// 							WHERE d1.`upn` = '".$upn."'
+// 							AND d1.`districtid`=d2.`districtid`
+// 							AND d1.`business_class`=d2.`code`
+// 							AND d2.`year`='".$currentYear."'
 // 							AND d2.`districtid`=d3.`districtid`;");
 
-	$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
-							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d2.`year`, d1.`pay_status`, d1.`business_class`, 
+	$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`,
+							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d2.`year`, d1.`pay_status`, d1.`business_class`,
 							d2.`code`, d2.`class`, d2.`rate`, d1.`districtid`
 							from `business` d1, `fee_fixing_business` d2
-							WHERE d1.`upn` = '".$upn."' 
-							AND d1.`districtid`=d2.`districtid` 
-							AND d1.`business_class`=d2.`code` 
-							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, length(d1.`subupn`), d1.`subupn`;");	
+							WHERE d1.`upn` = '".$upn."'
+							AND d1.`districtid`=d2.`districtid`
+							AND d1.`business_class`=d2.`code`
+							AND d2.`year`='".$currentYear."' ORDER BY d1.`upn`, length(d1.`subupn`), d1.`subupn`;");
 
 	$count = mysql_num_rows($query);
 	if ($count>0){
- 	while( $row = mysql_fetch_assoc( $query ) ) 	
-// 	while( $row = $statement->fetch(PDO::FETCH_BOTH)) 
+ 	while( $row = mysql_fetch_assoc( $query ) )
+// 	while( $row = $statement->fetch(PDO::FETCH_BOTH))
 	{
 		$json 						= array();
-		
+
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
@@ -237,7 +237,7 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
  		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
  		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "due" ),2,'.','' ); //$row['revenue_due'];
  		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "paid" ),2,'.','' ); //$row['revenue_collected'];
- 		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "balance" ),2,'.','' ); 
+ 		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "balance" ),2,'.','' );
 
 // 		$json['pay_status'] 		= $row['pay_status'];
 // 		$json['revenue_due'] 		= $row['revenue_due'];
@@ -250,16 +250,16 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 		$json['owneraddress'] 		= $row['owneraddress'];
 		$json['owner_tel'] 			= $row['owner_tel'];
 		$json['owner_email'] 		= $row['owner_email'];
-		
+
 		$data[] 					= $json;
 		//echo $row["upn"];
 	}
 		}else{
-		$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`, 
-							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d1.`pay_status`, d1.`business_class`, 
+		$query=mysql_query("SELECT d1.`id`, d1.`upn`, d1.`subupn`, d1.`owner`, d1.`streetname`, d1.`housenumber`, d1.`owner`,
+							d1.`owneraddress`, d1.`owner_tel`, d1.`owner_email`, d1.`business_name`, d1.`pay_status`, d1.`business_class`,
 							d1.`districtid`
 							from `business` d1
-							WHERE d1.`upn` = '".$upn."';");	
+							WHERE d1.`upn` = '".$upn."';");
 	 	while( $row = mysql_fetch_assoc( $query ) )
 	 	{
 		$json 						= array();
@@ -279,15 +279,15 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
-    
+
 //-----------------------------------------------------------------------------
-				//function getlocalplan() 
-				//collects polygon information 
+				//function getlocalplan()
+				//collects polygon information
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getlocalplan($districtid) 
+function getlocalplan($districtid)
 {
-	// get the polygons out of the database 
+	// get the polygons out of the database
 //	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d1.LUPMIS_color, d1.Address, d1.Landuse, d1.ParcelOf, d2.unit_planning from `KML_from_LUPMIS` d1, `property` d2 WHERE d1.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."' ORDER BY d1.UPN;";
 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d1.LUPMIS_color, d1.Address, d1.Landuse, d1.ParcelOf from `KML_from_LUPMIS` d1 WHERE d1.`districtid`='".$districtid."' ORDER BY d1.UPN;";
 	$query = mysql_query($run);
@@ -304,25 +304,25 @@ function getlocalplan($districtid)
 	$json['Landuse'] 	= $row['Landuse'];
 	$json['ParcelOf'] 	= $row['ParcelOf'];
 	$json['unit_planning'] 	= $row['unit_planning'];
-	
+
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
-				//function getproperty() 
-				//collects polygon information 
+				//function getproperty()
+				//collects polygon information
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getproperty($districtid, $upn) 
+function getproperty($districtid, $upn)
 {
 	$Data = new Revenue;
-	$System = new System;	
+	$System = new System;
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 
 
-	// get the polygons out of the database 
+	// get the polygons out of the database
 	$subupn = "";
 	if (!isset($upn)) {
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d1.`districtid`, d3.`subupn`, d3.`balance`
@@ -334,7 +334,7 @@ function getproperty($districtid, $upn)
 	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`
 	ORDER BY d3.`upn`, d3.`subupn`;";
 	}
-// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
+// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance
 // 			from `KML_from_LUPMIS` d1, property d2, property_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 	$query = mysql_query($run);
 
@@ -353,20 +353,20 @@ function getproperty($districtid, $upn)
 				$payStatus=9;
 			}
 		if (empty($row['subupn'])) {
-			$payStatus = $payStatus; 
+			$payStatus = $payStatus;
 			$payStatus9=false;
 		} else {
 			if ($payStatus==9){
 				 $payStatus9=true;}
-			 
+
 			if ($payStatus9){
 //				$balanceTotal = $Data->getBalanceTotal( $row['UPN'], $row['districtid'], $currentYear, "property", "sumbalance");
 				if($Data->getBalanceTotal( $row['UPN'], $row['districtid'], $currentYear, "property", "sumbalance") > 0)
-				{				
+				{
 				 $payStatus = 5;} else {
 				 $payStatus = 9;
 				 }
-			}	 
+			}
 		}
 		$json['id'] 		= $row['id'];
 		$json['upn'] 		= $row['UPN'];
@@ -381,19 +381,19 @@ function getproperty($districtid, $upn)
 }
 
 //-----------------------------------------------------------------------------
-				//function getbusiness() 
-				//collects polygon information 
+				//function getbusiness()
+				//collects polygon information
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getbusiness($districtid, $upn) 
+function getbusiness($districtid, $upn)
 {
 
 	$Data = new Revenue;
-	$System = new System;	
+	$System = new System;
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 
 
-	// get the polygons out of the database 
+	// get the polygons out of the database
 	$subupn = "";
 	if (!isset($upn)) {
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
@@ -404,7 +404,7 @@ function getbusiness($districtid, $upn)
 		FROM `business_balance` d3
 		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d3.`districtid`='".$districtid."';";
 	}
-// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance 
+// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance
 // 			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
 
 	$query = mysql_query($run);
@@ -425,21 +425,21 @@ function getbusiness($districtid, $upn)
 			$payStatus=9;
 		}
 	if (empty($row['subupn'])) {
-//		$payStatus = $row['pay_status']; 
-		$payStatus = $payStatus; 
+//		$payStatus = $row['pay_status'];
+		$payStatus = $payStatus;
 		$payStatus9=false;
 	} else {
 //		if ($row['pay_status']==9){
 		if ($payStatus==9){
 			 $payStatus9=true;}
-			 
+
 		if ($payStatus9){
 			if($Data->getBalanceTotal( $row['UPN'], $row['districtid'], $currentYear, "business", "sumbalance") > 0)
-			{				
+			{
 			 $payStatus = 5;} else {
 			 $payStatus = 9;
 			 }
-		}	 
+		}
 	}
 	$json['id'] 		= $row['id'];
 	$json['upn'] 		= $row['UPN'];
@@ -454,16 +454,16 @@ function getbusiness($districtid, $upn)
 
 
 //-----------------------------------------------------------------------------
-				//function getdistrictmap() 
-				//collects polygon information 
+				//function getdistrictmap()
+				//collects polygon information
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getdistrictmap() 
+function getdistrictmap()
 {
-	// get the polygons out of the database 
+	// get the polygons out of the database
 //	$run = "SELECT * from `KML_from_districts`;";
-	
-	$run = "SELECT t1.`id`, t1.`boundary` ,t1.`districtname`, t2.`district_name`, t2.`districtid`, t2.`activestatus` 
+
+	$run = "SELECT t1.`id`, t1.`boundary` ,t1.`districtname`, t2.`district_name`, t2.`districtid`, t2.`activestatus`
 	from `KML_from_districts` t1, `area_district` t2 WHERE t1.`districtname`=t2.`district_name`;";
 //	$run = "SELECT t2.`id`, t2.`boundary` , t2.`district_name`, t2.`activestatus` from `area_district` t2;";
 //	$run = "SELECT * from `area_district`;";
@@ -486,16 +486,16 @@ function getdistrictmap()
  	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
-				//function getregionmap() 
-				//collects polygon information 
+				//function getregionmap()
+				//collects polygon information
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getregionmap($year) 
+function getregionmap($year)
 {
 
 	$Stats = new StatsData;
 
-	// get the polygons out of the database 
+	// get the polygons out of the database
 //	$run = "SELECT * from `KML_from_regions`;";
 	$run = "SELECT * from `area_region`;";
 	$query = mysql_query($run);
@@ -512,34 +512,34 @@ function getregionmap($year)
 	$json['TotalPropertyDue'] 	= number_format( $Stats->getTotalPropertyDueForRegion( $row['regionid'], $year),2,'.',',' );
 	$json['TotalPropertyExpected'] 	= number_format($Stats->getTotalPropertyExpected(  $row['regionid'], $year),2,'.',',' );
 	$json['TotalPropertyPayments'] 	= number_format($Stats->getTotalPropertyPayments(  $row['regionid'], $year),2,'.',',' );
-	$json['TotalPropertyBalance'] 	= number_format($Stats->getTotalPropertyDueForRegion( $row['regionid'], $year)-$Stats->getTotalPropertyPayments(  $row['regionid'], $year),2,'.',',' );	
+	$json['TotalPropertyBalance'] 	= number_format($Stats->getTotalPropertyDueForRegion( $row['regionid'], $year)-$Stats->getTotalPropertyPayments(  $row['regionid'], $year),2,'.',',' );
 	$json['TotalBusinessDue'] 	= number_format( $Stats->getTotalBusinessDueForRegion( $row['regionid'], $year),2,'.',',' );
 	$json['TotalBusinessExpected'] 	= number_format($Stats->getTotalBusinessExpected(  $row['regionid'], $year),2,'.',',' );
 	$json['TotalBusinessPayments'] 	= number_format($Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );
 // 	$json['TotalBusinessBalance'] 	= number_format($json['TotalBusinessExpected']-$json['TotalBusinessPayments'],2,'.',',' );
-	$json['TotalBusinessBalance'] 	= number_format($Stats->getTotalBusinessDueForRegion( $row['regionid'], $year)-$Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );	
-	
+	$json['TotalBusinessBalance'] 	= number_format($Stats->getTotalBusinessDueForRegion( $row['regionid'], $year)-$Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );
+
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
-				//function insertCZ() 
-				//inserts or updates polygon information into table collectorzones 
+				//function insertCZ()
+				//inserts or updates polygon information into table collectorzones
 				//expects  zoneid, polygon, collector, zonecolour as $_POST parameters
 //-----------------------------------------------------------------------------
-function insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour) 
+function insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour)
 {
    if (empty($zoneid)){
    	$data 				= array();
 
-	// insert new collector zone 
+	// insert new collector zone
     $run = "INSERT INTO collectorzones (polygon, collectorid, zone_colour, districtid) VALUES ('".$polygon."', '".$collector."', '".$zonecolour."', '".$districtid."');";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 
 	$run = "SELECT * FROM collectorzones WHERE polygon = '".$polygon."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 	$data 				= array();
 	$json 				= array();
 
@@ -549,17 +549,17 @@ function insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour)
 			$json['collectorid']	= $row['collectorid'];
 			$json['districtid']	= $row['districtid'];
 		}
-	
+
     $data[] 			= $json;
 
    }else{
-	// update existing collector zone 
-	
+	// update existing collector zone
+
     $run = "UPDATE collectorzones SET polygon='".$polygon."', collectorid='".$collector."', zone_colour='".$zonecolour."', districtid='".$districtid."' WHERE id='".$zoneid."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 
 	$run = "SELECT * FROM collectorzones WHERE polygon = '".$polygon."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 	$data 				= array();
 //   if (!empty($query)){
 	$json 				= array();
@@ -569,23 +569,23 @@ function insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour)
 			$json['collectorid']	= $row['collectorid'];
 			$json['districtid']	= $row['districtid'];
 		}
-	
+
     $data[] 			= $json;
 //	 }//end if
-	}//end else 
+	}//end else
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 
 //-----------------------------------------------------------------------------
-				//function getCZ() 
-				//collects the existing polygon information from table collectorzones 
+				//function getCZ()
+				//collects the existing polygon information from table collectorzones
 				//expects  districtid as $_POST parameters
 //-----------------------------------------------------------------------------
-function getCZ($districtid) 
+function getCZ($districtid)
 {
 	$run = "SELECT * FROM collectorzones WHERE districtid = '".$districtid."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 	$data 				= array();
 //   if (!empty($query)){
 	$json 				= array();
@@ -598,22 +598,22 @@ function getCZ($districtid)
 
 			$data[] 					= $json;
 		}
-	
+
 //	 }//end if
-//	}//end else 
+//	}//end else
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
-				//function deleteCZ() 
-				//deletes the record for the selected zoneid from table collectorzones 
+				//function deleteCZ()
+				//deletes the record for the selected zoneid from table collectorzones
 				//expects  zoneid as $_POST parameters
 //-----------------------------------------------------------------------------
-function deleteCZ($zoneid) 
+function deleteCZ($zoneid)
 {
 	$run = "DELETE FROM collectorzones WHERE id = '".$zoneid."' LIMIT 1;";
-	
-	$query = mysql_query($run);  
+
+	$query = mysql_query($run);
 
 	$affectedrows = (mysql_affected_rows($con)== 1) ? true : false;
 	$data 				= array();
@@ -621,18 +621,18 @@ function deleteCZ($zoneid)
 	$json 				= array();
 			$json['deleted'] 				= $affectedrows;
 			$data[] 					= $json;
-	
+
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 //-----------------------------------------------------------------------------
-				//function searchupn() 
+				//function searchupn()
 				//searches for a upn and returns
 //-----------------------------------------------------------------------------
-function searchupn($searchupn) 
+function searchupn($searchupn)
 {
 	$run = "SELECT * FROM collectorzones WHERE districtid = '".$districtid."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 	$data 				= array();
 //   if (!empty($query)){
 	$json 				= array();
@@ -645,18 +645,18 @@ function searchupn($searchupn)
 
 			$data[] 					= $json;
 		}
-	
+
 //	 }//end if
-//	}//end else 
+//	}//end else
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 
 //-----------------------------------------------------------------------------
-				//function searchOther() 
+				//function searchOther()
 				//searches for a street or a name and returns the found upns
 //-----------------------------------------------------------------------------
-function searchOther($districtid, $starget, $sString, $searchlayer) 
+function searchOther($districtid, $starget, $sString, $searchlayer)
 {
 
 //debug_to_console( "Test:".$starget.' '.$sString.' '.$searchlayer );
@@ -677,29 +677,31 @@ function searchOther($districtid, $starget, $sString, $searchlayer)
 	$run = "SELECT * FROM business WHERE districtid = '".$districtid."' AND `streetname` LIKE '%".$sString."%';";
 	}
   }
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 	$data 				= array();
 //   if (!empty($query)){
 	$json 				= array();
 		while ($row = mysql_fetch_assoc($query)) {
-			$json['upn'] 				= $row['upn'];			
+			$json['upn'] 				= $row['upn'];
+			$json['owner'] 				= $row['owner'];
+			$json['streetname'] 		= $row['streetname'];
 			$data[] 					= $json;
 		}
-	
+
 //	 }//end if
-//	}//end else 
+//	}//end else
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
 
 
 //-----------------------------------------------------------------------------
-				//function updateCZinProp() 
-				//updates the colzone_id in property and business to 
+				//function updateCZinProp()
+				//updates the colzone_id in property and business to
 				//propincz=Property in Collector Zone
 				//busincz =Business in Collector Zone
 //-----------------------------------------------------------------------------
-function updateCZinProp($propincz, $busincz) 
+function updateCZinProp($propincz, $busincz)
 {
 
 $json_decoded=json_decode($propincz);
@@ -712,7 +714,7 @@ $jsonBus 				= array();
 //the data comes in as a multidimensional array, hence we need to go through the array to identify the values
 foreach ($json_decoded as $key => $value)
 {
-    foreach ($value as $k => $val)    
+    foreach ($value as $k => $val)
     {
     	if ($k=='upn'){
 		$json['upn'] =  $val;
@@ -721,23 +723,23 @@ foreach ($json_decoded as $key => $value)
 		$json['colzone'] =  $val;
 		}
 //        echo "$k | $val <br />";
-    } 
+    }
 if (!empty($propincz)){
     $run = "UPDATE `property` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
 //    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 //	$json['message'] = 'Done!';
 	}else{
 		$json['message'] = 'Property Empty!';
 	}
 	$json['message'] = 'Property Done!';
-	$data[] = $json;	
+	$data[] = $json;
 
 }
 
 foreach ($json_decodedBus as $key => $value)
 {
-    foreach ($value as $k => $val)    
+    foreach ($value as $k => $val)
     {
     	if ($k=='upn'){
 		$jsonBus['upn'] =  $val;
@@ -746,23 +748,23 @@ foreach ($json_decodedBus as $key => $value)
 		$jsonBus['colzone'] =  $val;
 		}
 //        echo "$k | $val <br />";
-    } 
+    }
 
 if (!empty($busincz)){
     $run = "UPDATE `business` SET `colzone_id`='".$jsonBus['colzone']."' WHERE upn='".$jsonBus['upn']."';";
 //    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
-	$query = mysql_query($run);  
+	$query = mysql_query($run);
 //	$json['message'] = 'Done!';
 	}else{
 		$jsonBus['message'] = 'Business Empty!';
 	}
 	$jsonBus['message'] = 'Business Done!';
-	$data[] = $jsonBus;	
+	$data[] = $jsonBus;
 
 }
 
 //	 }//end if
-//	}//end else 
+//	}//end else
 	header("Content-type: application/json");
 	echo json_encode($data);
 }

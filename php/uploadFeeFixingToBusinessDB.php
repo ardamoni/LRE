@@ -22,19 +22,20 @@ date_default_timezone_set('Europe/London');
 <h1>PHPExcel Workbook Upload</h1>
 <h2>Fee Fixing Upload</h2>
 <?php
-require_once('../lib/feefixingBClass.php');
+
 require_once("../lib/System.php");
+require_once('../lib/feefixingBClass.php');
 
 $System = new System;
 
-// if ($System->GetConfiguration("PeriodForBillsYear")!='empty')
-// {
+if ($System->GetConfiguration("PeriodForBillsYear")!='empty')
+{
 	$aYears = explode(",",$System->GetConfiguration("PeriodForBillsYear"));
-// }
+}
 
-$aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
-$aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
-$aDays = explode(",",$System->GetConfiguration("PeriodForBillsDay"));
+// $aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
+// $aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
+// $aDays = explode(",",$System->GetConfiguration("PeriodForBillsDay"));
 
 global $feefixb;
 
@@ -48,15 +49,15 @@ include 'PHPExcel/IOFactory.php';
 
 define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 
-//var_dump($_POST);
+// var_dump($_POST);
 
-//get the variables passed from parent	
+//get the variables passed from parent
 	$inputFileName = $_POST['inputFileName'];
 	$inputYear = $_POST['year'];
 //check which tables need to be used
 
 	$targetTable = $feefixb->tell_table_name();
-	
+
 
 	//echo $inputFileName;
 
@@ -95,7 +96,7 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 	//$objReader = PHPExcel_IOFactory::load($inputFileName);
 
 	$worksheetData = $objReader->listWorksheetInfo($inputFileName);
-	
+
 
 	echo '<h3>Worksheet Information</h3>';
 	echo '<ol>';
@@ -117,45 +118,46 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 		$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 		echo '<h3>The following Cell Content of '.$filterrows.' row(s) was uploaded to the table "'.$targetTable.'" </h3>';
 		echo '<ol>';
-//var_dump($sheetData);
+// var_dump($sheetData);
 		echo "<table class='demoTbl' border='1' cellpadding='10' cellspacing='1' bgcolor='#FFFFFF'>";
 		//echo "<tr>";
 		//set count for first row, which most probably is the column descriptor and we don't want that in the db
 		$firstrow=1;
 		foreach ($sheetData as $cellData) {
-		$unit='y';
-		//check the validity period of the item
-		if (in_array($cellData['E'], $aYears))
-		{
-		  $unit='y';
-		}
-		elseif (in_array($cellData['E'], $aMonths))
-		{
-		  $unit='m';
-		}
-		elseif (in_array($cellData['E'], $aWeeks))
-		{
-		  $unit='w';
-		}
-		elseif (in_array($cellData['E'], $aDays))
-		{
-		  $unit='d';
-		}
+			$unit='y';
+			//check the validity period of the item
+			if (in_array($cellData['E'], $aYears))
+			{
+			  $unit='y';
+			}
+			elseif (in_array($cellData['E'], $aMonths))
+			{
+			  $unit='m';
+			}
+			elseif (in_array($cellData['E'], $aWeeks))
+			{
+			  $unit='w';
+			}
+			elseif (in_array($cellData['E'], $aDays))
+			{
+			  $unit='d';
+			}
 
 			 echo "<tr>";
-//var_dump($cellData);
+// echo $firstrow.'<br>';
+// var_dump($cellData);
 				$feefixb->code=$cellData['A'];
 				$feefixb->class=ltrim($cellData['B'],' ');
 				$feefixb->category=$cellData['C'];
 				$feefixb->rate=$cellData['D'];
-				$feefixb->unit=$unit;
+ 				$feefixb->unit=$unit;
 				$feefixb->assessed=$cellData['F'];
 				$feefixb->rate_impost=$cellData['G'];
 				$feefixb->code_of_zone=$cellData['H'];
 				$feefixb->name_of_zone=$cellData['I'];
 				$feefixb->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'];
-				$feefixb->districtid=$_POST['districtid'];	  
-				$feefixb->year=$_POST['year'];	  
+				$feefixb->districtid=$_POST['districtid'];
+				$feefixb->year=$_POST['year'];
 
 				if ($firstrow > 1){
 						$feefixb->save();
@@ -163,20 +165,20 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 
 			$firstrow++;
 				unset($feefixb->id);
-			 
+
 			foreach ($cellData as $key => $value){
 				  echo "<td>" . $value . "</td>";
 				  }
 		   echo "</tr>";
 		}
-		
+
 		   echo "</table>";
 		echo '</ol>';
 		echo '</li>';
 		echo '<hr />';
 
 	} // end foreach
-	
+
 ?>
 <!--	<form id="form1" name="form1" method="post" action="propertyDetails.php">
 	<input name="inputFileName" type="hidden" id="inputFileName" value = "<?php echo $inputFileName;?>">

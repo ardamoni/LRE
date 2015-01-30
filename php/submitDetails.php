@@ -77,25 +77,25 @@ $username = $_SESSION['user']['user'];
 				    $excluded=1;}
 				    else {
 				    $excluded=0;}
-				    
-				    
-		switch( $type ) 
+
+
+		switch( $type )
 			{
 				case "property":
-					
+
 				$feefi_code = substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1);
 				$feefi_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "property", "rate" );
 				$rate_impost_value = 0;
 				$rate_value = 0;
 				$due = $feefi_value;
 				$balance = $due;
- echo '<br> ffc '.$feefi_code.' - ffv'. 
-				$feefi_value.' - riv '. 
+// debug echo '<br> ffc '.$feefi_code.' - ffv'.
+				$feefi_value.' - riv '.
 				$rate_impost_value.' - rv '.
-				$rate_value.' - d '. 
-				$due.' - b'. 
+				$rate_value.' - d '.
+				$due.' - b'.
 				$balance;
-				
+
 				if ($_POST['prop_value']!= ''){
 					$rate_impost_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "property", "rate_impost" );
 					$rate_value = ($_POST['prop_value']*$rate_impost_value);
@@ -104,13 +104,13 @@ $username = $_SESSION['user']['user'];
 						$balance = $due;
 					}
 				}
- echo '<br> ffc '.$feefi_code.' - ffv'. 
-				$feefi_value.' - riv '. 
+// debug echo '<br> ffc '.$feefi_code.' - ffv'.
+				$feefi_value.' - riv '.
 				$rate_impost_value.' - rv '.
-				$rate_value.' - d '. 
-				$due.' - b'. 
+				$rate_value.' - d '.
+				$due.' - b'.
 				$balance;
-				
+
 
 				if ($_POST['buildPerm']=='yes'){
 					$buildPerm=1;}
@@ -118,11 +118,11 @@ $username = $_SESSION['user']['user'];
 					$buildPerm=0;
 				}
 				//normal update of existing details
-				if ($addDetails=='')  
-				{ 
-					$q = mysql_query(" SELECT 	* 
-										FROM 	`property` 
-										WHERE 	`upn` = '".$upn."' AND 
+				if ($addDetails=='')
+				{
+					$q = mysql_query(" SELECT 	*
+										FROM 	`property`
+										WHERE 	`upn` = '".$upn."' AND
 												`subupn` = '".$subupn."' ;");
 
 					$count = mysql_num_rows($q);
@@ -131,13 +131,13 @@ $username = $_SESSION['user']['user'];
  					    die(mysql_error()); // TODO: better error handling
  					}
 
-					if( !empty($r) ) 
+					if( !empty($r) )
 					{
 						$paid = $Data->getSumPaymentInfo( $upn, $subupn, $districtid, $year, $type = "property" );
 						if ($paid == NULL || $paid == '') {
 						 $paid = 0;
 						}
-//check with PropertyRevenueCollection it is more complex than thought						
+//check with PropertyRevenueCollection it is more complex than thought
 						if ($paid > 0){
 						  $balance = $balance+$paid;
 						  }
@@ -174,15 +174,15 @@ $username = $_SESSION['user']['user'];
 						$result = $pdo->update("property_due", $update, "upn = :upn AND subupn = :subupn", $bind);
 						$result = $pdo->update("property_balance", $update, "upn = :upn AND subupn = :subupn", $bind);
 
-					} 
-				} elseif ($addDetails=='true') {	//we add a new property and need to update property_due, property_balance		
-				echo '<br>inside == true';
-					$st = $pdo->prepare(" SELECT 	* 
-										FROM 	`property` 
+					}
+				} elseif ($addDetails=='true') {	//we add a new property and need to update property_due, property_balance
+// 				echo '<br>inside == true';
+					$st = $pdo->prepare(" SELECT 	*
+										FROM 	`property`
 										WHERE 	`upn` = '".$upn."';");
-				    $st->execute();  
+				    $st->execute();
 					$count = $st->rowCount();
-					
+
 				 if ($count==0)		//this is indeed a new property
 				 	{
  	 					$subupn='';
@@ -202,14 +202,14 @@ $username = $_SESSION['user']['user'];
 						$result = $pdo->update("property_balance", $update, "upn = :upn", $bind);
 
  						$subupn=$upn.chr(65+$count);
- 	 				
- 	 				} 	 				
+
+ 	 				}
  	 			elseif ($count>1)	//more than one property and more than one subupn
  	 				{
  						$subupn=$upn.chr(65+$count);
 					}
-				 
-				//}				 
+
+				//}
 				 //use pdo wrapper
 				    $insert = array(
 						'upn' => $upn,
@@ -256,71 +256,71 @@ $username = $_SESSION['user']['user'];
 				<tr>
 				<td colspan="2"><strong>Property Location</strong></td>
 				</tr>
-				<td>Street name</td><td><?php echo $_POST['street'] ?> </td> 
+				<td>Street name</td><td><?php echo $_POST['street'] ?> </td>
 				</tr>
 				<tr>
-				<td>Housenumber</td><td><?php echo $_POST['Nr_'] ?> </td> 
+				<td>Housenumber</td><td><?php echo $_POST['Nr_'] ?> </td>
 				</tr>
 				<tr>
-				<td>Streetcode</td><td><?php echo $_POST['streetcode'] ?> </td> 
+				<td>Streetcode</td><td><?php echo $_POST['streetcode'] ?> </td>
 				</tr>
 				<tr>
 				<td colspan="2"><strong>Owner Information</strong></td>
 				</tr>
 				<tr>
-				<td>Name</td><td><?php echo $_POST['owner'] ?> </td> 
+				<td>Name</td><td><?php echo $_POST['owner'] ?> </td>
 				</tr>
 				<tr>
-				<td>Address</td><td><?php echo $_POST['ownAddress'] ?> </td> 
+				<td>Address</td><td><?php echo $_POST['ownAddress'] ?> </td>
 				</tr>
 				<tr>
-				<td>Phone</td><td><?php echo $_POST['ownTel'] ?> </td> 
+				<td>Phone</td><td><?php echo $_POST['ownTel'] ?> </td>
 				</tr>
 				<tr>
-				<td>Email</td><td><?php echo $_POST['ownEmail'] ?> </td> 
+				<td>Email</td><td><?php echo $_POST['ownEmail'] ?> </td>
 				</tr>
 				<tr>
-				<td>Building permit available</td><td><?php echo $_POST['buildPerm'] ?> </td> 
+				<td>Building permit available</td><td><?php echo $_POST['buildPerm'] ?> </td>
 				</tr>
 				<tr>
-				<td>Building permit No.</td><td><?php echo $_POST['buildPermNo'] ?> </td> 
+				<td>Building permit No.</td><td><?php echo $_POST['buildPermNo'] ?> </td>
 				</tr>
 				<tr>
 				<td colspan="2"><strong>Property Information</strong></td>
 				</tr>
 				<tr>
-				<td>Locality code</td><td><?php echo $_POST['localCode'] ?> </td> 
+				<td>Locality code</td><td><?php echo $_POST['localCode'] ?> </td>
 				</tr>
 				<tr>
-				<td>Type of Property Use</td><td><?php echo $_POST['propertyType'] ?> </td> 
+				<td>Type of Property Use</td><td><?php echo $_POST['propertyType'] ?> </td>
 				</tr>
 				<tr>
-				<td>Value</td><td><?php echo $_POST['prop_value'] ?> </td> 
+				<td>Value</td><td><?php echo $_POST['prop_value'] ?> </td>
 				</tr>
 				<tr>
-				<td>Excluded from rating</td><td><?php echo $_POST['excluded'] ?> </td> 
+				<td>Excluded from rating</td><td><?php echo $_POST['excluded'] ?> </td>
 				</tr>
 				<tr>
-				<td>Comments</td><td><?php echo $_POST['comments'] ?> </td> 
+				<td>Comments</td><td><?php echo $_POST['comments'] ?> </td>
 				</tr>
 				</table>
 				<br><br>
 				<p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Close"></a></p>
 
 
-<?php				
+<?php
 
 //					echo  mysql_affected_rows();
 				break;
-				
+
 				case "business":
-				if (!$addDetails=='true') 
-				{ 
-					if( !empty($r) ) 
+				if (!$addDetails=='true')
+				{
+					if( !empty($r) )
 					{
-					$q = mysql_query(" SELECT 	* 
-										FROM 	`business` 
-										WHERE 	`upn` = '".$upn."' AND 
+					$q = mysql_query(" SELECT 	*
+										FROM 	`business`
+										WHERE 	`upn` = '".$upn."' AND
 												`subupn` = '".$subupn."' ;");
 
 					$count = mysql_num_rows($q);
@@ -353,10 +353,10 @@ $username = $_SESSION['user']['user'];
 						);
 						$result = $pdo->update("business", $update, "upn = :upn AND subupn = :subupn", $bind);
 
-					} 
-				} elseif ($addDetails=='true') {			
-					$q = mysql_query(" SELECT 	* 
-										FROM 	`business` 
+					}
+				} elseif ($addDetails=='true') {
+					$q = mysql_query(" SELECT 	*
+										FROM 	`business`
 										WHERE 	`upn` = '".$upn."';");
 
 					$count = mysql_num_rows($q);
@@ -379,13 +379,13 @@ $username = $_SESSION['user']['user'];
 						$result = $pdo->update("business", $update, "upn = :upn", $bind);
 
  						$subupn=$upn.'/'.($count+1);
- 	 				
- 	 				} 	 				
+
+ 	 				}
  	 			elseif ($count>1)
  	 				{
  						$subupn=$upn.'/'.($count+1);
 					}
-				 
+
 				 //use pdo wrapper
 				    $insert = array(
 						'upn' => $upn,
@@ -415,7 +415,7 @@ $username = $_SESSION['user']['user'];
 				}
 
 //					return mysql_affected_rows();
-					
+
 ?>
 				<h1>Form Submission Result</h1>
 
@@ -426,68 +426,68 @@ $username = $_SESSION['user']['user'];
 				<tr>
 				<td colspan="2"><strong>Business Location</strong></td>
 				</tr>
-				<td>Street name</td><td><?php echo $_POST['street'] ?> </td> 
+				<td>Street name</td><td><?php echo $_POST['street'] ?> </td>
 				</tr>
 				<tr>
-				<td>Housenumber</td><td><?php echo $_POST['Nr_'] ?> </td> 
+				<td>Housenumber</td><td><?php echo $_POST['Nr_'] ?> </td>
 				</tr>
 				<tr>
-				<td>Streetcode</td><td><?php echo $_POST['streetcode'] ?> </td> 
+				<td>Streetcode</td><td><?php echo $_POST['streetcode'] ?> </td>
 				</tr>
 				<tr>
 				<td colspan="2"><strong>Owner Information</strong></td>
 				</tr>
 				<tr>
-				<td>Name</td><td><?php echo $_POST['owner'] ?> </td> 
+				<td>Name</td><td><?php echo $_POST['owner'] ?> </td>
 				</tr>
 				<tr>
-				<td>Address</td><td><?php echo $_POST['ownAddress'] ?> </td> 
+				<td>Address</td><td><?php echo $_POST['ownAddress'] ?> </td>
 				</tr>
 				<tr>
-				<td>Phone</td><td><?php echo $_POST['ownTel'] ?> </td> 
+				<td>Phone</td><td><?php echo $_POST['ownTel'] ?> </td>
 				</tr>
 				<tr>
-				<td>Email</td><td><?php echo $_POST['ownEmail'] ?> </td> 
+				<td>Email</td><td><?php echo $_POST['ownEmail'] ?> </td>
 				</tr>
 				<tr>
-				<td>Locality code</td><td><?php echo $_POST['localCode'] ?> </td> 
+				<td>Locality code</td><td><?php echo $_POST['localCode'] ?> </td>
 				</tr>
 				<tr>
 				<td colspan="2"><strong>Business Information</strong></td>
 				</tr>
 				<tr>
-				<td>Business name</td><td><?php echo $_POST['businessname'] ?> </td> 
+				<td>Business name</td><td><?php echo $_POST['businessname'] ?> </td>
 				</tr>
 				<tr>
-				<td>Business class</td><td><?php echo $_POST['businessclass'] ?> </td> 
+				<td>Business class</td><td><?php echo $_POST['businessclass'] ?> </td>
 				</tr>
 				<tr>
-				<td>DA assigned number</td><td><?php echo $_POST['daAssignmentNumber'] ?> </td> 
+				<td>DA assigned number</td><td><?php echo $_POST['daAssignmentNumber'] ?> </td>
 				</tr>
 				<tr>
-				<td>Business certificate</td><td><?php echo $_POST['businessCertificate'] ?> </td> 
+				<td>Business certificate</td><td><?php echo $_POST['businessCertificate'] ?> </td>
 				</tr>
 				<tr>
-				<td>Employees</td><td><?php echo $_POST['employees'] ?> </td> 
+				<td>Employees</td><td><?php echo $_POST['employees'] ?> </td>
 				</tr>
 				<tr>
-				<td>Year of establishment</td><td><?php echo $_POST['yearEstablishment'] ?> </td> 
+				<td>Year of establishment</td><td><?php echo $_POST['yearEstablishment'] ?> </td>
 				</tr>
 				<tr>
-				<td>Comments</td><td><?php echo $_POST['comments'] ?> </td> 
+				<td>Comments</td><td><?php echo $_POST['comments'] ?> </td>
 				</tr>
 				</table>
 				<br><br>
 				<p><input type="button" a href="javascript:;" onclick="window.close();" class="orange-flat-small" value="Close"></a></p>
-<?php				
-					
+<?php
+
 				break;
-			 
+
 				default:
 					echo "Your type of entity 'property' or 'business' is not set!";
-			}	
+			}
 ?>
-			
+
 <p>&nbsp;</p>
 </body>
 </html>
