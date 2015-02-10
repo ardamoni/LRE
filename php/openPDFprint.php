@@ -33,7 +33,7 @@ date_default_timezone_set('Europe/London');
 
 </head>
 <body>
-<script src="../lib/OpenLayers/lib/OpenLayers.js"></script> 
+<script src="../lib/OpenLayers/lib/OpenLayers.js"></script>
 <script src="../lib/spin/spin.js"></script>
 
 <!-- Progress information -->
@@ -42,7 +42,7 @@ date_default_timezone_set('Europe/London');
 
 <!-- Target for the spinner -->
 <h1><div><center id="target"></center></div></h1>
-<!-- 
+<!--
 <br/>
 <br/>
  -->
@@ -91,7 +91,7 @@ document.getElementById("PDFcontent").src=pageURL;
 document.getElementById("PDFcontent").width=w;
 document.getElementById("PDFcontent").height=h;
 document.getElementById("PDFcontent").onload=function()	{
-		spin.stop(); 
+		spin.stop();
 		var sd = new Date();
 		var sdate = sd.getDate().toString()+'.'+(sd.getMonth()+1).toString()+'.'+sd.getFullYear().toString()+'-'+sd.getHours().toString()+':'+sd.getMinutes().toString()+'h';//+sd.getSeconds().toString();
 		document.getElementById("information").innerHTML="Process completed! - "+sdate;

@@ -22,9 +22,8 @@ date_default_timezone_set('Europe/London');
 <h1>PHPExcel Workbook Upload</h1>
 <h2>Fee Fixing Upload</h2>
 <?php
-require_once('../lib/configuration.php');
-//require_once('../lib/feefixingClass.php');
-//global $feefixp;
+require_once('../lib/feefixingClass.php');
+global $feefixp;
 
 /** Include path **/
 set_include_path(get_include_path() . PATH_SEPARATOR . '../lib/PHPExcel179/Classes/');
@@ -44,7 +43,7 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 //check which tables need to be used
 
 	if ($_POST['ifproperty']=='1'){
-//		$targetTable = $feefixp->tell_table_name();
+		$targetTable = $feefixp->tell_table_name();
 	}elseif ($_POST['ifproperty']=='0'){
 //		$targetTable = $feefixb->tell_table_name();
 	}
@@ -117,48 +116,59 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 		foreach ($sheetData as $cellData) {
 			 echo "<tr>";
 //var_dump($cellData);
-		$readData = array(
-			'code' => $cellData['A'],
-			'class' => $cellData['B'],
-			'category' => $cellData['C'],
-			'rate' => $cellData['D'],
-			'unit' => $cellData['E'],
-			'assessed' => $cellData['F'],
-			'rate_impost' => $cellData['G'],
-			'code_of_zone' => $cellData['H'],
-			'name_of_zone' => $cellData['I'],
-			'comments' => 'Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'],
-			'districtid' => $_POST['districtid'],
-			'year' => $_POST['year']
-			);
-		$bind = array(
-			":code" => $cellData['A'],
-			":districtid" => $_POST['districtid'],
-			":year" => $_POST['year']
-		);
-		if ($firstrow > 1){
-			$stmt = $pdo->prepare('SELECT * FROM fee_fixing_property WHERE districtid = :districtid AND code = :code AND year = :year');
-			$stmt->bindParam(':districtid', $_POST['districtid'], PDO::PARAM_STR);
-			$stmt->bindParam(':code', $cellData['A'], PDO::PARAM_STR);
-			$stmt->bindParam(':year', $_POST['year'], PDO::PARAM_STR);
-			$stmt->execute();
-//			$stmt = $pdo->select("feefixing_property", "districtid = :districtid AND code = :search AND year = :year", $bind); //prepare('SELECT * FROM feefixing_property WHERE ID=?');
-			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+						$update = array(
+							'streetname' => $_POST['street'],
+							'housenumber' => $_POST['Nr_'],
+							'locality_code' => $_POST['localCode'],
+							'owner' => $_POST['owner'],
+							'owneraddress' => $_POST['ownAddress'],
+							'owner_tel' => $_POST['ownTel'],
+							'owner_email' => $_POST['ownEmail'],
+							'property_use' => substr($_POST['propertyType'], 0, strpos($_POST['propertyType'], ':')-1),
+							'prop_value' => $_POST['prop_value'],
+							'buildingpermit' => $buildPerm,
+							'buildingpermit_no' => $_POST['buildPermNo'],
+							'feefi_code' => $feefi_code,
+							'feefi_unit' => 'y',
+							'feefi_value' => $feefi_value,
+							'rate_impost_value' => $rate_impost_value,
+							'rate_value' => $rate_value,
+							'due' => $due,
+							'paid' => $paid,
+							'balance' => $balance,
+							'excluded' => $excluded,
+							'lastentry_person' => $_SESSION['user']['user'],
+							'lastentry_date' => $today
+							);
+						$bind = array(
+							":upn" => $upn,
+							":subupn" => $subupn
+						);
+						$result = $pdo->update("property", $update, "upn = :upn AND subupn = :subupn", $bind);
 
-			if( ! $row)
-			{
-			$result = $pdo->insert("fee_fixing_property", $readData);
-//				die('nothing found');
-			}else {
-			$result = $pdo->update("fee_fixing_property", $readData, "districtid = :districtid AND code = :search AND year = :year", $bind);
-			}
-		}
+				$feefixp->code=$cellData['A'];
+				$feefixp->class=$cellData['B'];
+				$feefixp->category=$cellData['C'];
+				$feefixp->rate=$cellData['D'];
+				$feefixp->unit=$cellData['E'];
+				$feefixp->assessed=$cellData['F'];
+				$feefixp->rate_impost=$cellData['G'];
+				$feefixp->code_of_zone=$cellData['H'];
+				$feefixp->name_of_zone=$cellData['I'];
+				$feefixp->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'];
+				$feefixp->districtid=$_POST['districtid'];
+				$feefixp->year=$_POST['year'];
 
-		$firstrow++;
+				if ($firstrow > 1){
+						$feefixp->save();
+					}
 
-		foreach ($cellData as $key => $value){
-			  echo "<td>" . $value . "</td>";
-			  }
+			$firstrow++;
+				unset($feefixp->id);
+
+			foreach ($cellData as $key => $value){
+				  echo "<td>" . $value . "</td>";
+				  }
 		   echo "</tr>";
 		}
 

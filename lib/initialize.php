@@ -17,7 +17,7 @@ defined('SITE_ROOT') ? null :
 defined('LIB_PATH') ? null : define('LIB_PATH', SITE_ROOT.DS.'lib');
 
 // load config file first
-require_once(LIB_PATH.DS.'config.php');
+//require_once(LIB_PATH.DS.'config.php');
 require_once(LIB_PATH.DS.'configuration.php');
 // require_once(LIB_PATH.DS.'System.php');
 

@@ -1,7 +1,8 @@
 <?php
-// If it's going to need the database, then it's 
+// If it's going to need the database, then it's
 // probably smart to require it before we start.
 //require_once(LIB_PATH.DS.'database.php');
+
 require_once('database.php');
 
 class DatabaseObject {
@@ -10,12 +11,12 @@ class DatabaseObject {
 	public static function find_all() {
 		return static::find_by_sql("SELECT * FROM ".static::$table_name);
   }
-  
+
   public static function find_by_id($id=0) {
     $result_array = static::find_by_sql("SELECT * FROM ".static::$table_name." WHERE id={$id} LIMIT 1");
 		return !empty($result_array) ? array_shift($result_array) : false;
   }
-  
+
   public static function find_by_sql($sql="") {
     global $database;
     $result_set = $database->query($sql);
@@ -37,7 +38,7 @@ class DatabaseObject {
 	private static function instantiate($record) {
 		// Could check that $record exists and is an array
     $object = new static;
-		
+
 		// More dynamic, short-form approach:
 		foreach($record as $attribute=>$value){
 		  if($object->has_attribute($attribute)) {
@@ -46,7 +47,7 @@ class DatabaseObject {
 		}
 		return $object;
 	}
-	
+
 
 
 	private function has_attribute($attribute) {
@@ -55,7 +56,7 @@ class DatabaseObject {
 	  return array_key_exists($attribute, $this->attributes());
 	}
 
-	protected function attributes() { 
+	protected function attributes() {
 		// return an array of attribute names and their values
 	  $attributes = array();
 	  foreach(static::$db_fields as $field) {
@@ -65,7 +66,7 @@ class DatabaseObject {
 	  }
 	  return $attributes;
 	}
-	
+
 	protected function sanitized_attributes() {
 	  global $database;
 	  $clean_attributes = array();
@@ -76,14 +77,14 @@ class DatabaseObject {
 	  }
 	  return $clean_attributes;
 	}
-	
+
 	public function save() {
 	  // A new record won't have an id yet.
 	  echo $this->id;
 //	  echo 'ekke';
 	  return isset($this->id) ? $this->update() : $this->create();
 	}
-	
+
 	public function create() {
 		global $database;
 		// Don't forget your SQL syntax and good habits:
@@ -133,12 +134,12 @@ class DatabaseObject {
 	  $sql .= " LIMIT 1";
 	  $database->query($sql);
 	  return ($database->affected_rows() == 1) ? true : false;
-	
-		// NB: After deleting, the instance of User still 
+
+		// NB: After deleting, the instance of User still
 		// exists, even though the database entry does not.
 		// This can be useful, as in:
 		//   echo $user->first_name . " was deleted";
-		// but, for example, we can't call $user->update() 
+		// but, for example, we can't call $user->update()
 		// after calling $user->delete().
 	}
 }

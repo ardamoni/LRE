@@ -31,12 +31,12 @@ table.demoTbl td, table.demoTbl th {
 
 table.demoTbl th.first {
     text-align:left;
-    background-color:green; 
+    background-color:green;
     }
 table.demoTbl td.num {
     text-align:right;
     }
-    
+
 table.demoTbl td.foot {
     text-align: center;
 }
@@ -52,19 +52,23 @@ table.demoTbl td.foot {
 <?php
 // DB connection
 require_once( "../lib/configuration.php"	);
-	
+
+//var_dump($_GET);
+
+$displayText = $_GET['displayText'];
 $statement = $pdo->query($_GET['squery']);
 $rs1 = $pdo->query('SELECT FOUND_ROWS()');
-$rowCount = (int) $rs1->fetchColumn(); 
+$rowCount = (int) $rs1->fetchColumn();
 
 $total = $rowCount; //10;
 $j=1;
 $r=1;
 
-print( "The time is " . date("h:i:sa")." - Affected rows: ".$total); 
+print( "The time is " . date("h:i:sa")." - Affected rows: ".$total);
 
 session_start();
 	// match UPN
+	echo $displayText.'<br><br>';
 
 	echo "<table class='demoTbl' border='1' cellpadding='10' cellspacing='1' bgcolor='#FFFFFF'>
 			<tr'>";
@@ -76,8 +80,8 @@ session_start();
 			echo '</tr>';
 
 
-//mysql_fetch_array( $query,MYSQLI_NUM ) ) 
-	while( $row = $statement->fetch(PDO::FETCH_BOTH)) 
+//mysql_fetch_array( $query,MYSQLI_NUM ) )
+	while( $row = $statement->fetch(PDO::FETCH_BOTH))
 	{
 	 echo "<tr>";
 	 for ($x=0; $x<$statement->columnCount(); $x++)
@@ -91,14 +95,14 @@ session_start();
 // This is for the buffer achieve the minimum size in order to flush data
 //     echo str_repeat(' ',1024*64);
 
-    
+
 // Send output to browser immediately
 //     flush();
 
-    
+
 // Sleep one second so we can see the delay
 //    sleep(1);
-	
+
    echo "</table>";
    // Tell user that the process is completed
 echo '<script language="javascript">document.getElementById("information").innerHTML="Process completed"</script>';

@@ -58,6 +58,8 @@
 
   if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz);}
 
+  if ($dbaction=='feedColzoneInfo'){feedColzoneInfo($districtid,$clickfeature);}
+
   if ($dbaction=='searchOther'){searchOther($districtid, $starget, $sString, $searchlayer);}
 
 //----------end of loader -------------------------------------------------------------------
@@ -127,13 +129,15 @@ function feedUPNinfo($dbaction,$clickfeature,$sub)
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
-		$json['year']	 			= $row['year'];
+		$json['year']	 			= $currentYear;
 		$json['property_use']	 	= $row['property_use'];
 		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
  		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "due" ),2,'.','' ); //$row['revenue_due'];
+		// Arreas - the last years balance holds all the previous years arreas
+		$json['arrears'] 			= number_format($Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear-1, "property", "balance" ),2,'.','' );
  		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "paid" ),2,'.','' ); //$row['revenue_collected'];
  		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "property", "balance" ),2,'.','' ); //$json['revenue_due']-$json['revenue_collected'];
- 		$json['pay_status'] 		= ($json['revenue_balance']<=0 ? 9 : 1);// this is an inline if condition //number_format( $row['pay_status'],0,'.','' );
+ 		$json['pay_status'] 		= ($json['revenue_balance'] <=0 ? 9 : 1);// this is an inline if condition //number_format( $row['pay_status'],0,'.','' );
 		$json['streetname'] 		= $row['streetname'];
 		$json['housenumber'] 		= $row['housenumber'];
 		$json['owner'] 				= $row['owner'];
@@ -233,11 +237,14 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 		$json['id'] 				= $row['id'];
 		$json['upn'] 				= $row['upn'];
 		$json['subupn'] 			= $row['subupn'];
+		$json['year']	 			= $currentYear;
 		$json['rate']	 			= number_format( $row['rate'],2,'.','' );// $row['rate'];
- 		$json['pay_status'] 		= number_format( $row['pay_status'],0,'.','' );
  		$json['revenue_due'] 		= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "due" ),2,'.','' ); //$row['revenue_due'];
+		// Arreas - the last years balance holds all the previous years arreas
+		$json['arrears'] 			= number_format($Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear-1, "business", "balance" ),2,'.','' );
  		$json['revenue_collected'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "paid" ),2,'.','' ); //$row['revenue_collected'];
  		$json['revenue_balance'] 	= number_format( $Data->getBalanceInfo( $row['upn'], $row['subupn'], $row['districtid'], $currentYear, "business", "balance" ),2,'.','' );
+ 		$json['pay_status'] 		= ($json['revenue_balance'] <=0 ? 9 : 1);// this is an inline if condition //number_format( $row['pay_status'],0,'.','' );
 
 // 		$json['pay_status'] 		= $row['pay_status'];
 // 		$json['revenue_due'] 		= $row['revenue_due'];
@@ -278,6 +285,66 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 	}
 	header("Content-type: application/json");
 	echo json_encode($data);
+}
+
+//-----------------------------------------------------------------------------
+				//function feedColzoneInfo()
+				//collects information for the given collector zone
+				//expects $_POST $districtid, $clickfeature
+//-----------------------------------------------------------------------------
+function feedColzoneInfo($districtid, $clickfeature)
+{
+//
+	$System = new System;
+	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
+
+	require_once( "../lib/configuration.php"	);
+
+  	// upn
+	$zoneid = $clickfeature;
+//
+	$data = array();
+//
+	$bind = array(
+		":colzone_id" => $zoneid,
+		":districtid" => $districtid,
+		":year" => $currentYear
+	);
+
+		$conn = new PDO(cDsn, cUser, cPass);
+		$stmt = $conn->prepare("	SELECT sum(d1.`balance`) as sumbalance, COUNT(*) as rowcount
+							FROM `property_balance` d1
+							JOIN `KML_from_LUPMIS` d3 ON d1.`upn` = d3.`upn`, `property` d2
+							WHERE d1.`upn` = d2.`upn` and d1.`subupn` = d2.`subupn` and d1.`districtid` = :districtid
+							and d1.`year`= :year and d2.`colzone_id` = :colzone_id;
+						");
+		if (!$stmt->execute($bind))
+		  throw new Exception('[' . $stmt->errorCode() . ']: ' . $stmt->errorInfo());
+		$count = $stmt->rowCount();
+		$row = $stmt->fetch(PDO::FETCH_BOTH);
+				$json 						= array();
+				$json['revbalanceProp'] 				= $row['sumbalance'];
+				$json['intersectedProp'] 				= $row['rowcount'];
+//
+		$stmt = $conn->prepare("	SELECT sum(d1.`balance`) as sumbalance, COUNT(*) as rowcount
+							FROM `business_balance` d1
+							JOIN `KML_from_LUPMIS` d3 ON d1.`upn` = d3.`upn`, `business` d2
+							WHERE d1.`upn` = d2.`upn` and d1.`subupn` = d2.`subupn` and d1.`districtid` = :districtid
+							and d1.`year`= :year and d2.`colzone_id` = :colzone_id;
+						");
+		if (!$stmt->execute($bind))
+		  throw new Exception('[' . $stmt->errorCode() . ']: ' . $stmt->errorInfo());
+		$count = $stmt->rowCount();
+		$row = $stmt->fetch(PDO::FETCH_BOTH);
+				$json['revbalanceBus'] 				= $row['sumbalance'];
+				$json['intersectedBus'] 				= $row['rowcount'];
+				$json['revbalanceTotal'] 				= $json['revbalanceBus']+$json['revbalanceProp'];
+
+		$data[] 					= $json;
+//
+		header("Content-type: application/json");
+		echo json_encode($data);
+//
 }
 
 //-----------------------------------------------------------------------------
@@ -327,11 +394,13 @@ function getproperty($districtid, $upn)
 	if (!isset($upn)) {
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d1.`districtid`, d3.`subupn`, d3.`balance`
 	FROM `property_balance` d3
-	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`;";
+	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn`
+	WHERE d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid` AND d3.`year`='".$currentYear."';";
 	}else{
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
 	FROM `property_balance` d3
-	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d1.`districtid`='".$districtid."' AND d1.`districtid`=d3.`districtid`
+	JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d1.`districtid`='".$districtid."'
+	AND d1.`districtid`=d3.`districtid` AND d3.`year`='".$currentYear."'
 	ORDER BY d3.`upn`, d3.`subupn`;";
 	}
 // 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance
@@ -368,6 +437,7 @@ function getproperty($districtid, $upn)
 				 }
 			}
 		}
+		$payStatus9=false;
 		$json['id'] 		= $row['id'];
 		$json['upn'] 		= $row['UPN'];
 		$json['boundary'] 	= $row['boundary'];
@@ -375,7 +445,7 @@ function getproperty($districtid, $upn)
 		$json['revenue_balance'] 	= $row['balance'];
 //		$json['balanceTotal'] 	= $Data->getBalanceTotal( $row['UPN'], $row['districtid'], $currentYear, "property", "sumbalance");
 		$data[] 			= $json;
-	 }//end while
+	 } //end while
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
@@ -398,11 +468,13 @@ function getbusiness($districtid, $upn)
 	if (!isset($upn)) {
 	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
 		FROM `business_balance` d3
-		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."';";
+		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."'
+		AND d3.`year`='".$currentYear."';";
 	}else{
 		$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
 		FROM `business_balance` d3
-		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d3.`districtid`='".$districtid."';";
+		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d3.`districtid`='".$districtid."'
+		AND d3.`year`='".$currentYear."';";
 	}
 // 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance
 // 			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
@@ -441,6 +513,7 @@ function getbusiness($districtid, $upn)
 			 }
 		}
 	}
+	$payStatus9=false;
 	$json['id'] 		= $row['id'];
 	$json['upn'] 		= $row['UPN'];
 	$json['boundary'] 	= $row['boundary'];
@@ -710,6 +783,8 @@ $json_decodedBus=json_decode($busincz);
 
 $json 				= array();
 $jsonBus 				= array();
+$i = 1;
+$j = 1;
 
 //the data comes in as a multidimensional array, hence we need to go through the array to identify the values
 foreach ($json_decoded as $key => $value)
@@ -730,10 +805,12 @@ if (!empty($propincz)){
 	$query = mysql_query($run);
 //	$json['message'] = 'Done!';
 	}else{
-		$json['message'] = 'Property Empty!';
+		$json['messageProp'] = 'Property Empty!';
 	}
-	$json['message'] = 'Property Done!';
+	$json['reccountProp'] = $i;
+	$json['messageProp'] = 'Property Done!';
 	$data[] = $json;
+	$i++;
 
 }
 
@@ -756,10 +833,14 @@ if (!empty($busincz)){
 	$query = mysql_query($run);
 //	$json['message'] = 'Done!';
 	}else{
-		$jsonBus['message'] = 'Business Empty!';
+		$jsonBus['messageBus'] = 'Business Empty!';
 	}
-	$jsonBus['message'] = 'Business Done!';
+	$jsonBus['reccountProp'] = $i;
+	$jsonBus['reccountBus'] = $j;
+	$jsonBus['messageProp'] = 'Property Done with ';
+	$jsonBus['messageBus'] = 'Business Done with ';
 	$data[] = $jsonBus;
+	$j++;
 
 }
 

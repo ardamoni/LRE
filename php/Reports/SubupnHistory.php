@@ -14,7 +14,7 @@
 	require_once(	"../../lib/configuration.php"	);
 	require_once(	"../../lib/System.PDF.php"		);
 	require_once( 	"../../lib/Revenue.php"			);
-// 	require_once( 	"../../lib/System.php"			);
+	require_once( 	"../../lib/System.php"			);
 
 	$Data 			= new Revenue;
 //	$System 		= new System;
@@ -26,8 +26,8 @@
 	$districtid = $_SESSION['user']['districtid'];
 	$type 		= $_GET['type'];
 
-//	$year = $System->GetConfiguration("RevenueCollectionYear");
-	$year = 2014;
+	$year = $System->GetConfiguration("RevenueCollectionYear");
+//	$year = 2014;
 
 	/*
 	 * PDF Generation

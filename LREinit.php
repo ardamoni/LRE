@@ -9,8 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <title>Ntobua - District Local Revenue</title>	
-	
+    <title>Ntobua - District Local Revenue</title>
+
 	<script type="text/javascript" language="javascript" src="jquery_accordion.js"></script>
  <style>
  #overlay {
@@ -101,7 +101,7 @@
      height:100%;
      text-align:center;
      z-index: 1000;
-} 
+}
 
 #overlaysearch div {
      width:300px;
@@ -112,16 +112,16 @@
      text-align:center;
 }
 
- </style>	
+ </style>
 	<script type="text/javascript">
 	$(document).ready(function()
 	{
-		//slides the element with class "menu_body" when paragraph with class "menu_head" is clicked 
+		//slides the element with class "menu_body" when paragraph with class "menu_head" is clicked
 		$("#menuContainer p.menu_head").click(function()
 		{
 			$(this).css({backgroundImage:"url(icons/down.png)"}).next("div.menu_body").slideToggle(300).siblings("div.menu_body").slideUp("slow");
 			$(this).siblings().css({backgroundImage:"url(icons/left.png)"});
-		});	
+		});
 	});
 
 	function overlay() {
@@ -201,12 +201,12 @@
 }
 
 </script>
-	
+
 	<link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
 	<link rel="stylesheet" href="style.css" type="text/css">
 	<link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
 	<link rel="stylesheet" href="css/themify-icons.css" type="text/css">
-	
+
 	<!-- center and far right column-->
 	<style type="text/css">
 		#controls {
@@ -223,13 +223,13 @@
 			height: 650px;
 		}
 
-		.olControlAttribution { 
+		.olControlAttribution {
 			bottom: 0px;
 			left: 2px;
 			right: inherit;
 			width: 400px;
-		}   
-		.olControlPanel div { 
+		}
+		.olControlPanel div {
 		  position: relative;
 		  left: 5px;
 		  display:block;
@@ -239,31 +239,31 @@
 		  float: left;
 		  background-color:white;
 		}
-		.olControlPanel .olControlZoomToMaxExtentItemInactive { 
-		  width:  18px;  
+		.olControlPanel .olControlZoomToMaxExtentItemInactive {
+		  width:  18px;
 		  height: 18px;
 		  background-image: url("img/zoom-world-mini.png");
 		}
-		.olControlPanel .olControlZoomBoxItemInactive { 
-		  width:  22px;  
+		.olControlPanel .olControlZoomBoxItemInactive {
+		  width:  22px;
 		  height: 22px;
 		  background-color: orange;
 		  background-image: url("img/drag-rectangle-off.png");
 		}
-		.olControlPanel .olControlZoomBoxItemActive { 
-		  width:  22px;  
+		.olControlPanel .olControlZoomBoxItemActive {
+		  width:  22px;
 		  height: 22px;
 		  background-color: blue;
 		  background-image: url("img/drag-rectangle-on.png");
 		}
-		.olControlPanel .olControlZoomInItemInactive { 
-		  width:  22px;  
+		.olControlPanel .olControlZoomInItemInactive {
+		  width:  22px;
 		  height: 22px;
 		  background-color: white;
 		  background-image: url("img/zoomin.png");
 		}
-		.olControlPanel .olControlZoomOutItemInactive { 
-		  width:  22px;  
+		.olControlPanel .olControlZoomOutItemInactive {
+		  width:  22px;
 		  height: 22px;
 		  background-color: white;
 		  background-image: url("img/zoomout.png");
@@ -295,24 +295,24 @@
 			 left: 5px;
 			 right: 23px;
 			 top: 150px;
-	   } 
+	   }
 	.olControlPanZoomBar {
 		left:450px;
 	}
-	.tableshow { 
-		  width:  24px;  
+	.tableshow {
+		  width:  24px;
 		  height: 24px;
 		  background-color: white;
 		  background-image: url("img/tableview.png");
 		}
-	.xlsexport { 
-		  width:  24px;  
+	.xlsexport {
+		  width:  24px;
 		  height: 24px;
 		  background-color: white;
 		  background-image: url("img/tXLSExport.png");
 		}
-	.deletezone { 
-		  width:  20px;  
+	.deletezone {
+		  width:  20px;
 		  height: 20px;
 		  background-color: white;
 		  background-image: url("img/delete2.png");
@@ -328,9 +328,41 @@
 			border: 1px solid #ccc;
 			border-color:#ffcc00;
 		}
+
+ #loading
+    {
+        display:none;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+        background:rgba(255,255,255,0.8);
+        z-index:1000;
+    }
+
+    #loadingcontent
+    {
+        display:table;
+        position:fixed;
+        left:0;
+        top:0;
+        width:100%;
+        height:100%;
+    }
+
+    #loadingspinner
+    {
+        display: table-cell;
+        vertical-align:middle;
+        width: 100%;
+        text-align: center;
+        font-size:larger;
+        padding-top:80px;
+    }
 	</style>
 </head>
-<body>	
+<body>
 <!-- 	This is needed for the menu system -->
 <!-- this is the popup below the icon section -->
 	<div id="overlay">
@@ -341,7 +373,7 @@
 			<input type="submit" value="Bills Register for Property Rates" href="javascript:;" onclick="billsRegister('property');" title="Bills Register for Property Rates" class="orange-flat-small">
 			<input type="submit" value="Bills Register for Business Licenses" href="javascript:;" onclick="billsRegister('business');" title="Bills Register for Business Licenses" class="orange-flat-small">
           [<a href='#' onclick='overlay()'>close</a>]
-     </div>     
+     </div>
 	</div>
 	<div id="overlayadmin">
      <div>
@@ -352,14 +384,14 @@
 			<input type="submit" value="Collector Zone relation" href="javascript:;" onclick="updateCZinPropBus();" title="Relate each parcel with collector zone" class="orange-flat-small">
 			<input type="submit" value="Administration Module" href="javascript:;" onclick="index_admin();" title="Administration Module" class="orange-flat-small">
           [<a href='#' onclick='overlayadmin()'>close</a>]
-     </div>     
+     </div>
 	</div>
 	<div id="overlayxls">
      <div>
           <p>Please select one of the Export options.</p>
 			<input type="submit" value="Excel Export" href="javascript:;" onclick="xlsexport();" title="Available Excel Exports" class="orange-flat-small">
           [<a href='#' onclick='overlayxls()'>close</a>]
-     </div>     
+     </div>
 	</div>
 	<div id="overlayreports">
      <div>
@@ -369,26 +401,26 @@
 			<input type="submit" value="Quarterly" href="javascript:;" onclick="" title="Generate the quarterly report" class="orange-flat-small">
 			<input type="submit" value="Annualy" href="javascript:;" onclick="" title="Generate the anual report" class="orange-flat-small">
           [<a href='#' onclick='overlayreports()'>close</a>]
-     </div>     
+     </div>
 	</div>
 	<div id="overlaysearch">
      <div>
           <p>Please enter either a Name <br/> or a Street into the entry field.</p>
 <!-- <form> -->
-		<input type="text" id="searchOther" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchOther();}"  > 
+		<input type="text" id="searchOther" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchOther();}"  >
 		<center><input type="radio" id="target" name="target" value="street">Street
 		<input type="radio" id="target" name="target" value="owner">Owner<br></center>
 		<input type="submit" value="Search" href="javascript:;" onclick="searchOther();" title="Submit the search" class="orange-flat-small">
           [<a href='#' onclick='overlaysearch()'>close</a>]
 <!-- </form> -->
-     </div>     
+     </div>
 	</div>
 <!-- end of popup below the icon section -->
 
-	
-	<div id="header">  
+
+	<div id="header">
 	<!--the following districtname is set in jsfunctions.js in function sessionuserhandler-->
-		<h1> <div id="districtname"></div></h1> 
+		<h1> <div id="districtname"></div></h1>
 		<div id="tags">GeoJSON</div>
 		<table class="lremain">
 		<tr>
@@ -400,19 +432,19 @@
 					<td width="25px" style="border:0px">
 						<strong><small><span id="stat1">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td style="border:0px">Properties #:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="stat2">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td style="border:0px">Businesses #:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="stat3">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				</table>
 			</td>
 			<td>
@@ -423,19 +455,19 @@
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis1">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td width="10px" style="border:0px">Collected:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis2">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td width="10px" style="border:0px">Outstanding:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis3">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				</table>
 			</td>
 			<td>
@@ -446,25 +478,25 @@
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis4">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td width="10px" style="border:0px">Collected:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis5">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td width="10px" style="border:0px">Outstanding:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis6">0</span></small></strong>
 					</td>
-				</tr> 
+				</tr>
 				</table>
 			</td>
 			<td>
 				<strong><span id="navtools"><center>Navigation Tools</center></span></strong>
 				<center><span id="tools" class="olControlPanel"></span></center>
-			</td> 
+			</td>
 			<td>
 			<div class="icon-section" id="icon-section">
 				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
@@ -485,7 +517,7 @@
 							<span class="ti-export" type="submit" href="javascript:;" href="javascript:;" onclick="overlayxls();" value="" title="Open Excel Export"></span><span class="icon-name"></span>
 						</div>
 					</td>
-				</tr> 
+				</tr>
 				<tr>
 					<td style="border:0px"></td>
 					<td width="25px" style="border:0px">
@@ -498,14 +530,14 @@
 							<span class="ti-search" type="submit" href="javascript:;" href="javascript:;" onclick="overlaysearch();" value="" title="Open Street and Name Search"></span><span class="icon-name"></span>
 						</div>
 					</td>
-				</tr>					 
+				</tr>
 				</table>
 			</div>
 				<center id="debug2"></center>
-			</td> 
+			</td>
 			<td>
 				 <center>Quick Search</center>
-				 <input type="text" id="searchBox" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchupn();}"  > 
+				 <input type="text" id="searchBox" value="" style="width: 200px;" onkeypress="if(event.keyCode==13) {javascript:searchupn();}"  >
 				 <center><input type="submit" href="javascript:;" onclick="searchupn();" class="orange-flat-small" value="SEARCH" ></center>
 			</td>
 			<td>
@@ -517,7 +549,7 @@
 		 </tr>
 		</table>
 	</header>
-	
+
 	<div id="container">
 		<!-- left most column, col3 -->
 
@@ -538,6 +570,9 @@
 					} else {
 					document.getElementById("map").style.height = window.innerHeight*0.80+"px";
 					}
+
+					document.getElementById("controls").style.visibility="hidden";
+
 					init();
 				};
 			</script>
@@ -545,14 +580,15 @@
 
 		<!-- right most column, col3 -->
 		<div id="col3">
-		
+
 
 		<table class="map_area">
 		<tr>
-			<td> <div id="map" class="smallmap"></div> </td>
+			<td> <div id="map" class="smallmap"></div>
+    		</div> </td>
 			<td>
 			<table>
-			<tr><td><center id="debug1"></center></td></tr>
+			<tr><td><div id="debug1"></div></td></tr>
 			<tr>
 			<td>
 			<div id="tags"> vertices, digitizing, draw, drawing </div>
@@ -602,11 +638,11 @@
 			</td>
 		   </tr>
 		  </table>
-		</div> <!-- end of rightmost column -->  
-		
+		</div> <!-- end of rightmost column -->
+
 	</div> <!-- end of container -->
-	
-	<div id="footer">	
+
+	<div id="footer">
 		<div id="docs">
 			<p>
 				Geo Location Information provided by TCPD
@@ -616,14 +652,14 @@
 			</p>
 		</div>
 		    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
-			<script src="lib/OpenLayers/lib/OpenLayers.js"></script> 
+			<script src="lib/OpenLayers/lib/OpenLayers.js"></script>
 			<script src="lib/spin/spin.js"></script>
 			<script src="lib/stopwatch.js"></script>
 			<script src="lib/numberformat.js"></script>
 			<script src="js/jsfunctions.js"></script>
 
 	</div>	<!-- end of footer -->
-    
-	
-	</body>	
+
+
+	</body>
 </html>

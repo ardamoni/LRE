@@ -250,7 +250,7 @@ switch(opt) {
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`';
 		document.getElementById('squery'+opt).value=squery;
-		document.getElementById('option'+opt).value="List revenue potential per year";
+		document.getElementById('option'+opt).value="Potential of Property Rates per year";
 //		document.getElementById('option4').value=squery;
 		document.getElementById('report'+opt).value="01LREpotentialProperty";
 		document.getElementById('template'+opt).value="TotalRevExpectedtemplate.xlsx";
@@ -263,7 +263,7 @@ switch(opt) {
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`;';
 		document.getElementById('squery'+opt).value=squery;
-		document.getElementById('option'+opt).value="List revenue Potential of Property Rates per year per Property Class";
+		document.getElementById('option'+opt).value="Potential of Property Rates per year per Property Class";
 //		document.getElementById('option4').value=squery;
 		document.getElementById('report'+opt).value="01LREpotentialProperty";
 		var target = document.getElementById('spin'+opt);
@@ -274,7 +274,7 @@ switch(opt) {
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`business_class`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`';
 		document.getElementById('squery'+opt).value=squery;
-		document.getElementById('option'+opt).value="List revenue potential";
+		document.getElementById('option'+opt).value="Potential of BOP";
 		document.getElementById('report'+opt).value="01LREpotentialBusiness";
 		document.getElementById('template'+opt).value="TotalRevExpectedtemplate.xlsx";
 		var target = document.getElementById('spin'+opt);
@@ -285,7 +285,7 @@ switch(opt) {
 			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
 			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`business_class`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`;';
 		document.getElementById('squery'+opt).value=squery;
-		document.getElementById('option'+opt).value="List revenue Potential of BOP per year per Business Class";
+		document.getElementById('option'+opt).value="Potential of BOP per year per Business Class";
 //		document.getElementById('option4').value=squery;
 		document.getElementById('report'+opt).value="01LREpotentialBusiness";
 		var target = document.getElementById('spin'+opt);
@@ -410,7 +410,7 @@ function handler(request){
 // this is the object used in scope
 // console.log(this);
 // alert(this.opt);
-var sqy = "SELECT * from area_district"; // WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
+//var sqy = "SELECT * from area_district"; // WHERE districtid='+<?php echo json_encode($_GET['districtid']); ?>;
 
 document.getElementById('spin0').innerHTML="<strong>Export to Excel is completed! Use the link to download the file</strong>";
 var outfile = document.getElementById('report'+this.opt).value+".xlsx";
@@ -443,7 +443,7 @@ function tablepreview(opt) {
 // 	 var template = document.getElementById('template'+opt).value;
 // 	 var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value+'&template='+template;
 // 	} else {
-	  var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value;
+	  var pageURL = 'showtable.php?squery='+document.getElementById('squery'+opt).value+'&displayText='+document.getElementById('option'+opt).value;
 // 	}
 
 

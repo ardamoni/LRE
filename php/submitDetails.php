@@ -52,10 +52,12 @@ table.demoTbl td{
 
 <?php
 
+require_once( "../lib/System.php"			);
 require_once( "../lib/configuration.php"	);
 require_once( "../lib/Revenue.php"			);
 
 $Data = new Revenue;
+$System = new System;
 
 
 $upn=$_POST['upn'];
@@ -65,9 +67,41 @@ $type = $_POST['ifproperty'];
 $addDetails = $_POST['addDetails'];
 $today = date("Y/m/d");
 $year = date("Y");
+
+	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
+	$previousYear =  $currentYear -1;
+
+	 	/*
+ 	 * previous year
+ 	 */
+ 	// DUE, PAYMENT, BALANCE
+ 	$revenueDuePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "due" );
+ 	$revenueCollectedPrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "paid" );
+ 	$revenueBalancePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "balance" );
+
+ 	/*
+ 	 * current year
+ 	 */
+ 	// DUE, PAYMENT, BALANCE
+ 	$revenueDue = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "due" );
+ 	$revenueCollected = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "paid" );
+ 	$revenueBalanceOld = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "balance" );
+
+ 	// assuring NULL values are converted to 0
+ 	if( !$revenueBalanceOld )
+ 	{
+ 		$revenueBalanceOld = 0;
+ 	}
+
+ 	// calculations
+ 	$revenuePaid = $revenueCollected + $revenueCollectedPrevious;  // current year
+ 	$revenueBalance = $revenueBalancePrevious+$revenueBalanceOld - $revenuePaid;
+
+
+
 //  echo "<pre>";
 if (isset($addDetails)){
-// var_dump($_POST);
+//  var_dump($_POST);
 }else{echo 'not set';}
 // var_dump($_SESSION);
 // echo "</pre>";
@@ -105,11 +139,11 @@ $username = $_SESSION['user']['user'];
 					}
 				}
 // debug echo '<br> ffc '.$feefi_code.' - ffv'.
-				$feefi_value.' - riv '.
-				$rate_impost_value.' - rv '.
-				$rate_value.' - d '.
-				$due.' - b'.
-				$balance;
+// 				$feefi_value.' - riv '.
+// 				$rate_impost_value.' - rv '.
+// 				$rate_value.' - d '.
+// 				$due.' - b'.
+// 				$balance;
 
 
 				if ($_POST['buildPerm']=='yes'){
@@ -133,6 +167,41 @@ $username = $_SESSION['user']['user'];
 
 					if( !empty($r) )
 					{
+							 	/*
+						 * previous year
+						 */
+						// DUE, PAYMENT, BALANCE
+						$revenueBalancePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "balance" );
+						$revenueCollectedPrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "paid" );
+
+						/*
+						 * current year
+						 */
+						// DUE, PAYMENT, BALANCE
+						$revenueCollected = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "paid" );
+
+						// calculations
+						$revenuePaid = $revenueCollected + $revenueCollectedPrevious;  // current year
+						$revenueBalance = $revenueBalancePrevious + $due - $revenueCollected;
+
+	// debug	echo '<br> ffc '.$feefi_code.' - ffv'.
+					$feefi_value.' - riv '.
+					$rate_impost_value.' - rv '.
+					$rate_value.' - d '.
+					$due.' - bo'.
+					$revenueBalancePrevious.' - bal'.
+				 	$revenueBalanceOld.' - balance'.
+				 	$revenueBalance.' - po'.
+					$revenueCollectedPrevious.' - p'.
+					$revenueCollected  ;
+
+//check with BusinessRevenueCollection it is more complex than thought
+// I guess it is solved, but further tests will show
+						if ($revenuePaid > 0){
+						  $balance = $revenueBalance;
+						  }
+
+
 						$paid = $Data->getSumPaymentInfo( $upn, $subupn, $districtid, $year, $type = "property" );
 						if ($paid == NULL || $paid == '') {
 						 $paid = 0;
@@ -160,7 +229,7 @@ $username = $_SESSION['user']['user'];
 							'rate_impost_value' => $rate_impost_value,
 							'rate_value' => $rate_value,
 							'due' => $due,
-							'paid' => $paid,
+							'paid' => $revenueCollected,
 							'balance' => $balance,
 							'excluded' => $excluded,
 							'lastentry_person' => $_SESSION['user']['user'],
@@ -168,11 +237,14 @@ $username = $_SESSION['user']['user'];
 							);
 						$bind = array(
 							":upn" => $upn,
-							":subupn" => $subupn
+							":subupn" => $subupn,
+							":districtid" => $districtid,
+							":year" => $currentYear
 						);
+
 						$result = $pdo->update("property", $update, "upn = :upn AND subupn = :subupn", $bind);
-						$result = $pdo->update("property_due", $update, "upn = :upn AND subupn = :subupn", $bind);
-						$result = $pdo->update("property_balance", $update, "upn = :upn AND subupn = :subupn", $bind);
+						$result = $pdo->update("property_due", $update, "upn = :upn AND subupn = :subupn AND districtid = :districtid AND year = :year", $bind);
+						$result = $pdo->update("property_balance", $update, "upn = :upn AND subupn = :subupn  AND districtid = :districtid AND year = :year", $bind);
 
 					}
 				} elseif ($addDetails=='true') {	//we add a new property and need to update property_due, property_balance
@@ -235,7 +307,7 @@ $username = $_SESSION['user']['user'];
 						'rate_impost_value' => $rate_impost_value,
 						'rate_value' => $rate_value,
 						'due' => $due,
-						'paid' => 0,
+						'paid' => $revenueCollected,
 						'balance' => $balance,
 						'comments' => $_POST['comments'],
 						'lastentry_person' => $_SESSION['user']['user'],
@@ -314,10 +386,15 @@ $username = $_SESSION['user']['user'];
 				break;
 
 				case "business":
-				if (!$addDetails=='true')
+
+					$feefi_code = substr($_POST['businessclass'], 0, strpos($_POST['businessclass'], ':')-1);
+					$feefi_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "business", "rate" );
+					$due = $feefi_value;
+					$balance = $due;
+
+				//normal update of existing details
+				if ($addDetails=='')
 				{
-					if( !empty($r) )
-					{
 					$q = mysql_query(" SELECT 	*
 										FROM 	`business`
 										WHERE 	`upn` = '".$upn."' AND
@@ -328,22 +405,72 @@ $username = $_SESSION['user']['user'];
  					if($r === FALSE) {
  					    die(mysql_error()); // TODO: better error handling
  					}
+
+					if( !empty($r) )
+					{
+// 						$paid = $Data->getSumPaymentInfo( $upn, $subupn, $districtid, $year, $type = "business" );
+// 						if ($paid == NULL || $paid == '') {
+// 						 $paid = 0;
+// 						}
+							 	/*
+ 	 * previous year
+ 	 */
+ 	// DUE, PAYMENT, BALANCE
+ 	$revenueBalancePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "balance" );
+ 	$revenueCollectedPrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "paid" );
+
+ 	/*
+ 	 * current year
+ 	 */
+ 	// DUE, PAYMENT, BALANCE
+ 	$revenueCollected = $Data->getBalanceInfo( $upn, $subupn, $districtid, $currentYear, $type, "paid" );
+
+ 	// calculations
+ 	$revenuePaid = $revenueCollected + $revenueCollectedPrevious;  // current year
+ 	$revenueBalance = $revenueBalancePrevious + $due - $revenueCollected;
+
+	// debug	echo '<br> ffc '.$feefi_code.' - ffv'.
+					$feefi_value.' - riv '.
+					$rate_impost_value.' - rv '.
+					$rate_value.' - d '.
+					$due.' - bo'.
+					$revenueBalancePrevious.' - bal'.
+				 	$revenueBalanceOld.' - balance'.
+				 	$revenueBalance.' - po'.
+					$revenueCollectedPrevious.' - p'.
+					$revenueCollected  ;
+
+//check with BusinessRevenueCollection it is more complex than thought
+// I guess it is solved, but further tests will show
+						if ($revenuePaid > 0){
+						  $balance = $revenueBalance;
+						  }
+
 						//use pdo wrapper
 						$update = array(
 							'streetname' => $_POST['street'],
 							'housenumber' => $_POST['Nr_'],
-							'locality_code' => $_POST['localCode'],
-							'da_no' => $_POST['daAssignmentNumber'],
-							'business_certif' => $_POST['businessCertificate'],
-							'employees' => $_POST['employees'],
-							'business_name' => $_POST['businessname'],
-							'year_establ' => $_POST['yearEstablishment'],
 							'owner' => $_POST['owner'],
 							'owneraddress' => $_POST['ownAddress'],
 							'owner_tel' => $_POST['ownTel'],
 							'owner_email' => $_POST['ownEmail'],
+							'locality_code' => $_POST['localCode'],
+							'business_name' => $_POST['businessname'],
 							'business_class' => substr($_POST['businessclass'],0, strpos($_POST['businessclass'],':')-1),
+							'da_no' => $_POST['daAssignmentNumber'],
+							'business_certif' => $_POST['businessCertificate'],
+							'employees' => $_POST['employees'],
+							'year_establ' => $_POST['yearEstablishment'],
 							'excluded' => $excluded,
+							'feefi_code' => $feefi_code,
+							'feefi_unit' => 'y',
+							'feefi_value' => $feefi_value,
+							'bo_impost_value' => $rate_impost_value,
+							'bo_value' => $rate_value,
+							'due' => $due,
+							'paid' => $revenueCollected,
+							'balance' => $balance,
+							'comments' => $_POST['comments'],
 							'lastentry_person' => $_SESSION['user']['user'],
 							'lastentry_date' => $today
 						);
@@ -353,14 +480,23 @@ $username = $_SESSION['user']['user'];
 						);
 						$result = $pdo->update("business", $update, "upn = :upn AND subupn = :subupn", $bind);
 
+						$bind = array(
+							":upn" => $upn,
+							":subupn" => $subupn,
+							":districtid" => $districtid,
+							":year" => $currentYear
+
+						);
+						$result = $pdo->update("business_due", $update, "upn = :upn AND subupn = :subupn AND districtid = :districtid AND year = :year", $bind);
+						$result = $pdo->update("business_balance", $update, "upn = :upn AND subupn = :subupn  AND districtid = :districtid AND year = :year", $bind);
+
 					}
 				} elseif ($addDetails=='true') {
-					$q = mysql_query(" SELECT 	*
-										FROM 	`business`
-										WHERE 	`upn` = '".$upn."';");
-
-					$count = mysql_num_rows($q);
-					$r = mysql_fetch_array($q);
+					$st = $pdo->prepare(" SELECT 	*
+					FROM 	`business`
+					WHERE 	`upn` = '".$upn."';");
+				    $st->execute();
+					$count = $st->rowCount();
 
 				 if ($count==0)
 				 	{
@@ -377,6 +513,8 @@ $username = $_SESSION['user']['user'];
 							":upn" => $upn,
 						);
 						$result = $pdo->update("business", $update, "upn = :upn", $bind);
+						$result = $pdo->update("business_due", $update, "upn = :upn", $bind);
+						$result = $pdo->update("business_balance", $update, "upn = :upn", $bind);
 
  						$subupn=$upn.'/'.($count+1);
 
@@ -408,10 +546,22 @@ $username = $_SESSION['user']['user'];
 						'owner_email' => $_POST['ownEmail'],
 						'business_class' => substr($_POST['businessclass'],0, strpos($_POST['businessclass'],':')-1),
 						'excluded' => $excluded,
+						'feefi_code' => $feefi_code,
+						'feefi_unit' => 'y',
+						'feefi_value' => $feefi_value,
+						'bo_impost_value' => $rate_impost_value,
+						'bo_value' => $rate_value,
+						'due' => $due,
+						'paid' => $revenueCollected,
+						'balance' => $balance,
+						'comments' => $_POST['comments'],
 						'lastentry_person' => $_SESSION['user']['user'],
 						'lastentry_date' => $today
 						);
 					$result = $pdo->insert("business", $insert);
+					$result = $pdo->insert("business_due", $insert);
+					$result = $pdo->insert("business_balance", $insert);
+
 				}
 
 //					return mysql_affected_rows();

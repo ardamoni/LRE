@@ -1,8 +1,14 @@
 <?php
-	// DB connection
-	require_once( "../lib/configuration.php"	);
+	session_start();
 
-session_start();
+	// DB connection
+//	require_once( "../lib/configuration.php"	);
+	require_once( 	"../lib/System.php"			);
+
+ 	$System = new System;
+
+ 	$currentYear 	= $System->GetConfiguration("RevenueCollectionYear");
+
 
 if (isset($_SESSION['user']['name']))
 	$_SESSION['user']['name']=$_SESSION['user']['name'];
@@ -15,7 +21,7 @@ else
 	$json['username'] 				= $_SESSION['user']['name'];
 	$json['userdistrict'] 		= $_SESSION['user']['districtid'];
 	$json['userdistrictname'] 		= $_SESSION['user']['districtname'];
-	
+
 		// collect the information to be displayed in the UI
 	$qsumPropertyBalance = 	mysql_query("SELECT SUM(d3.balance) as sumpropbal FROM property_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
 	$sumPropertyBalance	 = 	mysql_fetch_array($qsumPropertyBalance);
@@ -40,9 +46,9 @@ else
 	$json['sumBusinessBalance'] 	= $sumBusinessBalance['sumbusbal'];
 	$json['sumBusinessPaid'] 		= $sumBusinessPaid['sumbuspaid'];
 	$json['sumBusinessDue'] 		= $sumBusinessDue['sumbusdue'];
-	
+
 	$data[] 			= $json;
-	
+
 header("Content-type: application/json");
 echo json_encode($data);
 ?>

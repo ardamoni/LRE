@@ -6,14 +6,14 @@
 	 *	Include the Library Code
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */
-	require_once(	"../../lib/configuration.php"	);	
+	require_once(	"../../lib/configuration.php"	);
 //	require_once(	"../../lib/System.PDF.php"		);
-	require_once(	"../../lib/System.PDF.AnnualBill.php"		);	
+	require_once(	"../../lib/System.PDF.AnnualBill.php"		);
 	require_once( 	"../../lib/Revenue.php"			);
 //	require_once( 	"../../lib/BusinessRevenueClass.php"			);
 	require_once( 	"../../lib/System.php"			);
-	
-	
+
+
  	$System = new System;
 	$Data = new Revenue;
 	$districtid = $_GET['districtid'];
@@ -35,26 +35,26 @@
 //    break;
 
 	$PDF = new PDF('P','mm','A4');
-	
+
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 	$districtid = $_GET['districtid'];
-	
+
 	$districtName = $Data->getDistrictInfo( $districtid, "district_name" );
-	
 
 
-	//var_dump($_GET);		
 
-	
+	//var_dump($_GET);
+
+
 	/*
 	 * PDF Generation
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	 */	
+	 */
 
 	$PDF->AddPage();
-	
+
 	$PDF->Ln();
-	
+
 	$PDF->SetFont('Arial','B',16);
 	if ($target=='business'){
 		$PDF->Cell(0,5,'Bills Register for Business Operating Permits',0,1,'C');		$PDF->Ln();
@@ -62,20 +62,20 @@
 		$PDF->Cell(0,5,'Bills Register for Property Rates',0,1,'C');		$PDF->Ln();
 	}
 	$PDF->SetFont('Arial','',12);
-	$PDF->Ln(10);	
-	
+	$PDF->Ln(10);
+
 			// 1st row
 			$PDF->SetFont('Arial','B',8);
 			$PDF->SetFillColor(225,225,225);
 			$PDF->Cell(34,5, "District",1,0,'C',true);
-			$PDF->SetFont('Arial','',8); 
+			$PDF->SetFont('Arial','',8);
 			$PDF->SetFillColor(255,255,255);
 			$PDF->Cell(155,5, $districtName, 1,0,'C',true);
 			$PDF->Ln();
 			$PDF->SetFont('Arial','B',8);
 			$PDF->SetFillColor(225,225,225);
 			$PDF->Cell(34,5, "Sub-District",1,0,'C',true);
-			$PDF->SetFont('Arial','',8); 
+			$PDF->SetFont('Arial','',8);
 			$PDF->SetFillColor(255,255,255);
 			$PDF->Cell(155,5, '', 1,0,'C',true);
 			$PDF->Ln();
@@ -99,48 +99,48 @@
 			$PDF->Cell(40,5, "REMARKS", 1,0,'C',true);
 			}
 			$PDF->Ln();
-			
+
 			// Data from Tables
 			$n = 0;
 			$PDF->SetFont('Arial','',6);
 			$PDF->SetFillColor(255,255,255);
 			if ($target=='business'){
-				$q = mysql_query("SELECT business.id, 
-								business.`upn`, 
-								business.`subupn`, 
-								business.`streetname`, 
-								business.`housenumber`, 
-								business.`business_name`, 
-								business.`owner_tel`, 
-								business.`owner`, 
-								business.`colzone_id`, 
-								demand_notice_record.`upn`, 
-								demand_notice_record.`subupn`, 
+				$q = mysql_query("SELECT business.id,
+								business.`upn`,
+								business.`subupn`,
+								business.`streetname`,
+								business.`housenumber`,
+								business.`business_name`,
+								business.`owner_tel`,
+								business.`owner`,
+								business.`colzone_id`,
+								demand_notice_record.`upn`,
+								demand_notice_record.`subupn`,
 								demand_notice_record.`value`,
 								demand_notice_record.`billprintdate`
-							FROM business INNER JOIN demand_notice_record 
+							FROM business INNER JOIN demand_notice_record
 								ON business.`upn` = demand_notice_record.`upn` AND business.`subupn` = demand_notice_record.`subupn`
-							WHERE business.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
+							WHERE business.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."' AND demand_notice_record.`year`='".$year."'
 							ORDER BY business.`colzone_id`, business.`streetname`, LENGTH(business.`housenumber`), business.`housenumber`, business.`upn`, business.`subupn`;");
 			} elseif ($target=='property'){
-				$q = mysql_query("SELECT property.id, 
-								property.`upn`, 
-								property.`subupn`, 
-								property.`streetname`, 
-								property.`housenumber`, 
-								property.`owner_tel`, 
-								property.`owner`, 
-								property.`colzone_id`, 
-								demand_notice_record.`upn`, 
-								demand_notice_record.`subupn`, 
+				$q = mysql_query("SELECT property.id,
+								property.`upn`,
+								property.`subupn`,
+								property.`streetname`,
+								property.`housenumber`,
+								property.`owner_tel`,
+								property.`owner`,
+								property.`colzone_id`,
+								demand_notice_record.`upn`,
+								demand_notice_record.`subupn`,
 								demand_notice_record.`value`,
 								demand_notice_record.`billprintdate`
-							FROM property INNER JOIN demand_notice_record 
+							FROM property INNER JOIN demand_notice_record
 								ON property.`upn` = demand_notice_record.`upn` AND property.`subupn` = demand_notice_record.`subupn`
-							WHERE property.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."'
+							WHERE property.`districtid`='".$districtid."' AND demand_notice_record.`comments`='".$target."' AND demand_notice_record.`year`='".$year."'
 							ORDER BY property.`colzone_id`, property.`streetname`, LENGTH(property.`housenumber`), property.`housenumber`, property.`upn`, property.`subupn`;");
 			}
-							
+
 			$counter = 0;
 			$cznr='';
 			while( $r = mysql_fetch_array($q) )
@@ -165,7 +165,7 @@
 					$PDF->SetFont('Arial','B',8);
 					$PDF->SetFillColor(225,225,225);
 					$PDF->Cell(34,5, "Collector Zone",1,0,'C',true);
-// 					$PDF->SetFont('Arial','',8); 
+// 					$PDF->SetFont('Arial','',8);
 // 					$PDF->SetFillColor(255,255,255);
 					if ($target=='business'){
 					$PDF->Cell(50,5, $r['colzone_id'], 1,0,'C',true);
@@ -176,27 +176,27 @@
 					}
 					$PDF->Ln();
 				}
-				if ($target=='business'){ 
+				if ($target=='business'){
 					$PDF->SetFont('Arial','',6);
 					$PDF->SetFillColor(255,255,255);
 					$PDF->Cell(16,5, $r['upn'],1,0,'C',true);
-					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);	
-	// 				$PDF->Cell(18,5, $r['billprintdate'],1,0,'C',true);	
-					$PDF->Cell(50,5, $businessname,1,0,'C',true);			
+					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);
+	// 				$PDF->Cell(18,5, $r['billprintdate'],1,0,'C',true);
+					$PDF->Cell(50,5, $businessname,1,0,'C',true);
 					$PDF->Cell(40,5, $r['owner'], 1,0,'C',true);
 					$PDF->Cell(30,5, $address, 1,0,'C',true);
 					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
-					
+
 						IF ($dupUPNchecked == FALSE) {
 						$PDF->Cell(20,5, '', 1,0,'C',true);
 						}else{
 						$PDF->Cell(20,5, '*', 1,0,'L',true);
-						}					
+						}
 					}elseif ($target=='property'){
 					$PDF->SetFont('Arial','',6);
 					$PDF->SetFillColor(255,255,255);
 					$PDF->Cell(16,5, $r['upn'],1,0,'C',true);
-					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);	
+					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);
 					$PDF->Cell(55,5, $r['owner'], 1,0,'C',true);
 					$PDF->Cell(45,5, $address, 1,0,'C',true);
 					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
@@ -204,18 +204,18 @@
 						$PDF->Cell(40,5, '', 1,0,'C',true);
 						}else{
 						$PDF->Cell(40,5, '*', 1,0,'L',true);
-						}					
+						}
 				}
 				$PDF->Ln();
 				$n = $n + 1;
 				$cznr=$r['colzone_id'];
 			}
-						
+
 			$PDF->Ln();
 			$PDF->SetFont('Arial','',4);
 			$PDF->Write(2,'* = Please check this address explicitly.');
-			$PDF->Ln(10);			
-				
+			$PDF->Ln(10);
+
 
 	$PDF->Ln();
 	$PDF->Output();

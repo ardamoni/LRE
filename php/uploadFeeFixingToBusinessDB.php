@@ -7,7 +7,6 @@ ob_start(); // prevent adding duplicate data with refresh (F5)
 session_start();
 
 date_default_timezone_set('Europe/London');
-	//$ffix = new Feefix;
 
 ?>
 <html>
@@ -24,7 +23,7 @@ date_default_timezone_set('Europe/London');
 <?php
 
 require_once("../lib/System.php");
-require_once('../lib/feefixingBClass.php');
+// require_once('../lib/configuration.php');
 
 $System = new System;
 
@@ -33,9 +32,9 @@ if ($System->GetConfiguration("PeriodForBillsYear")!='empty')
 	$aYears = explode(",",$System->GetConfiguration("PeriodForBillsYear"));
 }
 
-// $aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
-// $aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
-// $aDays = explode(",",$System->GetConfiguration("PeriodForBillsDay"));
+$aMonths = explode(",",$System->GetConfiguration("PeriodForBillsMonth"));
+$aWeeks = explode(",",$System->GetConfiguration("PeriodForBillsWeek"));
+$aDays = explode(",",$System->GetConfiguration("PeriodForBillsDay"));
 
 global $feefixb;
 
@@ -56,7 +55,7 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 	$inputYear = $_POST['year'];
 //check which tables need to be used
 
-	$targetTable = $feefixb->tell_table_name();
+	$targetTable = 'fee_fixing_business'; //$feefixb->tell_table_name();
 
 
 	//echo $inputFileName;
@@ -144,27 +143,46 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 			}
 
 			 echo "<tr>";
-// echo $firstrow.'<br>';
-// var_dump($cellData);
-				$feefixb->code=$cellData['A'];
-				$feefixb->class=ltrim($cellData['B'],' ');
-				$feefixb->category=$cellData['C'];
-				$feefixb->rate=$cellData['D'];
- 				$feefixb->unit=$unit;
-				$feefixb->assessed=$cellData['F'];
-				$feefixb->rate_impost=$cellData['G'];
-				$feefixb->code_of_zone=$cellData['H'];
-				$feefixb->name_of_zone=$cellData['I'];
-				$feefixb->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'];
-				$feefixb->districtid=$_POST['districtid'];
-				$feefixb->year=$_POST['year'];
+ //echo $firstrow.'<br>';
+		$readData = array(
+			'code' => $cellData['A'],
+			'class' => $cellData['B'],
+			'category' => $cellData['C'],
+			'rate' => $cellData['D'],
+			'unit' => $cellData['E'],
+			'assessed' => $cellData['F'],
+			'rate_impost' => $cellData['G'],
+			'code_of_zone' => $cellData['H'],
+			'name_of_zone' => $cellData['I'],
+			'comments' => 'Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellData['J'],
+			'districtid' => $_POST['districtid'],
+			'year' => $_POST['year']
+			);
+		$bind = array(
+			":code" => $cellData['A'],
+			":districtid" => $_POST['districtid'],
+			":year" => $_POST['year']
+		);
+		if ($firstrow > 1){
+			$stmt = $pdo->prepare('SELECT * FROM fee_fixing_business WHERE districtid = :districtid AND code = :code AND year = :year');
+			$stmt->bindParam(':districtid', $_POST['districtid'], PDO::PARAM_STR);
+			$stmt->bindParam(':code', $cellData['A'], PDO::PARAM_STR);
+			$stmt->bindParam(':year', $_POST['year'], PDO::PARAM_STR);
+			$stmt->execute();
+//			$stmt = $pdo->select("feefixing_property", "districtid = :districtid AND code = :search AND year = :year", $bind); //prepare('SELECT * FROM feefixing_property WHERE ID=?');
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-				if ($firstrow > 1){
-						$feefixb->save();
-					}
+			if( ! $row)
+			{
+			$result = $pdo->insert("fee_fixing_business", $readData);
+//				die('nothing found');
+			}else {
+			$result = $pdo->update("fee_fixing_business", $readData, "districtid = :districtid AND code = :search AND year = :year", $bind);
+			}
+		}
+
 
 			$firstrow++;
-				unset($feefixb->id);
 
 			foreach ($cellData as $key => $value){
 				  echo "<td>" . $value . "</td>";
@@ -185,5 +203,5 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 	Are you sure you want to upload this data into the database?: <input type="submit" id="Submit" name="Submit" value="Upload" />
 	</form>
 -->
-<body>
+</body>
 </html>

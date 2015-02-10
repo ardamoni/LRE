@@ -73,6 +73,7 @@
 	// insert all property UPN, SUBUPN and DISTRICTID into Property_due
 	while($BOR = mysql_fetch_array($querry))
 	{
+
 		// property_due
 		mysql_query(" INSERT INTO `property_due`(	`id`,
 													`upn`,

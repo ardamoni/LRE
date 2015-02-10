@@ -19,10 +19,10 @@
 
  try {
 		$conn = new PDO(cDsn, cUser, cPass);
-		$st = $conn->prepare(" SELECT * FROM `system_config` WHERE `variable` = :id");
-		if (!$st->execute(array('id' => $id)))
+		$stmt = $conn->prepare(" SELECT * FROM `system_config` WHERE `variable` = :id");
+		if (!$stmt->execute(array('id' => $id)))
 		  throw new Exception('[' . $stmt->errorCode() . ']: ' . $stmt->errorInfo());
-		$count = $st->rowCount();
+		$count = $stmt->rowCount();
 //		echo $count.' count';
 	}
 //
@@ -35,7 +35,7 @@
 				}
 			elseif ($count==1)  //table system_config contains the needed information
 				{
-					$r = $st->fetchAll(PDO::FETCH_ASSOC);
+					$r = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				return $r[0]['value'];
 // 			return $r['value'];
 				}

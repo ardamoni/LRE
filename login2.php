@@ -3,17 +3,17 @@
   	/*
 	 *	No Direct Access To This File
 	 *	-----------------------------------------------------------------------
-	 */ 
+	 */
 	defined( 'VALID_REVENUE' ) or die( 'STOP' );
- 
+
 ?>
 <style type="text/css">
-        .olControlAttribution { 
+        .olControlAttribution {
             bottom: 0px;
             left: 2px;
             right: inherit;
             width: 400px;
-        }        
+        }
 
 			 #mapLogin {
 				width: 720px;
@@ -48,16 +48,16 @@
 					<input type = "password" id = "txt1" name = "pass" size = "30"><br /><br /></td>
 				</tr>
 				<tr>
-					<td colspan = "2">		
-						<input type = "submit" class="orange-flat-button" value = "<?php echo "SIGN IN"; ?>" id = "btn1">		
+					<td colspan = "2">
+						<input type = "submit" class="orange-flat-button" value = "<?php echo "SIGN IN"; ?>" id = "btn1">
 					</td>
 				</tr>
 			</table>
 		</td>
-	</tr>	
+	</tr>
 </table>
 </form>
-<script src="lib/OpenLayers/lib/OpenLayers.js"></script> 
+<script src="lib/OpenLayers/lib/OpenLayers.js"></script>
 
 <script type="text/javascript">
 var LREpilot = true;
@@ -65,7 +65,7 @@ var mapLogin;
 var projWGS84 = new OpenLayers.Projection("EPSG:4326");
 var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
-var options = {   
+var options = {
 			  scales: [500, 1000, 2500, 5000, 10000],
 			  numZoomLevels: 26,
 			  allOverlays: true,
@@ -74,7 +74,7 @@ var options = {
 			  controls:[
 //			new OpenLayers.Control.Navigation(),
 //				new OpenLayers.Control.PanZoomBar(),
-			new OpenLayers.Control.LayerSwitcher({'ascending':false}), 
+			new OpenLayers.Control.LayerSwitcher({'ascending':false}),
 //				new OpenLayers.Control.ScaleLine(),
 				new OpenLayers.Control.MousePosition(),
 			//	new OpenLayers.Control.OverviewMap(),
@@ -89,7 +89,7 @@ var sm = new OpenLayers.StyleMap({
 var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
     renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-var styleDistricts = { 
+var styleDistricts = {
 		// style_definition
 		 strokeColor: "#0000FF",
             strokeOpacity: 0.6,
@@ -97,7 +97,7 @@ var styleDistricts = {
             fillColor: "#F8F8F8",
             fillOpacity: 0.2
 	};
-var styleSFDR = { 
+var styleSFDR = {
 		// style_definition
 		 strokeColor: "#FF0033",
             strokeOpacity: 0.6,
@@ -106,7 +106,7 @@ var styleSFDR = {
             fillOpacity: 0.4
 	};
 
-var styleLOGODEP = { 
+var styleLOGODEP = {
 		// style_definition
 		 strokeColor: "#FF0033",
             strokeOpacity: 0.6,
@@ -115,7 +115,7 @@ var styleLOGODEP = {
             fillOpacity: 0.4
 	};
 
-var styleSFDRCAN = { 
+var styleSFDRCAN = {
 		// style_definition
 		 strokeColor: "#FF0033",
             strokeOpacity: 0.6,
@@ -124,9 +124,18 @@ var styleSFDRCAN = {
             fillOpacity: 0.4
 	};
 
+var styleSFDRGood = {
+		// style_definition
+		 strokeColor: "#FF0033",
+            strokeOpacity: 0.6,
+            strokewidth: 1,
+            fillColor: "#33CC33",
+            fillOpacity: 0.4
+	};
+
 var zoneStyle = new OpenLayers.Style({
   		fillColor: "#66FFFF",
-        fillOpacity: 0.4, 
+        fillOpacity: 0.4,
         hoverFillColor: "#587498",
         hoverFillOpacity: 0.8,
         strokeColor: "#FFAC62",
@@ -141,11 +150,11 @@ var zoneStyle = new OpenLayers.Style({
         hoverPointRadius: 1,
         hoverPointUnit: "%",
         pointerEvents: "visiblePainted",
-        cursor: "inherit"});   
-        
+        cursor: "inherit"});
+
 var districtselectStyle = new OpenLayers.Style({
 	    fillColor: "#ffcc00",
-        fillOpacity: 0.4, 
+        fillOpacity: 0.4,
         hoverFillColor: "white",
         hoverFillOpacity: 0.6,
         strokeColor: "#ff9900",
@@ -161,11 +170,11 @@ var districtselectStyle = new OpenLayers.Style({
         hoverPointUnit: "%",
         pointerEvents: "visiblePainted",
         cursor: "pointer"
-        });    
+        });
 
    var temporaryStyle = new OpenLayers.Style({
         fillColor: "#587058",
-        fillOpacity: 0.4, 
+        fillOpacity: 0.4,
         hoverFillColor: "white",
         hoverFillOpacity: 0.8,
         strokeColor: "#587498",
@@ -183,40 +192,40 @@ var districtselectStyle = new OpenLayers.Style({
         cursor: "inherit",
         graphicName: "cross"
     });
-    
+
 var zoneStyleMap = new OpenLayers.StyleMap({
 		 'default': zoneStyle,
 		 'select': districtselectStyle,
-		 'temporary': temporaryStyle});  
+		 'temporary': temporaryStyle});
 
 var regionStyleMap = new OpenLayers.StyleMap({
 		 'default': styleDistricts,
 		 'select': districtselectStyle,
-		 'temporary': temporaryStyle});  
-		 
-		 
+		 'temporary': temporaryStyle});
+
+
 var mapLogin = new OpenLayers.Map('mapLogin', options);
 //Mapnik
   var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
 
-   var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {	
+   var districtmap = new OpenLayers.Layer.Vector("Districts from Database", {
    		renderers: renderer,
 	    visibility: true,
 	    isBaseLayer: false,
 	    styleMap: zoneStyleMap});
 
-   var regionmap = new OpenLayers.Layer.Vector("Regions from Database", {	
+   var regionmap = new OpenLayers.Layer.Vector("Regions from Database", {
    		renderers: renderer,
 	    visibility: true,
 	    isBaseLayer: false,
 	    styleMap: regionStyleMap});
-        
-	mapLogin.addLayer(mapnik);     
+
+	mapLogin.addLayer(mapnik);
 	mapLogin.addLayer(regionmap);
 	mapLogin.addLayer(districtmap);
 
 	var request = OpenLayers.Request.POST({
-			url: "php/dbaction.php", 
+			url: "php/dbaction.php",
 			data: OpenLayers.Util.getParameterString(
 			{dbaction: "getdistrictmap"}),
 			headers: {
@@ -226,7 +235,7 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 		});
 
 	var regionrequest = OpenLayers.Request.POST({
-			url: "php/dbaction.php", 
+			url: "php/dbaction.php",
 			data: OpenLayers.Util.getParameterString(
 			{dbaction: "getregionmap"}),
 			headers: {
@@ -238,7 +247,7 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 var report = function(e) {
                 OpenLayers.Console.log(e.type, e.feature.id);
             };
-            		
+
 /*	 var highlightCtrl = new OpenLayers.Control.SelectFeature(districtmap, {
                 hover: true,
                 highlightOnly: true,
@@ -257,14 +266,14 @@ var report = function(e) {
 	overFeature: function(feature) {
 		console.log('hover: number of selected features: ' + districtmap.selectedFeatures.length);
 		document.getElementById("title1").innerHTML="Login to dLRev - "+feature.attributes.districtname;
-		districtmap.drawFeature(districtmap.getFeatureById(feature.id), {fillColor: "#FFCC00", fillOpacity: 0.1, strokeColor: "#00ffff"});			
+		districtmap.drawFeature(districtmap.getFeatureById(feature.id), {fillColor: "#FFCC00", fillOpacity: 0.1, strokeColor: "#00ffff"});
 	},
 	outFeature: function(feature) {
 		console.log('hover out: number of selected features: ' + districtmap.selectedFeatures.length);
-		districtmap.drawFeature(districtmap.getFeatureById(feature.id));			
+		districtmap.drawFeature(districtmap.getFeatureById(feature.id));
 	},
         });
-        
+
 var selectControl = new OpenLayers.Control.SelectFeature(
   regionmap, {
     hover: true,
@@ -311,11 +320,11 @@ var selectControl = new OpenLayers.Control.SelectFeature(
     var ghana = new OpenLayers.LonLat(-1.175,7.8).transform(new OpenLayers.Projection("EPSG:4326"),mapLogin.getProjectionObject());
 
     mapLogin.setCenter(ghana, 7);
-    
-    
+
+
 
 //-----------------------------------------------------------------------------
-		//function polyhandler() 
+		//function polyhandler()
 		//is the callback handler for getpolygons()
 		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromjson
 //-----------------------------------------------------------------------------
@@ -340,7 +349,7 @@ function polyhandler(request) {
 		var i = 0
 		// build geometry for each feed item
 		for (var i = 0; i < feed.length; i++) {
-			boundary = feed[i]['boundary'];       	
+			boundary = feed[i]['boundary'];
 			var coordinates = boundary.split(" ");
 			var polypoints = [];
 			for (var j=0;j < coordinates.length; j++) {
@@ -358,24 +367,26 @@ function polyhandler(request) {
 			if (LREpilot) {
 			//the switch checks on whether the district is part of the GIZ/SfDR Pilot districts MUST BE TAKEN OUT AFTER PILOT PHASE
 			switch(parseInt(feed[i]['activestatus'])) {
-					case 1: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDR);		
+					case 1: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDR);
 						break;
-					case 2: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleLOGODEP);		
+					case 2: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleLOGODEP);
 						break;
-					case 3: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDRCAN);		
+					case 3: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDRCAN);
 						break;
-					default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
+					case 4: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleSFDRGood);
+						break;
+					default: var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);
 			}
 			}else{
 				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);
 			}
 			districtmap.addFeatures([polygonFeature]);
-		} // end of for 
+		} // end of for
 		  districtmap.redraw();
 	}
 
 
-}	
+}
 function polyhandlerregion(regionrequest) {
    request=regionrequest;
 	// the server could report an error
@@ -391,12 +402,12 @@ function polyhandlerregion(regionrequest) {
 	if(!request.responseXML) {
 		// get the response from php and read the json encoded data
 	   feed=JSON.parse(request.responseText);
-    
+
 		var boundary = [];
 		var i = 0
 		// build geometry for each feed item
 		for (var i = 0; i < feed.length; i++) {
-			boundary = feed[i]['boundary'];       	
+			boundary = feed[i]['boundary'];
 			var coordinates = boundary.split(" ");
 			var polypoints = [];
 			for (var j=0;j < coordinates.length; j++) {
@@ -408,10 +419,10 @@ function polyhandlerregion(regionrequest) {
 		var attributes = {regionname: feed[i]['regionname']};
 		    // create a linear ring by combining the just retrieved points
 		var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
-		    //the switch checks on the payment status and 
-				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);		
+		    //the switch checks on the payment status and
+				var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes);//, styleDistricts);
 		  regionmap.addFeatures([polygonFeature]);
-		  } // end of for 
+		  } // end of for
 		  regionmap.redraw();
 	}
 } // end of function polyhandler

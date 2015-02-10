@@ -11,13 +11,13 @@
 	 *	Include the Library Code
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 */
-	require_once(	"../../lib/configuration.php"	);
+//	require_once(	"../../lib/configuration.php"	);
+ 	require_once( 	"../../lib/System.php"			);
 	require_once(	"../../lib/System.PDF.php"		);
 	require_once( 	"../../lib/Revenue.php"			);
-// 	require_once( 	"../../lib/System.php"			);
 
+	$System = new System;
 	$Data = new Revenue;
-	//$System = new System;
 
 	$PDF = new PDF('P','mm','A4');
 
@@ -25,7 +25,7 @@
 	$subupn 	= $_GET['subupn'];
 	$type 		= $_GET['type'];
 //	$year 		= $System->GetConfiguration("RevenueCollectionYear");
-	$year 		= 2014;
+	$year 		= 2015;
 	$districtid = $_SESSION['user']['districtid'];
 
 	/*

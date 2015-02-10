@@ -3,6 +3,7 @@
 // 27. September 2013 10:10:43 GMT moved previous code from LREinit and created init() in order to keep file count low
 
 //make drawing tools invisible
+//on NITA OpenLayers.ProxyHost = "/usr/lib/cgi-bin/proxy.cgi?url=";
 OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
  document.getElementById("controls").style.visibility="hidden";
 
@@ -96,6 +97,27 @@ var spinopts = {
 };
 var target = document.getElementById('map');
 var spinner = new Spinner(spinopts); //.spin(target);
+
+var spinoptsclick = {
+  lines: 13, // The number of lines to draw
+  length: 20, // The length of each line
+  width: 10, // The line thickness
+  radius: 30, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 14, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#0000FF', // #rgb or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: '50%', // Top position relative to parent in px
+  left: '50%' // Left position relative to parent in px
+};
+// var targetclick = document.getElementById('debug1');
+var spinclick = new Spinner(spinoptsclick); //.spin(target);
 
 
 //define the vector layers
@@ -643,7 +665,7 @@ function onFeatureSelectSub(evt) {
 	});
 }
 //-----------------------------------------------------------------------------
-		//function onFeatureSelectFJ()
+		//function onFeatureSelectFJ() click
 		//called by the click event on the map
 		//it performs a POST to dbaction.php which retrieves the information of the clicked parcel
 		//we need this function because the UPN information is directly accessible as a feature attribute
@@ -652,6 +674,8 @@ function onFeatureSelectSub(evt) {
 //-----------------------------------------------------------------------------
 function onFeatureSelectFJ(evt) {
 	feature = evt.feature;
+spinclick.spin(target);
+
 //               alert('features: '+feature.attributes.upn);
 	var request = OpenLayers.Request.POST({
 		url: "php/dbaction.php",
@@ -675,6 +699,7 @@ function onFeatureSelectFJ(evt) {
 //-----------------------------------------------------------------------------
 function onFeatureSelectBus(evt) {
 	feature = evt.feature;
+spinclick.spin(target);
 	//                alert('features: '+feature.attributes.upn);
 	var request = OpenLayers.Request.POST({
 		url: "php/dbaction.php",
@@ -695,7 +720,6 @@ function onFeatureSelectBus(evt) {
 		//
 //-----------------------------------------------------------------------------
 function onFeatureSelectcz(evt) {
-	paraevt = evt;
 	feature = evt.feature;
 	var intersectedUPNs=0;
 	var intersectedParcels=0;
@@ -712,22 +736,20 @@ function onFeatureSelectcz(evt) {
    		alert(html);
    	}//else{
 
-spinner.spin(target);
 
-		if (jsonPVisible && !jsonBVisible){
-			var searchlayer=fromProperty.id;
-		}
-		else if (jsonBVisible && !jsonPVisible)
-		{	var searchlayer=fromBusiness.id; }
-		else if (jsonPVisible && jsonBVisible)
-		{	var searchlayer=fromProperty.id;
-			var searchlayer2=fromBusiness.id;
-			}
-		else
-		{ 	html = 'Please open either the Properties or the Business Map!\nThis will enable the calculation of numbers of Properties or Businesses';
-			alert(html);
-		}
-
+// 		if (jsonPVisible && !jsonBVisible){
+// 			var searchlayer=fromProperty.id;
+// 		}
+// 		else if (jsonBVisible && !jsonPVisible)
+// 		{	var searchlayer=fromBusiness.id; }
+// 		else if (jsonPVisible && jsonBVisible)
+// 		{	var searchlayer=fromProperty.id;
+// 			var searchlayer2=fromBusiness.id;
+// 			}
+// 		else
+// 		{ 	html = 'Please open either the Properties or the Business Map!\nThis will enable the calculation of numbers of Properties or Businesses';
+// 			alert(html);
+// 		}
 		// check each feature from Localplan layer if intersecting with the collector zone polygon
 			for( var i = 0; i < map.getLayer(fromLocalplan.id).features.length; i++ )
 			{
@@ -744,85 +766,125 @@ spinner.spin(target);
 				}
 			}
 
-		if ((jsonPVisible || jsonBVisible) && !(jsonPVisible && jsonBVisible)) {
-		// check each feature from layer below if intersecting with the collector zone polygon
-//			console.log('property layer');
-			for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ )
-			{
-				if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) {
-					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
-				if (feature.geometry.containsPoint(checkPoint)){
-					intersectedUPNs++;
-					revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
-				// for debugging
-					if (console && console.log) {
-						console.log(map.getLayer(searchlayer).features[i].attributes.upn, intersectedUPNs.toString());
-					}
-				}
-				}
-			}
-		} else if (jsonPVisible && jsonBVisible){
-			for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ )
-			{
-				if (feature.geometry.intersects(map.getLayer(searchlayer).features[i].geometry)) {
-					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer).features[i].geometry.getBounds().getCenterLonLat().lat);
-				if (feature.geometry.containsPoint(checkPoint)){
-					intersectedUPNs++;
-					revbalance=revbalance+Number(map.getLayer(searchlayer).features[i].attributes.revbalance);
-				// for debugging
-// 					if (console && console.log) {
-// 						console.log(map.getLayer(searchlayer).features[i].attributes.upn, intersectedUPNs.toString());
-					}
-				}
-				}
-			for( var i = 0; i < map.getLayer(searchlayer2).features.length; i++ )
-			{
-				if (feature.geometry.intersects(map.getLayer(searchlayer2).features[i].geometry)) {
-					var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlayer2).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlayer2).features[i].geometry.getBounds().getCenterLonLat().lat);
-				if (feature.geometry.containsPoint(checkPoint)){
-					intersectedBusinesses++;
-					revbalanceBusiness=revbalanceBusiness+Number(map.getLayer(searchlayer2).features[i].attributes.revbalance);
-				// for debugging
-// 					if (console && console.log) {
-// 						console.log(map.getLayer(searchlayer2).features[i].attributes.upn, intersectedUPNs.toString());
-					}
-				}
-				}
-			}
+		spinclick.spin(target);
 
-		content = 'Collector ID: '+feature.attributes.collectorid+
-					'<br>Area: '+(feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2)+'sq km'+
-					'<br>Parcels: '+intersectedParcels.toString();
-		if (jsonPVisible && !jsonBVisible){
-		content +=	'<br>Properties: '+intersectedUPNs.toString();
-		}else if (jsonBVisible && !jsonPVisible){
-		content +=	'<br>Businesses: '+intersectedUPNs.toString();
-		} else if (jsonPVisible && jsonBVisible){
-		content +=	'<br>Properties: '+intersectedUPNs.toString();
-		content +=	'<br>Businesses: '+intersectedBusinesses.toString();
-		}
-		if (jsonPVisible && jsonBVisible){
-		content +=	'<br>Outstanding Property: '+number_format(revbalance, 2, '.', ',')+' GHC'+
-					'<br>Outstanding Business: '+number_format(revbalanceBusiness, 2, '.', ',')+' GHC'+
-					'<br>Outstanding Total: '+number_format(revbalance+revbalanceBusiness, 2, '.', ',')+' GHC'+
-					'<br>Zone ID: '+feature.attributes.zoneid;
-			} else {
-		content +=	'<br>Outstanding: '+number_format(revbalance, 2, '.', ',')+' GHC'+
-					'<br>Zone ID: '+feature.attributes.zoneid;
-			}
-		content += "<br><input type='button' class='deletezone' value='' title='Delete the selected collector zone' onclick='deletezone(paraevt)' >";
+		var handlerParameter = {zoneid: feature.attributes.zoneid, collectorid: feature.attributes.collectorid, area: (feature.geometry.getGeodesicArea(proj900913)/1000000).toFixed(2), parcels: intersectedParcels.toString()};
+
+		var request = OpenLayers.Request.POST({
+			url: "php/dbaction.php",
+			data: OpenLayers.Util.getParameterString(
+			{dbaction: "feedColzoneInfo",
+			 districtid: globaldistrictid,
+			 clickfeature: feature.attributes.zoneid
+			 }),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: handlerColZoneInfo,
+			scope: handlerParameter
+
+		});
+
+} //end of function
+
+
+//-----------------------------------------------------------------------------
+		//function handlerColZoneInfo()
+		//gets the request feed from the POST in onFeatureSelectCZ()
+		//and displays the retrieved information in a popup
+//-----------------------------------------------------------------------------
+
+function handlerColZoneInfo(request)
+{
+	// erro 5xx and 4xx are same
+	// http://www.w3.org/Protocols/HTTP/HTRESP.html
+    if( request.status == 500  || request.status == 413 )
+	{
+        // TODO: do something to calm the user
+    }
+
+    // the browser's parser may have failed
+    if( !request.responseXML )
+	{
+        // get the response from php and read the json encoded data
+		feed = JSON.parse(request.responseText);
+		var i = 0;
+		var html = '';
+		html = 'Collector ID: '+this.collectorid+
+					'<br>Area: '+this.area+' sq km'+
+					'<br>Parcels: '+this.parcels;
+		html +=	'<br>Properties: '+ feed[i]['intersectedProp'];
+		html +=	'<br>Businesses: '+feed[i]['intersectedBus'];
+		html +=	'<br>Outstanding Property: '+number_format(feed[i]['revbalanceProp'], 2, '.', ',')+' GHC'+
+					'<br>Outstanding Business: '+number_format(feed[i]['revbalanceBus'], 2, '.', ',')+' GHC'+
+					'<br>Outstanding Total: '+number_format(feed[i]['revbalanceTotal'], 2, '.', ',')+' GHC'+
+					'<br>Zone ID: '+this.zoneid;
+
+// 		html += '<table style="cellpadding:15px; border:1p">';
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Collector ID:</strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </strong></td>";
+// 		html += "	<td style='border:0px; text-align:center'>"+this.collectorid+"</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Area:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:center'>"+this.area+' sq km'+"</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Parcels:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:center'>"+this.parcels+"</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Properties:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:center'>"+feed[i]['intersectedProp']+"</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Businesses:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:center'>"+feed[i]['intersectedBus']+"</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Outstanding Property:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:right'>"+number_format(feed[i]['revbalanceProp'], 2, '.', ',')+" GHC</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Outstanding Business:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:right; padding:5px>'"+number_format(feed[i]['revbalanceBus'], 2, '.', ',')+" GHC</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Outstanding Total:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:right'>"+number_format(feed[i]['revbalanceTotal'], 2, '.', ',')+" GHC</td>";
+// 		html += "</tr>";
+// 		html += "<tr>";
+// 		html += "	<td style='border:0px'><strong>Zone ID:</center></strong></td>";
+// 		html += "	<td style='border:0px'><strong>  </center></strong></td>";
+// 		html += "	<td style='border:0px; text-align:center'>"+this.zoneid+"</td>";
+// 		html += "</tr>";
+// 		html += "</table>";
+//
+//
+		html += "<br><input type='button' class='deletezone' value='' title='Delete the selected collector zone' onclick='deletezone(paraevt)' >";
 
 		var popup = new OpenLayers.Popup.FramedCloud("featurePopup",
 						feature.geometry.getBounds().getCenterLonLat(),
 						new OpenLayers.Size(100,100),
-						content,
+						html,
 						null, true, onPopupClose);
 
-spinner.stop();
 		feature.popup = popup;
 		popup.feature = feature;
 		popup.panMapIfOutOfView = true;
 		map.addPopup(popup, true);
+	}
+
+	spinclick.stop();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -902,8 +964,9 @@ function handler(request)
 			}else{
 				html += '<p>Current rate: '+ feed[i]['rate'] +' GHS</p>';
 			}
- 			html += '<p>Payment Due: '+ feed[i]['revenue_due'] +' GHS</p>';
-			html += '<p>Revenue Collected: '+ feed[i]['revenue_collected'] +' GHS</p>';
+ 			html += '<p>Payment Due ('+ feed[i]['year'] +'): '+ feed[i]['revenue_due'] +' GHS</p>';
+ 			html += '<p>Arrears: '+ feed[i]['arrears'] +' GHS</p>';
+			html += '<p>Revenue Collected ('+ feed[i]['year'] +'): '+ feed[i]['revenue_collected'] +' GHS</p>';
 //			html += '<p>Date paid: '+ feed[i]['date_payment'] +'</p>';
 			switch( parseInt(feed[i]['pay_status']) ) {
 				case 1:
@@ -951,6 +1014,8 @@ function handler(request)
 		popup.panMapIfOutOfView = true;
 		map.addPopup(popup, true);
 	}
+	spinclick.stop();
+
 }  // end of handler function
 
 //-----------------------------------------------------------------------------
@@ -1592,9 +1657,8 @@ function polyhandler(request) {
 //-----------------------------------------------------------------------------
 		//function getBusinessPolygons()
 		//is the onvisibilitychanged event for the Buisness Layer
-		//it calls dbaction.php - getlocalplan() to retrieve geometry information to draws polygones
-		//from the boundaries stored in the table KML_From_LUPMIS
-		//it calls a polyhandler() to actually create the polygones based on the returned data
+		//it calls dbaction.php - getbusiness() to retrieve the fiscal data
+		//it calls a Businesshandler() to actually create the polygones based on the returned data
 //-----------------------------------------------------------------------------
 function getBusinessPolygons() {
 //   alert("inside getpolygones");
@@ -2482,7 +2546,7 @@ function xlsexport() {
 //    		alert(html);
 //    }
 //    else if (jsonBVisible || jsonPVisible)  {
- 		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, width='+w+', height='+h+', top='+top+', left='+left+', resizable=no,location=no,menubar=no,status=no,toolbar=no');
+ 		popupWindow = window.open(pageURL,"Excel Reports", 'border=0, status=0, width='+w+', height='+h+', top='+top+', left='+left+', scrollbars=yes, resizable=no,location=no,menubar=no,status=no,toolbar=no');
 // 	}
 //    else
 //    { 	html = 'Please open either the Properties or the Business Map! \nTable view is only available for data from one of these two Maps';
@@ -2835,7 +2899,7 @@ var handlerParameter = {spin: spinner};
 //-----------------------------------------------------------------------------
 function handlerupdateCZinProp(request) {
 feed=JSON.parse(request.responseText);
-alert(feed[0]['upn']+' '+feed[0]['message']);
+alert(feed[feed.length-1]['messageProp']+feed[feed.length-1]['reccountProp']+' records'+' '+feed[feed.length-1]['messageBus']+feed[feed.length-1]['reccountBus']+' records');
 this.spin.stop();
 }
 
