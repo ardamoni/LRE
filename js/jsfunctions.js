@@ -146,6 +146,12 @@ var fromBusiness = new OpenLayers.Layer.Vector("Business Status (Real Time)", {
  						 //"featureadded": function(){alert("Feature added")}
  						 }
      });
+var fromFees = new OpenLayers.Layer.Vector("Fees Status (Real Time)", {
+	    visibility: false,
+	    eventListeners: {"visibilitychanged": getFeesPolygons,
+ 						 //"featureadded": function(){alert("Feature added")}
+ 						 }
+     });
 
 
 //specify the colours used for collector zones
@@ -448,6 +454,7 @@ mapnik.visibility = false;
 	map.addLayer(fromLocalplan);
 	map.addLayer(fromProperty);
 	map.addLayer(fromBusiness);
+	map.addLayer(fromFees);
 	map.addLayer(colzones);
 
 
@@ -1670,6 +1677,127 @@ function getBusinessPolygons() {
 			url: "php/dbaction.php",
 			data: OpenLayers.Util.getParameterString(
 			{dbaction: "getbusiness",
+			 districtid: globaldistrictid}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: Businesshandler
+		});
+     }else{
+// 		 if (jsonBVisible) {
+// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';
+// 				showLegend();
+// 		  }else{
+// 				document.getElementById("debug2").innerHTML=' - ';
+// 				}
+		showLegend();
+		spinner.stop();
+	 }
+	 globalbusinesschanged = false;
+
+} //end of function getBusinessPolygons
+
+//-----------------------------------------------------------------------------
+		//function Businesshandler()
+		//is the callback handler for getPropertyPolygons()
+		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
+//-----------------------------------------------------------------------------
+
+function Businesshandler(request) {
+	// the server could report an error
+	if(request.status == 500) {
+		// do something to calm the user
+	}
+	// the server could say you sent too much stuff
+	if(request.status == 413) {
+		// tell the user to trim their request a bit
+	}
+	// the browser's parser may have failed
+
+	if(!request.responseXML) {
+		// get the response from php and read the json encoded data
+	   feed=JSON.parse(request.responseText);
+
+		var boundary = [];
+		var i = 0;
+		var revbalance = 0;
+		// build geometry for each feed item
+		for (var i = 0; i < feed.length; i++) {
+			boundary = feed[i]['boundary'].trim();
+			var coordinates = boundary.split(" ");
+			var polypoints = [];
+			for (var j=0;j < coordinates.length; j++) {
+				points = coordinates[j].split(",");
+				if (points.length>1){
+					point = new OpenLayers.Geometry.Point(points[0], points[1]).transform(projWGS84,proj900913);
+					polypoints.push(point);
+				}
+			}
+				// create some attributes for the feature
+			var attributes = {upn: feed[i]['upn'],
+								revbalance: feed[i]['revenue_balance']};
+				// create a linear ring by combining the just retrieved points
+			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
+				//the switch checks on the payment status and
+			switch(parseInt(feed[i]['status'])) {
+				case 1:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleRed);
+				  break;
+				case 5:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNotYetGreen);
+				  break;
+				case 9:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleGreen);
+				  break;
+				default:
+					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);
+				}
+				var num = Number(feed[i]['revenue_balance']);
+				var n = num.valueOf();
+				revbalance = revbalance+num;
+				global_out_business = revbalance;
+// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';
+//					document.getElementById("debug2").innerHTML=typeof(num);
+
+// for debugging
+// 	if (console && console.log) {
+// //	 		console.log('getbusiness poly');
+// 			if (feed[i]['id']=='4928'){
+// 			console.log(i,';',feed[i]['id'], ';',num);}
+// 			console.log(i,';',feed[i]['id'],';',feed[i]['upn'],';',global_out_business,';', num, ';',revbalance);
+// 		}
+//
+
+			  fromBusiness.addFeatures([polygonFeature]);
+
+		  } // end of for
+		  fromBusiness.redraw();
+	}
+		spinner.stop();
+		w.stop();
+// 		document.getElementById("debug1").innerHTML=w.toString();
+		showLegend();
+
+
+//       alert(w.toString());
+} // end of function Businesshandler
+
+//-----------------------------------------------------------------------------
+		//function getBusinessPolygons()
+		//is the onvisibilitychanged event for the Buisness Layer
+		//it calls dbaction.php - getbusiness() to retrieve the fiscal data
+		//it calls a Businesshandler() to actually create the polygones based on the returned data
+//-----------------------------------------------------------------------------
+function getFeesPolygons() {
+//   alert("inside getpolygones");
+   var jsonBVisible = fromBusiness.getVisibility();
+   if ((fromBusiness.features.length<1) || (globalpropertychanged)) {
+	  spinner.spin(target);
+	  w.start();
+		var request = OpenLayers.Request.POST({
+			url: "php/dbaction.php",
+			data: OpenLayers.Util.getParameterString(
+			{dbaction: "getfees",
 			 districtid: globaldistrictid}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"

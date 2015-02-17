@@ -44,6 +44,8 @@
 
   if ($dbaction=='getbusiness'){getbusiness($districtid, $upn);}
 
+  if ($dbaction=='getfees'){getfees($districtid, $upn);}
+
   if ($dbaction=='getdistrictmap'){getdistrictmap();}
 
   if ($dbaction=='getregionmap'){getregionmap($year);}
@@ -488,6 +490,80 @@ function getbusiness($districtid, $upn)
 	$payupn="";
 	$balanceTotal=-99;
 
+
+	while ($row = mysql_fetch_assoc($query)) {
+	$json 				= array();
+	if ($row['balance']>0){
+			$payStatus=1;
+		}else{
+			$payStatus=9;
+		}
+	if (empty($row['subupn'])) {
+//		$payStatus = $row['pay_status'];
+		$payStatus = $payStatus;
+		$payStatus9=false;
+	} else {
+//		if ($row['pay_status']==9){
+		if ($payStatus==9){
+			 $payStatus9=true;}
+
+		if ($payStatus9){
+			if($Data->getBalanceTotal( $row['UPN'], $row['districtid'], $currentYear, "business", "sumbalance") > 0)
+			{
+			 $payStatus = 5;} else {
+			 $payStatus = 9;
+			 }
+		}
+	}
+	$payStatus9=false;
+	$json['id'] 		= $row['id'];
+	$json['upn'] 		= $row['UPN'];
+	$json['boundary'] 	= $row['boundary'];
+	$json['status'] 	= $payStatus; //$row['pay_status'];
+	$json['revenue_balance'] 	= $row['balance'];
+	$data[] 			= $json;
+	 }//end while
+	header("Content-type: application/json");
+	echo json_encode($data);
+}
+
+//-----------------------------------------------------------------------------
+				//function getfees()
+				//collects polygon information
+				//expects no $_POST parameters
+//-----------------------------------------------------------------------------
+function getfees($districtid, $upn)
+{
+
+	$Data = new Revenue;
+	$System = new System;
+	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
+
+
+	// get the polygons out of the database
+	$subupn = "";
+	if (!isset($upn)) {
+	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
+		FROM `business_balance` d3
+		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."'
+		AND d3.`year`='".$currentYear."';";
+	}else{
+		$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
+		FROM `business_balance` d3
+		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d3.`districtid`='".$districtid."'
+		AND d3.`year`='".$currentYear."';";
+	}
+// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance
+// 			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+
+	$query = mysql_query($run);
+
+	$data 				= array();
+
+	$payStatus = 1;
+	$payStatus9 = false;
+	$payupn="";
+	$balanceTotal=-99;
 
 	while ($row = mysql_fetch_assoc($query)) {
 	$json 				= array();
