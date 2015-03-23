@@ -59,7 +59,7 @@ require_once( "../lib/Revenue.php"			);
 $Data = new Revenue;
 $System = new System;
 
-
+// var_dump($_POST);
 $upn=$_POST['upn'];
 $subupn=$_POST['subupn'];
 $districtid=$_POST['districtid'];
@@ -173,6 +173,8 @@ $username = $_SESSION['user']['user'];
 						// DUE, PAYMENT, BALANCE
 						$revenueBalancePrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "balance" );
 						$revenueCollectedPrevious = $Data->getBalanceInfo( $upn, $subupn, $districtid, $previousYear, $type, "paid" );
+						$revenuePaymentCurrentYear = $Data->getLastPaymentInfo( $upn, $subupn, $districtid, $currentYear, $type, "payment_value" );
+						$revenuePaymentPreviousYear = $Data->getLastPaymentInfo( $upn, $subupn, $districtid, $previousYear, $type, "payment_value" );
 
 						/*
 						 * current year
@@ -184,32 +186,40 @@ $username = $_SESSION['user']['user'];
 						$revenuePaid = $revenueCollected + $revenueCollectedPrevious;  // current year
 						$revenueBalance = $revenueBalancePrevious + $due - $revenueCollected;
 
-	// debug	echo '<br> ffc '.$feefi_code.' - ffv'.
-					$feefi_value.' - riv '.
-					$rate_impost_value.' - rv '.
-					$rate_value.' - d '.
-					$due.' - bo'.
-					$revenueBalancePrevious.' - bal'.
-				 	$revenueBalanceOld.' - balance'.
-				 	$revenueBalance.' - po'.
-					$revenueCollectedPrevious.' - p'.
-					$revenueCollected  ;
-
-//check with BusinessRevenueCollection it is more complex than thought
-// I guess it is solved, but further tests will show
-						if ($revenuePaid > 0){
-						  $balance = $revenueBalance;
-						  }
-
+// //check with BusinessRevenueCollection it is more complex than thought
+// // I guess it is solved, but further tests will show
+// 						if ($revenuePaid > 0){
+// 						  $balance = $revenueBalance;
+// 						  }
+//
 
 						$paid = $Data->getSumPaymentInfo( $upn, $subupn, $districtid, $year, $type = "property" );
 						if ($paid == NULL || $paid == '') {
 						 $paid = 0;
 						}
 //check with PropertyRevenueCollection it is more complex than thought
-						if ($paid > 0){
-						  $balance = $balance+$paid;
-						  }
+
+							$balance = $revenueBalancePrevious + $due - $paid;
+
+// 						  $due = $balance;
+
+	// debug
+// 	echo '<br> ffc '.$feefi_code.
+				' - ffv'.$feefi_value.
+				' - riv '.$rate_impost_value.
+				' - rv '.$rate_value.
+				' - d '.$due.
+				' - bo'.$revenueBalancePrevious.
+				' - revbalOld'.$revenueBalanceOld.
+				' - revbalance'.$revenueBalance.
+				' - balance'.$balance.
+				' - revColPrev'.$revenueCollectedPrevious.
+				' - revCol'.$revenueCollected.
+				' - paid'.$paid.
+				' - paymentCurrentY'.$revenuePaymentCurrentYear.
+				' - paymentPreviousY'.$revenuePaymentPreviousYear  ;
+
+
 						//use pdo wrapper
 						$update = array(
 							'streetname' => $_POST['street'],
@@ -237,12 +247,16 @@ $username = $_SESSION['user']['user'];
 							);
 						$bind = array(
 							":upn" => $upn,
+							":subupn" => $subupn
+						);
+						$result = $pdo->update("property", $update, "upn = :upn AND subupn = :subupn", $bind);
+
+						$bind = array(
+							":upn" => $upn,
 							":subupn" => $subupn,
 							":districtid" => $districtid,
 							":year" => $currentYear
 						);
-
-						$result = $pdo->update("property", $update, "upn = :upn AND subupn = :subupn", $bind);
 						$result = $pdo->update("property_due", $update, "upn = :upn AND subupn = :subupn AND districtid = :districtid AND year = :year", $bind);
 						$result = $pdo->update("property_balance", $update, "upn = :upn AND subupn = :subupn  AND districtid = :districtid AND year = :year", $bind);
 

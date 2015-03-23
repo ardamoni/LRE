@@ -36,7 +36,7 @@ $outputFile = '../tmp/'.$upload_district.'dupUPN.csv';
 //If you have received a submission.
     if ($_POST['submit'] == "Upload File"){
       $goodtogo = true;
-     } 
+     }
       //Check for a blank submission.
 
       try {
@@ -64,7 +64,7 @@ $outputFile = '../tmp/'.$upload_district.'dupUPN.csv';
 		if (!in_array ($_FILES['uploadedfile']['type'],$allowedmimes)){ $goodtogo = false;
 		throw new exception ("Sorry, the file must be of type .kml. Yours is: " . $_FILES['uploadedfile']['type'] . "");
         }
-       } 
+       }
        catch (exception $e) {
         echo $e->getmessage ();
       }
@@ -77,19 +77,19 @@ $outputFile = '../tmp/'.$upload_district.'dupUPN.csv';
 			  }
 			} catch (exception $e) {
 			  echo $e->getmessage ();
-			} 
+			}
 		}
 
 if ($goodtogo){
 
 
-// Where the file is going to be placed 
+// Where the file is going to be placed
 $target_path = "../kml/";
 
-/* Add the original filename to our target path.  
+/* Add the original filename to our target path.
 Result is "target_path/filename.extension" */
-$completeurl = $target_path . basename( $upload_district.$_FILES['uploadedfile']['name']); 
-//$target_path = $target_path . "bogoso.kml"; //basename( $_FILES['uploadedfile']['name']); 
+$completeurl = $target_path . basename( $upload_district.$_FILES['uploadedfile']['name']);
+//$target_path = $target_path . "bogoso.kml"; //basename( $_FILES['uploadedfile']['name']);
 
 //$completeurl = $target_path; // "../kml/Prestea_status_igf_prop.kml";
 
@@ -100,19 +100,19 @@ We also have a Python script called stripWhiteSpace.py that does the same thing
 */
 
 // print("Checking .KML file for unreadable characters, please have some patience");
-// 
+//
 // $file = fopen($completeurl, "r+") or exit("Unable to open file!");
 // $filenows = fopen($completeurl."tmp", "w") or exit("Unable to open file!");
-// 
+//
 // while (!feof($file)) {
 //     $line = fgets($file);
 // 	if (strpos($line,chr(2))>=0) {
 // 		$line=str_replace(chr(2),'',$line);
 // 	}
-// 
+//
 //     fwrite($filenows,$line);
 // }
-// 
+//
 // fclose($file);
 // fclose($filenows);
 // if (!unlink($completeurl))
@@ -124,10 +124,10 @@ We also have a Python script called stripWhiteSpace.py that does the same thing
 //   echo ("<br>Deleted $completeurl<br>");
 //   }
 // $frename = rename($completeurl."tmp",$completeurl) or exit("Unable to rename file!");
-// 
+//
 print("Start import into database, please have some patience");
 
-if (file_exists($completeurl)) { 
+if (file_exists($completeurl)) {
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
 $districtid=$upload_district; //$_SESSION['user']['districtid'];//130;
 $tmp4='';
@@ -138,7 +138,7 @@ $tmp4='';
 //   {
 //   echo "Failed to connect to MySQL: " . mysqli_connect_error();
 //   }
-// 
+//
   $placemarks = $xml->Document->Folder->Placemark;
   for ($i = 0; $i < sizeof($placemarks); $i++) {
     $coordinates = $placemarks[$i]->name;
@@ -164,14 +164,14 @@ $tmp4='';
      $cor_d  =  explode(' ', $placemarks[$i]->Polygon->outerBoundaryIs->LinearRing->coordinates);
      $cor_d1='';
 	 $query = '';
-	 $run='';  
+	 $run='';
 	 $iCount2 = 1;
 //			  echo "cor_d "; print_r($cor_d); echo "<br>";
 	  for ($j = 0; $j < sizeof($cor_d); $j++) {
-		foreach($cor_d as $value){  
+		foreach($cor_d as $value){
 			$tmp2 = explode(',',$value);
 			$iCount=1;
-			foreach($tmp2 as $value2){  
+			foreach($tmp2 as $value2){
 			   $subval= substr($value2,0,2);
 				if ($subval == "0".chr(10)) {  //check for carriage return
 				   $tmp3=substr($value2,2,strlen($value2)); //here we extract the coordinates without the NewLIne
@@ -201,12 +201,12 @@ $dupprint=false;
 //Check if UPN is already used in the database. It is assumed if the UPN already exists, it will be overwritten with the new information, hence an update of the data
 //However, it also could happen, that a district uses more than one kml-file for their local plan. If a UPN is used in two different locations will cause a data quality
 //issue, because the subsequent UPN will overwrite the existing one, hence will alter the boundary and thus the location of the UPN
-//We had this case in AgonaWest-Swedru. 
+//We had this case in AgonaWest-Swedru.
 		if (mysql_affected_rows()>0)
 		{
 		// for data quality purpose I included this to list all dublicated UPNs in the console log of the browser
-		while( $row = mysql_fetch_assoc( $found ) ) 
-		{		
+		while( $row = mysql_fetch_assoc( $found ) )
+		{
 		debug_to_file( $outputFile, $row['UPN']." , ".$row['Address']." , ".$row['ParcelOf']." , ".$row['id'].', '.$upn." , ".$address." , ".$parcelOf.chr(13).chr(10) );
 		$dupprint=true;
 		}
@@ -220,7 +220,7 @@ $dupprint=false;
 //			print_r($run);
 			 mysql_query($run) or die ('UPDATE - Error updating database: ' . mysql_error());
 		 }else
-		{       
+		{
 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
 //			echo $query;
 			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
@@ -231,7 +231,7 @@ $dupprint=false;
 	  }
 
    }else {
- 
+
    exit('Failed to open file '.$completeurl);
   }
   print("<br>Import into database successful - Great!!!");
@@ -239,7 +239,7 @@ $dupprint=false;
   print("<br>Existing UPNs were found and updated with the new information!!!");
   print("<br>The results are stored in the file:  <a href='".$outputFile."'>".$outputFile."</a>" );
   }
-	//   mysqli_close($con);    
+	//   mysqli_close($con);
 } //end if goodtogo
 
 //this is a helper function to get some info to be displayed within the console log as well as into the external file on the server
@@ -248,12 +248,12 @@ function debug_to_file( $outputFile, $data ) {
 
     if ( is_array( $data ) )
      {
-		$f = file_put_contents($outputFile,implode( ',', $data),FILE_APPEND);    	
+		$f = file_put_contents($outputFile,implode( ',', $data),FILE_APPEND);
         $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
     }
     else
      {
-		$f = file_put_contents($outputFile,$data,FILE_APPEND);    	
+		$f = file_put_contents($outputFile,$data,FILE_APPEND);
         $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
     }
 

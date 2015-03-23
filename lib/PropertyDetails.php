@@ -10,10 +10,10 @@ session_start();
 	 *
 	 */
 	class propertyDetailsClass
-	{		
+	{
 		/*
-		 *	PROPERTY Details TEST
-		 */		
+		 *
+		 */
 		// 	get the data out of property table
 		function getPInfo( $upn, $subupn) //, $year, $districtid)
 		{
@@ -29,25 +29,49 @@ session_start();
 			$r = mysql_fetch_assoc($q);
 			return $r;
 		}
-		
+
+		// 	get the local plan data out of KML_from_LUPIS table
+		function getLPInfo( $upn) //, $year, $districtid)
+		{
+			$conndb = new db(cDsn, cUser, cPass);
+
+			$bind = array(
+				":upn" => "$upn"
+			);
+ 			$result = $conndb->select("KML_from_LUPMIS INNER JOIN area_district ON KML_from_LUPMIS.districtid = area_district.districtid", "KML_from_LUPMIS.upn = :upn", $bind);
+			return $result[0];
+		}
+
+		// 	get the local plan data out of KML_from_LUPIS table
+		function getFFInfo( $upn)
+		{
+			$conndb = new db(cDsn, cUser, cPass);
+
+			$bind = array(
+				":upn" => "$upn"
+			);
+ 			$result = $conndb->select("fees_fines INNER JOIN area_district ON fees_fines.districtid = area_district.districtid", "upn = :upn", $bind);
+			return $result[0];
+		}
+
 		/*
-		 *	
-		 */		
+		 *
+		 */
 		// 	get the data out of roofing helper table
 	function getHelperText($tablename)
 		{
 			$run = "SELECT `text`, `code` from `{$tablename}`;";
 			$query 	= mysql_query($run);
-			while ($r = mysql_fetch_assoc($query)) 
+			while ($r = mysql_fetch_assoc($query))
 			{
 			$json 				= array();
 				$json['code']	= $r['code'];
 				$json['text']	= $r['text'];
 	    	$data[] 			= $json;
-			}	
+			}
 
 			return $data;
 		 }
-	} //end Class	
+	} //end Class
 
-?>	
+?>

@@ -19,6 +19,8 @@
 	$districtid = $_GET['districtid'];
 	$target = $_GET['target'];
 
+	// was used to check an updated local plan and to see whether one upn was used at two or more locations
+	// and to mark it with a * in the print
 	$dupUPNinKML = $Data->checkOnDuplicateUPNInKML($districtid, $target);
 
 // 	$dupUPNchecked = array_search('557-0688-0083',$dupUPNinKML);
@@ -145,6 +147,9 @@
 			$cznr='';
 			while( $r = mysql_fetch_array($q) )
 			{
+			// was used to check an updated local plan and to see whether one upn was used at two or more locations
+			// and to mark it with a * in the print
+
 				$dupUPNchecked = array_search($r['upn'],$dupUPNinKML);
 				//	$dupUPNchecked = array_search('556-0686-0002',$dupUPNinKML);
 
@@ -175,6 +180,26 @@
 					$PDF->Cell(100,5, 'Bills Register for Property Rates', 1,0,'C',true);
 					}
 					$PDF->Ln();
+			// 2nd row
+					$PDF->SetFont('Arial','B',7);
+					$PDF->SetFillColor(225,225,225);
+					$PDF->Cell(16,5, "UPN", 1,0,'C',true);
+					$PDF->Cell(18,5, "SUBUPN", 1,0,'C',true);
+		// 			$PDF->Cell(18,5, "Print Date", 1,0,'C',true);
+					if ($target=='business'){
+					$PDF->Cell(50,5, "BUSINESSNAME", 1,0,'C',true);
+					$PDF->Cell(40,5, "OWNER", 1,0,'C',true);
+					$PDF->Cell(30,5, "ADDRESS", 1,0,'C',true);
+					$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
+					$PDF->Cell(20,5, "REMARKS", 1,0,'C',true);
+					}elseif ($target=='property'){
+					$PDF->Cell(55,5, "OWNER", 1,0,'C',true);
+					$PDF->Cell(45,5, "ADDRESS", 1,0,'C',true);
+					$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
+					$PDF->Cell(40,5, "REMARKS", 1,0,'C',true);
+					}
+					$PDF->Ln();
+
 				}
 				if ($target=='business'){
 					$PDF->SetFont('Arial','',6);

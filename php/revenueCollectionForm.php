@@ -1,10 +1,10 @@
 <?php
-	
+
 	if( session_status() != 2 )
 	{
 		session_start();
 	}
-	//echo " post: ", $_SESSION['user']['user'];	
+	//echo " post: ", $_SESSION['user']['user'];
 ?>
 
 <!DOCTYPE html>
@@ -72,51 +72,57 @@ form.demoForm lable {font-size:0.5em;}
 function checkBeforeSubmit(frm) {
     // JavaScript validation here
     // return false if error(s)
-    
+
     //alert('This is just a demo form with no place to go.');
     //return false;
-    
+
     return true; // to submit
 }
 
 </script>
 </head>
 <body>
-    
 
-    
+
+
 <?php
 	require_once( "../lib/configuration.php" );
 	require_once("../lib/Revenue.php");
 	require_once("../lib/System.php");
-	
+
 
 	$Data = new Revenue;
-	
+
 	$upn 			= $_GET["upn"];
 	$subupn 		= $_GET["subupn"];
-	$districtid 	= $_SESSION['user']['districtid'];  //$_GET['districtid'];	
-	$ifproperty 	= $_GET['ifproperty'];	
+	$districtid 	= $_SESSION['user']['districtid'];  //$_GET['districtid'];
+	$ifproperty 	= $_GET['ifproperty'];
 
      $districtinfo = $Data->getDistrictInfo( $districtid, 'district_name' ).' ('.$districtid.')';
-//var_dump($_GET);
+// var_dump($_GET);
 
 	if ($ifproperty == 'property'){
 		echo "<h1><center>Enter revenue for this property</center></h1>";
 	} else {
-		echo "<h1><center>Enter revenue for this business</center></h1>";
+		if ($ifproperty == 'feesandfines'){
+			echo "<h1><center>Enter revenue for collected Fee & Fine</center></h1>";
+		}else{
+			echo "<h1><center>Enter revenue for this business</center></h1>";
+		}
 	}
 	if ($subupn == "" || $subupn == NULL || $subupn == 'null' || $subupn == "0")
 //		if ($subupn == 'null')
 	{ $subupn = ' - '; }
-		
+
 	$options = explode(",",$subupn);	// array
-	$name = 'subupn_dropDown';		 
-	$selected = -1; 					// default selection is first on the list	
+	$name = 'subupn_dropDown';
+	$selected = -1; 					// default selection is first on the list
 	$choice = dropdown( $name, $options, $selected );
-	
+
 //Options for type of payment selection
 $System = new System;
+
+$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 
 if ($System->GetConfiguration("PaymentType")!='empty')
 {
@@ -128,26 +134,51 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 		'bank transfer' => 'bank transfer'
 		);
 }
-?>
 
-<?php	
+	if ($ifproperty == 'feesandfines'){
+		$bind = array(
+			":districtid" => $districtid,
+			":year" => $currentYear);
+		$result = $pdo->select("fee_fixing_feesfines", "districtid = :districtid AND year = :year", $bind);
+		$data = array();
+		$i=0;
+		foreach($result as $temp){
+		foreach($temp as $key => $value) {
+		$feeficodes = array();
+		   if ($key=='code'){		$tcode = $value;}
+		   if ($key=='class'){		$tclass = $value;}
+		   if ($key=='category'){	$tcategory = $value;}
+		   if ($key=='rate'){		$trate = $value;}
+
+			$feeficodes['$i'] = $tcode.', '.$tclass.', '.$tcategory.', rate: '.$trate;
+			$i++;
+		}
+			$data[] = $feeficodes['$i'];
+		}
+// 		var_dump($data);
+	}
+
 	if ($ifproperty == 'property'){
 		echo '<form id="form1" name="form1" method="post" action="PropertyRevenueCollection.php">';
 	} else {
-		echo '<form id="form1" name="form1" method="post" action="BusinessRevenueCollection.php">';
+		if ($ifproperty == 'feesandfines'){
+			echo '<form id="form1" name="form1" method="post" action="FeesandFinesRevenueCollection.php">';
+		}else{
+			echo '<form id="form1" name="form1" method="post" action="BusinessRevenueCollection.php">';
+		}
 	}
-?>	
+?>
 	<script type="text/javascript" src="../js/jquery_validation.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function() 
-		{   			
+		$(document).ready(function()
+		{
 			//the min chars for treceipt
 			var min_chars = 1;
-			
+
 			//result texts
 			var characters_error = 'Minimum amount of chars is 1';
 			var checking_html = '<img src="images/loading.gif" /> Checking...';
-			
+
 			//when button is clicked
 			$('#Submit').click(function()
 			{
@@ -155,15 +186,15 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 				if($('#treceipt').val().length < min_chars){
 					//if it's bellow the minimum show characters_error text
 					$('#treceipt_availability_result').html(characters_error);
-				}else{			
+				}else{
 					//else show the cheking_text and run the function to check
 					$('#treceipt_availability_result').html(checking_html);
 					check_availability();
 				}
-			});			
+			});
 		});
 
-		//function to check treceipt availability	
+		//function to check treceipt availability
 		function check_availability()
 		{
 			//get the treceipt
@@ -171,11 +202,12 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 			var subupn = $('#subupn').val();
 			var treceipt = $('#treceipt').val();
 			var districtid = $('#districtid').val();
-			
+			var type = $('#type').val();
+
 			//use ajax to run the check
-			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt },
+			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt, type: type },
 				function(result)
-				{				
+				{
 					//$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + result + '</b></span>');
 					if( result == 1 )
 					{
@@ -186,9 +218,9 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 					{
 						//show that the treceipt is NOT available
 						$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + treceipt + '</b> is NOT available or was Used previously </span>');
-					}					
+					}
 			});
-		}  
+		}
 	</script>
 <!--		<table class='formTblContainer'>
 		<tr>
@@ -197,42 +229,49 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 		<table class='formTblContainer'><!-- border="0" cellpadding="3" cellspacing="1" bgcolor="#FFFFFF">-->
 			<tr>
 				<td colspan="3" bgcolor="#E6E6E6"><center><strong>Payment Form</strong></center></td>
-			</tr>					
+			</tr>
 			<tr>
 				<td width="25%">UPN</td>
 				<td width="2%">:</td>
 				<td class='c' width="50%"><input name="upn" type="hidden" id="upn" value = "<?php echo $upn;?>"><?php echo $upn;?><input name="ifproperty" type="hidden" id="ifproperty" value = "<?php echo $ifproperty;?>"></td>
-			</tr>					
+			</tr>
 			<tr>
-				<td width="20%">SUB-UPN</td>
-				<td width="2%">:</td>						
-				
-				<!-- TODO: fix the dropdown choice -->
-				<!--<td width="84%"><select name="subupn" id="subupn">
-				<option value="<?php //echo $choice;?>">Please make your selection</option></select></td> -->
-				<!-- TEMP: until the drop down is fixed -->
-				<td class='c' width="50%"><input name="subupn" type="hidden" id="subupn" size="50" value = "<?php echo $subupn;?>"><?php echo $subupn;?></td>
-			</tr>	
-			<tr>
+			<?php
+				if ($ifproperty != 'feesandfines'){
+				echo '<td width="20%">SUB-UPN</td>';
+				echo '<td width="2%">:</td>';
+				echo '<td class="c" width="50%"><input name="subupn" type="hidden" id="subupn" size="50" value = "'.$subupn.'">'.$subupn.'</td>';
+				echo '</tr>';
+				echo '<tr>';
+			}
+			?>
 				<td width="25%">District ID</td>
 				<td width="2%">:</td>
 				<td class='c' width="50%"><input name="did" type="hidden" id="did" value = "<?php echo $districtid;?>"><?php echo $districtinfo;?></td>
-			</tr>	
+			</tr>
 			<tr>
 				<td width = "25%">Payment date</td>
 				<td width = "2%">:</td>
 				<td class='c' width = "50%"><input type="hidden" name="paymentdate" id="paymentdate" size="50">
 					<script language="JavaScript">
 						today = new Date();
-						//document.write("(YYYY-MM-DD) ", today.getFullYear(), "-", today.getMonth()+1, "-", today.getDate() );								
+						//document.write("(YYYY-MM-DD) ", today.getFullYear(), "-", today.getMonth()+1, "-", today.getDate() );
 						document.write(today.toLocaleDateString());
 					</script>
-				</td>						
-			</tr>			
+				</td>
+			</tr>
 			<tr>
-				<td>Paid by</td>
-				<td>:</td>
-				<td class='c'><input name="paidby" type="text" id="paidby" size="30"></td>
+			<?php
+				if ($ifproperty != 	'feesandfines'){
+					echo '<td>Paid by</td>';
+					echo '<td>:</td>';
+					echo '<td class="c"><input name="paidby" type="text" id="paidby" size="30"></td>';
+				}else{
+				echo '<td>Fee Fixing Class</td>';
+				echo '<td>:</td>';
+				echo '<td class="c">'.generateSelect("feeficode", $data).'</td>';
+				}
+			?>
 			</tr>
 			<tr>
 				<td>Value</td>
@@ -254,7 +293,19 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 <!--				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 -->				<td colspan="3" style="background-color:#E6E6E6;text-align:center;">
-					<input type="button" id="Submit" name="Submit" value="Submit"  class='orange-flat-small'/> 
+			<?php
+					if ($ifproperty == 'property'){
+						echo '<input name="type" type="hidden" id="type" size="50" value = "property"></input>';
+					}else{
+						if (!$ifproperty=='feesandfines'){
+							echo '<input name="type" type="hidden" id="type" size="50" value = "feesandfines"></input>';
+						} else {
+							echo '<input name="type" type="hidden" id="type" size="50" value = "business"></input>';
+						}
+					}
+			?>
+
+					<input type="button" id="Submit" name="Submit" value="Submit"  class='orange-flat-small'/>
 					<input type="reset" id="Reset" name="Reset" value="Reset" class='orange-flat-small' />
 				</td>
 			</tr>
@@ -269,16 +320,17 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 
 <?php
 
+
 function generateSelect($name = '', $options = array()) {
 
-	$html = '<select name="'.$name.'">';
+	$html = '<select name="'.$name.'" style="width:175px">';
 	foreach ($options as $option => $value) {
 		$html .= '<option value='.$value.'>'.$value.'</option>';
 	}
 	$html .= '</select>';
 	return $html;
 }
-	// drop down 
+	// drop down
 	function dropdown( $name, array $options, $selected=null )
 	{
 		/*** begin the select ***/
@@ -289,18 +341,20 @@ function generateSelect($name = '', $options = array()) {
 		foreach( $options as $key=>$option )
 		{
 			/*** assign a selected value ***/
-			$select = $selected==$key ? ' selected' : null;			
+			$select = $selected==$key ? ' selected' : null;
 
 			/*** add each option to the dropdown ***/
-			$dropdown .= '<option value="'.$key.'"'.$select.'>'.$option.'</option>'."\n";			
+			$dropdown .= '<option value="'.$key.'"'.$select.'>'.$option.'</option>'."\n";
 		}
 
-		/*** close the select ***/		
+		/*** close the select ***/
 		$dropdown .= '</select>'."\n";
-
-		/*** and return the completed dropdown ***/				
+		if (strlen($dropdown)>50){
+			$dropdown=substr($dropdown,0,50);
+		}
+		/*** and return the completed dropdown ***/
 		return $dropdown;
-	}	
+	}
 ?>
 </body>
 </html>

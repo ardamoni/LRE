@@ -33,7 +33,12 @@
 	//get the districts logo
 	if (file_exists('../../uploads/logo-'.$districtId.'.gif')) {
 		$file= '../../uploads/logo-'.$districtId.'.gif';
-	} else {
+	}
+	elseif (file_exists('../../uploads/logo-'.$districtId.'.jpg'))
+	{
+		$file= '../../uploads/logo-'.$districtId.'.jpg';
+	}
+	else {
 		$file='../../uploads/logo-0.JPG';}
 	$ext = pathinfo($file, PATHINFO_EXTENSION);
 	//get the districts signature
@@ -166,8 +171,14 @@ $q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`dis
         $dueFeeFixValue 	= $dueFeeFixValue * $r['rooms'];
         }}
 
-//!!! needs work when we work with valued property EKKE
-		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
+		if ($duePropertyValue > 0) {
+			$value = $dueRateValue + $arreas;
+			$adjustment = $dueRateValue;}
+			else{
+			$value = $dueRateValue + $arreas + $dueFeeFixValue;
+						$adjustment = $dueFeeFixValue;}
+
+
 
 		//Obsolete - 15.07.2014 - Arben
 		/*$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
@@ -203,7 +214,7 @@ $q = mysql_query("SELECT t1.*, t1.`colzone_id` FROM  `property` t1 WHERE t1.`dis
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
 		$PDF->Cell(12,5, number_format( $arreas,2,'.','' ),1,0,'R');
-		$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R');
+		$PDF->Cell(16,5, number_format( $adjustment,2,'.','' ) ,1,0,'R');
 		$PDF->Cell(19,5, number_format( $value,2,'.','' ) ,1,1,'R');
 
 		$PDF->SetFont('Arial','B',6);

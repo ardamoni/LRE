@@ -5,6 +5,25 @@
 	 */
 	class Revenue
 	{
+		// OBSOLETE: 15.07.2014 - Arben, use getBasicInfo
+		function getPropertyInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		{
+			if( $subupn != "" || $subupn != NULL || $subupn != "0" )
+			{
+				$q = mysql_query("SELECT * 	FROM 	`property`
+											WHERE 	`upn` = '".$upn."' AND
+													`subupn` = '".$subupn."' AND
+													`year` = '".$year."' ");
+			}
+			else
+			{
+				$q = mysql_query("SELECT * 	FROM 	`property`
+											WHERE 	`upn` = '".$upn."' AND
+													`year` = '".$year."' ");
+			}
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
 
 		/*
 		 *  BASIC INFO
@@ -62,6 +81,18 @@
 			}
 		} // end of function getBasicInfo
 
+		// 	OBSOLETE -15.07.2014 - Arben - use getDueInfo
+		function getPropertyDueInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		{
+//			$q = mysql_query("SELECT * FROM 	`property_due`
+			$q = mysql_query("SELECT '".$f."' FROM 	`property_due`
+										WHERE 	`upn` = '".$upn."' AND
+												`subupn` = '".$subupn."' AND
+												`year` = '".$year."' ");
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
+
 		/*
 		 *  DUE INFO
 		 *  Tables: property_due, business_due
@@ -114,6 +145,69 @@
 					return "Your type of entity is not set!";
 			}
 		} // end of getDueInfo function
+
+		// OBSOLETE - 15.07.014 - Arben - use getDueInfo up to 4 times - rate_value, rate_impost_value, feefi_value, prop_value
+		// it was used in propertyAnnualBill and propertyAnnualBill_One
+		function getPropertyDueInfoAll( $upn = "", $subupn = "", $year = "2013")
+		{
+			$q = mysql_query("SELECT * FROM 	`property_due`
+										WHERE 	`upn` = '".$upn."' AND
+												`subupn` = '".$subupn."' AND
+												`year` = '".$year."' ");
+			$r = mysql_fetch_array($q);
+			return array("rate_value"=>$r["rate_value"],
+										  "rate_impost_value"=>$r["rate_impost_value"],
+										  "feefi_value"=>$r["feefi_value"],
+										  "prop_value"=>$r["prop_value"]);
+		}
+
+		// 	NOT USED !!!
+		// OBSOLETE because of logic change.
+		// Due tables are filled once in the beggining of the year.   so there is one row for each property / business
+		// therefore no need to use the sum('x')
+		// you can use getDueInfo(...), up to 4 times - rate_value, rate_impost_value, feefi_value, prop_value
+		function getAnnualDueSum( $upn = "", $subupn = "", $year = "2013" )
+		{
+// ??? !!! ekke ALERT THIS NEEDS ATTENTION WHEN valuation is done
+// 			$q	= mysql_query("SELECT ( SUM(`rate_value`) +  SUM(`rate_impost_value`) + SUM(`feefi_value`) )
+// 									AS `due`
+// 									FROM 	`property_due`
+// 									WHERE	`upn` = '".$upn."' AND
+// 											`subupn` = '".$subupn."' AND
+// 											`year` = '".$year."' ");
+			$q	= mysql_query("SELECT ( SUM(`feefi_value`) )
+									AS `due`
+									FROM 	`property_due`
+									WHERE	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."' AND
+											`year` = '".$year."' ");
+
+			$r = mysql_fetch_array($q);
+			return $r['due'];
+		}
+
+		// OBSOLETE - 15.07.2014 - Arben - use getLastPaymentInfo
+		function getLastPropertyPaymentInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		{
+			// the newest entry in the table
+			$q = mysql_query("SELECT * FROM `property_payments`
+										WHERE 	`upn` = '".$upn."' AND
+												`subupn` = '".$subupn."' AND
+												YEAR(`payment_date`) = '".$year."'
+										ORDER BY `id` DESC LIMIT 1 ");
+
+			$r = mysql_fetch_array($q);
+			$count = mysql_num_rows($q);
+			if( $count != 1 )
+			{
+				//echo "ERROR: ", $count, "<br>";
+				return 'error '.$count;
+			}
+			else
+			{
+				return $r[$f];
+			}
+		}
 
 		/*
 		 *  LAST PAYMENTS INFO
@@ -181,6 +275,25 @@
 					return "Your type of entity is not set!";
 			}
 		} // end of getLastPaymentInfo function
+
+		// OBSOLETE 15.07.014 - Arben - use getSumPaymentInfo
+		function getAnnualPaymentSum( $upn = "", $subupn = "", $year = "2013" )
+		{
+		  if (!empty($subupn)) {
+			$q	= mysql_query("SELECT SUM(`payment_value`) AS `val`
+									FROM 	`property_payments`
+									WHERE	`upn` = '".$upn."' AND
+											`subupn` = '".$subupn."' AND
+											YEAR(`payment_date`) = '".$year."' ");
+			} else {
+			$q	= mysql_query("SELECT SUM(`payment_value`) AS `val`
+									FROM 	`property_payments`
+									WHERE	`upn` = '".$upn."' AND
+											YEAR(`payment_date`) = '".$year."' ");
+			}
+			$r = mysql_fetch_array($q);
+			return $r['val'];
+		}
 
 		/*
 		 *  SUM PAYMENTS INFO
@@ -330,6 +443,17 @@
 			}
 		}
 
+		// OBSOLETE - use getBalanceInfo
+		function getPropertyBalanceInfo( $upn = "", $subupn = "", $year = "2013", $f = "" )
+		{
+			$q = mysql_query("SELECT * FROM `property_balance`
+										WHERE 	`upn` = '".$upn."' AND
+												`subupn` = '".$subupn."' AND
+												`year` = '".$year."' ");
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
+
 		/*
 		 *	BALANCE INFO
 		 *	Tables: property_balance, business_balance
@@ -414,6 +538,28 @@
 			}
 		} // end of function getBalanceTotalSubupn
 
+		// OBSOLETE - use getBalanceInfo where $f = 'balance'
+		//   get balance for one year
+		function getAnnualBalance( $upn = "", $subupn = "", $year = "2013" )
+		{
+			$q	= mysql_query("SELECT `balance` FROM `property_balance`
+										WHERE 	`upn` = '".$upn."' AND
+												`subupn` = '".$subupn."' AND
+												`year` = '".$year."' ");
+			$r = mysql_fetch_array($q);
+			return $r['balance'];
+		}
+
+
+		// 	OBSOLETE - 15.07.2014
+		// get the data out of business table
+		function getBusinessInfo( $upn = "", $subupn = "", /*$year = 2013,*/ $f = "" )
+		{
+			//$q = mysql_query("SELECT * FROM `property` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' AND `year` = '".$year."' ");
+			$q = mysql_query("SELECT * FROM `business` WHERE `upn` = '".$upn."' AND `subupn` = '".$subupn."' ");
+			$r = mysql_fetch_array($q);
+			return $r[$f];
+		}
 
 		/*
 		 *	OWNER INFO
@@ -438,6 +584,14 @@
 			return $r[$f];
 		}
 
+		// OBSOLETE - 15.07.2014 Arben - use getFeeFixingInfo
+		// 	get the district info
+		function getFeeFixingClassInfo( $id = "", $code = "", $f = "" )
+		{
+			$q = mysql_query("SELECT * 	FROM `fee_fixing_property` WHERE `districtid` = '".$id."' AND `code` = '".$code."' ");
+			$r = mysql_fetch_array($q);
+			return $r['class'];
+		}
 
 		/*
 		 *	FEE FIXING INFO
@@ -481,6 +635,21 @@
 					return "Your type of entity is not set!";
 			}
 		} // end of getFeeFixingInfo
+
+		// OBSOLETE - use getBalanceInfo
+		//   get balance for one year
+		function getEndBalance( $upn = "", $subupn = "", $districtid = "", $year = "2013" )
+		{
+			$q = mysql_query("  SELECT  `balance`
+									 FROM  `property_balance`
+									 WHERE  `upn` = '".$upn."' AND
+									   `subupn` = '".$subupn."' AND
+									   `districtid` = '".$districtid."' AND
+									   `year` = '".$year."' ");
+
+			$r = mysql_fetch_array($q);
+			return $r['balance'];
+		}
 
 	  	/*
 		 *	SET DEMAND NOTICE RECORD
@@ -538,9 +707,6 @@
 	  	/*
 		 *	checkOnDuplicateUPNInKML
 		 *	Tables: property/business, KML_from_LUPMIS
-		 *  was used to check an updated locla plan and to see whether one locations was used at two or more upns
-		 *  at the moment produces and SQL error if the old KML_from_LUPMIS table does not exist anymore
-		 *  It is used in BillsRegister.php line 22
 		 */
 		function checkOnDuplicateUPNInKML( $districtid = "",  $type = ""  )
 		{

@@ -23,12 +23,13 @@
 	$PDF = new PDF('P','mm','A4');
 
  	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
-//	$currentYear = '2014';
+// 	$currentYear = '2015';
 
 	$districtId 	= $_GET['districtid'];
 	$upn 			= $_GET["upn"];
 	$subupn 		= $_GET["subupn"];
 	$type			= $_GET["type"];
+// var_dump($_GET);
 // 												****FOR TESTING****
 //	$districtId 	= '130';
 //	$upn 			= '610-0615-0802';
@@ -36,10 +37,13 @@
 
 
 	//get the districts logo
-	if (
-		file_exists('../../uploads/logo-'.$districtId.'.gif'))
+	if (file_exists('../../uploads/logo-'.$districtId.'.gif'))
 		{
 			$file= '../../uploads/logo-'.$districtId.'.gif';
+		}
+	elseif (file_exists('../../uploads/logo-'.$districtId.'.jpg'))
+		{
+			$file= '../../uploads/logo-'.$districtId.'.jpg';
 		}
 	else
 	{
@@ -185,7 +189,11 @@
         	}
         }
 
-		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
+//		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
+		if ($duePropertyValue > 0) {
+			$value = $dueRateValue + $arreas;}
+			else{
+			$value = $dueRateValue + $arreas + $dueFeeFixValue;}
 
 		// Obsolete - 15.07.2014 - Arben
 		//$PDF->Cell(30,5, number_format( $dueAll["rate_value"] +
@@ -223,7 +231,11 @@
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_value" ),1,0,'R');
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
 		$PDF->Cell(12,5, number_format( $arreas,2,'.','' ),1,0,'R');
+		if ($duePropertyValue==0) {
 		$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R');
+		}else{
+			$PDF->Cell(16,5, number_format( '0',2,'.','' ) ,1,0,'R');
+		}
 		$PDF->Cell(19,5, number_format( $value,2,'.','' ) ,1,1,'R');
 
 		$PDF->SetFont('Arial','B',6);

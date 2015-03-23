@@ -49,10 +49,27 @@
 			$u = mysql_real_escape_string(htmlentities($user));
 			$p = md5(mysql_real_escape_string(htmlentities($pass)));
 
-			$q = mysql_query("SELECT * FROM `usr_users`
-								WHERE	`username`	= '".$u."'
-										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
-			$r	= 	mysql_fetch_array($q);
+			try {
+				$conn = new db(cDsn, cUser, cPass);
+			} catch(PDOException $e) {
+				die('Could not connect to the database:<br/>' . $e->getMessage());
+			}
+			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$bind = array(
+				":username" => $u,
+				":pass" => $p,
+				":adminpass" => $p,
+				":masterpass" => $p
+			);
+			$r = $conn->select("usr_users", " `username` = :username
+										AND (`pass` = :pass OR `adminpass` = :adminpass OR `masterpass` = :masterpass)", $bind);
+
+// var_dump($r);
+
+// 			$q = mysql_query("SELECT * FROM `usr_users`
+// 								WHERE	`username`	= '".$u."'
+// 										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
+// 			$r	= 	mysql_fetch_array($q);
 
 
 			$headers = apache_request_headers();
@@ -66,10 +83,12 @@
 			}
 			$today = date("Y-m-d H:i:s");
 
-			if( mysql_num_rows($q) == 1 )
+//			$count = $conn->rowCount();
+// 			if( mysql_num_rows($q) == 1 )
+			if( count($r) == 1 )
 			{
-				$username 	= $r['username'];
-				$name		= $r['name'];
+				$username 	= $r[0]['username'];
+				$name		= $r[0]['name'];
 				$comment	= 'user exists in database';
 			}else{
 				$username	= $user;
@@ -91,46 +110,60 @@
 					'time' => $today,
 					'comments' => $comment
 					);
-				$conn = new db(cDsn, cUser, cPass);
 				$result = $conn->insert("usr_user_accesslog", $insert);
 
-			if( mysql_num_rows($q) == 1 )
+// 			if( mysql_num_rows($q) == 1 )
+			if( count($r) == 1 )
 			{
 				session_regenerate_id();
 				/*
 				 *	Put User Info in the Session
 				 */
-				$_SESSION['user']['user']		=	$r['username'];
-				$_SESSION['user']['name']		=	$r['name'];
+				$_SESSION['user']['user']		=	$r[0]['username'];
+				$_SESSION['user']['name']		=	$r[0]['name'];
+				$_SESSION['user']['ip']			=	$ip;
 				$_SESSION['sys']['login'] 		=	true;
 
 				// user role
-				$qrole	= 	mysql_query("SELECT `roleid` FROM `usr_user_role` WHERE `username` = '".$r['username']."'");
-				$role	= 	mysql_fetch_array($qrole);
+				$bind = array(
+				":username" => $r[0]['username']
+				);
+				$role = $conn->select("usr_user_role", " `username` = :username", $bind, 'roleid');
 
-				$_SESSION['user']['roleid']		=	$role['roleid'];
+//
+// 				$qrole	= 	mysql_query("SELECT `roleid` FROM `usr_user_role` WHERE `username` = '".$r[0]['username']."'");
+// 				$role	= 	mysql_fetch_array($qrole);
+
+				$_SESSION['user']['roleid']		=	$role[0]['roleid'];
 
 
 				// user is regional district
-				$qdistrict	= 	mysql_query("SELECT `districtid` FROM `usr_user_district` WHERE `username` = '".$r['username']."'");
-				$district	= 	mysql_fetch_array($qdistrict);
+				$bind = array(
+				":username" => $r[0]['username']
+				);
+				$district = $conn->select("usr_user_district", " `username` = :username", $bind, 'districtid');
+// 				$qdistrict	= 	mysql_query("SELECT `districtid` FROM `usr_user_district` WHERE `username` = '".$r[0]['username']."'");
+// 				$district	= 	mysql_fetch_array($qdistrict);
 
-				$_SESSION['user']['districtid']	=	$district['districtid'];
+				$_SESSION['user']['districtid']	=	$district[0]['districtid'];
 
 				// user district name
-				$qdistrictname	= 	mysql_query("SELECT `district_name` FROM `area_district` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
-				$districtname	= 	mysql_fetch_array($qdistrictname);
+				$bind = array(
+				":districtid" => $_SESSION['user']['districtid']
+				);
+				$districtname = $conn->select("area_district", " `districtid` = :districtid", $bind, 'district_name');
+// 				$qdistrictname	= 	mysql_query("SELECT `district_name` FROM `area_district` WHERE `districtid` = '".$_SESSION['user']['districtid']."'");
+// 				$districtname	= 	mysql_fetch_array($qdistrictname);
 
-				$_SESSION['user']['districtname']	=	$districtname['district_name'];
-
+				$_SESSION['user']['districtname']	=	$districtname[0]['district_name'];
 
 				/*
 	 			 *	Log In and Start The System
 		 		 */
-		 		 if ($role['roleid']==200){
+		 		 if ($role[0]['roleid']==200){
 					echo '<meta http-equiv="REFRESH" content="0;url=LREstats.php">';
 				}else {
-					echo '<meta http-equiv="REFRESH" content="0;url=LREinit.php">';
+ 					echo '<meta http-equiv="REFRESH" content="0;url=LREinit.php">';
 				}
 				exit;
 

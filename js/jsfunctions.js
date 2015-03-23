@@ -14,7 +14,6 @@ var session_name = "<?php echo json_encode($_SESSION['user']['name']); ?>";
 var session_user = "<?php=$_SESSION['user']['user'];?>";
 var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
 
-
 //     		   document.getElementById("debug1").innerHTML=session_roleid+" "+session_user;
 
 // global variables, CLEAN before populating them
@@ -27,6 +26,7 @@ var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
 	var globaluserrole='';
 	var globalpropertychanged = false; //used to display the outstanding revenue
 	var globalbusinesschanged = false; //same, but for business
+	var globalfeesandfineschanged = false;
 	var googleonline = true;
 
 //we need to get the starting window dimensions for a potential resize of the map
@@ -489,7 +489,7 @@ mapnik.visibility = false;
 // end polygon drawing for collector zones
 
 //   on click events for vector layers
-   select = new OpenLayers.Control.SelectFeature([fromBusiness, fromLocalplan, fromProperty, fromBusiness, colzones],{
+   select = new OpenLayers.Control.SelectFeature([fromBusiness, fromLocalplan, fromProperty, fromBusiness, fromFees, colzones],{
                 hover: false,
                 highlightOnly: false,
                 renderIntent: "temporary",
@@ -514,6 +514,11 @@ mapnik.visibility = false;
             });
 			fromBusiness.events.on({
                 "featureselected": onFeatureSelectBus,
+                "featureunselected": onFeatureUnselect,
+
+            });
+			fromFees.events.on({
+                "featureselected": onFeatureSelectFees,
                 "featureunselected": onFeatureUnselect,
 
             });
@@ -631,7 +636,7 @@ function onFeatureSelectLocalplan(evt) {
 	if (globaluserrole<100){
 		content += '<hr />';
 		content += '<form action="javascript:addDetails(feature.attributes.upn)" method="post">';
-		content += '<br><select id="ddDetails" ><option value="property">Property</option><option value="business">Business</option><option value="other">Others</option></select>';
+		content += '<br><select id="ddDetails" ><option value="property">Property</option><option value="business">Business</option><option value="fees">Fees & Fines</option><option value="other">Others</option></select>';
 		content += "<input type='submit' id='btAdd' class='orange-flat-small' value='Add' title='Add details'></form>";
 	}
 
@@ -718,6 +723,29 @@ spinclick.spin(target);
 			"Content-Type": "application/x-www-form-urlencoded"
 		},
 		callback: handler
+	});
+}
+//-----------------------------------------------------------------------------
+		//function onFeatureSelectFees()
+		//called by the click event on the map
+		//it performs a POST to dbaction.php which retrieves the information of the clicked parcel
+		//we need this function because the UPN information is directly accessible as a feature attribute
+		//and not as an individual feature.attribute within the feature
+		//the popup action is done in handler()
+//-----------------------------------------------------------------------------
+function onFeatureSelectFees(evt) {
+	feature = evt.feature;
+spinclick.spin(target);
+// 	               alert('features: '+feature.attributes.upn);
+	var request = OpenLayers.Request.POST({
+		url: "php/dbaction.php",
+		data: OpenLayers.Util.getParameterString(
+		{dbaction: "feedFeesFinesinfo",
+		 clickfeature: feature.attributes.upn}),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		callback: feesInfohandler
 	});
 }
 
@@ -1026,6 +1054,92 @@ function handler(request)
 }  // end of handler function
 
 //-----------------------------------------------------------------------------
+		//function feesInfohandler()
+		//gets the request feed from the POST in onFeatureSelectFees()
+		//and displays the retrieved information in a popup
+//-----------------------------------------------------------------------------
+
+function feesInfohandler(request)
+{
+	// erro 5xx and 4xx are same
+	// http://www.w3.org/Protocols/HTTP/HTRESP.html
+    if( request.status == 500  || request.status == 413 )
+	{
+        // TODO: do something to calm the user
+    }
+
+    // the browser's parser may have failed
+    if( !request.responseXML )
+	{
+        // get the response from php and read the json encoded data
+		feed = JSON.parse(request.responseText);
+
+		var html = '';
+		var supnid= '';
+		var title = 'Fees & Fines';
+
+		// cleaning the global valiables before use
+		global_upn = null;
+		global_subupn = [];
+		pushBusiness = 'feesandfines';
+
+		if (feed.length==0){
+			html += '<p>There seems to be no information or a problem with the database!</p>';
+//			html += "<input type='button' value='"+title+" Details' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+		}
+
+		for( var i = 0; i < feed.length; i++ )
+		{
+			global_upn = feed[i]['upn'];
+			global_subupn[i] = feed[i]['subupn'];
+			pushBusiness = 'feesandfines';
+		}
+
+		// build html for each feed item
+		for( var i = 0; i < feed.length; i++ )
+		{
+			html += '<p>Address: '+ feed[i]['address'] +'</p>';
+			html += '<p>UPN: '+ feed[i]['upn'] +'</p>';
+			html += '<p>Collector zone: '+ feed[i]['colzone_id'] +'</p>';
+			//html += '<p>YEAR: '+ feed[i]['year'] +'</p>';
+		if( feed[i]['totalFeesFines']>0 && feed[i]['totalFeesFines']<1000 ){
+				html += '<div><strong>Revenue Balance: <FONT COLOR="ADEBAD">'+ feed[i]['totalFeesFines'] +'</FONT> GHS</strong></div>';
+			}else if (feed[i]['totalFeesFines']>=1000 && feed[i]['totalFeesFines']<1000000 ){
+				html += '<div><strong>Revenue Balance: <FONT COLOR="32CD32">'+ feed[i]['totalFeesFines'] +'</FONT> GHS</strong></div>';
+			} else {
+				html += '<div><strong>Revenue Balance: <FONT COLOR="800000">'+ feed[i]['totalFeesFines'] +'</FONT> GHS</strong></div>';
+			}
+			html += "<br>";
+			html += "<input type='button' value='Revenue Collection' class='orange-flat-small' onclick='collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+			html += "<input type='button' value='"+title+" Details' class='orange-flat-small' onclick='propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+			html += "<input type='button' value='Print Bill' class='orange-flat-small' onclick='printIndividualBillOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+			html += '<hr />';
+			//html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+		}
+
+		//html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClick(global_upn, global_subupn, globaldistrictid, "+i+", pushBusiness)' >";
+		html += "<input type='button' value='UPN History' class='peter-river-flat-small' onclick='UPNHistoryOnClickAll( pushBusiness )' >";
+		//html += "<button onclick='collectRevenueOnClick(\''+upn+'\', \''+subupn+'\')'>Revenue Collection</button>";
+		//html += ("<input type='button' value='Revenue Collection' />").find('input[type=button]').click( function(){ collectRevenueOnClick(upn, subupn); } );
+
+
+		var popup = new OpenLayers.Popup.FramedCloud(
+										"featurePopup",
+                                        feature.geometry.getBounds().getCenterLonLat(),
+                                        new OpenLayers.Size(200,200),
+                                        html,
+                                        null, true, onPopupClose);
+
+		feature.popup = popup;
+		popup.feature = feature;
+		popup.panMapIfOutOfView = true;
+		map.addPopup(popup, true);
+	}
+	spinclick.stop();
+
+}  // end of feesInfohandler function
+
+//-----------------------------------------------------------------------------
 		//function collectRevenueOnClick()
 		//  on mouse-click activation to create the window for revenue payments
 
@@ -1041,9 +1155,15 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 		var title = 'Property Revenue Collection';
 		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
 	}else{
-		var ifproperty = 'business';
-		var title = 'Business Revenue Collection';
-		var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		if(ifproperty=='feesandfines'){
+			var ifproperty = 'feesandfines';
+			var title = 'Fees & Fines Revenue Collection';
+			var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		}else{
+			var ifproperty = 'business';
+			var title = 'Business Revenue Collection';
+			var pageURL = 'php/revenueCollectionForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid+'&title='+title+'&ifproperty='+ifproperty;
+		}
 	}
 	var w = 450;
 	var h = 550;
@@ -1069,7 +1189,11 @@ var timer = setInterval(function() {
 	if (ifproperty=='property'){
 	    globalpropertychanged=true;
 	}else{
-	    globalbusinesschanged=true;
+		if(ifproperty=='feesandfines'){
+	    	globalfeesandfineschanged=true;
+		}else{
+	    	globalbusinesschanged=true;
+	    }
 	}
 	return false;
 }
@@ -1089,7 +1213,12 @@ function getSinglePolygon(upn, ifproperty) {
 	if (ifproperty=='property'){
 	   	var visibleLayer = fromProperty.getVisibility();
 	}else{
+		if(ifproperty=='feesandfines'){
+		var visibleLayer = fromFees.getVisibility();
+		}else{
 		var visibleLayer = fromBusiness.getVisibility();
+		}
+
 	}
 
 	var handlerParameter = {visibleLayer: visibleLayer};
@@ -1097,7 +1226,12 @@ function getSinglePolygon(upn, ifproperty) {
 	if (ifproperty=='property'){
 	 targetdataset = "getproperty"
 	 }else{
-	 targetdataset = "getbusiness"
+ 		if(ifproperty=='feesandfines'){
+ 			 targetdataset = "getfees"
+		}else{
+			 targetdataset = "getbusiness"
+ 		}
+
 	 }
 
 //   alert(jsonVisible);
@@ -1120,11 +1254,14 @@ function getSinglePolygon(upn, ifproperty) {
 function handlerSinglePolygon(request) {
   var jsonPVisible = fromProperty.getVisibility();
   var jsonBVisible = fromBusiness.getVisibility();
+  var jsonFeeVisible = fromFees.getVisibility();
    if (jsonPVisible){
    		var searchlayer=fromProperty.id;
    }
    else if (jsonBVisible)
    {	var searchlayer=fromBusiness.id; }
+   else if (jsonFeeVisible)
+   {	var searchlayer=fromFees.id; }
 
 	// the server could report an error
 	if(request.status == 500) {
@@ -1141,7 +1278,6 @@ function handlerSinglePolygon(request) {
 	   feed=JSON.parse(request.responseText);
 	   for (var i = 0; i < feed.length; i++) {
 	   sUPN = feed[i]['upn'].trim();
-
 // 	   		+' '+map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN).geometry);
 
 		foundUPN=map.getLayer(searchlayer).getFeaturesByAttribute('upn', sUPN);
@@ -1167,7 +1303,15 @@ function handlerSinglePolygon(request) {
 		} //if foundUPN.length>0
 	}//end for i
 //		  map.getLayer(searchlayer).redraw();
-		  fromProperty.redraw();
+	   if (jsonPVisible){
+			  fromProperty.redraw();
+	   }
+	   else if (jsonBVisible)
+	   {  fromBusiness.redraw();
+		 }
+	   else if (jsonFeeVisible)
+	   {	 fromFees.redraw();
+	   }
 		  popup = map.popup;
 // 		  map.removePopup(popup, true);
 	}
@@ -1195,11 +1339,22 @@ function propertyDetailsOnClick(global_upn, global_subupn, globaldistrictid, sup
 		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
 		var title = 'Property Details';
 	}else{
-		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
-		var title = 'Business Details';
+		 if(ifproperty=='feesandfines'){
+			var pageURL = 'php/feesandfinesForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+			var title = 'Fees & Fines Details';
+		}else{
+			var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+globaldistrictid;
+			var title = 'Business Details';
+		}
 	}
-	var w = 1024;
-	var h = 750;
+	if (ifproperty=='feesandfines'){
+		var w = 720;
+		var h = 550;
+	}else
+	{
+		var w = 1024;
+		var h = 750;
+	}
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
@@ -1670,7 +1825,7 @@ function polyhandler(request) {
 function getBusinessPolygons() {
 //   alert("inside getpolygones");
    var jsonBVisible = fromBusiness.getVisibility();
-   if ((fromBusiness.features.length<1) || (globalpropertychanged)) {
+   if ((fromBusiness.features.length<1) || (globalbusinesschanged)) {
 	  spinner.spin(target);
 	  w.start();
 		var request = OpenLayers.Request.POST({
@@ -1790,8 +1945,8 @@ function Businesshandler(request) {
 //-----------------------------------------------------------------------------
 function getFeesPolygons() {
 //   alert("inside getpolygones");
-   var jsonBVisible = fromBusiness.getVisibility();
-   if ((fromBusiness.features.length<1) || (globalpropertychanged)) {
+   var jsonFeeVisible = fromFees.getVisibility();
+   if (fromFees.features.length<1  || (globalfeesandfineschanged)) {
 	  spinner.spin(target);
 	  w.start();
 		var request = OpenLayers.Request.POST({
@@ -1802,29 +1957,23 @@ function getFeesPolygons() {
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
-			callback: Businesshandler
+			callback: getFeeshandler
 		});
      }else{
-// 		 if (jsonBVisible) {
-// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';
-// 				showLegend();
-// 		  }else{
-// 				document.getElementById("debug2").innerHTML=' - ';
-// 				}
 		showLegend();
 		spinner.stop();
 	 }
-	 globalbusinesschanged = false;
+ 	 globalfeesandfineschanged = false;
 
-} //end of function getBusinessPolygons
+} //end of function getFeesPolygons
 
 //-----------------------------------------------------------------------------
-		//function Businesshandler()
-		//is the callback handler for getPropertyPolygons()
-		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromProperty
+		//function getFeeshandler()
+		//is the callback handler for getFeesPolygons()
+		//it takes the request feed from getlocalplan.php and creates polygones on the Layer fromFees
 //-----------------------------------------------------------------------------
 
-function Businesshandler(request) {
+function getFeeshandler(request) {
 	// the server could report an error
 	if(request.status == 500) {
 		// do something to calm the user
@@ -1856,29 +2005,11 @@ function Businesshandler(request) {
 			}
 				// create some attributes for the feature
 			var attributes = {upn: feed[i]['upn'],
-								revbalance: feed[i]['revenue_balance']};
+								address: feed[i]['address']};
 				// create a linear ring by combining the just retrieved points
 			var linear_ring = new OpenLayers.Geometry.LinearRing(polypoints);
 				//the switch checks on the payment status and
-			switch(parseInt(feed[i]['status'])) {
-				case 1:
-					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleRed);
-				  break;
-				case 5:
-					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNotYetGreen);
-				  break;
-				case 9:
-					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleGreen);
-				  break;
-				default:
 					var polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linear_ring]), attributes, styleNeutral);
-				}
-				var num = Number(feed[i]['revenue_balance']);
-				var n = num.valueOf();
-				revbalance = revbalance+num;
-				global_out_business = revbalance;
-// 				document.getElementById("debug2").innerHTML='Outstanding revenue: <br>'+number_format(global_out_business, 2, '.', ',')+' GHC';
-//					document.getElementById("debug2").innerHTML=typeof(num);
 
 // for debugging
 // 	if (console && console.log) {
@@ -1889,10 +2020,10 @@ function Businesshandler(request) {
 // 		}
 //
 
-			  fromBusiness.addFeatures([polygonFeature]);
+			  fromFees.addFeatures([polygonFeature]);
 
 		  } // end of for
-		  fromBusiness.redraw();
+		  fromFees.redraw();
 	}
 		spinner.stop();
 		w.stop();
@@ -2298,7 +2429,7 @@ var request = OpenLayers.Request.GET({
     callback: fiscalstatshandler
 });
 }
-// end of function getSessionUser
+// end of function getFiscalStats
 
 //-----------------------------------------------------------------------------
 		//function fiscalstatshandler()
@@ -2315,6 +2446,7 @@ if(!request.responseXML) {
 	var sumBusinessBalance='';
 	var sumBusinessPaid='';
 	var sumBusinessDue='';
+	var currentYear='';
 		// get the response from php and read the json encoded data
 		feed=JSON.parse(request.responseText);
 		for (var i = 0; i < feed.length; i++) {
@@ -2324,6 +2456,7 @@ if(!request.responseXML) {
 			sumBusinessBalance += feed[i]['sumBusinessBalance'];
 			sumBusinessPaid += feed[i]['sumBusinessPaid'];
 			sumBusinessDue += feed[i]['sumBusinessDue'];
+			currentYear += feed[i]['currentYear'];
 			};
 
 	document.getElementById("fis1").innerHTML=number_format(sumPropertyDue, 2, '.', ',')+' GHC';
@@ -2335,6 +2468,9 @@ if(!request.responseXML) {
 
 	document.getElementById("fisprop").value='Property Rates';
 	document.getElementById("fisbus").value='Business Permits';
+	document.getElementById("fispropexp").innerHTML='Expected <small> ('+currentYear+')</small>:';
+	document.getElementById("fisbusexp").innerHTML='Expected <small> ('+currentYear+')</small>:';
+
 
 }
 spinner.stop();
@@ -2795,13 +2931,22 @@ function addDetails(global_upn) {
 //		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+districtid+'&addDetails=true';
 		var pageURL = 'php/propertyDetailsForm.php?upn='+upn+'&districtid='+globaldistrictid+'&addDetails=true';
 		var title = 'Property Details';
-	}else{
+	}else if (ifproperty=='business'){
 //		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&subupn='+subupn+'&districtid='+districtid+'&addDetails=true';
 		var pageURL = 'php/businessDetailsForm.php?upn='+upn+'&districtid='+globaldistrictid+'&addDetails=true';
 		var title = 'Business Details';
+	}else if (ifproperty=='fees'){
+		var pageURL = 'php/feesandfinesForm.php?upn='+upn+'&districtid='+globaldistrictid+'&addDetails=true';
+		var title = 'Fees & Fines Details';
 	}
-	var w = 1024;
-	var h = 750;
+	if (ifproperty=='fees'){
+		var w = 720;
+		var h = 550;
+	}else
+	{
+		var w = 1024;
+		var h = 750;
+	}
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
@@ -2815,6 +2960,7 @@ function addDetails(global_upn) {
 //	return false;
 }
 // end of function addDetails
+
 
 function checkConnection(e) {
 		if (doesConnectionExist() == true) {
@@ -2945,14 +3091,15 @@ function updateCZinPropBus() {
 	var jsonPVisible = fromProperty.getVisibility();
 	var jsonBVisible = fromBusiness.getVisibility();
 	var jsonCZVisible = colzones.getVisibility();
+	var JSONObjectLP= [];
 	var JSONObject= [];
 	var JSONObjectBus= [];
 //start spinner
 	spinner.spin(target);
 
-// 	if (!jsonLPVisible){
-// 		fromLocalplan.setVisibility(true);
-// 	}
+	if (!jsonLPVisible){
+		fromLocalplan.setVisibility(true);
+	}
 	if (!jsonPVisible){
 		fromProperty.setVisibility(true);
 	}
@@ -2964,9 +3111,24 @@ function updateCZinPropBus() {
 	}
 	for( var j = 0; j < colzones.features.length; j++ ) {
 		feature = colzones.feature;
+		var searchlocalplan=fromLocalplan.id;
 		var searchlayer=fromProperty.id;
 		var searchlayer2=fromBusiness.id;
 //		console.log('property layer');
+//alert('starting now with Local Plan');
+		for( var i = 0; i < map.getLayer(searchlocalplan).features.length; i++ )
+		{
+			if (colzones.features[j].geometry.intersects(map.getLayer(searchlocalplan).features[i].geometry)) {
+				var checkPoint = new OpenLayers.Geometry.Point(map.getLayer(searchlocalplan).features[i].geometry.getBounds().getCenterLonLat().lon,map.getLayer(searchlocalplan).features[i].geometry.getBounds().getCenterLonLat().lat);
+				if (colzones.features[j].geometry.containsPoint(checkPoint)){
+					JSONObjectLP.push({upn: map.getLayer(searchlocalplan).features[i].attributes.upn,colzone: colzones.features[j].attributes.zoneid});
+	// for debugging
+		if (console && console.log) {
+				console.log(map.getLayer(searchlocalplan).features[i].attributes.upn);
+			}
+				}
+			}
+		}
 //alert('starting now with Property');
 		for( var i = 0; i < map.getLayer(searchlayer).features.length; i++ )
 		{
@@ -3006,6 +3168,7 @@ var handlerParameter = {spin: spinner};
 		data: OpenLayers.Util.getParameterString(
 		{
 			dbaction: "updateCZinProp",
+			lpcz: JSON.stringify(JSONObjectLP),
 			propincz: JSON.stringify(JSONObject),
 			busincz: JSON.stringify(JSONObjectBus),
 			sub: "false"
@@ -3027,7 +3190,7 @@ var handlerParameter = {spin: spinner};
 //-----------------------------------------------------------------------------
 function handlerupdateCZinProp(request) {
 feed=JSON.parse(request.responseText);
-alert(feed[feed.length-1]['messageProp']+feed[feed.length-1]['reccountProp']+' records'+' '+feed[feed.length-1]['messageBus']+feed[feed.length-1]['reccountBus']+' records');
+alert(feed[feed.length-1]['messageLP']+feed[feed.length-1]['reccountLP']+' records'+' - '+feed[feed.length-1]['messageProp']+feed[feed.length-1]['reccountProp']+' records'+' - '+feed[feed.length-1]['messageBus']+feed[feed.length-1]['reccountBus']+' records');
 this.spin.stop();
 }
 
@@ -3065,9 +3228,10 @@ function printFunction() {
 //         }
 //     });
 
-   html2canvas(document.getElementById("map"), {
-        onrendered: function (canvas) {
-            var img = canvas.toDataURL("image/png")
-            window.open(img);
-        }
-    });}
+//    html2canvas(document.getElementById("map"), {
+//         onrendered: function (canvas) {
+//             var img = canvas.toDataURL("image/png")
+//             window.open(img);
+//         }
+//     });
+}

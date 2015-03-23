@@ -2,6 +2,8 @@
 require_once("class.db.php");
 $version = "1.0.2";
 $released = "December 31, 2014";
+
+global $pdo;
 /*
 	This file is used for connecting to DB only !!!
 */

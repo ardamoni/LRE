@@ -8,7 +8,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
-
+	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta name="robots" content="noindex">
+	<meta name="referrer" content="never">
     <title>Ntobua - District Local Revenue</title>
 
 	<script type="text/javascript" language="javascript" src="jquery_accordion.js"></script>
@@ -451,7 +453,8 @@
 				<input type="submit" id="fisprop" value="Property Rates Info" href="javascript:;" onclick="getFiscalStats();" title="Click to calculate fiscal stats" class="orange-flat-small">
 				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
 				<tr>
-					<td width="10px" style="border:0px">Expected:</td>
+					<td width="10px" style="border:0px"><div id="fispropexp">Expected:</div></td>
+<!-- 					<input type="text" readonly="readonly" style="border:0px" id="fispropexp" value=""></td> -->
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis1">0</span></small></strong>
 					</td>
@@ -463,7 +466,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td width="10px" style="border:0px">Outstanding:</td>
+					<td width="10px" style="border:0px">Outstanding<small><br>(incl. arrears)</small>:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis3">0</span></small></strong>
 					</td>
@@ -474,7 +477,7 @@
 				<input type="submit" id="fisbus" value="BOP Info" href="javascript:;" onclick="getFiscalStats();" title="Click to calculate fiscal stats" class="orange-flat-small">
 				<table style="border:0px" cellpadding="3" cellspacing="5" align='center'>
 				<tr>
-					<td width="10px" style="border:0px">Expected:</td>
+					<td width="10px" style="border:0px"><div id="fisbusexp">Expected:</div></td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis4">0</span></small></strong>
 					</td>
@@ -486,7 +489,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td width="10px" style="border:0px">Outstanding:</td>
+					<td width="10px" style="border:0px">Outstanding<small><br>(incl. arrears)</small>:</td>
 					<td width="25px" style="border:0px">
 						<strong><small><span id="fis6">0</span></small></strong>
 					</td>

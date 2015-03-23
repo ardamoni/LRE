@@ -2,7 +2,9 @@
 
 //-------- loader ---------------------------------------------------------------------
 
-	// DB connection
+session_start();
+
+// DB connection
 	require_once( "../lib/configuration.php"	);
 	require_once( "../lib/System.php" );
 	require_once( "../lib/Revenue.php"			);
@@ -23,6 +25,7 @@
 	$zoneid = $_POST['zoneid'];
 	$districtid = $_POST['districtid'];
 	$searchupn = $_POST['searchupn'];
+	$lpcz = $_POST['lpcz'];
 	$propincz = $_POST['propincz'];
 	$busincz = $_POST['busincz'];
 	$starget = $_POST['starget'];
@@ -37,6 +40,8 @@
   if ($dbaction=='feedUPNinfo'){feedUPNinfo($dbaction,$clickfeature,$sub);}
 
   if ($dbaction=='feedBusinessinfo'){feedBusinessinfo($dbaction,$clickfeature,$sub);}
+
+  if ($dbaction=='feedFeesFinesinfo'){feedFeesFinesinfo($clickfeature);}
 
   if ($dbaction=='getlocalplan'){getlocalplan($districtid);}
 
@@ -58,7 +63,7 @@
 
   if ($dbaction=='searchupn'){searchupn($searchupn);}
 
-  if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz);}
+  if ($dbaction=='updateCZinProp'){updateCZinProp($propincz,$busincz, $lpcz);}
 
   if ($dbaction=='feedColzoneInfo'){feedColzoneInfo($districtid,$clickfeature);}
 
@@ -288,6 +293,68 @@ function feedBusinessinfo($dbaction,$clickfeature,$sub)
 	header("Content-type: application/json");
 	echo json_encode($data);
 }
+
+//-----------------------------------------------------------------------------
+		//function feedFeesFinesinfo()
+		//retrieves information according to the passed UPN
+		//expects clickfeature and sub as $_POST parameters
+//-----------------------------------------------------------------------------
+function feedFeesFinesinfo($clickfeature)
+{
+//	require_once( "../lib/configuration.php"	);
+
+//	$Data = new Revenue;
+	$System = new System;
+	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
+  	// upn
+	$upn = $clickfeature;
+
+	$data = array();
+
+	$query=mysql_query("SELECT fees_fines.upn, sum(fees_fines_payments.`payment_value`) AS totalFeesFines, fees_fines.address, fees_fines.colzone_id
+						FROM fees_fines INNER JOIN fees_fines_payments ON fees_fines.upn = fees_fines_payments.upn
+							WHERE fees_fines.`upn` = '".$upn."'
+							AND fees_fines.`districtid`=fees_fines_payments.`districtid`
+							AND YEAR(fees_fines_payments.`payment_date`) = '".$currentYear."' ORDER BY fees_fines.`upn`;");
+
+	$count = mysql_num_rows($query);
+	if ($count>0){
+ 	while( $row = mysql_fetch_assoc( $query ) )
+// 	while( $row = $statement->fetch(PDO::FETCH_BOTH))
+	{
+		$json 						= array();
+
+		$json['id'] 				= $row['id'];
+		if ($row['upn']){
+			$json['upn'] 				= $row['upn'];
+		}else{
+			$json['upn'] 				= $upn;
+		}
+		$json['year']	 			= $currentYear;
+		if ($row['upn']){
+			$json['address'] 			= $row['address'];
+		}else{
+			$json['address'] 			= 'n.a.';
+		}
+		if ($row['colzone_id']){
+			$json['colzone_id'] 		= $row['colzone_id'];
+		}else{
+			$json['colzone_id'] 		= 'n.a.';
+		}
+		if ($row['totalFeesFines']){
+			$json['totalFeesFines'] 	= $row['totalFeesFines'];
+		}else{
+			$json['totalFeesFines'] 	= 0;
+		}
+
+		$data[] 					= $json;
+		//echo $row["upn"];
+	}
+	}else{
+	}
+	header("Content-type: application/json");
+	echo json_encode($data);
+} //end of feedFeesFinesinfo
 
 //-----------------------------------------------------------------------------
 				//function feedColzoneInfo()
@@ -543,58 +610,24 @@ function getfees($districtid, $upn)
 	// get the polygons out of the database
 	$subupn = "";
 	if (!isset($upn)) {
-	$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
-		FROM `business_balance` d3
-		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."'
-		AND d3.`year`='".$currentYear."';";
-	}else{
-		$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`, d3.`subupn`, d1.`districtid`, d3.`balance`
-		FROM `business_balance` d3
-		JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn`= '".$upn."' AND d3.`districtid`='".$districtid."'
-		AND d3.`year`='".$currentYear."';";
-	}
-// 	$run = "SELECT DISTINCT d1.UPN, d1.boundary, d1.id, d2.subupn, d2.pay_status, d3.balance
-// 			from `KML_from_LUPMIS` d1, business d2, business_balance d3 WHERE d1.`UPN` = d2.`upn` AND d3.`UPN` = d2.`upn` AND d1.`districtid`='".$districtid."';";
+		$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`,  d1.`districtid`, d1.`colzone_id`, d3.`address`
+			FROM `fees_fines` d3
+			JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d3.`districtid`='".$districtid."';";
+		}else{
+		$run = "SELECT  d1.`id`, d1.`boundary`, d1.`UPN`,  d1.`districtid`, d1.`colzone_id`, d3.`address`
+			FROM `fees_fines` d3
+			JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` WHERE d1.`upn` = '".$upn."' WHERE d3.`districtid`='".$districtid."';";
+		}
 
 	$query = mysql_query($run);
 
 	$data 				= array();
 
-	$payStatus = 1;
-	$payStatus9 = false;
-	$payupn="";
-	$balanceTotal=-99;
-
 	while ($row = mysql_fetch_assoc($query)) {
 	$json 				= array();
-	if ($row['balance']>0){
-			$payStatus=1;
-		}else{
-			$payStatus=9;
-		}
-	if (empty($row['subupn'])) {
-//		$payStatus = $row['pay_status'];
-		$payStatus = $payStatus;
-		$payStatus9=false;
-	} else {
-//		if ($row['pay_status']==9){
-		if ($payStatus==9){
-			 $payStatus9=true;}
-
-		if ($payStatus9){
-			if($Data->getBalanceTotal( $row['UPN'], $row['districtid'], $currentYear, "business", "sumbalance") > 0)
-			{
-			 $payStatus = 5;} else {
-			 $payStatus = 9;
-			 }
-		}
-	}
-	$payStatus9=false;
 	$json['id'] 		= $row['id'];
 	$json['upn'] 		= $row['UPN'];
 	$json['boundary'] 	= $row['boundary'];
-	$json['status'] 	= $payStatus; //$row['pay_status'];
-	$json['revenue_balance'] 	= $row['balance'];
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");
@@ -850,9 +883,10 @@ function searchOther($districtid, $starget, $sString, $searchlayer)
 				//propincz=Property in Collector Zone
 				//busincz =Business in Collector Zone
 //-----------------------------------------------------------------------------
-function updateCZinProp($propincz, $busincz)
+function updateCZinProp($propincz, $busincz, $lpcz)
 {
 
+$json_decodedLP=json_decode($lpcz);
 $json_decoded=json_decode($propincz);
 $json_decodedBus=json_decode($busincz);
 //var_dump($json_decoded);
@@ -863,6 +897,35 @@ $i = 1;
 $j = 1;
 
 //the data comes in as a multidimensional array, hence we need to go through the array to identify the values
+foreach ($json_decodedLP as $key => $value)
+{
+    foreach ($value as $k => $val)
+    {
+    	if ($k=='upn'){
+		$json['upn'] =  $val;
+		}
+    	if ($k=='colzone'){
+		$json['colzone'] =  $val;
+		}
+//        echo "$k | $val <br />";
+    }
+if (!empty($lpcz)){
+    $run = "UPDATE `KML_from_LUPMIS` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+//    $run = "UPDATE `business` SET `colzone_id`='".$json['colzone']."' WHERE upn='".$json['upn']."';";
+	$query = mysql_query($run);
+//	$json['message'] = 'Done!';
+	}else{
+		$json['messageLP'] = 'LP Empty!';
+	}
+	$json['reccountLP'] = $i;
+	$json['messageLP'] = 'LP Done!';
+	$data[] = $json;
+	$i++;
+
+}
+
+$i = 1;
+
 foreach ($json_decoded as $key => $value)
 {
     foreach ($value as $k => $val)
