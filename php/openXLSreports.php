@@ -245,10 +245,16 @@ switch(opt) {
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 4:
-		var squery = 'select d3.`district_name` as District_name, d2.year as Year, sum(d2.`rate`) as TotalRevenueExpected_Property ';
-			squery +='from `property` d1, `fee_fixing_property` d2, `area_district` d3 ';
-			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
-			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`';
+		var squery = 'SELECT t2.`district_name` as "District", year as "Year", round(sum(sumpropdue_feefi),2) as "Expected Revenue from Property Rates" from ';
+					squery +='((SELECT year, SUM(d3.feefi_value) as sumpropdue_feefi FROM property_due d3 ';
+					squery +='JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` ';
+					squery +='Where d3.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' AND d3.rate_value=0 GROUP by year) ';
+					squery +='UNION ';
+					squery +='(SELECT year, SUM(d3.rate_value) as sumpropdue_feefi ';
+					squery +='FROM property_due d3 ';
+					squery +='JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` ';
+					squery +='Where d3.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' AND d3.rate_value>0 GROUP by year)) t';
+					squery +=', `area_district` t2 WHERE t2.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' group by year;';
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="Potential of Property Rates per year";
 //		document.getElementById('option4').value=squery;

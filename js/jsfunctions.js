@@ -29,6 +29,11 @@ var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
 	var globalfeesandfineschanged = false;
 	var googleonline = true;
 
+//keypress listener for the Easter egg
+window.addEventListener("keydown", keysPressed, false);
+window.addEventListener("keyup", keysReleased, false);
+var eastereggkeys = [];
+
 //we need to get the starting window dimensions for a potential resize of the map
 	var windowWidth = window.innerWidth;
   	var windowHeight = window.innerHeight;
@@ -3234,4 +3239,33 @@ function printFunction() {
 //             window.open(img);
 //         }
 //     });
+}
+
+//-----------------------------------------------------------------------------
+		//function keysPressed()
+		//is used to display an Easter egg
+//-----------------------------------------------------------------------------
+function keysPressed(e) {
+// store an entry for every key pressed
+	eastereggkeys[e.keyCode] = true;
+
+	// Ctrl + Shift + 5
+//	if (eastereggkeys[17] && eastereggkeys[16] && eastereggkeys[53]) {
+	// Ctrl + Shift + w
+	if (eastereggkeys[17] && eastereggkeys[16] && eastereggkeys[87] && eastereggkeys[69]) {
+		// do something
+		overlayeasteregg();
+		//alert('Developed by William Amoah, Arben Damoni, Ekkehardt Roth');
+		eastereggkeys = [];
+	}
+}
+
+//-----------------------------------------------------------------------------
+		//function keysReleased()
+		//is used to display an Easter egg
+//-----------------------------------------------------------------------------
+function keysReleased(e) {
+// store an entry for every key pressed
+	eastereggkeys[e.keyCode] = false;
+	eastereggkeys = [];
 }

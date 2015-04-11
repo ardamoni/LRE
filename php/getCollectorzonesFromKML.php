@@ -1,6 +1,6 @@
 <?
-$completeurl = "../kml/123Tarkwa_Collectorzones.kml";
-$districtid=123;
+$completeurl = "../kml/198Suhum_Collectorzones.kml";
+$districtid=198;
  print("Start import into database, please have some patience");
 
 $colors = ['#1FCB4A', 	'#59955C', 	'#48FB0D', 	'#2DC800', 	'#59DF00', 	'#9D9D00', 	'#B6BA18',
@@ -40,14 +40,14 @@ $zonecolour=$colors[$zcol_counter];
 			 $cor_d  =  explode(' ', $placemarks[$i]->Polygon->outerBoundaryIs->LinearRing->coordinates);
 			 $cor_d1='';
 			 $query = '';
-			 $run='';  
+			 $run='';
 			 $iCount2 = 1;
 		//			  echo "cor_d "; print_r($cor_d); echo "<br>";
 			  for ($j = 0; $j < sizeof($cor_d); $j++) {
-				foreach($cor_d as $value){  
+				foreach($cor_d as $value){
 					$tmp2 = explode(',',$value);
 					$iCount=1;
-					foreach($tmp2 as $value2){  
+					foreach($tmp2 as $value2){
 					   $subval= substr($value2,0,2);
 						if ($subval == "0".chr(10)) {  //check for carriage return
 						   $tmp3=substr($value2,2,strlen($value2)); //here we extract the coordinates without the NewLIne
@@ -66,13 +66,14 @@ $zonecolour=$colors[$zcol_counter];
 				}
 			  }
 				$cor_d1 = substr($cor_d1,1,strlen($cor_d1)-2);
+				$j=$i+1;
 		//Get geo coordinates
-				$query .='\''.$cor_d1.'\', \''.$districtid.'\', \''.$zonecolour.'\'';
+				$query .='\''.$cor_d1.'\', \''.$districtid.'\', \''.$j.'\', \''.$zonecolour.'\'';
 				echo $query;
-				$run .="INSERT INTO collectorzones (polygon, districtid, zone_colour) VALUES (".$query." );";
+				$run .="INSERT INTO collectorzones (polygon, districtid, colzonenr, zone_colour) VALUES (".$query." );";
 		//		print($i);
 		//		if ($iCount2 < 25) {
-		//		echo "i ".$i." - "; 
+		//		echo "i ".$i." - ";
 		//		}else{
 		//		echo "i ".$i." - <br>";
 		//		}
@@ -84,10 +85,10 @@ $zonecolour=$colors[$zcol_counter];
 	  }
 
   }else {
- 
+
    exit('Failed to open file '.$completeurl);
   }
   print("<br>Import into database successful - Great!!!");
-   mysqli_close($con);    
+   mysqli_close($con);
 
 ?>

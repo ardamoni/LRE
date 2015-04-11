@@ -47,7 +47,7 @@ $objPHPExcel->getProperties()->setDescription("Document for Office 2007 XLSX, ge
 
 // DB connection
 require_once("../lib/configuration.php");
-//$pdo->setAttribute(array(PDO::MYSQL_USE_BUFFERED_QUERY=>TRUE)); 
+//$pdo->setAttribute(array(PDO::MYSQL_USE_BUFFERED_QUERY=>TRUE));
 
 //var_dump($_POST);
 //echo $_GET['squery'];
@@ -55,7 +55,7 @@ require_once("../lib/configuration.php");
 $statement = $pdo->query($_POST['squery']);
 
 $rs1 = $pdo->query('SELECT FOUND_ROWS()');
-$rowCount = (int) $rs1->fetchColumn(); 
+$rowCount = (int) $rs1->fetchColumn();
 // echo $rowCount.'<br>';
 
 /**
@@ -160,7 +160,7 @@ $objSheet->getColumnDimension($column)->setAutoSize(true);
 }
 $objSheet->getColumnDimension($lastColumn)->setAutoSize(true);
 
-
+$objSheet->getStyle('C2:C5')->getNumberFormat()->setFormatCode($numberFormat);
 // write the file
 $objWriter->save("../tmp/".$_POST['sfile'].".xlsx");
 

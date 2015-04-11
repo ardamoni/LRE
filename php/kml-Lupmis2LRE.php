@@ -127,6 +127,7 @@ We also have a Python script called stripWhiteSpace.py that does the same thing
 //
 print("Start import into database, please have some patience");
 
+
 if (file_exists($completeurl)) {
 $xml = simplexml_load_file($completeurl, 'SimpleXMLElement', LIBXML_NOCDATA);
 $districtid=$upload_district; //$_SESSION['user']['districtid'];//130;
@@ -152,112 +153,135 @@ $tmp4='';
 	$status=strip_tags(substr($status,8,strpos($status,'</b>')));
     $landuse=strstr($cdata[0],'Use: ');
     $landuse=strip_tags(substr($landuse,9,strpos($landuse,'</b>')-1));
+    if (!strpos($cdata[0],'UPN:')){
+// 		echo '<br>no UPN label';
+// 		echo '<br>count b: '.substr_count($cdata[0],'</b>');
+		$teststr=strstr($cdata[0],':'); //'Polygon of suame complete finished 1:<br><br> <b>-</b><br> <b>3</b><br> <b>653-0744-0065</b><br>';
+		switch (substr_count($cdata[0],'</b>'))
+		{
+			case 2:
+				$upn=strip_tags(substr($teststr,strrpos($teststr,'</b>')-13,13));
+				$address=strip_tags(substr($teststr,strpos($teststr,'<b>')+3,strpos($teststr,'</b>')-strpos($teststr,'<b>')));
+// 				sscanf(strip_tags($teststr),": %s %s>",$address,$upn);
+			break;
+			case 3:
+				sscanf(strip_tags($teststr),": %s %d %s>",$address,$status,$upn);
+			break;
+			default:
+				$upn='no upn in kml file';
+		}
+//		echo '<br>teststr: '.strip_tags($teststr);
+    }else{
     $upn = strstr($cdata[0],'UPN: ');
    	$upn=substr($upn,9,13);
-//    var_dump($upn);
+   	}
+
+//    echo "<br>upn: ".$upn;
+//    exit;}}
+
 //End Get Infor out of CDATA
-    $styleUrl = $placemarks[$i]->styleUrl;
+     $styleUrl = $placemarks[$i]->styleUrl;
 
-// echo " parcelOf: ".$parcelOf."<br> color: ".$styleUrl."<br> address: ".$adddress."<br> use: ".$landuse."<br> status: ".$status."<br> UPN: ".$upn;    //break;
+//  echo " parcelOf: ".$parcelOf."<br> color: ".$styleUrl."<br> address: ".$adddress."<br> use: ".$landuse."<br> status: ".$status."<br> UPN: ".$upn;    //break;
 
-//Get geo coordinates
-     $cor_d  =  explode(' ', $placemarks[$i]->Polygon->outerBoundaryIs->LinearRing->coordinates);
-     $cor_d1='';
-	 $query = '';
-	 $run='';
-	 $iCount2 = 1;
-//			  echo "cor_d "; print_r($cor_d); echo "<br>";
-	  for ($j = 0; $j < sizeof($cor_d); $j++) {
-		foreach($cor_d as $value){
-			$tmp2 = explode(',',$value);
-			$iCount=1;
-			foreach($tmp2 as $value2){
-			   $subval= substr($value2,0,2);
-				if ($subval == "0".chr(10)) {  //check for carriage return
-				   $tmp3=substr($value2,2,strlen($value2)); //here we extract the coordinates without the NewLIne
-				   } else
-				   {
-				   $tmp3=$value2;
-				   }
-//			  enter seperator for coordinates, if looks for even or odd numbers and sets the seperator accordingly
-			  if($iCount&1) {
-					$cor_d1=$cor_d1 . $tmp3 . ',';
-					} else {
-					$cor_d1=$cor_d1 . $tmp3 . ' ';
-					}
-     		  $iCount++;
-			}
-		}
-	  }
-		$cor_d1 = substr($cor_d1,1,strlen($cor_d1)-2);
-//Check whether this record already exists in KML_from_LUPMIS
-		$run ="SELECT * from KML_from_LUPMIS WHERE `upn`='".$upn."';";
-		$found='';
-		$found = mysql_query($run, $con) or die ('Error updating database: ' . mysql_error());
-//if the upn already exist, then do an UPDATE, if not do an INSERT
-//  print("<br>Found: ".$found);
-$dupprint=false;
-//		if (!empty($found))
-//Check if UPN is already used in the database. It is assumed if the UPN already exists, it will be overwritten with the new information, hence an update of the data
-//However, it also could happen, that a district uses more than one kml-file for their local plan. If a UPN is used in two different locations will cause a data quality
-//issue, because the subsequent UPN will overwrite the existing one, hence will alter the boundary and thus the location of the UPN
-//We had this case in AgonaWest-Swedru.
-		if (mysql_affected_rows()>0)
-		{
-		// for data quality purpose I included this to list all dublicated UPNs in the console log of the browser
-		while( $row = mysql_fetch_assoc( $found ) )
-		{
-		debug_to_file( $outputFile, $row['UPN']." , ".$row['Address']." , ".$row['ParcelOf']." , ".$row['id'].', '.$upn." , ".$address." , ".$parcelOf.chr(13).chr(10) );
-		$dupprint=true;
-		}
+ //Get geo coordinates
+      $cor_d  =  explode(' ', $placemarks[$i]->Polygon->outerBoundaryIs->LinearRing->coordinates);
+      $cor_d1='';
+ 	 $query = '';
+ 	 $run='';
+ 	 $iCount2 = 1;
+ //			  echo "cor_d "; print_r($cor_d); echo "<br>";
+ 	  for ($j = 0; $j < sizeof($cor_d); $j++) {
+ 		foreach($cor_d as $value){
+ 			$tmp2 = explode(',',$value);
+ 			$iCount=1;
+ 			foreach($tmp2 as $value2){
+ 			   $subval= substr($value2,0,2);
+ 				if ($subval == "0".chr(10)) {  //check for carriage return
+ 				   $tmp3=substr($value2,2,strlen($value2)); //here we extract the coordinates without the NewLIne
+ 				   } else
+ 				   {
+ 				   $tmp3=$value2;
+ 				   }
+ //			  enter seperator for coordinates, if looks for even or odd numbers and sets the seperator accordingly
+ 			  if($iCount&1) {
+ 					$cor_d1=$cor_d1 . $tmp3 . ',';
+ 					} else {
+ 					$cor_d1=$cor_d1 . $tmp3 . ' ';
+ 					}
+      		  $iCount++;
+ 			}
+ 		}
+ 	  }
+ 		$cor_d1 = substr($cor_d1,1,strlen($cor_d1)-2);
+ //Check whether this record already exists in KML_from_LUPMIS
+ 		$run ="SELECT * from KML_from_LUPMIS WHERE `upn`='".$upn."';";
+ 		$found='';
+ 		$found = mysql_query($run, $con) or die ('Error updating database: ' . mysql_error());
+ //if the upn already exist, then do an UPDATE, if not do an INSERT
+ //  print("<br>Found: ".$found);
+ $dupprint=false;
+ //		if (!empty($found))
+ //Check if UPN is already used in the database. It is assumed if the UPN already exists, it will be overwritten with the new information, hence an update of the data
+ //However, it also could happen, that a district uses more than one kml-file for their local plan. If a UPN is used in two different locations will cause a data quality
+ //issue, because the subsequent UPN will overwrite the existing one, hence will alter the boundary and thus the location of the UPN
+ //We had this case in AgonaWest-Swedru.
+ 		if (mysql_affected_rows()>0)
+ 		{
+ 		// for data quality purpose I included this to list all dublicated UPNs in the console log of the browser
+ 		while( $row = mysql_fetch_assoc( $found ) )
+ 		{
+ 		debug_to_file( $outputFile, $row['UPN']." , ".$row['Address']." , ".$row['ParcelOf']." , ".$row['id'].', '.$upn." , ".$address." , ".$parcelOf.chr(13).chr(10) );
+ 		$dupprint=true;
+ 		}
 
-			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
-//			echo $query;
-// this INSERT was used to identify duplicated UPN in the kml dataset from AgonaWest-Swedru and Sefwi Wiawso. It is still here for future data quality tests.
-//		$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
+ 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
+ //			echo $query;
+ // this INSERT was used to identify duplicated UPN in the kml dataset from AgonaWest-Swedru and Sefwi Wiawso. It is still here for future data quality tests.
+ //		$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
 
- 			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
-//			print_r($run);
-			 mysql_query($run) or die ('UPDATE - Error updating database: ' . mysql_error());
-		 }else
-		{
-			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
-//			echo $query;
-			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
-//			print_r($run);
-			 mysql_query($run) or die ('Error updating database: ' . mysql_error());
-		}
-// 		break;
-	  }
+  			$run ="UPDATE KML_from_LUPMIS SET boundary='".$cor_d1."', LUPMIS_color='".$styleUrl."', UPN='".$upn."', Address='".$address."', Landuse='".$landuse."', ParcelOf='".$parcelOf."', districtid='".$districtid."' WHERE UPN='".$upn."';";
+ //			print_r($run);
+ 			 mysql_query($run) or die ('UPDATE - Error updating database: ' . mysql_error());
+ 		 }else
+ 		{
+ 			$query .='\''.$cor_d1.'\', \''.$styleUrl.'\', \''.$upn.'\', \''.$address.'\', \''.$landuse.'\', \''.$parcelOf.'\', \''.$districtid.'\'';
+ //			echo $query;
+ 			$run ="INSERT INTO KML_from_LUPMIS (boundary, LUPMIS_color, UPN, Address, Landuse, ParcelOf, districtid) VALUES (".$query." );";
+ //			print_r($run);
+ 			 mysql_query($run) or die ('Error updating database: ' . mysql_error());
+ 		}
+ // 		break;
+ 	  }
 
-   }else {
+    }else {
 
-   exit('Failed to open file '.$completeurl);
-  }
-  print("<br>Import into database successful - Great!!!");
-  if ($dupprint) {
-  print("<br>Existing UPNs were found and updated with the new information!!!");
-  print("<br>The results are stored in the file:  <a href='".$outputFile."'>".$outputFile."</a>" );
-  }
-	//   mysqli_close($con);
-} //end if goodtogo
+    exit('Failed to open file '.$completeurl);
+   }
+   print("<br>Import into database successful - Great!!!");
+   if ($dupprint) {
+   print("<br>Existing UPNs were found and updated with the new information!!!");
+   print("<br>The results are stored in the file:  <a href='".$outputFile."'>".$outputFile."</a>" );
+   }
+ 	//   mysqli_close($con);
+ } //end if goodtogo
 
-//this is a helper function to get some info to be displayed within the console log as well as into the external file on the server
-//thes specific file will grow over time, because it is set to FILE_APPEND
-function debug_to_file( $outputFile, $data ) {
+ //this is a helper function to get some info to be displayed within the console log as well as into the external file on the server
+ //thes specific file will grow over time, because it is set to FILE_APPEND
+ function debug_to_file( $outputFile, $data ) {
 
-    if ( is_array( $data ) )
-     {
-		$f = file_put_contents($outputFile,implode( ',', $data),FILE_APPEND);
-        $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
-    }
-    else
-     {
-		$f = file_put_contents($outputFile,$data,FILE_APPEND);
-        $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
-    }
+     if ( is_array( $data ) )
+      {
+ 		$f = file_put_contents($outputFile,implode( ',', $data),FILE_APPEND);
+         $output = "<script>console.log( 'Debug Objects: " . implode( ',', $data) . "' );</script>";
+     }
+     else
+      {
+ 		$f = file_put_contents($outputFile,$data,FILE_APPEND);
+         $output = "<script>console.log( 'Debug Objects: " . $data . "' );</script>";
+     }
 
-    echo $output;
-}
+     echo $output;
+ }
 
 ?>

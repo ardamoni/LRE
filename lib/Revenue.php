@@ -393,7 +393,7 @@
 			{
 				case "property":
 						$q = mysql_query(" SELECT SUM(`balance`) as sumbalance FROM 	`property_balance`
-													WHERE 	`upn` = '".$upn."' AND 	`subupn` = '".$subupn."' AND
+													WHERE 	`upn` = '".$upn."' AND
 															`districtid` = '".$districtid."' AND
 															`year` = '".$year."' ");
 					$r = mysql_fetch_array($q);

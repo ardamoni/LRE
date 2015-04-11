@@ -95,8 +95,9 @@
 			$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
 			$PDF->Cell(20,5, "REMARKS", 1,0,'C',true);
 			}elseif ($target=='property'){
-			$PDF->Cell(55,5, "OWNER", 1,0,'C',true);
+			$PDF->Cell(45,5, "OWNER", 1,0,'C',true);
 			$PDF->Cell(45,5, "ADDRESS", 1,0,'C',true);
+			$PDF->Cell(10,5, "DUE", 1,0,'C',true);
 			$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
 			$PDF->Cell(40,5, "REMARKS", 1,0,'C',true);
 			}
@@ -176,8 +177,8 @@
 					$PDF->Cell(50,5, $r['colzone_id'], 1,0,'C',true);
 					$PDF->Cell(105,5, 'Bills Register for Business Operating Permits', 1,0,'C',true);
 					}elseif ($target=='property'){
-					$PDF->Cell(55,5, $r['colzone_id'], 1,0,'C',true);
-					$PDF->Cell(100,5, 'Bills Register for Property Rates', 1,0,'C',true);
+					$PDF->Cell(45,5, $r['colzone_id'], 1,0,'C',true);
+					$PDF->Cell(110,5, 'Bills Register for Property Rates', 1,0,'C',true);
 					}
 					$PDF->Ln();
 			// 2nd row
@@ -193,8 +194,9 @@
 					$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
 					$PDF->Cell(20,5, "REMARKS", 1,0,'C',true);
 					}elseif ($target=='property'){
-					$PDF->Cell(55,5, "OWNER", 1,0,'C',true);
+					$PDF->Cell(45,5, "OWNER", 1,0,'C',true);
 					$PDF->Cell(45,5, "ADDRESS", 1,0,'C',true);
+					$PDF->Cell(10,5, "DUE", 1,0,'C',true);
 					$PDF->Cell(15,5, "PHONE", 1,0,'C',true);
 					$PDF->Cell(40,5, "REMARKS", 1,0,'C',true);
 					}
@@ -222,8 +224,9 @@
 					$PDF->SetFillColor(255,255,255);
 					$PDF->Cell(16,5, $r['upn'],1,0,'C',true);
 					$PDF->Cell(18,5, $r['subupn'],1,0,'C',true);
-					$PDF->Cell(55,5, $r['owner'], 1,0,'C',true);
+					$PDF->Cell(45,5, $r['owner'], 1,0,'C',true);
 					$PDF->Cell(45,5, $address, 1,0,'C',true);
+					$PDF->Cell(10,5, number_format( $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtid, $year, $target, "due" ),2,'.',''), 1,0,'C',true);
 					$PDF->Cell(15,5, $r['owner_tel'], 1,0,'C',true);
 						IF ($dupUPNchecked == FALSE) {
 						$PDF->Cell(40,5, '', 1,0,'C',true);

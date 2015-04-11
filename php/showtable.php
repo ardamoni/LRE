@@ -86,7 +86,7 @@ session_start();
 	 echo "<tr>";
 	 for ($x=0; $x<$statement->columnCount(); $x++)
   		{
-		  echo "<td>" . $row[$x] . "</td>";
+		  echo "<td><center>" . $row[$x] . "</center></td>";
 	    }
 	  echo "</tr>";
 	// Send output to browser immediately

@@ -165,7 +165,7 @@ if (isset($addDetails)){
 //end get current db entries
 
 //get the properyType from feefixing for the drop-down list
-$run = "SELECT d1.class, d1.code, d1.rate from `fee_fixing_property` d1 WHERE d1.`districtid`='".$districtid."' AND d1.`year`='".$currentyear."';";
+$run = "SELECT d1.class, d1.code, d1.rate from `fee_fixing_property` d1 WHERE d1.`districtid`='".$districtid."' AND d1.`year`='".$currentyear."' ORDER BY d1.`code`;";
 
 $query 	= mysql_query($run);
 

@@ -120,7 +120,7 @@ class TableRows extends RecursiveIteratorIterator {
 //           }});
         }
     });
-
+ $( ".selector" ).tabs({ selected: 0 });
  $('#tabs').tabs({
 	 activate: function (event, ui) {
 	 var $activeTab = $('#tabs').tabs('option', 'active');
@@ -194,7 +194,7 @@ class TableRows extends RecursiveIteratorIterator {
     }
 
 
-    usrdialog = $( "#usrdialog-form" ).dialog({
+    usrdialog = $( "#usredit-form" ).dialog({
       autoOpen: false,
       height: 300,
       width: 350,
@@ -245,7 +245,8 @@ class TableRows extends RecursiveIteratorIterator {
       }
     });
 
-    $( "#dialog-message" ).dialog({
+    submitmsg = $( "#submit-message" ).dialog({
+      autoOpen: false,
       modal: true,
       buttons: {
         Ok: function() {
@@ -347,8 +348,8 @@ class TableRows extends RecursiveIteratorIterator {
 		 if(!request.responseXML) {
 			// get the response from php and read the json encoded data
 		   feed=JSON.parse(request.responseText);
-
-			dialog-message.dialog( "open" );
+			sysedit.dialog( "close" );
+			submitmsg.dialog( "open" );
        }
 //  	   document.getElementById("ename").value=feed[0]['returnval'];
 } //end function updateSysconhandler(request){
@@ -375,6 +376,7 @@ class TableRows extends RecursiveIteratorIterator {
 		document.getElementById("whichTab").value=1;
 	</script>
 
+<!--
 	<div id="usrdialog-form" title="Create new user">
 	  <p class="validateTips">All form fields are required.</p>
 
@@ -387,11 +389,18 @@ class TableRows extends RecursiveIteratorIterator {
 		  <label for="password">Password</label>
 		  <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
 
-		  <!-- Allow form submission with keyboard without duplicating the dialog button -->
+		  <!~~ Allow form submission with keyboard without duplicating the dialog button ~~>
 		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
 		</fieldset>
 	  </form>
 	</div>
+ -->
+	 <div id="submit-message" title="Update complete">
+	  <p>
+		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+		The database update was successfully performed.
+	  </p>
+	  </div>
 
 	<div id="sysedit-form" title="Maintain System Configuration">
 	  <p class="validateTips">All form fields are required.</p>
@@ -411,13 +420,13 @@ class TableRows extends RecursiveIteratorIterator {
 	  </form>
 	</div>
 
-	<div id="usredit-form" title="Create new user">
+	<div id="usredit-form" title="Edit user accounts">
 	  <p class="validateTips">All form fields are required.</p>
 
 	  <form>
 		<fieldset>
 		  <label for="name">Username</label>
-		  <input type="text" name="name" id="ename" value="Jane Smizz" class="text ui-widget-content ui-corner-all">
+		  <input type="text" name="name" id="ename" value="" class="text ui-widget-content ui-corner-all">
 		  <label for="pass">Password</label>
 		  <input type="text" name="pass" id="epass" value="" class="text ui-widget-content ui-corner-all">
 		  <label for="title">Title</label>
@@ -473,6 +482,7 @@ class TableRows extends RecursiveIteratorIterator {
       <tr class="ui-widget-header ">
 
       <?php
+      //fill the user admin tab table
        	$statement = $pdo->query('(SELECT t1.`id`, t4.`regionid`, t4.`region_name`, t3.`districtid`, t3.`district_name`,  t1.`username`, t1.`name`, t1.`title`, t1.`position`, t1.`email`,
        				t1.`phone`, t1.`baselanguage`, t1.`activestatus`, t1.`loged`
        				FROM `usr_users` t1
@@ -496,18 +506,12 @@ class TableRows extends RecursiveIteratorIterator {
 		echo '<th>'.$col['name'].'</th>';
 		}
 		?>
-<!--
-        <th>Name</th>
-        <th>Email</th>
-        <th>Password</th>
- -->
       </tr>
     </thead>
     <tbody>
-<!--       <tr> -->
       <?php
       try {
-		// set the resulting array to associative
+		// write the content from the db table
 			$i = 1;
 			$result = $statement->setFetchMode(PDO::FETCH_ASSOC);
 			foreach(new TableRows(new RecursiveArrayIterator($statement->fetchAll())) as $k=>$v) {
@@ -515,26 +519,11 @@ class TableRows extends RecursiveIteratorIterator {
 				if ($i==1) {$uservalue=$v; echo $userval;}
 				$i++;
 			}
-// 		echo '<td width="15px">';
-// 		echo '<div class="icon-container">';
-// 		echo '	<span class="ti-pencil" type="submit" id="edituser" href="javascript:;" onclick="alert('. $uservalue .');" value="" title="Edit User"></span><span class="icon-name"></span>';
-// 		echo '</td>';
-// 		echo '<td width="15px">';
-// 		echo '<div class="icon-container">';
-// 		echo '	<span class="ti-trash" type="submit" value="" title="Delete User"></span><span class="icon-name"></span>';
-// 		echo '</td>';
-// 		echo '</div>';
     }
     catch(PDOException $e) {
     	echo "Error: " . $e->getMessage();
 	}
     ?>
-<!--
-        <td>John Doe</td>
-        <td>john.doe@example.com</td>
-        <td>johndoe1</td>
- -->
-<!--       </tr> -->
     </tbody>
   </table>
 	</div>
@@ -548,22 +537,21 @@ class TableRows extends RecursiveIteratorIterator {
 
   <table id="system" class="ui-widget ui-widget-content">
     <thead>
-      <tr class="ui-widget-header ">
+    <tr class="ui-widget-header ">
 
-  <?php
-   	$statement2 = $pdo->query('SELECT * FROM `system_config`');
+	  <?php
+		$statement2 = $pdo->query('SELECT * FROM `system_config`');
 
-	$rs2 = $pdo->query('SELECT FOUND_ROWS()');
-	$rowCount = (int) $rs2->fetchColumn();
+		$rs2 = $pdo->query('SELECT FOUND_ROWS()');
+		$rowCount = (int) $rs2->fetchColumn();
 
-	// write header
-	for ($i = 0; $i < $statement2->columnCount(); $i++) {
-	$col = $statement2->getColumnMeta($i);
-	echo '<th>'.$col['name'].'</th>';
-	}
-
-  ?>
-        </tr>
+		// write header
+		for ($i = 0; $i < $statement2->columnCount(); $i++) {
+		$col = $statement2->getColumnMeta($i);
+		echo '<th>'.$col['name'].'</th>';
+		}
+	  ?>
+    </tr>
     </thead>
     <tbody>
       <?php
@@ -584,19 +572,16 @@ class TableRows extends RecursiveIteratorIterator {
 
   </div>
 
-  <div id="dialog-message" title="Update complete">
-  <p>
-    <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-    The database update was successfully performed.
-  </p>
-  </div>
+
 <!--
   <div id="tabs-3">
     <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
     <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
   </div>
  -->
+<!--
 </div>
+ -->
 
 
 

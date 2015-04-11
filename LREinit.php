@@ -14,107 +14,13 @@
     <title>Ntobua - District Local Revenue</title>
 
 	<script type="text/javascript" language="javascript" src="jquery_accordion.js"></script>
- <style>
- #overlay {
-     visibility: hidden;
-     position: absolute;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     text-align:center;
-     z-index: 1000;
-/*   background-image:url(background.png); */
-  }
+	<link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
+<!-- 	the next stylesheet contains the styles for overlays etc. -->
+	<link rel="stylesheet" href="css/styles.css" type="text/css">
+	<link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
+	<link rel="stylesheet" href="css/themify-icons.css" type="text/css">
 
-#overlay div {
-     width:300px;
-     margin: 100px 100px;
-     background-color: #fff;
-     border:1px solid #000;
-     padding:15px;
-     text-align:center;
-}
 
- #overlayadmin {
-     visibility: hidden;
-     position: absolute;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     text-align:center;
-     z-index: 1000;
-/*   background-image:url(background.png); */
-  }
-
-#overlayadmin div {
-     width:300px;
-     margin: 100px 100px;
-     background-color: #fff;
-     border:1px solid #000;
-     padding:15px;
-     text-align:center;
-}
- #overlayxls {
-     visibility: hidden;
-     position: absolute;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     text-align:center;
-     z-index: 1000;
-/*   background-image:url(background.png); */
-  }
-
-#overlayxls div {
-     width:300px;
-     margin: 100px 100px;
-     background-color: #fff;
-     border:1px solid #000;
-     padding:15px;
-     text-align:center;
-}
- #overlayreports {
-     visibility: hidden;
-     position: absolute;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     text-align:center;
-     z-index: 1000;
-}
-#overlayreports div {
-     width:300px;
-     margin: 100px 100px;
-     background-color: #fff;
-     border:1px solid #000;
-     padding:15px;
-     text-align:center;
-}
- #overlaysearch {
-     visibility: hidden;
-     position: absolute;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     text-align:center;
-     z-index: 1000;
-}
-
-#overlaysearch div {
-     width:300px;
-     margin: 100px 100px;
-     background-color: #fff;
-     border:1px solid #000;
-     padding:15px;
-     text-align:center;
-}
-
- </style>
 	<script type="text/javascript">
 	$(document).ready(function()
 	{
@@ -201,168 +107,21 @@
 	el.value = 1;
 	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
+	function overlayeasteregg() {
+	el = document.getElementById("overlayeasteregg");
+	var w = 800;
+	var h = 330;
+    var left = (screen.width/2)-w;
+    var top = (screen.height/2)-h;
+// 	el.style.margin = "'.top.' '. left'";
+	el.style.top = top+'px';
+	el.style.left = left+'px';
+	el.value = 1;
+	el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
 
 </script>
 
-	<link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
-	<link rel="stylesheet" href="style.css" type="text/css">
-	<link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
-	<link rel="stylesheet" href="css/themify-icons.css" type="text/css">
-
-	<!-- center and far right column-->
-	<style type="text/css">
-		#controls {
-			width: 230px;
-		}
-		#controlToggle {
-			padding-left: 1em;
-		}
-		#controlToggle li {
-			list-style: none;
-		}
-		#map {
-			width: 1180px;
-			height: 650px;
-		}
-
-		.olControlAttribution {
-			bottom: 0px;
-			left: 2px;
-			right: inherit;
-			width: 400px;
-		}
-		.olControlPanel div {
-		  position: relative;
-		  left: 5px;
-		  display:block;
-		  width:  24px;
-		  height: 24px;
-		  margin: 5px;
-		  float: left;
-		  background-color:white;
-		}
-		.olControlPanel .olControlZoomToMaxExtentItemInactive {
-		  width:  18px;
-		  height: 18px;
-		  background-image: url("img/zoom-world-mini.png");
-		}
-		.olControlPanel .olControlZoomBoxItemInactive {
-		  width:  22px;
-		  height: 22px;
-		  background-color: orange;
-		  background-image: url("img/drag-rectangle-off.png");
-		}
-		.olControlPanel .olControlZoomBoxItemActive {
-		  width:  22px;
-		  height: 22px;
-		  background-color: blue;
-		  background-image: url("img/drag-rectangle-on.png");
-		}
-		.olControlPanel .olControlZoomInItemInactive {
-		  width:  22px;
-		  height: 22px;
-		  background-color: white;
-		  background-image: url("img/zoomin.png");
-		}
-		.olControlPanel .olControlZoomOutItemInactive {
-		  width:  22px;
-		  height: 22px;
-		  background-color: white;
-		  background-image: url("img/zoomout.png");
-		}
-		.olControlPanPanel .olControlPanNorthItemInactive {
-			 left:50%;
-			 right:auto;
-			 margin-left: -9px;
-			 top: 0;
-		}
-		.olControlPanPanel .olControlPanSouthItemInactive {
-			 left: 50%;
-			 margin-left: -9px;
-			 top: auto;
-			 bottom: 0;
-		}
-		.olControlPanPanel .olControlPanWestItemInactive {
-			 top: 50%;
-			 margin-top: -9px;
-			 left: 0;
-		}
-		.olControlPanPanel .olControlPanEastItemInactive {
-			 top: 50%;
-			 margin-top: -9px;
-			 left: auto;
-			 right: 0;
-		}
-	   .olControlZoomPanel {
-			 left: 5px;
-			 right: 23px;
-			 top: 150px;
-	   }
-	.olControlPanZoomBar {
-		left:450px;
-	}
-	.tableshow {
-		  width:  24px;
-		  height: 24px;
-		  background-color: white;
-		  background-image: url("img/tableview.png");
-		}
-	.xlsexport {
-		  width:  24px;
-		  height: 24px;
-		  background-color: white;
-		  background-image: url("img/tXLSExport.png");
-		}
-	.deletezone {
-		  width:  20px;
-		  height: 20px;
-		  background-color: white;
-		  background-image: url("img/delete2.png");
-		}
-	</style>
-	<style>
-		table.lremain tr td {
-			border: 1px solid #ccc;
-			border-color:#ffcc00;
-			width: 200px;
-		}
-		table.map_area tr td {
-			border: 1px solid #ccc;
-			border-color:#ffcc00;
-		}
-
- #loading
-    {
-        display:none;
-        position:fixed;
-        left:0;
-        top:0;
-        width:100%;
-        height:100%;
-        background:rgba(255,255,255,0.8);
-        z-index:1000;
-    }
-
-    #loadingcontent
-    {
-        display:table;
-        position:fixed;
-        left:0;
-        top:0;
-        width:100%;
-        height:100%;
-    }
-
-    #loadingspinner
-    {
-        display: table-cell;
-        vertical-align:middle;
-        width: 100%;
-        text-align: center;
-        font-size:larger;
-        padding-top:80px;
-    }
-	</style>
 </head>
 <body>
 <!-- 	This is needed for the menu system -->
@@ -414,6 +173,28 @@
 		<input type="radio" id="target" name="target" value="owner">Owner<br></center>
 		<input type="submit" value="Search" href="javascript:;" onclick="searchOther();" title="Submit the search" class="orange-flat-small">
           [<a href='#' onclick='overlaysearch()'>close</a>]
+<!-- </form> -->
+     </div>
+	</div>
+	<div id="overlayeasteregg">
+     <div>
+        <canvas id="eggCanvas" width="800" height="300"></canvas>
+    <script>
+      var eggcanvas = document.getElementById('eggCanvas');
+      var eggcontext = eggcanvas.getContext('2d');
+      var x = 30;
+      var y = 35;
+      var width = 740;
+      var height = 240;
+      var imageObj = new Image();
+      imageObj.src = 'uploads/dlRevCrew-small.jpg';
+
+      imageObj.onload = function() {
+        eggcontext.drawImage(imageObj, x, y, width, height);
+      };
+      eggcontext.font = 'italic 20pt Verdana';
+      eggcontext.fillText('The Crew that brought you dLRev!', 30, 25);
+    </script>[<a href='#' onclick='overlayeasteregg()'>close</a>]
 <!-- </form> -->
      </div>
 	</div>
