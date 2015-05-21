@@ -49,28 +49,27 @@
 			$u = mysql_real_escape_string(htmlentities($user));
 			$p = md5(mysql_real_escape_string(htmlentities($pass)));
 
-			try {
-				$conn = new db(cDsn, cUser, cPass);
-			} catch(PDOException $e) {
-				die('Could not connect to the database:<br/>' . $e->getMessage());
-			}
-			$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
-//			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$bind = array(
-				":username" => $u,
-				":pass" => $p,
-				":adminpass" => $p,
-				":masterpass" => $p
-			);
-			$r = $conn->select("usr_users", " `username` = :username
-										AND (`pass` = :pass OR `adminpass` = :adminpass OR `masterpass` = :masterpass)", $bind);
-
+// 			try {
+// 				$conn = new db(cDsn, cUser, cPass);
+// 			} catch(PDOException $e) {
+// 				die('Could not connect to the database:<br/>' . $e->getMessage());
+// 			}
+// 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// 			$bind = array(
+// 				":username" => $u,
+// 				":pass" => $p,
+// 				":adminpass" => $p,
+// 				":masterpass" => $p
+// 			);
+// 			$r = $conn->select("usr_users", " `username` = :username
+// 										AND (`pass` = :pass OR `adminpass` = :adminpass OR `masterpass` = :masterpass)", $bind);
+//
 // var_dump($r);
 
-// 			$q = mysqli_query("SELECT * FROM `usr_users`
-// 								WHERE	`username`	= '".$u."'
-// 										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
-// 			$r	= 	mysqli_fetch_array($q);
+			$q = mysql_query("SELECT * FROM `usr_users`
+								WHERE	`username`	= '".$u."'
+										AND (`pass` = '".$p."' OR `adminpass` = '".$p."'  OR `masterpass` = '".$p."')");
+			$r	= 	mysql_fetch_array($q);
 
 
 //get info about the user who tries to login
@@ -89,10 +88,8 @@
 // 			if( mysql_num_rows($q) == 1 )
 			if( count($r) == 1 )
 			{
- 				$username 	= $r[0]['username'];
- 				$name		= $r[0]['name'];
-// 				$username 	= $r['username'];
-// 				$name		= $r['name'];
+				$username 	= $r[0]['username'];
+				$name		= $r[0]['name'];
 				$comment	= 'user exists in database';
 			}else{
 				$username	= $user;

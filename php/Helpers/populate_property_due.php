@@ -8,9 +8,11 @@
 	// DB connection
 	require_once( "../../lib/System.php" );
 	require_once( "../../lib/configuration.php" );
+	require_once( "../../lib/Revenue.php" );
 
 
 	$System = new System;
+	$Data = new Revenue;
 	$year = $System->GetConfiguration("RevenueCollectionYear");
 
 	//
@@ -18,6 +20,7 @@
 	//
 //	$districtID = '123';
 	$districtID = $_GET['districtid'];
+	$propThreshold = $System->getFeeFixingPropertyThreshold( $districtID, $year, "rate" ); //get minimum property rate from system_fee_fixing_property_threshold
 
 	// Display
 	echo "START", "</br>";
@@ -109,7 +112,7 @@
 								`fee_fixing_property` `f`
 						WHERE	`b`.`districtid` = `f`.`districtid` AND
 								`b`.`feefi_code` = `f`.`code` AND
-								`f`.`year` = '".$year."' ");
+								`f`.`year` = '".$year."' AND  `b`.`districtid` = '".$districtID."'");
 
 	// Display - Missmatch or number of rows
 	if( mysql_num_rows($q1) == 0 )
@@ -128,12 +131,44 @@
 
 	while($Results = mysql_fetch_array($q1))
 	{
+	//check if the district has set a minimum rate for rated properties
+	 if ($propThreshold != 0){
+	  if ((($Results['prop_value']*$Results['rate_impost']) < $propThreshold) && ($Results['prop_value'] != 0))
+	  	{
+	  		$rate_value= $propThreshold; //the calculated rate is too low -> take the minimum rate
+	  	}else
+	  	{
+	  		$rate_value= $Results['prop_value']*$Results['rate_impost']; // take the calculated rate
+	  	}
+	  }else
+	  	{
+	  		$rate_value= $Results['prop_value']*$Results['rate_impost']; // take the calculated rate
+	  	}
+
+    	$dueFeeFixValue 	= $Results['rate'];
+    	$comment			= '';
+
+//!!! needs to go away quickly !!! Was asked by Prestea and will only work there
+        if ($districtID==130){
+        	$rooms = $Data->getBasicInfo( $Results['upn'], $Results['subupn'], $districtID, "property", "rooms" );
+        	if ($rooms>0){
+        		$dueFeeFixValue 	= $dueFeeFixValue * $rooms;
+        		$comment 			= $Results['rate'].' * '.$rooms;
+        	}else{
+        		$dueFeeFixValue 	= $dueFeeFixValue;
+        		$comment 			= $Results['rate'].' only for PHV';
+        	}
+        }else{
+        	$dueFeeFixValue 	= $dueFeeFixValue;
+		}
+
 		// Property_due update with feefi_value
 		mysql_query("	UPDATE 		`property_due`
-						SET 		`feefi_value` = '".$Results['rate']."',
-									`rate_value` = '".$Results['prop_value']*$Results['rate_impost']."',
+						SET 		`feefi_value` = '".$dueFeeFixValue."',
+									`rate_value` = '".$rate_value."',
 									`rate_impost_value` = '".$Results['rate_impost']."',
-									`feefi_unit` = '".$Results['unit']."'
+									`feefi_unit` = '".$Results['unit']."',
+									`comments` = '".$comment."'
 						WHERE 		`upn` = '".$Results['upn']."' AND
 									`subupn` = '".$Results['subupn']."' AND
 									`districtid` = '".$Results['districtid']."' AND

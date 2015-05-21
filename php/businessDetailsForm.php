@@ -1,3 +1,15 @@
+<?php
+//    require_once("../lib/initialize.php");
+session_start();
+
+error_reporting(E_ALL);
+set_time_limit(0);
+ob_start(); // prevent adding duplicate data with refresh (F5)
+
+date_default_timezone_set('Europe/London');
+
+// var_dump($_SESSION);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +18,7 @@
 <link rel="stylesheet" href="../css/ex.css" type="text/css" />
 <link rel="stylesheet" href="../css/flatbuttons.css" type="text/css" />
 <link rel="stylesheet" href="../lib/OpenLayers/theme/default/style.css" type="text/css">
-<link rel="stylesheet" href="../style.css" type="text/css">
+<link rel="stylesheet" href="../css/styles.css" type="text/css">
 <style type="text/css">
 form.demoForm fieldset {
     width: 900px;
@@ -83,6 +95,9 @@ $subupn = $_GET["subupn"];
 $districtid = $_GET["districtid"];
 $addDetails = $_GET["addDetails"];
 
+
+$username = $_SESSION['user']['name'];
+
 $currentyear = $System->GetConfiguration("RevenueCollectionYear");
 
 // var_dump($_GET);
@@ -99,8 +114,20 @@ if (!empty($subupn) && $subupn != 'null' ){
 	$Data = new businessDetailsClass;
 //check whether new details are inserted or existing information is updated
 if (isset($addDetails)){
+
+		$conn = new PDO(cDsn, cUser, cPass);
+		$stmt = $conn->prepare(" SELECT 	*
+								FROM 	`KML_from_LUPMIS`
+								WHERE 	`districtid` = :districtid AND
+										`UPN` = :upn");
+		if (!$stmt->execute(array('districtid' => $districtid,
+									'upn'=>$upn)))
+		  throw new Exception('[' . $stmt->errorCode() . ']: ' . $stmt->errorInfo());
+		$localplaninfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		$count = $stmt->rowCount();
+
 		$r = array();
-		$r['streetname'] = '';
+		$r['streetname'] = $localplaninfo[0]['Address'];
 		$r['housenumber'] = '';
 		$r['da_no'] = '';
 		$r['business_certif'] = '';
@@ -116,6 +143,7 @@ if (isset($addDetails)){
 		$r['business_class'] = '';
 		$r["comments"] = '';
 		$r["excluded"] = '';
+		$r["colzone_id"] = $localplaninfo[0]['colzone_id'];
    } else {
    $r = $Data->getBInfo( $upn, $subupn, $currentyear, $districtid ) ;
    }
@@ -301,6 +329,7 @@ $frmStr = $frm->startForm('submitDetails.php', 'post', 'demoForm',
 	$frm->addInput('hidden', 'districtid', $districtid, array('id'=>'districtid', 'size'=>30, 'required'=>true) ) .
 	$frm->addInput('hidden', 'username', $username, array('id'=>'username', 'size'=>30, 'required'=>true) ) .
 	$frm->addInput('hidden', 'addDetails', $addDetails, array('id'=>'addDetails', 'size'=>30, 'required'=>true) ) .
+	$frm->addInput('hidden', 'colzone_id', $r["colzone_id"], array('id'=>'colzone_id', 'size'=>30, 'required'=>true) ) .
 
 //    $frm->endTag('p') . PHP_EOL .
 

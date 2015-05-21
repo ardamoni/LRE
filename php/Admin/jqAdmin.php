@@ -74,52 +74,76 @@ class TableRows extends RecursiveIteratorIterator {
     background-color: yellow;
     float: left;
     margin-top: 6px;
+
 }
   </style>
   <script>
 
-  $(function() {
+$(document).ready(function(){
+
     var usrdialog, form,
 
       // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
       emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+		username = $("#ename"),
+		pass = $("#epass"),
+		title = $("#etitle"),
+		fullname = $("#efullname"),
+		position = $("#eposition"),
+		email = $("#eemail"),
+		phone = $("#ephone"),
+		baselanguage = $("#ebaselanguage"),
+		activestatus = $("#eactivestatus"),
+		loged = $("#eloged"),
+		districtid = $("dropdistrict"),
+		regionid = $("#dropregion"),
+		roleid = $("#droprole"),
+
       name = $( "#name" ),
-      email = $( "#email" ),
-      password = $( "#password" ),
+//       email = $( "#email" ),
+       password = $( "#password" ),
       variable = $( "#evariable" ),
       value = $( "#evalue" ),
       allFields = $( [] ).add( name ).add( email ).add( password ),
       sysconFields = $( [] ).add( variable ).add( value ),
       tips = $( ".validateTips" );
 
- var district_target_id = 'district-target'; //first select list ID
-  var district_select_id = 'district-select'; //second select list ID
-  var initial_target_html = '<option value="">Please select a district...</option>'; //Initial prompt for target select
+// 	$("#district").keyup(function(){
+// 		$.get("../getdistrict.php", {district: $(this).val()}, function(data){
+// 			$("datalist").empty();
+// 			$("datalist").html(data);
+// 		});
+// 	});
 
-  $('#'+district_target_id).html(initial_target_html); //Give the target select the prompt option
+	$("select#dropregion").change(function(){
+	var region_id = $("select#dropregion option:selected").attr('value');
+//	 alert(region_id);
+	 $("#district").html( "" );
+	 if (typeof region_id != 'undefined'){
+	 if (region_id.length > 0 ) {
 
-  $('#'+district_select_id).change(function(e) {
-    //Grab the chosen value on first select list change
-    var selectvalue = $(this).val();
+	 $.ajax({
+	 type: "POST",
+	 url: "../getdistrict2.php",
+	 data: "region_id="+region_id,
+	 cache: false,
+	 beforeSend: function () {
+	 $('#district').html('<img src="../../img/loading.gif" alt="" width="24" height="24">');
+	 },
+	 success: function(html) {
+	 $("#district").html( html );
+//alert(html);
+		$("#dropdistrict :selected").text(feed[0]['districtname']) //the text content of the selected option
+		$("#dropdistrict").val(feed[0]['districtid']);
+		districtid = $("#dropdistrict"); //feed[0]['districtid'];
+	 }
+	 });
+	 }
+	 }
+	});
+// });
+//   $(function() {
 
-    //Display 'loading' status in the target select list
-    $('#'+district_target_id).html('<option value="">Loading...</option>');
-
-    if (selectvalue == "") {
-        //Display initial prompt in target select if blank value selected
-       $('#'+district_target_id).html(initial_target_html);
-    } else {
-      //Make AJAX request, using the selected value as the GET
-//       $.ajax({url: 'ajax-getvalues.php?svalue='+selectvalue,
-//              success: function(output) {
-//                 //alert(output);
-//                 $('#'+list_target_id).html(output);
-//             },
-//           error: function (xhr, ajaxOptions, thrownError) {
-//             alert(xhr.status + " "+ thrownError);
-//           }});
-        }
-    });
  $( ".selector" ).tabs({ selected: 0 });
  $('#tabs').tabs({
 	 activate: function (event, ui) {
@@ -234,7 +258,7 @@ class TableRows extends RecursiveIteratorIterator {
       width: 500,
       modal: true,
       buttons: {
-        "Submit": addUser,
+        "Submit": updateUser,
         Cancel: function() {
           usredit.dialog( "close" );
         }
@@ -245,12 +269,14 @@ class TableRows extends RecursiveIteratorIterator {
       }
     });
 
-    submitmsg = $( "#submit-message" ).dialog({
+    var submitmsg = $( "#submit-message" ).dialog({
       autoOpen: false,
       modal: true,
+      tite: "Submit Confirmation",
       buttons: {
         Ok: function() {
           $( this ).dialog( "close" );
+          window.location.reload(true);
         }
       }
     });
@@ -262,7 +288,13 @@ class TableRows extends RecursiveIteratorIterator {
 
 
     $( "#create-user" ).button().on( "click", function() {
-      usrdialog.dialog( "open" );
+	    document.getElementById("createuserYesNo").value=1;
+    	usrdialog.dialog( "open" );
+    });
+
+    $( "#create-user-top" ).button().on( "click", function() {
+	    document.getElementById("createuserYesNo").value=1;
+    	usrdialog.dialog( "open" );
     });
 
 //     $('.button-wrap but').addClass('icon-container');
@@ -318,8 +350,13 @@ class TableRows extends RecursiveIteratorIterator {
 		$("#ebaselanguage").val(feed[0]['baselanguage']);
 		$("#eactivestatus").val(feed[0]['activestatus']);
 		$("#eloged").val(feed[0]['loged']);
-		$("#edistrictid").val(feed[0]['districtname']+' / '+feed[0]['districtid']);
-		$("#eregionid").val(feed[0]['regionname']+' / '+feed[0]['regionid']);
+		$("#dropregion :selected").text(feed[0]['region_name']) //the text content of the selected option
+		$("#dropregion").val(feed[0]['regionid']);
+		$("#dropregion").change();
+// 		$("#dropdistrict :selected").text(feed[0]['districtname']) //the text content of the selected option
+// 		$("#dropdistrict").val(feed[0]['districtid']);
+//alert(feed[0]['districtid']);
+		$("#droprole").val(feed[0]['roleid']);
 		$("#whichIduser").val(feed[0]['id']);
 
         usredit.dialog( "open" );
@@ -348,8 +385,73 @@ class TableRows extends RecursiveIteratorIterator {
 		 if(!request.responseXML) {
 			// get the response from php and read the json encoded data
 		   feed=JSON.parse(request.responseText);
+	//	   alert('updateSysconhandler');
 			sysedit.dialog( "close" );
 			submitmsg.dialog( "open" );
+       }
+//  	   document.getElementById("ename").value=feed[0]['returnval'];
+} //end function updateSysconhandler(request){
+
+    function updateUser(){
+    if 	(document.getElementById("createuserYesNo").value==1){
+		var request = OpenLayers.Request.POST({
+			url: "jqAdminDBaction.php",
+			data: OpenLayers.Util.getParameterString(
+			{dbaction: 'insertUser',
+			id: document.getElementById("whichIduser").value,
+			username: username.val(),
+			pass: pass.val(),
+		title: title.val(),
+		fullname: fullname.val(),
+		position: position.val(),
+		email: email.val(),
+		phone: phone.val(),
+		baselanguage: baselanguage.val(),
+		activestatus: activestatus.val(),
+		districtid: districtid.val(),
+		regionid: regionid.val(),
+		roleid: roleid.val()}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: updateUserhandler
+		});
+    }else{
+		var request = OpenLayers.Request.POST({
+			url: "jqAdminDBaction.php",
+			data: OpenLayers.Util.getParameterString(
+			{dbaction: 'updateUser',
+			id: document.getElementById("whichIduser").value,
+			username: username.val(),
+			pass: pass.val(),
+		title: title.val(),
+		fullname: fullname.val(),
+		position: position.val(),
+		email: email.val(),
+		phone: phone.val(),
+		baselanguage: baselanguage.val(),
+		activestatus: activestatus.val(),
+		districtid: districtid.val(),
+		regionid: regionid.val(),
+		roleid: roleid.val()}),
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			callback: updateUserhandler
+		});
+	}
+
+    }
+
+    function updateUserhandler(request){
+		 if(!request.responseXML) {
+			// get the response from php and read the json encoded data
+		   feed=JSON.parse(request.responseText);
+			usredit.dialog( "close" );
+			if (feed[0]['rowsaffected']==1){
+			submitmsg.dialog( "open" );
+			document.getElementById("createuserYesNo").value=0;
+			}
        }
 //  	   document.getElementById("ename").value=feed[0]['returnval'];
 } //end function updateSysconhandler(request){
@@ -361,6 +463,7 @@ class TableRows extends RecursiveIteratorIterator {
 <body>
 
 	<input name="whichTab" type="hidden" id="whichTab" value = 0">
+	<input name="createuser" type="hidden" id="createuserYesNo" value = 0">
 
 <div id="tabs">
   <ul>
@@ -376,29 +479,10 @@ class TableRows extends RecursiveIteratorIterator {
 		document.getElementById("whichTab").value=1;
 	</script>
 
-<!--
-	<div id="usrdialog-form" title="Create new user">
-	  <p class="validateTips">All form fields are required.</p>
-
-	  <form>
-		<fieldset>
-		  <label for="name">Name</label>
-		  <input type="text" name="name" id="name" value="Jane Smizz" class="text ui-widget-content ui-corner-all">
-		  <label for="email">Email</label>
-		  <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
-		  <label for="password">Password</label>
-		  <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
-
-		  <!~~ Allow form submission with keyboard without duplicating the dialog button ~~>
-		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-		</fieldset>
-	  </form>
-	</div>
- -->
 	 <div id="submit-message" title="Update complete">
 	  <p>
 		<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-		The database update was successfully performed.
+				The database update was successfully performed.
 	  </p>
 	  </div>
 
@@ -420,7 +504,7 @@ class TableRows extends RecursiveIteratorIterator {
 	  </form>
 	</div>
 
-	<div id="usredit-form" title="Edit user accounts">
+	<div id="usredit-form" title="Edit user accounts usredit-form">
 	  <p class="validateTips">All form fields are required.</p>
 
 	  <form>
@@ -439,35 +523,59 @@ class TableRows extends RecursiveIteratorIterator {
 		  <input type="text" name="email" id="eemail" value="" class="text ui-widget-content ui-corner-all">
 		  <label for="phone">Phone</label>
 		  <input type="text" name="phone" id="ephone" value="" class="text ui-widget-content ui-corner-all">
-		  <label for="district">District</label>
-		  <div class="selDiv">
-		  		<select class="opts" name="district-select" id="district-select">
-				 <option value="">Please select..</option>
-				 <option value="tea">tea</option>
-				 <option value="coffee">coffee</option>
-				 <option value="water">water</option>
-			</select>
-			</div>
-		<select name="district-target" id="district-target"></select>
-<!-- 		  <input type="text" name="district" id="edistrictid" value="" class="text ui-widget-content ui-corner-all"> -->
-		  <label for="region">Region</label>
-		  <input type="text" name="region" id="eregionid" value="" class="text ui-widget-content ui-corner-all">
+			</p>
+			<div id="dropdowns">
+			 <div id="center" class="cascade">
+			 <?php
+			 require_once('../../lib/configuration.php');
+			 $sql = "SELECT * FROM area_region ORDER BY regionid";
+			 $query = mysqli_query($consqli, $sql);
+			 ?>
+			 <label>Region:</td>
+			 <td><select name="region" id = "dropregion">
+			 <option value="">Please Select</option>
+			 <?php while ($rs = mysqli_fetch_array($query, MYSQLI_ASSOC )) { ?>
+			 <option value="<?php echo $rs["regionid"]; ?>"><?php echo $rs["region_name"]; ?></option>
+			 <?php } ?>
+			 </select>
+			 </label>
+			 </div>
+			 <div class="cascade" id="district"></div>
+			 </div>
+
+			 <?php
+			 require_once('../../lib/configuration.php');
+			 $sql = "SELECT * FROM usr_roles ORDER BY description";
+			 $query = mysqli_query($consqli, $sql);
+			 ?>
+			 <label>Role:</td>
+			 <td><select name="role" id = "droprole">
+			 <option value="">Please Select</option>
+			 <?php while ($rs = mysqli_fetch_array($query, MYSQLI_ASSOC )) { ?>
+			 <option value="<?php echo $rs["id"]; ?>"><?php echo $rs["description"]; ?></option>
+			 <?php } ?>
+			 </select>
+			 </label>
+
+			<p style="text-align: justify;">
 		  <label for="baselanguage">Baselanguage</label>
 		  <input type="text" name="baselanguage" id="ebaselanguage" value="" class="text ui-widget-content ui-corner-all">
 		  <input name="whichIduser" type="hidden" id="whichIduser" value = 0">
 
 
-		  <label for="activestatus">Active</label>
 		  <div id='radio' class='buttons3'>
+		  <label for="radio">Active:
 			<input type='radio' id='radio1' name='radio' value='1'><label for="radio1">Yes</label></input>
 			<input type='radio' id='radio2' name='radio' value='0'><label for="radio2">No</label></input>
-		  </div>
+		  </label></div>
 
-		  <label for="loged">Loged</label>
+<!--
 		  <div id='radioL' class='buttons3'>
+		  <label for="radioL">Loged:
 			<input type='radio' id='radioL1' name='radio' value='1'><label for="radioL1">Yes</label></input>
 			<input type='radio' id='radioL2' name='radio' value='2'><label for="radioL2">No</label></input>
-		  </div>
+		  </div></label>
+ -->
 <!-- 		  <input type="text" name="loged" id="eloged" value="" class="text ui-widget-content ui-corner-all"> -->
 		  <!-- Allow form submission with keyboard without duplicating the dialog button -->
 		  <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
@@ -476,7 +584,13 @@ class TableRows extends RecursiveIteratorIterator {
 	</div>
 
 	<div id="users-contain" class="ui-widget">
-  <h1>Existing Users:</h1>
+  <table>
+  <tr>
+  <td><h1>Existing Users:</h1></td>
+  <td><button id="create-user-top">Create new user</button></td>
+  </tr>
+  </table>
+<!-- <h1>Existing Users:</h1> -->
   <table id="users" class="ui-widget ui-widget-content">
     <thead>
       <tr class="ui-widget-header ">
@@ -484,17 +598,19 @@ class TableRows extends RecursiveIteratorIterator {
       <?php
       //fill the user admin tab table
        	$statement = $pdo->query('(SELECT t1.`id`, t4.`regionid`, t4.`region_name`, t3.`districtid`, t3.`district_name`,  t1.`username`, t1.`name`, t1.`title`, t1.`position`, t1.`email`,
-       				t1.`phone`, t1.`baselanguage`, t1.`activestatus`, t1.`loged`
+       				t1.`phone`, t1.`baselanguage`, t1.`activestatus`, t1.`pass`, t1.`loged`, t5.`roleid`
        				FROM `usr_users` t1
        				inner join `usr_user_district` t2 on t1.`username`=t2.`username`
        					inner join `area_district` t3 on t2.`districtid`=t3.`districtid`
-       					inner join `area_region` t4 on t3.`regionid`=t4.`regionid`)
+       					inner join `area_region` t4 on t3.`regionid`=t4.`regionid`
+       					inner join `usr_user_role` t5 on t1.`username`=t5.`username`)
        				UNION
 					(SELECT t5.`id`, t6.`regionid`, "n.a", t6.`districtid`, "n.a",  t5.`username`, t5.`name`, t5.`title`, t5.`position`, t5.`email`,
-       				t5.`phone`, t5.`baselanguage`, t5.`activestatus`, t5.`loged`
+       				t5.`phone`, t5.`baselanguage`, t5.`activestatus`, t5.`pass`, t5.`loged`, t7.`roleid`
        				FROM `usr_users` t5
        				inner join `usr_user_district` t6 on t5.`username`=t6.`username`
-       				WHERE t6.`districtid`>900)
+       				inner join `usr_user_role` t7 on t5.`username`=t7.`username`
+       				WHERE t7.`roleid`=200)
        				order by `regionid`, `districtid`, `username`;');
 
 		$rs1 = $pdo->query('SELECT FOUND_ROWS()');
@@ -540,6 +656,7 @@ class TableRows extends RecursiveIteratorIterator {
     <tr class="ui-widget-header ">
 
 	  <?php
+	  //fill table for tab sys config
 		$statement2 = $pdo->query('SELECT * FROM `system_config`');
 
 		$rs2 = $pdo->query('SELECT FOUND_ROWS()');
@@ -556,7 +673,7 @@ class TableRows extends RecursiveIteratorIterator {
     <tbody>
       <?php
       try {
-		// set the resulting array to associative
+		// write the content
 			$i = 1;
 			$result2 = $statement2->setFetchMode(PDO::FETCH_ASSOC);
 			foreach(new TableRows(new RecursiveArrayIterator($statement2->fetchAll())) as $k=>$v) {

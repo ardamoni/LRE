@@ -160,14 +160,14 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 			  echo "<td>" . $value . "</td>";
 			  }
 		   echo "</tr>";
-		}
+		} // end foreach sheetData as $cellData
 
 		   echo "</table>";
 		echo '</ol>';
 		echo '</li>';
 		echo '<hr />';
 
-	} // end foreach
+	} // end foreach worksheetData as $worksheet
 
 ?>
 <!--	<form id="form1" name="form1" method="post" action="propertyDetails.php">

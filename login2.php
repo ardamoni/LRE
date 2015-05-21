@@ -21,7 +21,7 @@
 				  }
 </style>
         <link rel="stylesheet" href="lib/OpenLayers/theme/default/style.css" type="text/css">
-        <link rel="stylesheet" href="style.css" type="text/css">
+        <link rel="stylesheet" href="css/styles.css" type="text/css">
 		<link rel="stylesheet" href="css/flatbuttons.css" type="text/css">
 
 
@@ -40,11 +40,11 @@
 		<td>
 			<table width = "300" align = "center" border = "1">
 				<tr>
-					<td><p id = "form-desc"><?php echo "USERNAME"; ?>:</p>
+					<td><p id = "usr_name"><?php echo "USERNAME"; ?>:</p>
 					<input type = "text" id = "txt1" name = "user" size = "30"><br /><br /></td>
 				</tr>
 				<tr>
-					<td><p id = "form-desc"><?php echo "PASSWORD"; ?>:</p>
+					<td><p id = "pass_word"><?php echo "PASSWORD"; ?>:</p>
 					<input type = "password" id = "txt1" name = "pass" size = "30"><br /><br /></td>
 				</tr>
 				<tr>
@@ -237,7 +237,8 @@ var mapLogin = new OpenLayers.Map('mapLogin', options);
 	var regionrequest = OpenLayers.Request.POST({
 			url: "php/dbaction.php",
 			data: OpenLayers.Util.getParameterString(
-			{dbaction: "getregionmap"}),
+			{dbaction: "getregionmap",
+			 caller: "login"}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},

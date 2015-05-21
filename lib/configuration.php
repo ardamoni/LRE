@@ -24,6 +24,7 @@ try {
 
 	// Connect to the Server
 	$con = mysql_connect(cHost, cUser, cPass);
+	$consqli = mysqli_connect(cHost, cUser, cPass, cDb);
 	// test the connection
 	if (mysqli_connect_errno($con))
 	{

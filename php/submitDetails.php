@@ -1,3 +1,4 @@
+
 <?php
 //    require_once("../lib/initialize.php");
 
@@ -18,7 +19,7 @@ date_default_timezone_set('Europe/London');
 <link rel="stylesheet" href="../css/flatbuttons.css" type="text/css" />
 <link rel="stylesheet" href="../css/error.css" type="text/css" />
 <link rel="stylesheet" href="../lib/OpenLayers/theme/default/style.css" type="text/css" />
-<link rel="stylesheet" href="../style.css" type="text/css" />
+<link rel="stylesheet" href="../css/styles.css" type="text/css" />
 <style type="text/css">
 
 table.demoTbl {
@@ -65,8 +66,19 @@ $subupn=$_POST['subupn'];
 $districtid=$_POST['districtid'];
 $type = $_POST['ifproperty'];
 $addDetails = $_POST['addDetails'];
+$rooms = $_POST['rooms'];
 $today = date("Y/m/d");
 $year = date("Y");
+if ($_POST['prop_value']!=''){
+	$prop_value=$_POST['prop_value'];
+}else{
+	$prop_value = 0;
+}
+
+if ($_POST['colzone_id']!=''){
+	$colzone_id = $_POST['colzone_id'];
+}else{
+	$colzone_id = 0;}
 
 	$currentYear = $System->GetConfiguration("RevenueCollectionYear");
 	$previousYear =  $currentYear -1;
@@ -102,6 +114,7 @@ $year = date("Y");
 //  echo "<pre>";
 if (isset($addDetails)){
 //  var_dump($_POST);
+//  exit("debug");
 }else{echo 'not set';}
 // var_dump($_SESSION);
 // echo "</pre>";
@@ -122,6 +135,22 @@ $username = $_SESSION['user']['user'];
 				$rate_impost_value = 0;
 				$rate_value = 0;
 				$due = $feefi_value;
+				$comment = '';
+// //!!! needs to go away quickly !!! Was asked by Prestea and will only work there
+//only for Prestea Huni Valley, should disappear as soon as possible 20150506
+				if ($districtid=='130'){
+		         	if ($rooms>0){
+		         		$comment 		=  $feefi_value.' * '.$rooms;
+		         		$feefi_value 	= $feefi_value * $rooms;
+						$due = $feefi_value;
+					}else{
+		         		$comment 		=  $feefi_value.' only for PHV';
+						$feefi_value = $feefi_value;
+					}
+				}else{
+				 	$feefi_value = $feefi_value;
+				}
+//end special for Prestea 130
 				$balance = $due;
 // debug echo '<br> ffc '.$feefi_code.' - ffv'.
 				$feefi_value.' - riv '.
@@ -132,7 +161,17 @@ $username = $_SESSION['user']['user'];
 
 				if ($_POST['prop_value']!= ''){
 					$rate_impost_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "property", "rate_impost" );
+					if ($rate_impost_value==''){$rate_impost_value=0;}
 					$rate_value = ($_POST['prop_value']*$rate_impost_value);
+
+					//check if the district has district has set a minimum rate for rated properties
+					$propThreshold = $System->getFeeFixingPropertyThreshold( $districtid, $year, "rate" );
+					if ($propThreshold != 0){
+						if ($rate_value < $propThreshold)
+							{
+								$rate_value= $propThreshold; //the calculated rate is too low -> take the minimum rate
+							}
+					}
 					if ($rate_impost_value!='' && $rate_value>0){
 						$due = $rate_value;
 						$balance = $due;
@@ -151,7 +190,7 @@ $username = $_SESSION['user']['user'];
 				elseif ($_POST['buildPerm']=='no'){
 					$buildPerm=0;
 				}
-				//normal update of existing details
+//normal update of existing details
 				if ($addDetails=='')
 				{
 					$q = mysql_query(" SELECT 	*
@@ -234,6 +273,7 @@ $username = $_SESSION['user']['user'];
 							'buildingpermit' => $buildPerm,
 							'buildingpermit_no' => $_POST['buildPermNo'],
 							'feefi_code' => $feefi_code,
+							'rooms' => $rooms,
 							'feefi_unit' => 'y',
 							'feefi_value' => $feefi_value,
 							'rate_impost_value' => $rate_impost_value,
@@ -242,6 +282,7 @@ $username = $_SESSION['user']['user'];
 							'paid' => $revenueCollected,
 							'balance' => $balance,
 							'excluded' => $excluded,
+							'comments' => $comment,
 							'lastentry_person' => $_SESSION['user']['user'],
 							'lastentry_date' => $today
 							);
@@ -261,6 +302,7 @@ $username = $_SESSION['user']['user'];
 						$result = $pdo->update("property_balance", $update, "upn = :upn AND subupn = :subupn  AND districtid = :districtid AND year = :year", $bind);
 
 					}
+//add new property
 				} elseif ($addDetails=='true') {	//we add a new property and need to update property_due, property_balance
 // 				echo '<br>inside == true';
 					$st = $pdo->prepare(" SELECT 	*
@@ -303,7 +345,7 @@ $username = $_SESSION['user']['user'];
 						'districtid' => $districtid,
 						'year' => $year,
 						'pay_status' => 1,
-						'colzone_id' => $r['colzone_id'],
+						'colzone_id' => $colzone_id,
 				    	'streetname' => $_POST['street'],
 						'housenumber' => $_POST['Nr_'],
 						'locality_code' => $_POST['localCode'],
@@ -312,7 +354,7 @@ $username = $_SESSION['user']['user'];
 						'owner_tel' => $_POST['ownTel'],
 						'owner_email' => $_POST['ownEmail'],
 						'property_use' => $feefi_code,
-						'prop_value' => $_POST['prop_value'],
+						'prop_value' => $prop_value,
 						'buildingpermit' => $buildPerm,
 						'buildingpermit_no' => $_POST['buildPermNo'],
 						'feefi_code' => $feefi_code,
@@ -384,6 +426,9 @@ $username = $_SESSION['user']['user'];
 				<td>Value</td><td><?php echo $_POST['prop_value'] ?> </td>
 				</tr>
 				<tr>
+				<td>No of Rooms</td><td><?php echo $_POST['rooms'] ?> </td>
+				</tr>
+				<tr>
 				<td>Excluded from rating</td><td><?php echo $_POST['excluded'] ?> </td>
 				</tr>
 				<tr>
@@ -405,6 +450,11 @@ $username = $_SESSION['user']['user'];
 					$feefi_value = $Data->getFeeFixingInfo( $districtid, $feefi_code, $year, "business", "rate" );
 					$due = $feefi_value;
 					$balance = $due;
+					if ($_POST['employees']!=''){
+						$employees = $_POST['employees'];
+					}else{
+						$employees = 0;
+						}
 
 				//normal update of existing details
 				if ($addDetails=='')
@@ -473,7 +523,7 @@ $username = $_SESSION['user']['user'];
 							'business_class' => substr($_POST['businessclass'],0, strpos($_POST['businessclass'],':')-1),
 							'da_no' => $_POST['daAssignmentNumber'],
 							'business_certif' => $_POST['businessCertificate'],
-							'employees' => $_POST['employees'],
+							'employees' => $employees,
 							'year_establ' => $_POST['yearEstablishment'],
 							'excluded' => $excluded,
 							'feefi_code' => $feefi_code,
@@ -537,7 +587,11 @@ $username = $_SESSION['user']['user'];
  	 				{
  						$subupn=$upn.'/'.($count+1);
 					}
-
+				if ($r['colzone_id']!=''){
+					$colzone_id = $r['colzone_id'];
+				}else{
+					$colzone_id = 0;
+				}
 				 //use pdo wrapper
 				    $insert = array(
 						'upn' => $upn,
@@ -545,13 +599,13 @@ $username = $_SESSION['user']['user'];
 						'districtid' => $districtid,
 						'year' => $year,
 						'pay_status' => 1,
-						'colzone_id' => $r['colzone_id'],
+						'colzone_id' => $colzone_id,
 				    	'streetname' => $_POST['street'],
 						'housenumber' => $_POST['Nr_'],
 						'locality_code' => $_POST['localCode'],
 						'da_no' => $_POST['daAssignmentNumber'],
 						'business_certif' => $_POST['businessCertificate'],
-						'employees' => $_POST['employees'],
+						'employees' => $employees,
 						'business_name' => $_POST['businessname'],
 						'year_establ' => $_POST['yearEstablishment'],
 						'owner' => $_POST['owner'],
@@ -636,6 +690,9 @@ $username = $_SESSION['user']['user'];
 				</tr>
 				<tr>
 				<td>Year of establishment</td><td><?php echo $_POST['yearEstablishment'] ?> </td>
+				</tr>
+				<tr>
+				<td>Collector zone</td><td><?php echo $_POST['colzone_id'] ?> </td>
 				</tr>
 				<tr>
 				<td>Comments</td><td><?php echo $_POST['comments'] ?> </td>

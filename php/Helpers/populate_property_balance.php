@@ -140,7 +140,7 @@
 
 		// all other values
 		if ($results['prop_value']>0){
-			$due = $results['prop_value'] * $results['rate_impost_value'];
+			$due = $results['rate_value'];
 		} else {
 		 	$due = $results['feefi_value'];
 		 }

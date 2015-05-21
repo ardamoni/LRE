@@ -1171,7 +1171,7 @@ function collectRevenueOnClick(global_upn, global_subupn, globaldistrictid, supn
 		}
 	}
 	var w = 450;
-	var h = 550;
+	var h = 650;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
     popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
@@ -2464,15 +2464,15 @@ if(!request.responseXML) {
 			currentYear += feed[i]['currentYear'];
 			};
 
-	document.getElementById("fis1").innerHTML=number_format(sumPropertyDue, 2, '.', ',')+' GHC';
-	document.getElementById("fis2").innerHTML=number_format(sumPropertyPaid, 2, '.', ',')+' GHC';
-	document.getElementById("fis3").innerHTML=number_format(sumPropertyBalance, 2, '.', ',')+' GHC';
-	document.getElementById("fis4").innerHTML=number_format(sumBusinessDue, 2, '.', ',')+' GHC';
-	document.getElementById("fis5").innerHTML=number_format(sumBusinessPaid, 2, '.', ',')+' GHC';
-	document.getElementById("fis6").innerHTML=number_format(sumBusinessBalance, 2, '.', ',')+' GHC';
+	document.getElementById("fis1").innerHTML=number_format(sumPropertyDue, 2, '.', ',');
+	document.getElementById("fis2").innerHTML=number_format(sumPropertyPaid, 2, '.', ',');
+	document.getElementById("fis3").innerHTML=number_format(sumPropertyBalance, 2, '.', ',');
+	document.getElementById("fis4").innerHTML=number_format(sumBusinessDue, 2, '.', ',');
+	document.getElementById("fis5").innerHTML=number_format(sumBusinessPaid, 2, '.', ',');
+	document.getElementById("fis6").innerHTML=number_format(sumBusinessBalance, 2, '.', ',');
 
-	document.getElementById("fisprop").value='Property Rates';
-	document.getElementById("fisbus").value='Business Permits';
+	document.getElementById("fisprop").value='Property Rates (GHS)';
+	document.getElementById("fisbus").value='Business Permits (GHS)';
 	document.getElementById("fispropexp").innerHTML='Expected <small> ('+currentYear+')</small>:';
 	document.getElementById("fisbusexp").innerHTML='Expected <small> ('+currentYear+')</small>:';
 
@@ -2902,19 +2902,20 @@ function uploadScannedData() {
 		//
 //-----------------------------------------------------------------------------
 function index_admin() {
-	var pageURL = 'php/Admin/index.php';
+if (globaluserrole<=10){
+	var pageURL = 'php/Admin/jqAdmin.php';
 	var title = 'Aministration Module';
-	var w = 900;
-	var h = 600;
+	var w = 1100;
+	var h = 720;
     var left = (screen.width/2)-(w/2);
     var top = (screen.height/2)-(h/2);
-    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+    var popupWindow = window.open (pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
 
 	if(popupWindow && !popupWindow.closed)
 	{
 		popupWindow.focus();
 	}
-
+}
 	return false;
 } // end of index_admin function
 

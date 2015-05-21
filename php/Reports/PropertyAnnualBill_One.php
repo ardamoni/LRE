@@ -29,6 +29,8 @@
 	$upn 			= $_GET["upn"];
 	$subupn 		= $_GET["subupn"];
 	$type			= $_GET["type"];
+	$dateplus		= strtotime("+3 Months");
+	$datefuture		= date("l tS \of F Y", $dateplus);
 // var_dump($_GET);
 // 												****FOR TESTING****
 //	$districtId 	= '130';
@@ -65,7 +67,7 @@
 	$extsig = pathinfo($filesig, PATHINFO_EXTENSION);
 
 	$note = 'Kindly pay the amount involved to the District Finance Officer or to any Revenue Collector appointed ';
-	$note1 = 'by the Assembly ON OR BEFORE March 31, '.$currentYear.'.';
+	$note1 = 'by the Assembly ON OR BEFORE '.$datefuture.'.';
 	$note2 =  'Should you fail to do so, proceedings will be taken for the purpose of exacting Sale or Entry into possession such Rate and the expenses incurred.';
 
 
@@ -85,11 +87,16 @@
 // 										`subupn` = '".$subupn."' AND
 // 										`districtid` = '".$districtId."' ");
 
-	$q = mysql_query("SELECT t1.*, t2.`colzonenr` FROM  `property` t1, `collectorzones` t2
+	$q = mysql_query("SELECT t1.*, t2.`colzonenr`, t2.`colzonename` FROM  `property` t1, `collectorzones` t2
 						WHERE t1.`upn` = '".$upn."' AND
 							  	t1.`subupn` = '".$subupn."' AND
-								t1.`districtid` = '".$districtId."'
-								AND t2.`id`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
+								t1.`districtid` = '".$districtId."' AND t2.`districtid` = '".$districtId."'
+								AND t2.`colzonenr`= t1.`colzone_id` ORDER BY t2.`colzonenr` ");
+// 	$q = mysql_query("SELECT t1.* FROM  `property` t1
+// 						WHERE t1.`upn` = '".$upn."' AND
+// 							  	t1.`subupn` = '".$subupn."' AND
+// 								t1.`districtid` = '".$districtId."'
+// 								ORDER BY t1.`colzone_id` ");
 	$counter = 0;
 	while( $r = mysql_fetch_array($q) )
 	{
@@ -138,7 +145,11 @@
 		$PDF->Cell(40,5,'Property Rate Bill',0,1,'R');
 		$PDF->SetFont('Arial','',10);
 		$PDF->Cell(40,5, '',0,0,'C');
-		$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzonenr'].' / Copy',0,0,'R');
+		if ($r['colzonename']!=''){
+			$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Zone:'.$r['colzone_id'].' ['.$r['colzonename'].'] / Copy',0,0,'R');
+		}else{
+			$PDF->Cell(70,5,'Bill Date: '.date('d-m-Y').' / Collector Zone:'.$r['colzone_id'].' / Copy',0,0,'R');
+		}
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, '',0,0,'C');
 		$PDF->Cell(40,5,'Bill Date: '.date('d-m-Y'),0,1,'R');
@@ -152,7 +163,11 @@
 		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'Owner: ',0,0,'L');
 //		$PDF->Cell(90,5, $Data->getOwnerInfo( $r['ownerid'], "name" ) ,1,1,'C');
-		$PDF->Cell(90,5, $r['owner'],1,1,'C');
+		$PDF->Cell(90,5, $r['owner'],1,0,'C');
+		$PDF->SetFont('Arial','',6);
+		$PDF->Cell(30,5, 'Owner: ',0,0,'R');
+		$PDF->Cell(30,5, $r['owner'],1,1,'C');
+		$PDF->SetFont('Arial','',8);
 		$PDF->Cell(30,5, 'UPN: ',0,0,'L');
 		$PDF->Cell(90,5, $r['upn'],1,0,'C');
 		$PDF->SetFont('Arial','',6);
@@ -183,12 +198,12 @@
 		$dueFeeFixValue 	= $Data->getDueInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "feefi_value" );
 		$paidCurrentYear	= $Data->getBalanceInfo( $r['upn'], $r['subupn'], $districtId, $currentYear, $type, "paid" );
 
-//!!! needs to go away quickly !!! Was asked by Prestea and will only work there
-        if ($districtId==130){
-        	if ($r['rooms']>0){
-        		$dueFeeFixValue 	= $dueFeeFixValue * $r['rooms'];
-        	}
-        }
+// //!!! needs to go away quickly !!! Was asked by Prestea and will only work there
+//         if ($districtId==130){
+//         	if ($r['rooms']>0){
+//         		$dueFeeFixValue 	= $dueFeeFixValue * $r['rooms'];
+//         	}
+//         }
 
 //		$value = $dueRateValue + $dueRateImpostValue + $arreas + $dueFeeFixValue;
 		if ($duePropertyValue > 0) {
@@ -209,7 +224,7 @@
 		// name of the property_use
 		// OBSOLETE - 15.07.2014 - Arben
 		//$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingClassInfo( $districtId, $r['property_use']),1,0,'C');
-		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingInfo( $districtId, $r['property_use'], $currentYear, $type, "class" ),1,0,'C');
+		$PDF->Cell(90,5,  $r['property_use'].' / '.$Data->getFeeFixingInfo( $districtId, $r['property_use'], $currentYear, $type, "class" ).' / ['.$Data->getFeeFixingInfo( $districtId, $r['property_use'], $currentYear, $type, "rate" ).' GHS]',1,0,'C');
 
 		$PDF->Ln(10);
 
@@ -234,7 +249,15 @@
 // 		$PDF->Cell(17,5, $Data->getPropertyDueInfo( $r['upn'], $r['subupn'], $currentYear, "rate_impost_value" ),1,0,'R');
 		$PDF->Cell(12,5, number_format( $arreas,2,'.','' ),1,0,'R'); // Arrears
 		if ($duePropertyValue==0) {
-		$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R'); //Adjustment
+	        if ($districtId==130){
+        		if ($r['rooms']>0){
+					$PDF->Cell(16,5, '['.$r['rooms'].']     '.number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R'); //Adjustment
+        		}else{
+					$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R'); //Adjustment
+				}
+        	}else{
+			$PDF->Cell(16,5, number_format( $dueFeeFixValue,2,'.','' ) ,1,0,'R'); //Adjustment
+			}
 		}else{
 			$PDF->Cell(16,5, number_format( '0',2,'.','' ) ,1,0,'R');
 		}

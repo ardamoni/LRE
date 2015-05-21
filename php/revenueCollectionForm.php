@@ -14,7 +14,7 @@
 <?php echo "<title>".$_GET["title"]."</title>"; ?>
 <link rel="stylesheet" href="../css/ex.css" type="text/css" />
 <!--<link rel="stylesheet" href="../style.css" type="text/css">-->
-<link rel="stylesheet" href="../style.css" type="text/css">
+<link rel="stylesheet" href="../css/styles.css" type="text/css">
 <link rel="stylesheet" href="../css/flatbuttons.css" type="text/css">
 
 <style type="text/css">
@@ -98,8 +98,8 @@ function checkBeforeSubmit(frm) {
 	$districtid 	= $_SESSION['user']['districtid'];  //$_GET['districtid'];
 	$ifproperty 	= $_GET['ifproperty'];
 
-     $districtinfo = $Data->getDistrictInfo( $districtid, 'district_name' ).' ('.$districtid.')';
-// var_dump($_GET);
+     $districtinfo 	= $Data->getDistrictInfo( $districtid, 'district_name' ).' ('.$districtid.')';
+//var_dump($_GET);
 
 	if ($ifproperty == 'property'){
 		echo "<h1><center>Enter revenue for this property</center></h1>";
@@ -140,7 +140,7 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 			":districtid" => $districtid,
 			":year" => $currentYear);
 		$result = $pdo->select("fee_fixing_feesfines", "districtid = :districtid AND year = :year", $bind);
-		$data = array();
+		$feefidata = array();
 		$i=0;
 		foreach($result as $temp){
 		foreach($temp as $key => $value) {
@@ -153,10 +153,32 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 			$feeficodes['$i'] = $tcode.', '.$tclass.', '.$tcategory.', rate: '.$trate;
 			$i++;
 		}
-			$data[] = $feeficodes['$i'];
+			$feefidata[] = $feeficodes['$i'];
 		}
 // 		var_dump($data);
 	}
+
+//get the collector information
+		$bind = array(
+			":districtid" => $districtid);
+		$result = $pdo->select("col_collectors", "districtid = :districtid", $bind);
+		$coldata = array();
+		$nooption = 'No collector selected';
+		$i=1;
+		$colcodes = array();
+		$colcodes[0] = '0: '.$nooption;
+		foreach($result as $temp){
+		foreach($temp as $key => $value) {
+		   if ($key=='LastName'){		$tlastname = $value;}
+		   if ($key=='FirstName'){		$tfirstname = $value;}
+		   if ($key=='id')		{		$tcollectorid = $value;}
+
+			$colcodes['$i'] = $tcollectorid.': '.$tlastname.', '.$tfirstname;
+			$i++;
+		}
+			$coldata[] = $colcodes['$i'];
+		}
+
 
 	if ($ifproperty == 'property'){
 		echo '<form id="form1" name="form1" method="post" action="PropertyRevenueCollection.php">';
@@ -177,7 +199,7 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 
 			//result texts
 			var characters_error = 'Minimum amount of chars is 1';
-			var checking_html = '<img src="images/loading.gif" /> Checking...';
+			var checking_html = '<img src="../img/loading.gif" /> Checking...';
 
 			//when button is clicked
 			$('#Submit').click(function()
@@ -200,15 +222,16 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 			//get the treceipt
 			var upn = $('#upn').val();
 			var subupn = $('#subupn').val();
+			if (subupn == ' - '){subupn='';}
+			var collectorids = $('#collectorlist').val().split(":");
+			var collectorid = collectorids[0];
 			var treceipt = $('#treceipt').val();
 			var districtid = $('#districtid').val();
 			var type = $('#type').val();
-
 			//use ajax to run the check
-			$.post("formValidation.php", { upn: upn, subupn: subupn, treceipt: treceipt, type: type },
+			$.post("formValidation.php", { upn: upn, subupn: subupn, collectorid: collectorid, treceipt: treceipt, type: type },
 				function(result)
 				{
-					//$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + result + '</b></span>');
 					if( result == 1 )
 					{
 						//show that the treceipt is available
@@ -218,6 +241,12 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 					{
 						//show that the treceipt is NOT available
 						$('#treceipt_availability_result').html('<span class="is_not_available"><b>' + treceipt + '</b> is NOT available or was Used previously </span>');
+						if (confirm('Do you still want to safe the payment?')) {
+							// Save it!
+							$('#form1').submit();
+						} else {
+							// Do nothing!
+						}
 					}
 			});
 		}
@@ -269,7 +298,7 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 				}else{
 				echo '<td>Fee Fixing Class</td>';
 				echo '<td>:</td>';
-				echo '<td class="c">'.generateSelect("feeficode", $data).'</td>';
+				echo '<td class="c">'.generateSelect("feeficode", $feefidata).'</td>';
 				}
 			?>
 			</tr>
@@ -283,6 +312,12 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 				<td>:</td>
 				<td class='c'><?php echo generateSelect('paymenttype', $paymentType);?></td>
 				<!--<input name="paymenttype" type="text" id="paymenttype" size="10"></td>-->
+			</tr>
+			<tr>
+				<td>Collector</td>
+				<td>:</td>
+				<td class='c'><?php echo generateSelect('collectorlist', $colcodes);?></td>
+				<!--<input name="collector" type="text" id="collector" size="20"></td>-->
 			</tr>
 			<tr>
 				<td>Ticketing receipt</td>
@@ -322,16 +357,16 @@ $paymentType = explode(",",$System->GetConfiguration("PaymentType"));
 
 
 function generateSelect($name = '', $options = array()) {
-
-	$html = '<select name="'.$name.'" style="width:175px">';
+	$html = '<select name="'.$name.'" id="'.$name.'" style="width:175px">';
 	foreach ($options as $option => $value) {
 		$html .= '<option value='.$value.'>'.$value.'</option>';
 	}
 	$html .= '</select>';
 	return $html;
 }
-	// drop down
-	function dropdown( $name, array $options, $selected=null )
+
+// drop down not used at the moment
+function dropdown( $name, array $options, $selected=null )
 	{
 		/*** begin the select ***/
 		$dropdown = '<select name="'.$name.'" id="'.$name.'">'."\n";

@@ -31,6 +31,7 @@ session_start();
 	$starget = $_POST['starget'];
 	$sString = $_POST['sString'];
 	$searchlayer = $_POST['searchlayer'];
+	$caller = $_POST['caller'];
 
 
 //	$dbaction = $_GET['action'];
@@ -53,7 +54,7 @@ session_start();
 
   if ($dbaction=='getdistrictmap'){getdistrictmap();}
 
-  if ($dbaction=='getregionmap'){getregionmap($year);}
+  if ($dbaction=='getregionmap'){getregionmap($year, $caller);}
 
   if ($dbaction=='insertCZ'){insertCZ($zoneid,$districtid,$polygon,$collector,$zonecolour);}
 
@@ -672,7 +673,7 @@ function getdistrictmap()
 				//collects polygon information
 				//expects no $_POST parameters
 //-----------------------------------------------------------------------------
-function getregionmap($year)
+function getregionmap($year, $caller)
 {
 
 	$Stats = new StatsData;
@@ -688,8 +689,10 @@ function getregionmap($year)
 	$json 				= array();
 	$json['id'] 		= $row['id'];
 	$json['boundary'] 	= $row['boundary'];
-	$json['regionname'] 	= $row['region_name'];
+	$json['regionname'] 	= $row['region_name'].' '.$caller;
 	$json['regionid'] 	= $row['regionid'];
+
+	if (!$caller) {
 	$json['NrOfDistricts'] 	= $Stats->getNrDistricts( $row['regionid']);
 	$json['TotalPropertyDue'] 	= number_format( $Stats->getTotalPropertyDueForRegion( $row['regionid'], $year),2,'.',',' );
 	$json['TotalPropertyExpected'] 	= number_format($Stats->getTotalPropertyExpected(  $row['regionid'], $year),2,'.',',' );
@@ -700,7 +703,7 @@ function getregionmap($year)
 	$json['TotalBusinessPayments'] 	= number_format($Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );
 // 	$json['TotalBusinessBalance'] 	= number_format($json['TotalBusinessExpected']-$json['TotalBusinessPayments'],2,'.',',' );
 	$json['TotalBusinessBalance'] 	= number_format($Stats->getTotalBusinessDueForRegion( $row['regionid'], $year)-$Stats->getTotalBusinessPayments(  $row['regionid'], $year),2,'.',',' );
-
+	}
 	$data[] 			= $json;
 	 }//end while
 	header("Content-type: application/json");

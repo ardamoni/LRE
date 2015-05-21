@@ -272,11 +272,11 @@
 					// Unused ticket returns no rows
 					if( $count == 0 )
 					{
-						return false;
+						return '0';//false;
 					}
 					else
 					{
-						return true;
+						return '1';//true;
 					}
 				break;
 
@@ -568,4 +568,5 @@
 
 
 	}	//end of Revenue class
+
 ?>
