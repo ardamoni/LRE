@@ -22,6 +22,8 @@
 
 
 	<script type="text/javascript">
+
+// Add jQuery functionality
 	$(document).ready(function()
 	{
 		//slides the element with class "menu_body" when paragraph with class "menu_head" is clicked
@@ -30,6 +32,7 @@
 			$(this).css({backgroundImage:"url(icons/down.png)"}).next("div.menu_body").slideToggle(300).siblings("div.menu_body").slideUp("slow");
 			$(this).siblings().css({backgroundImage:"url(icons/left.png)"});
 		});
+
 	});
 
 	function overlay() {
@@ -372,6 +375,11 @@
     		</div> </td>
 			<td>
 			<table>
+<!--
+			if the layerswitcher is located outside the map you will need the next line
+			in jsfunctions.js there is some changes necessary as well line 53 for example
+			<tr><td><div id="layerswitcher" class="olControlLayerSwitcher"></div></td></tr>
+-->
 			<tr><td><div id="debug1"></div></td></tr>
 			<tr>
 			<td>
@@ -435,6 +443,9 @@
 				?>
 			</p>
 		</div>
+
+			<script src="lib/jquery-ui-1.11.0/external/jquery/jquery.js"></script>
+			<script src="lib/jquery-ui-1.11.0/jquery-ui.js"></script>
 		    <script src="http://maps.google.com/maps/api/js?v=3&amp;sensor=false"></script>
 			<script src="lib/OpenLayers/lib/OpenLayers.js"></script>
 			<script src="lib/spin/spin.js"></script>

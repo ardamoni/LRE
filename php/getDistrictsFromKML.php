@@ -24,14 +24,14 @@ echo "<br> dn: ".$districtname."<br>"; //    break;
      $cor_d  =  explode(' ', $placemarks[$i]->Polygon->outerBoundaryIs->LinearRing->coordinates);
      $cor_d1='';
 	 $query = '';
-	 $run='';  
+	 $run='';
 	 $iCount2 = 1;
 //			  echo "cor_d "; print_r($cor_d); echo "<br>";
 	  for ($j = 0; $j < sizeof($cor_d); $j++) {
-		foreach($cor_d as $value){  
+		foreach($cor_d as $value){
 			$tmp2 = explode(',',$value);
 			$iCount=1;
-			foreach($tmp2 as $value2){  
+			foreach($tmp2 as $value2){
 			   $subval= substr($value2,0,2);
 				if ($subval == "0".chr(10)) {  //check for carriage return
 				   $tmp3=substr($value2,2,strlen($value2)); //here we extract the coordinates without the NewLIne
@@ -56,7 +56,7 @@ echo "<br> dn: ".$districtname."<br>"; //    break;
 		$run .="INSERT INTO KML_from_districts (boundary, districtname) VALUES (".$query." );";
 //		print($i);
 //		if ($iCount2 < 25) {
-//		echo "i ".$i." - "; 
+//		echo "i ".$i." - ";
 //		}else{
 //		echo "i ".$i." - <br>";
 //		}
@@ -65,10 +65,10 @@ echo "<br> dn: ".$districtname."<br>"; //    break;
 	  }
 
   }else {
- 
+
    exit('Failed to open file '.$completeurl);
   }
   print("<br>Import into database successful - Great!!!");
-   mysqli_close($con);    
+   mysqli_close($con);
 
 ?>

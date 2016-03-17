@@ -95,7 +95,7 @@ $(document).ready(function(){
 		baselanguage = $("#ebaselanguage"),
 		activestatus = $("#eactivestatus"),
 		loged = $("#eloged"),
-		districtid = $("dropdistrict"),
+		districtid = $("#dropdistrict"),
 		regionid = $("#dropregion"),
 		roleid = $("#droprole"),
 
@@ -120,25 +120,24 @@ $(document).ready(function(){
 //	 alert(region_id);
 	 $("#district").html( "" );
 	 if (typeof region_id != 'undefined'){
-	 if (region_id.length > 0 ) {
-
-	 $.ajax({
-	 type: "POST",
-	 url: "../getdistrict2.php",
-	 data: "region_id="+region_id,
-	 cache: false,
-	 beforeSend: function () {
-	 $('#district').html('<img src="../../img/loading.gif" alt="" width="24" height="24">');
-	 },
-	 success: function(html) {
-	 $("#district").html( html );
-//alert(html);
-		$("#dropdistrict :selected").text(feed[0]['districtname']) //the text content of the selected option
-		$("#dropdistrict").val(feed[0]['districtid']);
-		districtid = $("#dropdistrict"); //feed[0]['districtid'];
-	 }
-	 });
-	 }
+		 if (region_id.length > 0 ) {
+			 $.ajax({
+			 type: "POST",
+			 url: "../getdistrict2.php",
+			 data: "region_id="+region_id,
+			 cache: false,
+			 beforeSend: function () {
+				 $('#district').html('<img src="../../img/loading.gif" alt="" width="24" height="24">');
+			 },
+			 success: function(html) {
+			 $("#district").html( html );
+		//alert(html);
+				$("#dropdistrict :selected").text(feed[0]['districtname']) //the text content of the selected option
+				$("#dropdistrict").val(feed[0]['districtid']);
+				districtid = $("#dropdistrict"); //feed[0]['districtid'];
+			 }
+			 });
+		 }
 	 }
 	});
 // });
@@ -355,7 +354,7 @@ $(document).ready(function(){
 		$("#dropregion").change();
 // 		$("#dropdistrict :selected").text(feed[0]['districtname']) //the text content of the selected option
 // 		$("#dropdistrict").val(feed[0]['districtid']);
-//alert(feed[0]['districtid']);
+// alert(feed[0]['districtid']);
 		$("#droprole").val(feed[0]['roleid']);
 		$("#whichIduser").val(feed[0]['id']);
 
@@ -394,6 +393,7 @@ $(document).ready(function(){
 
     function updateUser(){
     if 	(document.getElementById("createuserYesNo").value==1){
+    alert(districtid.val()+ ' ' + regionid.val());
 		var request = OpenLayers.Request.POST({
 			url: "jqAdminDBaction.php",
 			data: OpenLayers.Util.getParameterString(
@@ -401,16 +401,16 @@ $(document).ready(function(){
 			id: document.getElementById("whichIduser").value,
 			username: username.val(),
 			pass: pass.val(),
-		title: title.val(),
-		fullname: fullname.val(),
-		position: position.val(),
-		email: email.val(),
-		phone: phone.val(),
-		baselanguage: baselanguage.val(),
-		activestatus: activestatus.val(),
-		districtid: districtid.val(),
-		regionid: regionid.val(),
-		roleid: roleid.val()}),
+			title: title.val(),
+			fullname: fullname.val(),
+			position: position.val(),
+			email: email.val(),
+			phone: phone.val(),
+			baselanguage: baselanguage.val(),
+			activestatus: activestatus.val(),
+			districtid: districtid.val(),
+			regionid: regionid.val(),
+			roleid: roleid.val()}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
@@ -424,16 +424,16 @@ $(document).ready(function(){
 			id: document.getElementById("whichIduser").value,
 			username: username.val(),
 			pass: pass.val(),
-		title: title.val(),
-		fullname: fullname.val(),
-		position: position.val(),
-		email: email.val(),
-		phone: phone.val(),
-		baselanguage: baselanguage.val(),
-		activestatus: activestatus.val(),
-		districtid: districtid.val(),
-		regionid: regionid.val(),
-		roleid: roleid.val()}),
+			title: title.val(),
+			fullname: fullname.val(),
+			position: position.val(),
+			email: email.val(),
+			phone: phone.val(),
+			baselanguage: baselanguage.val(),
+			activestatus: activestatus.val(),
+			districtid: districtid.val(),
+			regionid: regionid.val(),
+			roleid: roleid.val()}),
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded"
 			},

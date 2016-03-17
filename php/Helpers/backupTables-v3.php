@@ -1,4 +1,4 @@
-<?php
+ <?php
 //You should test your script, once confirmed all working, add '@' in front of all 'mysqli' commands to stop any errors being displayed.
 require_once( "../../lib/configuration.php");
 //

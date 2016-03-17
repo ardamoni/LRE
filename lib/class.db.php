@@ -8,7 +8,7 @@ class db extends PDO {
 
 	public function __construct($dsn, $user="", $passwd="") {
 		$options = array(
-			PDO::ATTR_PERSISTENT => true, 
+			PDO::ATTR_PERSISTENT => true,
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 		);
 
@@ -31,8 +31,8 @@ class db extends PDO {
 			if(!empty($backtrace)) {
 				foreach($backtrace as $info) {
 					if($info["file"] != __FILE__)
-						$error["Backtrace"] = $info["file"] . " at line " . $info["line"];	
-				}		
+						$error["Backtrace"] = $info["file"] . " at line " . $info["line"];
+				}
 			}
 
 			$msg = "";
@@ -72,10 +72,10 @@ class db extends PDO {
 			$sql = "DESCRIBE " . $table . ";";
 			$key = "Field";
 		}
-		else {	
+		else {
 			$sql = "SELECT column_name FROM information_schema.columns WHERE table_name = '" . $table . "';";
 			$key = "column_name";
-		}	
+		}
 
 		if(false !== ($list = $this->run($sql))) {
 			$fields = array();
@@ -117,9 +117,9 @@ class db extends PDO {
 					return $pdostmt->fetchAll(PDO::FETCH_ASSOC);
 				elseif(preg_match("/^(" . implode("|", array("delete", "insert", "update")) . ") /i", $this->sql))
 					return $pdostmt->rowCount();
-			}	
+			}
 		} catch (PDOException $e) {
-			$this->error = $e->getMessage();	
+			$this->error = $e->getMessage();
 			$this->debug();
 			return false;
 		}
@@ -139,11 +139,11 @@ class db extends PDO {
 			$errorCallbackFunction = "print_r";
 
 		if(function_exists($errorCallbackFunction)) {
-			$this->errorCallbackFunction = $errorCallbackFunction;	
+			$this->errorCallbackFunction = $errorCallbackFunction;
 			if(!in_array(strtolower($errorMsgFormat), array("html", "text")))
 				$errorMsgFormat = "html";
-			$this->errorMsgFormat = $errorMsgFormat;	
-		}	
+			$this->errorMsgFormat = $errorMsgFormat;
+		}
 	}
 
 	public function update($table, $info, $where, $bind="") {
@@ -154,15 +154,14 @@ class db extends PDO {
 		for($f = 0; $f < $fieldSize; ++$f) {
 			if($f > 0)
 				$sql .= ", ";
-			$sql .= $fields[$f] . " = :update_" . $fields[$f]; 
+			$sql .= $fields[$f] . " = :update_" . $fields[$f];
 		}
 		$sql .= " WHERE " . $where . ";";
 
 		$bind = $this->cleanup($bind);
 		foreach($fields as $field)
 			$bind[":update_$field"] = $info[$field];
-		
 		return $this->run($sql, $bind);
 	}
-}	
+}
 ?>

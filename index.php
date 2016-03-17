@@ -5,7 +5,6 @@
 	 *	Start the Session
 	 */
 	session_start();
-
 	/*
 	 *	Set The Flag that This is the Parent File
 	 *	-----------------------------------------------------------------------

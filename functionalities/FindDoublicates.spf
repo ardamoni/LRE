@@ -128,6 +128,10 @@ FROM
 	<array/>
 	<key>queryHistory</key>
 	<array>
+		<string>select * from `source` Where (`source`) in (select `source` from `source` group by `source`
+    having count(1) &gt; 1 ) AND id in (select id from `tmp_source3`)</string>
+		<string>select * from `source` Where (`source`) in (select `source` from `source` group by `source`
+    having count(1) &gt; 1 ) AND id not in (select id from `tmp_source3`)</string>
 		<string>select `upn`, `subupn`, `owner`, `streetname`, `housenumber`, `districtid` from `property_copy`
  where (`upn`) in
   ( select `upn`

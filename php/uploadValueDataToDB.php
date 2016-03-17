@@ -70,7 +70,7 @@ var_dump($_GET);
 
 
 	/**  Identify the type of $inputFileName  **/
-	$inputFileName = '../xls/lre-values23.03.15-11-54.xlsx';
+	$inputFileName = '../xls/lre-values03.12.15-15-14.xlsx';
 
 	$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
 
@@ -139,8 +139,8 @@ if ($_GET['ifproperty']=='1'){
 }elseif ($_GET['ifproperty']=='0'){
 	$targetTable = $sdBusiness->tell_table_name();
 }
-if (!empty($cellTemp['A'])){
- $upn=$cellTemp['A'];
+if (!empty($cellTemp['D'])){
+ $upn=substr($cellTemp['D'],0,13);
 //erase known funny characters in upn
  foreach ($funnyChar as $key => $value) {
 		if (strpos($upn,$key)>=0) {
@@ -152,10 +152,11 @@ if (!empty($cellTemp['A'])){
 		$sdProperty->upn=$upn; //without funny characters
 		$sdProperty->subupn='';//$cellTemp['B'];
 		$sdProperty->districtid=$_GET['districtid'];
-		$sdProperty->streetname=$cellTemp['B'];
+		$sdProperty->town=$cellTemp['H'];
+		$sdProperty->streetname=$cellTemp['E'];
 		$sdProperty->housenumber=$cellTemp['C'];
-		$sdProperty->locality_code=$cellTemp['D'];
-		$sdProperty->owner=$cellTemp['E'];
+		$sdProperty->locality_code=$cellTemp['B'];
+		$sdProperty->owner=$cellTemp['K'];
 		$sdProperty->owneraddress='';//$cellTemp['G'];
 		$sdProperty->owner_tel='';//$cellTemp['H'];
 		$sdProperty->owner_email='';//$cellTemp['I'];
@@ -168,13 +169,14 @@ if (!empty($cellTemp['A'])){
 		$sdProperty->ownership_type='';//$cellTemp['P'];
 		$sdProperty->constr_material='';//$cellTemp['Q'];
 		$sdProperty->storeys='';//$cellTemp['R'];
-		$sdProperty->prop_value=$cellTemp['F'];
-		$sdProperty->prop_descriptor='';//$cellTemp['T'];
+		$sdProperty->prop_value=$cellTemp['M'];
+		$sdProperty->prop_descriptor=$cellTemp['M'];//$cellTemp['T'];
 		$sdProperty->planningpermit='';//$cellTemp['U'];
 		$sdProperty->planningpermit_no='';//$cellTemp['V'];
 		$sdProperty->buildingpermit='';//$cellTemp['W'];
 		$sdProperty->buildingpermit_no='';//$cellTemp['X'];
-		$sdProperty->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellTemp['G'];
+//		$sdProperty->comments='Uploaded by: '.$_SESSION['user']['name'].' - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellTemp['G'];
+		$sdProperty->comments='Uploaded by: uploadValueDataToDB.php - at: '.gmdate(DATE_RFC822).' - Comment: '.$cellTemp['F'];
 //Ascii Character 65=A to 90=Z
 		$sdProperty->save();
 		unset($sdProperty->id);

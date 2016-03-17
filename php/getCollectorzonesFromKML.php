@@ -1,7 +1,7 @@
 <?
-$completeurl = "../kml/198Suhum_Collectorzones.kml";
-$districtid=198;
- print("Start import into database, please have some patience");
+$completeurl = "../kml/150Nkoranza-collectorzones-LatLon.kml";
+$districtid=150;
+ print("Start import into database, please have some patience. File: ".$completeurl);
 
 $colors = ['#1FCB4A', 	'#59955C', 	'#48FB0D', 	'#2DC800', 	'#59DF00', 	'#9D9D00', 	'#B6BA18',
 '#27DE55', 	'#6CA870', 	'#79FC4E', 	'#32DF00', 	'#61F200', 	'#C8C800', 	'#CDD11B',

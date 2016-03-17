@@ -23,7 +23,7 @@ else
 	$json['userdistrictname'] 		= $_SESSION['user']['districtname'];
 
 		// collect the information to be displayed in the UI
-	$qsumPropertyBalance = 	mysql_query("SELECT SUM(d3.balance) as sumpropbal FROM property_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
+	$qsumPropertyBalance = 	mysql_query("SELECT SUM(d3.balance) as sumpropbal FROM property_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."' AND d3.year='".$currentYear."';");
 	$sumPropertyBalance	 = 	mysql_fetch_array($qsumPropertyBalance);
 	$qsumPropertyPaid 	= 	mysql_query("SELECT SUM(d3.payment_value) as sumproppaid FROM property_payments d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
 	$sumPropertyPaid	= 	mysql_fetch_array($qsumPropertyPaid);
@@ -32,7 +32,7 @@ else
 	$qsumPropertyDue_valued 	= 	mysql_query("SELECT SUM(d3.rate_value) as sumpropdue_valued FROM property_due d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."' AND d3.rate_value>0 AND d3.year='".$currentYear."';");
 	$sumPropertyDue_valued	 	= 	mysql_fetch_array($qsumPropertyDue_valued);
 
-	$qsumBusinessBalance = 	mysql_query("SELECT SUM(d3.balance) as sumbusbal FROM business_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
+	$qsumBusinessBalance = 	mysql_query("SELECT SUM(d3.balance) as sumbusbal FROM business_balance d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."' AND d3.year='".$currentYear."';");
 	$sumBusinessBalance	 = 	mysql_fetch_array($qsumBusinessBalance);
 	$qsumBusinessPaid 	= 	mysql_query("SELECT SUM(d3.payment_value) as sumbuspaid FROM business_payments d3 JOIN `KML_from_LUPMIS` d1 ON d3.`upn` = d1.`upn` Where d3.`districtid`='".$_SESSION['user']['districtid']."';");
 	$sumBusinessPaid	= 	mysql_fetch_array($qsumBusinessPaid);

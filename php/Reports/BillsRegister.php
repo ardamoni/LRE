@@ -68,7 +68,7 @@
 
 			// 1st row
 			$PDF->SetFont('Arial','B',8);
-			$PDF->SetFillColor(225,225,225);
+			$PDF->SetFillColor(100);
 			$PDF->Cell(34,5, "District",1,0,'C',true);
 			$PDF->SetFont('Arial','',8);
 			$PDF->SetFillColor(255,255,255);

@@ -2,31 +2,6 @@
 // 01.08.13 11:30 created the LREinit from dbgeojsonpoly.js and placed all the functions in lib/jsfunctions.js
 // 27. September 2013 10:10:43 GMT moved previous code from LREinit and created init() in order to keep file count low
 
-//Add jQuery functionality
-	$(document).ready(function()
-	{
-		//slides the element with class "menu_body" when paragraph with class "menu_head" is clicked
-		$("#menuContainer p.menu_head").click(function()
-		{
-			$(this).css({backgroundImage:"url(icons/down.png)"}).next("div.menu_body").slideToggle(300).siblings("div.menu_body").slideUp("slow");
-			$(this).siblings().css({backgroundImage:"url(icons/left.png)"});
-		});
-
-		var submitmsg = $( "#alert-message" ).dialog({
-		  autoOpen: false,
-		  modal: true,
-		  tite: "Not allowed",
-		  buttons: {
-			Ok: function() {
-			  $( this ).dialog( "close" );
-			  window.location.reload(true);
-			}
-		  }
-		});
-	});
-
-
-
 //make drawing tools invisible
 //on NITA OpenLayers.ProxyHost = "/usr/lib/cgi-bin/proxy.cgi?url=";
 OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
@@ -52,7 +27,7 @@ var session_roleid = "<?php=$_SESSION['user']['roleid'];?>";
 	var globalpropertychanged = false; //used to display the outstanding revenue
 	var globalbusinesschanged = false; //same, but for business
 	var globalfeesandfineschanged = false;
-	var googleonline = true;
+	var googleonline = false;
 
 //keypress listener for the Easter egg
 window.addEventListener("keydown", keysPressed, false);
@@ -68,14 +43,13 @@ var eastereggkeys = [];
 var options = {
 			  scales: [500, 1000, 2500, 5000, 10000],
 			  numZoomLevels: 26,
-//			  allOverlays: true, // this determines whether all Layers get checkbox or base layers get radiobuttons and overlay layers get checkboxes
+			  allOverlays: true,
 			  autoUpdateSize: true,
 			  projection: proj900913, //new OpenLayers.Projection("EPSG:900913"),
 			  displayProjection: projWGS84, //new OpenLayers.Projection("EPSG:4326"),
 			  controls:[
 			//	new OpenLayers.Control.PanZoomBar(),
 				new OpenLayers.Control.LayerSwitcher({'ascending':false}),
-//				new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('layerswitcher')}),
 				new OpenLayers.Control.ScaleLine(),
 				new OpenLayers.Control.MousePosition(),
 			//	new OpenLayers.Control.OverviewMap(),
@@ -83,8 +57,6 @@ var options = {
 				new OpenLayers.Control.KeyboardDefaults()],};
 
 var map = new OpenLayers.Map('map', options);
-
-//map.addControl(new OpenLayers.Control.LayerSwitcher({'div':OpenLayers.Util.getElement('layerswitcher')}));
 
 //allow user to resize window including the map area
 window.onresize = function()
@@ -304,6 +276,91 @@ var styleDistrictBoundary = {
             fillColor: "#FFFF99",
             fillOpacity: 0.0,
 	};
+
+
+function init(){
+
+// if (session_roleid<=100){
+// if (session_user='ekke'){
+  startNormalUser();
+// }
+//  if (session_user='monitor'){
+//   startMonitoringUser();
+//  }
+
+} //end init()
+
+function startNormalUser() {
+
+//check if Internet connection exists
+// 		if (doesConnectionExist() == true) {
+// 			alert("connection exists!");
+// 		} else {
+// 			alert("connection doesn't exist!");
+// 		}
+
+   var sm = new OpenLayers.StyleMap({
+    			fillColor: "#666666",
+    			lineColor: "#0033FF"});
+
+//    			'default': mystyle,
+//Mapnik
+      var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
+
+//check whether we are online or offline
+if (googleonline){
+if (doesConnectionExist()){
+try {
+  	  var gmap = new OpenLayers.Layer.Google(
+					"Google Hybrid",
+					{type: google.maps.MapTypeId.HYBRID,
+// 					"Google Streets", // the default
+// 					{numZoomLevels: 20,
+ 					visibility: false
+					});
+    } catch (e) {
+         alert(e);
+         var nogoogle=true;
+    	return false;
+    }//Google Streets
+} // end check online
+} // end if googleonline
+//Markers
+//      var markers = new OpenLayers.Layer.Markers( "Markers" );
+//KML we are not using this anymore
+/*      var kmlRedGreen =  new OpenLayers.Layer.Vector("Payment Status", {
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            styleMap: sm,
+            visibility: false,
+            projection: map.displayProjection,
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "kml/RedGreen.kml",
+                format: new OpenLayers.Format.KML({
+                    extractStyles: true,
+                    extractAttributes: true,
+                    kvpAttributes: false,
+                    maxDepth: 2
+                })
+            })
+        });
+*/
+//kmlLocalPlan
+//     var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
+//             strategies: [new OpenLayers.Strategy.Fixed()],
+//             styleMap: sm,
+//             visibility: false,
+//             projection: map.displayProjection,
+//             protocol: new OpenLayers.Protocol.HTTP({
+//                 url: "kml/bogoso.kml",
+//                 format: new OpenLayers.Format.KML({
+//                     extractStyles: true,
+//                     extractAttributes: true,
+//                     kvpAttributes: false,
+//                     maxDepth: 2
+//                 })
+//             })
+//         });
+
     var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
     renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
@@ -374,100 +431,6 @@ var styleDistrictBoundary = {
 
  //modifies the default "default" style settings of OpenLayers
 
-
-function init(){
-
-// if (session_roleid<=100){
-// if (session_user='ekke'){
-  startNormalUser();
-// }
-//  if (session_user='monitor'){
-//   startMonitoringUser();
-//  }
-
-} //end init()
-
-function startNormalUser() {
-
-//check if Internet connection exists
-// 		if (doesConnectionExist() == true) {
-// 			alert("connection exists!");
-// 		} else {
-// 			alert("connection doesn't exist!");
-// 		}
-
-   var sm = new OpenLayers.StyleMap({
-    			fillColor: "#666666",
-    			lineColor: "#0033FF"});
-
-//    			'default': mystyle,
-//Mapnik
-      var mapnik =  new OpenLayers.Layer.OSM("OpenStreetMap");
-
-//check whether we are online or offline
-if (googleonline){
-if (doesConnectionExist()){
-try {
-
-var ghybridmap = new OpenLayers.Layer.Google(
-					"Google Hybrid",
-					{type: google.maps.MapTypeId.HYBRID,
-					numZoomLevels: 20,
- 					visibility: false
-					});
-
-  	  var gmap = new OpenLayers.Layer.Google(
-					"Google Satellite",
-					{type: google.maps.MapTypeId.SATELLITE,
-// 					"Google Streets", // the default
-// 					{numZoomLevels: 20,
- 					visibility: false
-					});
-    } catch (e) {
-         alert(e);
-         var nogoogle=true;
-    	return false;
-    }//Google Streets
-} // end check online
-} // end if googleonline
-
-//Markers
-//      var markers = new OpenLayers.Layer.Markers( "Markers" );
-//KML we are not using this anymore
-/*      var kmlRedGreen =  new OpenLayers.Layer.Vector("Payment Status", {
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            styleMap: sm,
-            visibility: false,
-            projection: map.displayProjection,
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: "kml/RedGreen.kml",
-                format: new OpenLayers.Format.KML({
-                    extractStyles: true,
-                    extractAttributes: true,
-                    kvpAttributes: false,
-                    maxDepth: 2
-                })
-            })
-        });
-*/
-//kmlLocalPlan
-//     var kmlLocalPlan =  new OpenLayers.Layer.Vector("Local Plan", {
-//             strategies: [new OpenLayers.Strategy.Fixed()],
-//             styleMap: sm,
-//             visibility: false,
-//             projection: map.displayProjection,
-//             protocol: new OpenLayers.Protocol.HTTP({
-//                 url: "kml/bogoso.kml",
-//                 format: new OpenLayers.Format.KML({
-//                     extractStyles: true,
-//                     extractAttributes: true,
-//                     kvpAttributes: false,
-//                     maxDepth: 2
-//                 })
-//             })
-//         });
-
-
 //define the collector zone vector layer
 	colzones = new OpenLayers.Layer.Vector("Collector Zones", {
 		renderers: renderer,
@@ -485,7 +448,6 @@ var ghybridmap = new OpenLayers.Layer.Google(
 //only call Google Maps if Internet exists
 // if (doesConnectionExist()){
 if(googleonline){
-	map.addLayer(ghybridmap);
 	map.addLayer(gmap);
 }else //Internet not available
 {
@@ -578,8 +540,7 @@ mapnik.visibility = false;
 //
 //             map.events.register("mousemove", map, mouseMoveListener);
 
-    var layerSwitch = new OpenLayers.Control.LayerSwitcher({
-    						"baseLayers": mapnik, ghybridmap, gmap});
+    var layerSwitch = new OpenLayers.Control.LayerSwitcher();
 
     // Add Navigation controls
     var navigation = new OpenLayers.Control.Navigation();
@@ -2943,7 +2904,7 @@ function uploadScannedData() {
 function index_admin() {
 if (globaluserrole<=10){
 	var pageURL = 'php/Admin/jqAdmin.php';
-	var title = 'Administration Module';
+	var title = 'Aministration Module';
 	var w = 1100;
 	var h = 720;
     var left = (screen.width/2)-(w/2);
@@ -2954,9 +2915,7 @@ if (globaluserrole<=10){
 	{
 		popupWindow.focus();
 	}
-}else {
-	alert('Administration Module is only available for Administrators')
-	}
+}
 	return false;
 } // end of index_admin function
 
@@ -3141,7 +3100,6 @@ function updateCZinPropBus() {
 	var JSONObjectLP= [];
 	var JSONObject= [];
 	var JSONObjectBus= [];
-//alert(' l:'+jsonLPVisible+' p:'+jsonPVisible+' b:'+jsonBVisible+' CZ:'+jsonCZVisible);
 //start spinner
 	spinner.spin(target);
 
@@ -3238,10 +3196,7 @@ var handlerParameter = {spin: spinner};
 //-----------------------------------------------------------------------------
 function handlerupdateCZinProp(request) {
 feed=JSON.parse(request.responseText);
-if (feed) {
 alert(feed[feed.length-1]['messageLP']+feed[feed.length-1]['reccountLP']+' records'+' - '+feed[feed.length-1]['messageProp']+feed[feed.length-1]['reccountProp']+' records'+' - '+feed[feed.length-1]['messageBus']+feed[feed.length-1]['reccountBus']+' records');
-}else{
-alert('No return from database');}
 this.spin.stop();
 }
 
@@ -3297,11 +3252,11 @@ function keysPressed(e) {
 
 	// Ctrl + Shift + 5
 //	if (eastereggkeys[17] && eastereggkeys[16] && eastereggkeys[53]) {
-	// Ctrl + Shift + w+e
+	// Ctrl + Shift + w
 	if (eastereggkeys[17] && eastereggkeys[16] && eastereggkeys[87] && eastereggkeys[69]) {
 		// do something
 		overlayeasteregg();
-//		alert('Developed by William Amoah, Arben Damoni, Ekkehardt Roth');
+		//alert('Developed by William Amoah, Arben Damoni, Ekkehardt Roth');
 		eastereggkeys = [];
 	}
 }
@@ -3315,4 +3270,3 @@ function keysReleased(e) {
 	eastereggkeys[e.keyCode] = false;
 	eastereggkeys = [];
 }
-

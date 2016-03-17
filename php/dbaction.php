@@ -650,6 +650,7 @@ function getdistrictmap()
 	from `KML_from_districts` t1, `area_district` t2 WHERE t1.`districtname`=t2.`district_name`;";
 //	$run = "SELECT t2.`id`, t2.`boundary` , t2.`district_name`, t2.`activestatus` from `area_district` t2;";
 //	$run = "SELECT * from `area_district`;";
+
 	$query = mysql_query($run);
 	$affectedrows = mysql_affected_rows();
 
@@ -890,7 +891,7 @@ function updateCZinProp($propincz, $busincz, $lpcz)
 {
 
 $json_decodedLP=json_decode($lpcz);
-$json_decoded=json_decode($propincz);
+$json_decodedProp=json_decode($propincz);
 $json_decodedBus=json_decode($busincz);
 //var_dump($json_decoded);
 
@@ -929,7 +930,7 @@ if (!empty($lpcz)){
 
 $i = 1;
 
-foreach ($json_decoded as $key => $value)
+foreach ($json_decodedProp as $key => $value)
 {
     foreach ($value as $k => $val)
     {

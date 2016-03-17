@@ -26,7 +26,7 @@ try {
 	$con = mysql_connect(cHost, cUser, cPass);
 	$consqli = mysqli_connect(cHost, cUser, cPass, cDb);
 	// test the connection
-	if (mysqli_connect_errno($con))
+	if (mysqli_connect_errno($consqli))
 	{
 		echo "Failed to connect to MySQL: " . mysqli_connect_error();
 	}

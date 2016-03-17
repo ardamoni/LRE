@@ -44,7 +44,7 @@ require_once( "../../lib/configuration.php"	);
 
   if ($dbaction=='updateUser'){updateUser($id, $username, $pass, $title, $fullname, $position, $email, $phone, $baselanguage, $activestatus, $loged, $districtid, $regionid, $roleid);}
 
-  if ($dbaction=='insertUser'){insertUser($id, $username, $pass, $title, $fullname, $position, $email, $phone, $baselanguage, $activestatus, $loged, $districtid, $regionid);}
+  if ($dbaction=='insertUser'){insertUser($id, $username, $pass, $title, $fullname, $position, $email, $phone, $baselanguage, $activestatus, $loged, $districtid, $regionid, $roleid);}
 
 //var_dump($_POST);
 //debug_to_console( $_POST );
@@ -281,7 +281,7 @@ function updateUser($id, $username, $pass, $title, $fullname, $position, $email,
 	echo json_encode($data);
 }
 
-function insertUser($id, $username, $pass, $title, $fullname, $position, $email, $phone, $baselanguage, $activestatus, $loged, $districtid, $regionid)
+function insertUser($id, $username, $pass, $title, $fullname, $position, $email, $phone, $baselanguage, $activestatus, $loged, $districtid, $regionid, $roleid)
 {
  		$returnresult = 0;
 

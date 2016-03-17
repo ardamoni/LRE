@@ -264,10 +264,19 @@ switch(opt) {
 		var target = document.getElementById('spin'+opt);
 	  break;
 	case 4.1:
-		var squery = 'select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, sum(d2.`rate`) as "Total Revenue Expected" ';
-			squery +='from `property` d1, `fee_fixing_property` d2, `area_district` d3 ';
-			squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>;
-			squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`property_use`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`;';
+		var squery = 'SELECT `district_name` as "District", year as "Year", code, class, Units, round(sum(sumvalues)) as "Expected Revenue from Property Rates" FROM ';
+					squery +='((select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, round(sum(d1.`feefi_value`),2) as sumvalues ';
+					squery +='from `property_due` d1 ';
+					squery +='JOIN `KML_from_LUPMIS` d4 ON d1.`upn` = d4.`upn`, `fee_fixing_property` d2, `area_district` d3 ';
+					squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' AND d1.`rate_value`=0 ';
+					squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`feefi_code`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`) ';
+					squery +='UNION		';
+					squery +='(select d3.`district_name`, d2.year, d2.`code`, d2.`class`,d2.`rate`, count(d2.`rate`) as Units, round(sum(d1.`rate_value`),2) as sumvalues ';
+					squery +='from `property_due` d1 ';
+					squery +='JOIN `KML_from_LUPMIS` d4 ON d1.`upn` = d4.`upn`, `fee_fixing_property` d2, `area_district` d3 ';
+					squery +='WHERE d1.`districtid`='+<?php echo json_encode($_GET['districtid']); ?>+' AND d1.`rate_value`>0';
+					squery +=' AND d1.`districtid`=d2.`districtid` AND d1.`feefi_code`=d2.`code` AND d2.`districtid`=d3.`districtid` GROUP BY d1.`districtid`, d2.`year`, d2.`code`)) t ';
+					squery +=' group by year, code;';
 		document.getElementById('squery'+opt).value=squery;
 		document.getElementById('option'+opt).value="Potential of Property Rates per year per Property Class";
 //		document.getElementById('option4').value=squery;

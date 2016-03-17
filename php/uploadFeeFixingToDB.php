@@ -136,6 +136,7 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 			":districtid" => $_POST['districtid'],
 			":year" => $_POST['year']
 		);
+ var_dump($readData);
 		if ($firstrow > 1){
 			$stmt = $pdo->prepare('SELECT * FROM fee_fixing_property WHERE districtid = :districtid AND code = :code AND year = :year');
 			$stmt->bindParam(':districtid', $_POST['districtid'], PDO::PARAM_STR);
@@ -150,7 +151,9 @@ define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
 			$result = $pdo->insert("fee_fixing_property", $readData);
 //				die('nothing found');
 			}else {
-			$result = $pdo->update("fee_fixing_property", $readData, "districtid = :districtid AND code = :search AND year = :year", $bind);
+// var_dump($row);
+			$result = $pdo->update("fee_fixing_property", $readData, "districtid = :districtid AND code = :code AND year = :year", $bind);
+var_dump($result);
 			}
 		}
 
